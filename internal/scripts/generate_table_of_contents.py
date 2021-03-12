@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 import argparse
 import sys
+import re
 
 
 class Header:
@@ -10,7 +11,9 @@ class Header:
 
     def to_table_of_contents_intra_link(self):
         header_number = '#' * self.header_level
-        link = self.text.lower().replace(' ', '-')
+        # remove any punctuation
+        link = re.sub(r'[^\w\s]', '', self.text)
+        link = link.lower().replace(' ', '-')
 
         intra_link = f"[{self.text}]({header_number}{link})"
 
