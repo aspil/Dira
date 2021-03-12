@@ -10,12 +10,11 @@ class Header:
         self.text = text
 
     def to_table_of_contents_intra_link(self):
-        header_number = '#' * self.header_level
         # remove any punctuation
         link = re.sub(r'[^\w\s]', '', self.text)
         link = link.lower().replace(' ', '-')
 
-        intra_link = f"[{self.text}]({header_number}{link})"
+        intra_link = f"[{self.text}](#{link})"
 
         if self.header_level <= 2:
             intra_link = f"**{intra_link}**"
