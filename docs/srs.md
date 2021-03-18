@@ -3,9 +3,7 @@
 **[1. Introduction](#1-introduction)**\
 [1.1 Purpose](#11-purpose)\
 [1.2 Document Conventions](#12-document-conventions)\
-[1.3 Intented Audience and Reading Suggestions](#13-intented-audience-and-reading-suggestions)\
-[1.4 Project Scope](#14-project-scope)\
-[1.5 References](#15-references)
+[1.3 Project Scope](#13-project-scope)
 
 **[2. Overall Description](#2-overall-description)**\
 [2.1 Product Perspective](#21-product-perspective)\
@@ -34,13 +32,23 @@
 
 ### 1.1 Purpose
 
+The purpose of this document is to build an online service to manage tracking, analysis and development
+of software using the Scrum methodology.
+
 ### 1.2 Document Conventions
 
-### 1.3 Intented Audience and Reading Suggestions
+|Abbreviation|Meaning|
+|     ---    |  ---  |
+|SaaS|Software as a Service|
+|     ---    |  ---  |
+|SPA|Single Page Applications|
 
-### 1.4 Project Scope
+### 1.3 Project Scope
 
-### 1.5 References
+The purprose of the online issue tracking platform is to enable multiple teams to develop many
+projects based on the Scrum methodology.\
+The platform will support the relative domain specific features such as Epics and Stories.\
+The platform will be provided as a service (SasS).
 
 ## 2. Overall Description
 
@@ -64,11 +72,27 @@
 
 ### 4.1 User Interfaces
 
+- Front end software: HTML5, JavaScript
+- Back end software: Java, SQL
+
 ### 4.2 Hardware Interfaces
+
+- Any operating system that supports JVM and Postgre SQL
+- Any browser compatible with HTML5 and JavaScript ECS6
 
 ### 4.3 Software Interfaces
 
+| Software Used | Description |
+|     ---       |      ---    |
+|Java|We have chosen Java that supports almost every commercial operating system due to JVM support|
+|     ---       |      ---    |
+|Database|To save the Epics, Stories, Bugs and Users we have chosen Postgre SQL|
+|     ---       |      ---    |
+|React|We have chosen React for the front end because it has the fastest rendering, good support for most browsers and SPA are more dynamic|
+
 ### 4.4 Communication Interfaces
+
+The project supports all types of web browsers and software platforms as it uses JSON to communicate which is platform agnostic.
 
 ## 5. Nonfunctional Requirements
 
