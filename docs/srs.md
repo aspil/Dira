@@ -40,7 +40,6 @@ of software using the Scrum methodology.
 |Abbreviation|Meaning|
 |     ---    |  ---  |
 |SaaS|Software as a Service|
-|     ---    |  ---  |
 |SPA|Single Page Applications|
 
 ### 1.3 Project Scope
@@ -83,11 +82,9 @@ The platform will be provided as a service (SasS).
 ### 4.3 Software Interfaces
 
 | Software Used | Description |
-|     ---       |      ---    |
+| --- | --- |
 |Java|We have chosen Java that supports almost every commercial operating system due to JVM support|
-|     ---       |      ---    |
 |Database|To save the Epics, Stories, Bugs and Users we have chosen Postgre SQL|
-|     ---       |      ---    |
 |React|We have chosen React for the front end because it has the fastest rendering, good support for most browsers and SPA are more dynamic|
 
 ### 4.4 Communication Interfaces
