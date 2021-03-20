@@ -76,12 +76,17 @@ An issue will support/have the following:
 
 	- Issues:
 		- GET		/projects/{projectID or projectKey}/issues (retrieve all issues for the given project).
-		- GET		/projects/{projectID or projectKey}/issues/{issueID or issueKey} (retrieve the issue with the given ID under the given project).
 		- POST 		/projects/{projectID}/issues (create a new issue, return a json with the new issue info).
+		
+		- GET		/projects/{projectID or projectKey}/issues/{issueID or issueKey} (retrieve the issue with the given ID under the given project).
 		- POST		/projects/{projectID or projectKey}/issues/{issueID or issueKey} (update an issue with the given ID or issue Key).
 		- PUT		/projects/{projectID or projectKey}/issues/{issueID or issueKey} (update an issue with the given ID or issue Key).
 		- DELETE	/projects/{projectID or projectKey}/issues/{issueID or issueKey} (delete an issue with the given ID or issue Key). 
 
+	- Users:
+		- GET /users
+		- GET /users/{userID} (both self-view and other users)
+		
 	- Login:
 		- POST		/login
 	
