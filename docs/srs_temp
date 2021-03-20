@@ -1,8 +1,11 @@
 The system will support the following:
-- Accounts
 - Two flavors: One simpler with more limited features (free) and a premium one (subscription)
-- Register for one of the provided flavors
-- Creation, modification, view and search of projects
+- Create user accounts by choosing one of the available flavors
+- View all users in the system
+- View an individual user's profile (including themselves)
+- Creation, modification, deletion, view and search of projects
+- Modification, deletion and view of project permissions for users
+- Creation, modification, deletion, view and search of issues
 
 The user will be able to do the following:
 - Search for projects
