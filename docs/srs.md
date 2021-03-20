@@ -23,9 +23,9 @@
 [4.4 Communication Interfaces](#44-communication-interfaces)
 
 **[5. Nonfunctional Requirements](#5-nonfunctional-requirements)**\
-[5.1 Performance Requirements](#51-performance-requirements)\
-[5.2 Safety Requirements](#52-safety-requirements)\
-[5.3 Security Requirements](#53-security-requirements)\
+[5.1 General Characteristics](#51-general-characteristics)\
+[5.2 Performance Requirements](#52-performance-requirements)\
+[5.3 Security/Safety Requirements](#53-securitysafety-requirements)\
 [5.4 Software Quality Requirements](#54-software-quality-requirements)
 
 ## 1. Introduction
