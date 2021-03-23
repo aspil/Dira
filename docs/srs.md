@@ -23,9 +23,9 @@
 [4.4 Communication Interfaces](#44-communication-interfaces)
 
 **[5. Nonfunctional Requirements](#5-nonfunctional-requirements)**\
-[5.1 Performance Requirements](#51-performance-requirements)\
-[5.2 Safety Requirements](#52-safety-requirements)\
-[5.3 Security Requirements](#53-security-requirements)\
+[5.1 General Characteristics](#51-general-characteristics)\
+[5.2 Performance Requirements](#52-performance-requirements)\
+[5.3 Security/Safety Requirements](#53-securitysafety-requirements)\
 [5.4 Software Quality Requirements](#54-software-quality-requirements)
 
 ## 1. Introduction
@@ -152,11 +152,11 @@ The platform will be provided as a service (SasS).
 
 ### 4.3 Software Interfaces
 
-| Software Used | Description                                                                                                                          |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Java          | We have chosen Java that supports almost every commercial operating system due to JVM support                                        |
-| Database      | To save the Epics, Stories, Bugs and Users we have chosen Postgre SQL                                                                |
-| React         | We have chosen React for the front end because it has the fastest rendering, good support for most browsers and SPA are more dynamic |
+| Software Used | Description                                                                                                                           |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Java          | We have chosen Java that supports almost every commercial operating system due to JVM support                                         |
+| Database      | To save the Epics, Stories, Bugs and Users we have chosen Postgre SQL                                                                 |
+| React         | We have chosen React for the front end because it has the fastest rendering, good support for most browsers and SPAs are more dynamic |
 
 ### 4.4 Communication Interfaces
 
@@ -166,38 +166,34 @@ The project supports all types of web browsers and software platforms as it uses
 
 ### 5.1 General Characteristics
 
-- Our platform will have Greek as its "basic" language, but it will also support English.
-- Anyone will be able to access the platform's website via a web browser.
-- The currency supported by our platform to purchase a plan is only
-  the euro.
-- We will ensure the availability of information, ie users will have at their disposal at all times the data and resources necessary for the operation and use of our platform.
+- Our platform will support Greek and Enlgish languages
+- Anyone will be able to access the platform's website via a web browser
+- We will only support Euro as currency for service subsription
+- We will ensure the availability of information (ie users will have at their disposal at all times the data and resources necessary for the operation and use of our platform
 
 ### 5.2 Performance Requirements
 
-- Will be able to handle multiple simultaneous user requests.
-- Even after an error the user will be presented with clear messages
-  error so as not to be "trapped".
-- The response of the interface to the actions of the user will be very fast.
+- Will be able to handle multiple simultaneous user requests
+- Even after an error the user will be presented with clear messages so as not to get confused
+- The response of the interface to the actions of the user will be very fast
 
 ### 5.3 Security/Safety Requirements
 
-- We will not save the passwords as plain text(we will provide hashing).
-- When the user tries to login he should not be able to do SQL injection.
-- Since we have more than one distinct role in our system(basic users, premium users, different project roles), it follows that permissible actions of each role must be clearly delimited. We will ensure that in no case any of the system roles will have access to possibilities of another.
-- We will ensure the integrity of the information, ie we will protect any kind of data of our company from any modifications, additions or subtractions.
+- We will not save the passwords as plain text (we will provide hashing using salts as well)
+- When the user tries to login they should not be able to do SQL injection
+- Since we have more than one distinct role in our system (basic users, premium users, different project roles), it follows that permissible actions of each role must be clearly delimited. We will ensure that in no case any of the system roles will have access to possibilities of another
+- We will ensure the integrity of the information (ie we will protect any kind of data of our company from any modifications, additions or subtractions)
 - We will prevent, through various mechanisms, the access and use of the components of our system by unauthorized/unregistered users.
 - Sensitive corporate and personal data, such as credit / debit card information, will remain secure against unauthorized uses.
 
 ### 5.4 Software Quality Requirements
 
-- Our platform will be designed following the best design practices and
-  software implementation. We will try to achieve the best possible breakdown software in individual subsystems (abstraction). As a result, maintenance, reuse and expansion of the software will be performed without difficulty, which allows us to continually improve our user experience.
-- Reliability: our platform will run continuously, without interruption.
-- Our system will properly process each input data according to specifications that we have set and will produce the right output.
-- Connectivity: it will be easy to create and modify (in the future) one
-  interface for communicating our system with another system.
-- The need for system portability will be met, ie it will be easy to transfer to another environment in the future.
-- Our system will be easily manageable, ie it will be easy to set up and maintain mode.
-- It will be easily maintainable as we will be able to easily adapt our platform to new user requirements and correct any errors.
-- In addition it will be easily scalable, will have the ability to function properly and be efficient if we change its scope.
-- The process of testing the functionality and performance level of the system, after each change, will be easy and fast (test driven developement).
+- Our platform will be designed following the best design practices and software implementation. We will try to achieve the best possible breakdown software in individual subsystems (abstraction). As a result, maintenance, reuse and expansion of the software will be performed without difficulty, which allows us to continually improve our user experience.
+- Reliability: our platform will run continuously, without interruption
+- Our system will properly process each input data according to specifications that we have set and will produce the right output
+- Connectivity: it will be easy to create and modify (in the future) one interface for communicating our system with another system
+- The need for system portability will be met (ie it will be easy to transfer to another environment in the future)
+- Our system will be easily manageable (ie it will be easy to set up and maintain mode)
+- It will be easily maintainable as we will be able to easily adapt our platform to new user requirements and correct any errors
+- In addition it will be easily scalable, will have the ability to function properly and be efficient if we change its scope
+- The process of testing the functionality and performance level of the system, after each change, will be easy and fast (test driven developement)
