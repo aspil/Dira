@@ -30,11 +30,13 @@ A **REGISTERED USER** will be able to do the following:
 - Invite other users to projects
 - Ask access for public projects
 - Join in private projects only via invite
+- Upgrade their subscription plan to premium
+- Create a backlog for a project (ADMIN permissions required)
 
 | Features                     | Free | Premium |
 | ---------------------------- | ---- | ------- |
-| Unlimited number of projects | ❌   | ✔️      |
-| Private project creation     | ❌   | ✔️      |
+| Unlimited number of projects | ❌   | ✔️       |
+| Private project creation     | ❌   | ✔️       |
 
 
 An **UNREGISTERED USER** can only do the following:
@@ -94,6 +96,15 @@ An issue will support/have the following:
 - Fix version(s)
 - Issue Links: Depends on, Relates to
 - Epic link
+
+### 2.4 Backlog features
+
+A backlog will support the following:
+- Can only be created from someone with ADMIN permissions
+- Can only be modified (filters) from someone with ADMIN permissions
+- Can be modified (drag and drop) from someone with WRITE permissions
+- Contain issues based on issue data filters (e.g Status)
+- Drag and drop between the backlog columns in order to transition issue states
 
 ## 3. External Interface Requirements
 
