@@ -17,7 +17,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<UserModel> getAll() {
+    public List<UserModel> findAll() {
         List<User> users = repository.findAll();
         List<UserModel> models = new ArrayList<>();
         for (User user : users) {
@@ -32,7 +32,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserModel getById(String id) {
+    public UserModel findById(String id) {
         User user = repository.findById(id).orElse(null);
         if (user != null) {
             UserModel model = new UserModel();
@@ -45,9 +45,34 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserModel save(UserModel userModel) {
+    public UserModel insert(UserModel userModel) {
         User user = new User(userModel.getName(), userModel.getSurname(), userModel.getEmail(), "gliontos", "saiko");
         User newUser = repository.save(user);
-        return getById(newUser.getId());
+        return findById(newUser.getId());
+    }
+
+    @Override
+    public UserModel update(UserModel userModel) {
+        return null;
+    }
+
+    @Override
+    public void deleteById(String s) {
+
+    }
+
+    @Override
+    public void delete(UserModel userModel) {
+
+    }
+
+    @Override
+    public void deleteAll(Iterable<? extends UserModel> userModels) {
+
+    }
+
+    @Override
+    public void deleteAll() {
+
     }
 }

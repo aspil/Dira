@@ -18,13 +18,13 @@ public class UserController {
     @GetMapping("all")
     @ResponseBody
     public List<UserModel> getAll() {
-        return service.getAll();
+        return service.findAll();
     }
 
     @GetMapping("{id}")
     @ResponseBody
     public UserModel getById(@PathVariable String id) {
-        return service.getById(id);
+        return service.findById(id);
     }
 
     @PostMapping

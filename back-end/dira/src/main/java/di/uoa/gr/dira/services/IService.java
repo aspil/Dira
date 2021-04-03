@@ -5,9 +5,19 @@ import java.util.List;
 
 
 public interface IService<TModel, ID> {
-    List<TModel> getAll();
+    List<TModel> findAll();
 
-    TModel getById(ID id);
+    TModel findById(ID id);
 
-    TModel save(TModel model);
+    TModel insert(TModel model);
+
+    TModel update(TModel model);
+
+    void deleteById(ID id);
+
+    void delete(TModel model);
+
+    void deleteAll(Iterable<? extends TModel> models);
+
+    void deleteAll();
 }
