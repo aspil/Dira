@@ -72,6 +72,6 @@ public class UserService implements IUserService {
 
     @Override
     public void deleteAll() {
-
+        repository.deleteAll();
     }
 }

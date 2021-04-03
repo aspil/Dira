@@ -1,5 +1,6 @@
 package di.uoa.gr.dira.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import di.uoa.gr.dira.entities.User;
 
 public class UserModel {
@@ -7,6 +8,7 @@ public class UserModel {
     String name;
     String surname;
     String email;
+    @JsonIgnore
     String password;
 
     public UserModel() {
@@ -52,6 +54,7 @@ public class UserModel {
         this.email = email;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
