@@ -17,18 +17,25 @@ public class UserController {
 
     @GetMapping("all")
     @ResponseBody
-    public List<UserModel> getAll() {
+    public List<UserModel> getAllUsers() {
         return service.findAll();
     }
 
     @GetMapping("{id}")
     @ResponseBody
-    public UserModel getById(@PathVariable String id) {
+    public UserModel getUserById(@PathVariable String id) {
         return service.findById(id);
     }
 
     @PostMapping
+    @ResponseBody
     public UserModel createUser(@RequestBody UserModel user) {
-        return service.save(user);
+        return service.insert(user);
     }
+
+    @DeleteMapping("{id}")
+    public void deleteUserById(@PathVariable String id) {
+        service.deleteById(id);
+    }
+
 }
