@@ -27,8 +27,8 @@ public class UserController {
         return service.findById(id);
     }
 
-    @PostMapping
+    /*@PostMapping
     public UserModel createUser(@RequestBody UserModel user) {
         return service.save(user);
-    }
+    }*/
 }
