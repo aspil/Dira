@@ -46,9 +46,7 @@ public class UserService implements IUserService {
 
     @Override
     public UserModel insert(UserModel userModel) {
-        User user = new User(userModel.getName(), userModel.getSurname(), userModel.getEmail(), "gliontos", "saiko");
-        User newUser = repository.save(user);
-        return findById(newUser.getId());
+        return null;
     }
 
     @Override

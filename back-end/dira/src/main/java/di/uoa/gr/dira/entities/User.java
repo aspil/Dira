@@ -6,30 +6,43 @@ import javax.persistence.*;
 public class User {
     @Id
     private String id;
-
-    //    @ManyToOne
-//    @JoinColumn(name = "subscription_plan_id")
-//    private SubscriptionPlan subscriptionPlan;
+    private String username;
     private String name;
     private String surname;
     private String email;
-    private String username;
     private String password;
-    private String salt;
+
+    @ManyToOne
+    @JoinColumn(name = "subscription_plan_id")
+    private SubscriptionPlan subscriptionPlan;
 
     public User() {
     }
 
-    public User(String name, String surname, String email, String username, String password) {
-//        this.subscriptionPlan = subscriptionPlan;
+    public User(String username, String name, String surname, String email, String password, SubscriptionPlan subscriptionPlan) {
+        this.username = username;
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.username = username;
         this.password = password;
-        this.salt = null;
+        this.subscriptionPlan = subscriptionPlan;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public SubscriptionPlan getSubscriptionPlan() {
+        return subscriptionPlan;
+    }
+
+    public void setSubscriptionPlan(SubscriptionPlan subscriptionPlan) {
+        this.subscriptionPlan = subscriptionPlan;
+    }
 
     public String getName() {
         return name;
@@ -70,28 +83,4 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-//    public SubscriptionPlan getSubscriptionPlan() {
-//        return subscriptionPlan;
-//    }
-//
-//    public void setSubscriptionPlan(SubscriptionPlan subscriptionPlan) {
-//        this.subscriptionPlan = subscriptionPlan;
-//    }
 }
