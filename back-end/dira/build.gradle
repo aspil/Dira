@@ -14,6 +14,8 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.hibernate:hibernate-gradle-plugin:5.4.30.Final'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
