@@ -18,9 +18,9 @@ public class SubscriptionPlan {
     public SubscriptionPlan() {
     }
 
-    public SubscriptionPlan(String id, SubscriptionPlanEnum plan) {
-        this.id = id;
+    public SubscriptionPlan(SubscriptionPlanEnum plan) {
         this.plan = plan;
+
     }
 
     public String getId() {

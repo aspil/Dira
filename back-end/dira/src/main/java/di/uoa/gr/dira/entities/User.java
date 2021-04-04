@@ -1,5 +1,9 @@
 package di.uoa.gr.dira.entities;
 
+import com.mongodb.lang.NonNull;
+import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 
 @Entity
@@ -12,11 +16,13 @@ public class User {
     private String email;
     private String password;
 
+    @NonNull
     @ManyToOne
     @JoinColumn(name = "subscription_plan_id")
     private SubscriptionPlan subscriptionPlan;
 
     public User() {
+        this.subscriptionPlan = new SubscriptionPlan(SubscriptionPlanEnum.STANDARD);
     }
 
     public User(String username, String name, String surname, String email, String password, SubscriptionPlan subscriptionPlan) {

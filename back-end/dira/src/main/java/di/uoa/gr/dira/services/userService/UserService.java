@@ -1,6 +1,7 @@
 package di.uoa.gr.dira.services.userService;
 
 import di.uoa.gr.dira.entities.User;
+import di.uoa.gr.dira.models.UserLoginModel;
 import di.uoa.gr.dira.models.UserModel;
 import di.uoa.gr.dira.repositories.UserRepository;
 import di.uoa.gr.dira.security.PasswordManager;
@@ -62,7 +63,6 @@ public class UserService implements IUserService {
 
     @Override
     public void delete(UserModel userModel) {
-
     }
 
     @Override
@@ -73,5 +73,11 @@ public class UserService implements IUserService {
     @Override
     public void deleteAll() {
         repository.deleteAll();
+    }
+
+    @Override
+    public boolean authenticateUser(UserLoginModel user) {
+        User u = repository.findByUsername(user.getUsername()).orElse(null);
+        return u != null && PasswordManager.encoder().matches(user.getPassword(), u.getPassword());
     }
 }
