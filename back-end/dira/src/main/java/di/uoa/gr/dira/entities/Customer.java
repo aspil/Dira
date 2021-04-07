@@ -3,8 +3,9 @@ package di.uoa.gr.dira.entities;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 
 import javax.persistence.*;
+import java.util.List;
 
-@Entity(name = "CUSTOMER")
+@Entity
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,6 +30,13 @@ public class Customer {
     @ManyToOne
     @JoinColumn(name = "subscription_plan_id")
     private SubscriptionPlan subscriptionPlan;
+
+    @ManyToMany
+    @JoinTable(name = "project_customer",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id")
+    )
+    private List<Project> projects;
 
     public Customer() {
         this.subscriptionPlan = new SubscriptionPlan(SubscriptionPlanEnum.STANDARD);

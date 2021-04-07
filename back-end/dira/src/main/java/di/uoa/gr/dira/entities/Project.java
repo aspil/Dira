@@ -1,20 +1,47 @@
 package di.uoa.gr.dira.entities;
 
+import di.uoa.gr.dira.models.ProjectModel;
+
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
 public class Project {
-    long id;
-    String key;
-    String name;
-    String description;
-    List<Customer> customers; // TODO: Do we really need this?
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "project_id")
+    Long id;
 
-    public Project(long id, String key, String name, String description, List<Customer> customers) {
+    @Column(nullable = false, length = 125)
+    String key;
+
+    @Column(nullable = false)
+    String name;
+
+    String description;
+
+    @ManyToMany
+    @JoinTable(name = "project_customer",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "customer_id")
+    )
+    List<Customer> customers;
+
+    public Project() {
+    }
+
+    public Project(long id, String key, String name, String description) {
         this.id = id;
         this.key = key;
         this.name = name;
         this.description = description;
-        this.customers = customers;
+    }
+
+    public Project(ProjectModel model) {
+        this.key = model.getKey();
+        this.name = model.getName();
+        this.description = model.getDescription();
+        this.customers = model.getCustomers();
     }
 
     public void setId(long id) {
@@ -33,10 +60,6 @@ public class Project {
         this.description = description;
     }
 
-    public void setUsers(List<Customer> customers) {
-        this.customers = customers;
-    }
-
     public long getId() {
         return id;
     }
@@ -53,7 +76,15 @@ public class Project {
         return description;
     }
 
-    public List<Customer> getUsers() {
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<Customer> getCustomers() {
         return customers;
+    }
+
+    public void setCustomers(List<Customer> customers) {
+        this.customers = customers;
     }
 }
