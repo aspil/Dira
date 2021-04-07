@@ -47,7 +47,7 @@ public class UserService implements IUserService {
         String password = PasswordManager.encoder().encode(userModel.getPassword());
         user.setPassword(password);
 
-        User newUser = repository.insert(user);
+        User newUser = repository.save(user);
         return new UserModel(newUser);
     }
 

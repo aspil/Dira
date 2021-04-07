@@ -1,8 +1,6 @@
 package di.uoa.gr.dira.entities;
 
-import com.mongodb.lang.NonNull;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -16,7 +14,6 @@ public class User {
     private String email;
     private String password;
 
-    @NonNull
     @ManyToOne
     @JoinColumn(name = "subscription_plan_id")
     private SubscriptionPlan subscriptionPlan;
