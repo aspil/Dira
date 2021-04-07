@@ -1,9 +1,9 @@
 package di.uoa.gr.dira.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import di.uoa.gr.dira.entities.User;
+import di.uoa.gr.dira.entities.Customer;
 
-public class UserModel {
+public class CustomerModel {
     String username;
     String name;
     String surname;
@@ -11,15 +11,15 @@ public class UserModel {
     @JsonIgnore
     String password;
 
-    public UserModel() {
+    public CustomerModel() {
     }
 
-    public UserModel(User user) {
-        this.username = user.getUsername();
-        this.name = user.getName();
-        this.surname = user.getSurname();
-        this.email = user.getEmail();
-        this.password = user.getPassword();
+    public CustomerModel(Customer customer) {
+        this.username = customer.getUsername();
+        this.name = customer.getName();
+        this.surname = customer.getSurname();
+        this.email = customer.getEmail();
+        this.password = customer.getPassword();
     }
 
     public String getUsername() {

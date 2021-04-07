@@ -1,40 +1,40 @@
 package di.uoa.gr.dira.controllers;
 
-import di.uoa.gr.dira.models.UserModel;
-import di.uoa.gr.dira.services.userService.IUserService;
+import di.uoa.gr.dira.models.CustomerModel;
+import di.uoa.gr.dira.services.customerService.ICustomerService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("user")
-public class UserController {
-    final IUserService service;
+public class CustomerController {
+    final ICustomerService service;
 
-    public UserController(IUserService service) {
+    public CustomerController(ICustomerService service) {
         this.service = service;
     }
 
     @GetMapping("all")
     @ResponseBody
-    public List<UserModel> getAllUsers() {
+    public List<CustomerModel> getAllCustomers() {
         return service.findAll();
     }
 
     @GetMapping("{id}")
     @ResponseBody
-    public UserModel getUserById(@PathVariable String id) {
+    public CustomerModel getCustomerById(@PathVariable Long id) {
         return service.findById(id);
     }
 
     @PostMapping
     @ResponseBody
-    public UserModel createUser(@RequestBody UserModel user) {
+    public CustomerModel createUser(@RequestBody CustomerModel user) {
         return service.insert(user);
     }
 
     @DeleteMapping("{id}")
-    public void deleteUserById(@PathVariable String id) {
+    public void deleteUserById(@PathVariable Long id) {
         service.deleteById(id);
     }
 

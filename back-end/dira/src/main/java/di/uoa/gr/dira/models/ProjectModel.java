@@ -1,14 +1,13 @@
 package di.uoa.gr.dira.models;
 
-import di.uoa.gr.dira.entities.Project;
-import di.uoa.gr.dira.entities.User;
+import di.uoa.gr.dira.entities.Customer;
 
 import java.util.List;
 
 public class ProjectModel {
     String name;
     String description;
-    List<User> users;
+    List<Customer> customers;
 
     public ProjectModel() {
     }
@@ -29,11 +28,11 @@ public class ProjectModel {
         this.description = description;
     }
 
-    public List<User> getUsers(List<User> users) {
-        return this.users;
+    public List<Customer> getUsers(List<Customer> customers) {
+        return this.customers;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setUsers(List<Customer> customers) {
+        this.customers = customers;
     }
 }

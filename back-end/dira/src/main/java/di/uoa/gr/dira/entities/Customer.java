@@ -4,25 +4,37 @@ import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 
 import javax.persistence.*;
 
-@Entity
-public class User {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+@Entity(name = "CUSTOMER")
+public class Customer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "customer_id")
+    private Long id;
+
+    @Column(nullable = false, length = 50)
     private String username;
+
+    @Column(nullable = false, length = 50)
     private String name;
+
+    @Column(nullable = false, length = 50)
     private String surname;
+
+    @Column(nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String password;
 
     @ManyToOne
     @JoinColumn(name = "subscription_plan_id")
     private SubscriptionPlan subscriptionPlan;
 
-    public User() {
+    public Customer() {
         this.subscriptionPlan = new SubscriptionPlan(SubscriptionPlanEnum.STANDARD);
     }
 
-    public User(String username, String name, String surname, String email, String password, SubscriptionPlan subscriptionPlan) {
+    public Customer(String username, String name, String surname, String email, String password, SubscriptionPlan subscriptionPlan) {
         this.username = username;
         this.name = name;
         this.surname = surname;
@@ -31,11 +43,11 @@ public class User {
         this.subscriptionPlan = subscriptionPlan;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

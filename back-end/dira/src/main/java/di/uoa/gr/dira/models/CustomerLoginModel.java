@@ -1,10 +1,10 @@
 package di.uoa.gr.dira.models;
 
-public class UserLoginModel {
+public class CustomerLoginModel {
     private String username;
     private String password;
 
-    public UserLoginModel() {
+    public CustomerLoginModel() {
     }
 
     public String getUsername() {

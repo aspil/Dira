@@ -1,21 +1,21 @@
 package di.uoa.gr.dira.controllers;
 
-import di.uoa.gr.dira.models.UserLoginModel;
-import di.uoa.gr.dira.services.userService.IUserService;
+import di.uoa.gr.dira.models.CustomerLoginModel;
+import di.uoa.gr.dira.services.customerService.ICustomerService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class LoginController {
-    IUserService service;
+    ICustomerService service;
 
-    public LoginController(IUserService service) {
+    public LoginController(ICustomerService service) {
         this.service = service;
     }
 
     @PostMapping("login")
-    public boolean login(@RequestBody UserLoginModel userLoginModel) {
-        return service.authenticateUser(userLoginModel);
+    public boolean login(@RequestBody CustomerLoginModel customerLoginModel) {
+        return service.authenticateUser(customerLoginModel);
     }
 }

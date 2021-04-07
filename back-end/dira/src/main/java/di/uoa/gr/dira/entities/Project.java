@@ -7,14 +7,14 @@ public class Project {
     String key;
     String name;
     String description;
-    List<User> users; // TODO: Do we really need this?
+    List<Customer> customers; // TODO: Do we really need this?
 
-    public Project(long id, String key, String name, String description, List<User> users) {
+    public Project(long id, String key, String name, String description, List<Customer> customers) {
         this.id = id;
         this.key = key;
         this.name = name;
         this.description = description;
-        this.users = users;
+        this.customers = customers;
     }
 
     public void setId(long id) {
@@ -33,8 +33,8 @@ public class Project {
         this.description = description;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setUsers(List<Customer> customers) {
+        this.customers = customers;
     }
 
     public long getId() {
@@ -53,7 +53,7 @@ public class Project {
         return description;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public List<Customer> getUsers() {
+        return customers;
     }
 }
