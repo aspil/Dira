@@ -1,10 +1,12 @@
 package di.uoa.gr.dira.services.customerService;
 
 import di.uoa.gr.dira.entities.Customer;
+import di.uoa.gr.dira.entities.SubscriptionPlan;
 import di.uoa.gr.dira.models.CustomerLoginModel;
 import di.uoa.gr.dira.models.CustomerModel;
 import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.security.PasswordManager;
+import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ public class CustomerService implements ICustomerService {
         customer.setSurname(customerModel.getSurname());
         customer.setEmail(customerModel.getEmail());
         customer.setUsername(customerModel.getUsername());
+        customer.setSubscriptionPlan(SubscriptionPlan.PREMIUM);
 
         String password = PasswordManager.encoder().encode(customerModel.getPassword());
         customer.setPassword(password);

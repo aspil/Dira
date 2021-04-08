@@ -27,7 +27,7 @@ public class CustomerController {
         return service.findById(id);
     }
 
-    @PostMapping
+    @PostMapping("all")
     @ResponseBody
     public CustomerModel createUser(@RequestBody CustomerModel user) {
         return service.insert(user);

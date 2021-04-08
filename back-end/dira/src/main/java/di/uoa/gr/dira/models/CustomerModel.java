@@ -1,6 +1,7 @@
 package di.uoa.gr.dira.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import di.uoa.gr.dira.entities.Customer;
 
 public class CustomerModel {
@@ -59,6 +60,7 @@ public class CustomerModel {
         return password;
     }
 
+    @JsonProperty
     public void setPassword(String password) {
         this.password = password;
     }
