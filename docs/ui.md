@@ -25,8 +25,7 @@ These pages are accessible from anyone , no account is needed .\
 The following prototype is describing the Main Page of Dira .\
 This page is reached by the user which is not logged-in / not registered and it is the first page the user will see on our website .
 
-TODO
-MAIN PAGE PROTOTYPE
+![Initial Page](prototypes/initial_page.png?raw=true "Initial Page")
 
 The "Login" anchor on the header is redirecting the user to "Login Page" .\
 The "Contact Us" anchor on the footer is redirecting the user to "Contact Page" .
@@ -52,11 +51,11 @@ In User Authentication we assume the Login process , the Register process etc.
 ![Login](prototypes/login.png?raw=true "Login")
 
 The above prototype is describing the "Login Page" .
-The user should fill the two input fields and then press the "Login" button to login to his account.
+The user should fill the two input fields and then press the "Sign in" button to login to his account.
 
 The "Keep me logged in" checkbox is an option which can keep login the user for this specific user's device , until the user logout.
 
-The "Sing Up" anchor is redirecting the user to "Register Page" .\
+The "Create an account" anchor is redirecting the user to "Register Page" .\
 The "Forgot Password" anchor is redirecting the user to "Recover Password Page" . 
 
 ### 2.2 Register Page
