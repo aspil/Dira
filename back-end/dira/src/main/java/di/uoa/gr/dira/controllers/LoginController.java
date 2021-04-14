@@ -16,6 +16,6 @@ public class LoginController {
 
     @PostMapping("login")
     public boolean login(@RequestBody CustomerLoginModel customerLoginModel) {
-        return service.authenticateUser(customerLoginModel);
+        return service.authenticateUser(customerLoginModel.getUsername(), customerLoginModel.getPassword());
     }
 }

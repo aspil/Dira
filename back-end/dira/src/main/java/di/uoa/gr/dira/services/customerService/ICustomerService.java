@@ -1,6 +1,5 @@
 package di.uoa.gr.dira.services.customerService;
 
-import di.uoa.gr.dira.models.CustomerLoginModel;
 import di.uoa.gr.dira.models.CustomerModel;
 import di.uoa.gr.dira.services.IService;
 
