@@ -5,5 +5,5 @@ import di.uoa.gr.dira.models.CustomerModel;
 import di.uoa.gr.dira.services.IService;
 
 public interface ICustomerService extends IService<CustomerModel, Long> {
-    boolean authenticateUser(CustomerLoginModel user);
+    boolean authenticateUser(String username, String password);
 }

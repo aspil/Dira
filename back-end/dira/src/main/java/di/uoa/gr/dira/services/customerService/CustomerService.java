@@ -6,7 +6,6 @@ import di.uoa.gr.dira.models.CustomerLoginModel;
 import di.uoa.gr.dira.models.CustomerModel;
 import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.security.PasswordManager;
-import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -79,8 +78,8 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public boolean authenticateUser(CustomerLoginModel user) {
-        Customer u = repository.findByUsername(user.getUsername()).orElse(null);
-        return u != null && PasswordManager.encoder().matches(user.getPassword(), u.getPassword());
+    public boolean authenticateUser(String username, String password) {
+        Customer customer = repository.findByUsername(username).orElse(null);
+        return customer != null && PasswordManager.encoder().matches(password, customer.getPassword());
     }
 }
