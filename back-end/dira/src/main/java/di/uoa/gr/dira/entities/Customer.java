@@ -1,5 +1,6 @@
 package di.uoa.gr.dira.entities;
 
+import di.uoa.gr.dira.security.PasswordManager;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 
 import javax.persistence.*;
@@ -38,19 +39,6 @@ public class Customer {
     )
     private List<Project> projects;
 
-    public Customer() {
-        this.subscriptionPlan = new SubscriptionPlan(SubscriptionPlanEnum.STANDARD);
-    }
-
-    public Customer(String username, String name, String surname, String email, String password, SubscriptionPlan subscriptionPlan) {
-        this.username = username;
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.password = password;
-        this.subscriptionPlan = subscriptionPlan;
-    }
-
     public Long getId() {
         return id;
     }
@@ -61,6 +49,17 @@ public class Customer {
 
     public SubscriptionPlan getSubscriptionPlan() {
         return subscriptionPlan;
+    }
+
+    public void setSubscriptionPlanFromEnum(SubscriptionPlanEnum subscriptionPlan) {
+        switch (subscriptionPlan) {
+            case PREMIUM:
+                this.subscriptionPlan = SubscriptionPlan.PREMIUM;
+                break;
+            case STANDARD:
+                this.subscriptionPlan = SubscriptionPlan.STANDARD;
+                break;
+        }
     }
 
     public void setSubscriptionPlan(SubscriptionPlan subscriptionPlan) {
@@ -104,6 +103,6 @@ public class Customer {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = PasswordManager.encoder().encode(password);
     }
 }

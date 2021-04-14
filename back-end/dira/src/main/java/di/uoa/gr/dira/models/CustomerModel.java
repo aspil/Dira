@@ -3,6 +3,9 @@ package di.uoa.gr.dira.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import di.uoa.gr.dira.entities.Customer;
+import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 
 public class CustomerModel {
     String username;
@@ -11,16 +14,14 @@ public class CustomerModel {
     String email;
     @JsonIgnore
     String password;
+    SubscriptionPlanEnum subscriptionPlan;
 
     public CustomerModel() {
     }
 
-    public CustomerModel(Customer customer) {
-        this.username = customer.getUsername();
-        this.name = customer.getName();
-        this.surname = customer.getSurname();
-        this.email = customer.getEmail();
-        this.password = customer.getPassword();
+    public static void configureMapper(ModelMapper mapper) {
+        TypeMap<CustomerModel, Customer> typeMap = mapper.createTypeMap(CustomerModel.class, Customer.class);
+        typeMap.addMappings(m -> m.map(CustomerModel::getSubscriptionPlan, Customer::setSubscriptionPlanFromEnum));
     }
 
     public String getUsername() {
@@ -63,5 +64,13 @@ public class CustomerModel {
     @JsonProperty
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public SubscriptionPlanEnum getSubscriptionPlan() {
+        return subscriptionPlan;
+    }
+
+    public void setSubscriptionPlan(SubscriptionPlanEnum subscriptionPlan) {
+        this.subscriptionPlan = subscriptionPlan;
     }
 }
