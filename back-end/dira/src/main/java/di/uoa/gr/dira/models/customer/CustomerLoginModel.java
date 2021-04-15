@@ -1,4 +1,4 @@
-package di.uoa.gr.dira.models;
+package di.uoa.gr.dira.models.customer;
 
 public class CustomerLoginModel {
     private String username;

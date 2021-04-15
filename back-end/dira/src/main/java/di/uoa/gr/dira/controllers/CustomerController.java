@@ -1,6 +1,6 @@
 package di.uoa.gr.dira.controllers;
 
-import di.uoa.gr.dira.models.CustomerModel;
+import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.services.customerService.ICustomerService;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +21,11 @@ public class CustomerController {
         return service.findAll();
     }
 
+    @DeleteMapping("all")
+    public void deleteAllCustomers() {
+        service.deleteAll();
+    }
+
     @GetMapping("{id}")
     @ResponseBody
     public CustomerModel getCustomerById(@PathVariable Long id) {
@@ -28,12 +33,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("{id}")
-    public void deleteUserById(@PathVariable Long id) {
+    public void deleteCustomerById(@PathVariable Long id) {
         service.deleteById(id);
-    }
-
-    @DeleteMapping("all")
-    public void deleteAllUsers() {
-        service.deleteAll();
     }
 }

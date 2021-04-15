@@ -1,7 +1,5 @@
 package di.uoa.gr.dira.entities;
 
-import di.uoa.gr.dira.models.ProjectModel;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -12,7 +10,7 @@ public class Project {
     @Column(name = "project_id")
     Long id;
 
-    @Column(nullable = false, length = 125)
+    @Column(nullable = false, length = 15)
     String key;
 
     @Column(nullable = false)
@@ -28,20 +26,6 @@ public class Project {
     List<Customer> customers;
 
     public Project() {
-    }
-
-    public Project(long id, String key, String name, String description) {
-        this.id = id;
-        this.key = key;
-        this.name = name;
-        this.description = description;
-    }
-
-    public Project(ProjectModel model) {
-        this.key = model.getKey();
-        this.name = model.getName();
-        this.description = model.getDescription();
-        this.customers = model.getCustomers();
     }
 
     public void setId(long id) {

@@ -1,6 +1,6 @@
 package di.uoa.gr.dira.controllers;
 
-import di.uoa.gr.dira.models.CustomerModel;
+import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.services.customerService.ICustomerService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

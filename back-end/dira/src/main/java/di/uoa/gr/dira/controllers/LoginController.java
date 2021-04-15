@@ -1,6 +1,6 @@
 package di.uoa.gr.dira.controllers;
 
-import di.uoa.gr.dira.models.CustomerLoginModel;
+import di.uoa.gr.dira.models.customer.CustomerLoginModel;
 import di.uoa.gr.dira.services.customerService.ICustomerService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class LoginController {
-    ICustomerService service;
+    private final ICustomerService service;
 
     public LoginController(ICustomerService service) {
         this.service = service;

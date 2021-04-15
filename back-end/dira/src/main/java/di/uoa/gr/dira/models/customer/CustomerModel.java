@@ -1,4 +1,4 @@
-package di.uoa.gr.dira.models;
+package di.uoa.gr.dira.models.customer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 
 public class CustomerModel {
+    Long id;
     String username;
     String name;
     String surname;
@@ -22,6 +23,14 @@ public class CustomerModel {
     public static void configureMapper(ModelMapper mapper) {
         TypeMap<CustomerModel, Customer> typeMap = mapper.createTypeMap(CustomerModel.class, Customer.class);
         typeMap.addMappings(m -> m.map(CustomerModel::getSubscriptionPlan, Customer::setSubscriptionPlanFromEnum));
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {

@@ -1,7 +1,7 @@
 package di.uoa.gr.dira.services.customerService;
 
 import di.uoa.gr.dira.entities.Customer;
-import di.uoa.gr.dira.models.CustomerModel;
+import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.security.PasswordManager;
 import di.uoa.gr.dira.services.BaseService;

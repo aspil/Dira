@@ -9,7 +9,7 @@ import java.util.List;
 @RestController
 @RequestMapping("project")
 public class ProjectController {
-    final IProjectService service;
+    private final IProjectService service;
 
     public ProjectController(IProjectService service) {
         this.service = service;
@@ -21,15 +21,25 @@ public class ProjectController {
         return service.findAll();
     }
 
+    @PostMapping("all")
+    @ResponseBody
+    public ProjectModel createProject(@RequestBody ProjectModel project) {
+        return service.save(project);
+    }
+
+    @DeleteMapping("all")
+    public void deleteAllProjects() {
+        service.deleteAll();
+    }
+
     @GetMapping("{id}")
     @ResponseBody
     public ProjectModel getProjectById(@PathVariable Long id) {
         return service.findById(id);
     }
 
-    @PostMapping("all")
-    @ResponseBody
-    public ProjectModel createProject(@RequestBody ProjectModel project) {
-        return service.save(project);
+    @DeleteMapping("{id}")
+    public void deleteProjectById(@PathVariable Long id) {
+        service.deleteById(id);
     }
 }

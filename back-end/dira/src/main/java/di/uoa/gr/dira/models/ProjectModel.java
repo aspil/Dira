@@ -1,11 +1,11 @@
 package di.uoa.gr.dira.models;
 
 import di.uoa.gr.dira.entities.Customer;
-import di.uoa.gr.dira.entities.Project;
 
 import java.util.List;
 
 public class ProjectModel {
+    Long id;
     String key;
     String name;
     String description;
@@ -14,11 +14,12 @@ public class ProjectModel {
     public ProjectModel() {
     }
 
-    public ProjectModel(Project project) {
-        this.key = project.getKey();
-        this.name = project.getName();
-        this.description = project.getDescription();
-        this.customers = project.getCustomers();
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
