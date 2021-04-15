@@ -1,7 +1,9 @@
 package di.uoa.gr.dira.controllers;
 
-import di.uoa.gr.dira.models.ProjectModel;
+import di.uoa.gr.dira.models.project.ProjectModel;
+import di.uoa.gr.dira.models.project.ProjectUsersModel;
 import di.uoa.gr.dira.services.projectService.IProjectService;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,5 +43,16 @@ public class ProjectController {
     @DeleteMapping("{id}")
     public void deleteProjectById(@PathVariable Long id) {
         service.deleteById(id);
+    }
+
+    @GetMapping("{id}/users")
+    @ResponseBody
+    public List<ProjectUsersModel> getAllProjectUsers(@PathVariable Long id) {
+        return service.findUsersByProjectId(id);
+    }
+
+    @PostMapping("{id}/users")
+    public void addUserToProjectWithId(@PathVariable Long id) {
+        service.addUserToProjectWithId(id);
     }
 }

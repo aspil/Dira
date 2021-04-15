@@ -1,15 +1,10 @@
-package di.uoa.gr.dira.models;
-
-import di.uoa.gr.dira.entities.Customer;
-
-import java.util.List;
+package di.uoa.gr.dira.models.project;
 
 public class ProjectModel {
     Long id;
     String key;
     String name;
     String description;
-    List<Customer> customers;
 
     public ProjectModel() {
     }
@@ -38,9 +33,6 @@ public class ProjectModel {
         this.description = description;
     }
 
-    public List<Customer> getUsers(List<Customer> customers) {
-        return this.customers;
-    }
 
     public String getKey() {
         return key;
@@ -48,13 +40,5 @@ public class ProjectModel {
 
     public void setKey(String key) {
         this.key = key;
-    }
-
-    public List<Customer> getCustomers() {
-        return customers;
-    }
-
-    public void setCustomers(List<Customer> customers) {
-        this.customers = customers;
     }
 }

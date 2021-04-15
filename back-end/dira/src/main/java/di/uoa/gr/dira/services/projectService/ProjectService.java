@@ -1,17 +1,51 @@
 package di.uoa.gr.dira.services.projectService;
 
+import di.uoa.gr.dira.entities.Customer;
 import di.uoa.gr.dira.entities.Project;
-import di.uoa.gr.dira.models.ProjectModel;
+import di.uoa.gr.dira.models.project.ProjectModel;
+import di.uoa.gr.dira.models.project.ProjectUsersModel;
+import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
+import di.uoa.gr.dira.services.customerService.ICustomerService;
+import di.uoa.gr.dira.util.MapperHelper;
+import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
 public class ProjectService extends BaseService<ProjectModel, Project, Long, ProjectRepository> implements IProjectService {
-    ProjectRepository repository;
+    CustomerRepository customerRepository;
 
-    ProjectService(ProjectRepository repository) {
+    ProjectService(ProjectRepository repository, CustomerRepository customerRepository) {
         super(repository);
+        this.customerRepository = customerRepository;
+    }
+
+    @Override
+    public List<ProjectUsersModel> findUsersByProjectId(Long id) {
+        Project project = repository.findById(id).orElse(null);
+
+        if (project != null) {
+            List<ProjectUsersModel> users = new ArrayList<>();
+            MapperHelper.mapList(mapper, project.getCustomers(), new TypeToken<ProjectUsersModel>() {
+            }.getType());
+            return users;
+        }
+        return null;
+    }
+
+    @Override
+    public void addUserToProjectWithId(Long id) {
+        Project project = repository.findById(id).orElse(null);
+
+        if (project != null) {
+            Customer customer = customerRepository.findById(1L).orElse(null);
+            project.getCustomers().add(customer);
+            repository.save(project);
+        }
     }
 }
