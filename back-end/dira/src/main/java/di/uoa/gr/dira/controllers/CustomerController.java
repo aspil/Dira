@@ -9,7 +9,7 @@ import java.util.List;
 @RestController
 @RequestMapping("user")
 public class CustomerController {
-    final ICustomerService service;
+    private final ICustomerService service;
 
     public CustomerController(ICustomerService service) {
         this.service = service;
