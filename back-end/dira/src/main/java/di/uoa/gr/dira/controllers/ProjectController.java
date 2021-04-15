@@ -27,7 +27,7 @@ public class ProjectController {
         return service.findById(id);
     }
 
-    @PostMapping
+    @PostMapping("all")
     @ResponseBody
     public ProjectModel createProject(@RequestBody ProjectModel project) {
         return service.save(project);
