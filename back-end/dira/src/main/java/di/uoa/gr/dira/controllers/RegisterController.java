@@ -19,6 +19,6 @@ public class RegisterController {
     @PostMapping("register")
     @ResponseBody
     public CustomerModel registerCostumer(@RequestBody CustomerModel customerModel) {
-        return service.insert(customerModel);
+        return service.save(customerModel);
     }
 }

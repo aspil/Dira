@@ -38,14 +38,9 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
-    public ProjectModel insert(ProjectModel projectModel) {
+    public ProjectModel save(ProjectModel projectModel) {
         Project project = repository.save(new Project(projectModel));
         return new ProjectModel(project);
-    }
-
-    @Override
-    public ProjectModel update(ProjectModel projectModel) {
-        return null;
     }
 
     @Override

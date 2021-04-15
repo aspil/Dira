@@ -9,9 +9,7 @@ public interface IService<TModel, ID> {
 
     TModel findById(ID id);
 
-    TModel insert(TModel model);
-
-    TModel update(TModel model);
+    TModel save(TModel model);
 
     void deleteById(ID id);
 

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseService<TModel, TEntity, ID, TRepo extends JpaRepository<TEntity, ID>> implements IService<TModel, ID> {
@@ -31,21 +32,14 @@ public abstract class BaseService<TModel, TEntity, ID, TRepo extends JpaReposito
     @Override
     public TModel findById(ID id) {
         TEntity entity = repository.findById(id).orElse(null);
-        TModel model = entity != null ? mapper.map(entity, modelType) : null;
-        return model;
+        return entity != null ? mapper.map(entity, modelType) : null;
     }
 
     @Override
-    public TModel insert(TModel model) {
+    public TModel save(TModel model) {
         TEntity entity = mapper.map(model, entityType);
         TEntity saved = repository.save(entity);
-        TModel res = mapper.map(saved, modelType);
-        return res;
-    }
-
-    @Override
-    public TModel update(TModel model) {
-        return null;
+        return mapper.map(saved, modelType);
     }
 
     @Override
@@ -55,10 +49,18 @@ public abstract class BaseService<TModel, TEntity, ID, TRepo extends JpaReposito
 
     @Override
     public void delete(TModel model) {
+        TEntity entity = mapper.map(model, entityType);
+        repository.delete(entity);
     }
 
     @Override
-    public void deleteAll(Iterable<? extends TModel> tModels) {
+    public void deleteAll(Iterable<? extends TModel> models) {
+        List<TEntity> entities = new ArrayList<>();
+        for (TModel model : models) {
+            TEntity entity = mapper.map(model, entityType);
+            entities.add(entity);
+        }
+        repository.deleteAll(entities);
     }
 
     @Override

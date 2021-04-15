@@ -30,6 +30,6 @@ public class ProjectController {
     @PostMapping
     @ResponseBody
     public ProjectModel createProject(@RequestBody ProjectModel project) {
-        return service.insert(project);
+        return service.save(project);
     }
 }

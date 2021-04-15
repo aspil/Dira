@@ -27,12 +27,6 @@ public class CustomerController {
         return service.findById(id);
     }
 
-    @PostMapping("all")
-    @ResponseBody
-    public CustomerModel createUser(@RequestBody CustomerModel user) {
-        return service.insert(user);
-    }
-
     @DeleteMapping("{id}")
     public void deleteUserById(@PathVariable Long id) {
         service.deleteById(id);
