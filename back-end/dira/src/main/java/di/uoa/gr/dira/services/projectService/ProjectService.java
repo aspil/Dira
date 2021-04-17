@@ -2,12 +2,12 @@ package di.uoa.gr.dira.services.projectService;
 
 import di.uoa.gr.dira.entities.Customer;
 import di.uoa.gr.dira.entities.Project;
+import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.models.project.ProjectUsersModel;
 import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
-import di.uoa.gr.dira.services.customerService.ICustomerService;
 import di.uoa.gr.dira.util.MapperHelper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
@@ -26,14 +26,16 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     }
 
     @Override
-    public List<ProjectUsersModel> findUsersByProjectId(Long id) {
+    public ProjectUsersModel findUsersByProjectId(Long id) {
         Project project = repository.findById(id).orElse(null);
 
         if (project != null) {
-            List<ProjectUsersModel> users = new ArrayList<>();
-            MapperHelper.mapList(mapper, project.getCustomers(), new TypeToken<ProjectUsersModel>() {
+            List<CustomerModel> users = MapperHelper.mapList(mapper, project.getCustomers(), new TypeToken<CustomerModel>() {
             }.getType());
-            return users;
+            ProjectUsersModel projectUsers = mapper.map(project, new TypeToken<ProjectUsersModel>() {
+            }.getType());
+            projectUsers.setUsers(users);
+            return projectUsers;
         }
         return null;
     }
