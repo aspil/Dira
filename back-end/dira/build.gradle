@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'application'
+	id 'groovy'
 }
 
 group = 'di.uoa.gr'
@@ -19,10 +20,15 @@ dependencies {
 	implementation 'org.hibernate:hibernate-gradle-plugin:5.4.30.Final'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.0'
-	compileOnly "org.projectlombok:lombok:1.16.16"
+	implementation 'org.codehaus.groovy:groovy:3.0.5'
 	runtimeOnly 'org.postgresql:postgresql'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation('org.spockframework:spock-core:2.0-M3-groovy-3.0')
+	testImplementation('org.spockframework:spock-spring:2.0-M3-groovy-3.0')
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
 }
 
 test {
