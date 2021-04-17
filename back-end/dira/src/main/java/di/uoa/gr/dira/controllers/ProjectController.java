@@ -47,7 +47,7 @@ public class ProjectController {
 
     @GetMapping("{id}/users")
     @ResponseBody
-    public List<ProjectUsersModel> getAllProjectUsers(@PathVariable Long id) {
+    public ProjectUsersModel getAllProjectUsers(@PathVariable Long id) {
         return service.findUsersByProjectId(id);
     }
 
