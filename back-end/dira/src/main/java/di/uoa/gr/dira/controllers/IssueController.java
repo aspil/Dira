@@ -1,6 +1,5 @@
 package di.uoa.gr.dira.controllers;
 
-import di.uoa.gr.dira.entities.Issue;
 import di.uoa.gr.dira.models.issue.IssueModel;
 import di.uoa.gr.dira.models.project.ProjectIssueModel;
 import di.uoa.gr.dira.services.issueService.IssueService;
@@ -24,9 +23,13 @@ public class IssueController {
 
     @PostMapping
     @ResponseBody
-    public IssueModel createIssueWithProjectId(@PathVariable("projectId") Long projectId, @RequestBody IssueModel issueModel) {
-        ProjectIssueModel projectIssueModel = service.createIssueToProject(projectId, issueModel);
-        return projectIssueModel.getIssues().get(issueModel);
+    public void createIssueWithProjectId(@PathVariable("projectId") Long projectId, @RequestBody IssueModel issueModel) {
+        service.createIssueToProject(projectId, issueModel);
+    }
 
+    @GetMapping("{id}")
+    @ResponseBody
+    public IssueModel retrieveIssueWithProjectId(@PathVariable Long issueId) {
+        return service.findIssueWithProjectId(issueId);
     }
 }

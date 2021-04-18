@@ -6,5 +6,6 @@ import di.uoa.gr.dira.services.IService;
 
 public interface IIssueService extends IService<IssueModel, Long> {
     ProjectIssueModel findAllIssuesByProjectId(Long id);
-    ProjectIssueModel createIssueToProject(Long projectId, IssueModel issueModel);
+    void createIssueToProject(Long projectId, IssueModel issueModel);
+    IssueModel findIssueWithProjectId(Long issueId);
 }

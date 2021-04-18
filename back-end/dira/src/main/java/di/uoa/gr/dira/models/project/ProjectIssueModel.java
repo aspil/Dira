@@ -4,7 +4,6 @@ package di.uoa.gr.dira.models.project;
 import di.uoa.gr.dira.models.issue.IssueModel;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 public class ProjectIssueModel {
     private Long id;
