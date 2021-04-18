@@ -9,7 +9,6 @@ import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
 import di.uoa.gr.dira.util.MapperHelper;
-import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,10 +28,8 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         Project project = repository.findById(id).orElse(null);
 
         if (project != null) {
-            List<CustomerModel> users = MapperHelper.mapList(mapper, project.getCustomers(), new TypeToken<CustomerModel>() {
-            }.getType());
-            ProjectUsersModel projectUsers = mapper.map(project, new TypeToken<ProjectUsersModel>() {
-            }.getType());
+            List<CustomerModel> users = MapperHelper.mapList(mapper, project.getCustomers(), CustomerModel.class);
+            ProjectUsersModel projectUsers = mapper.map(project, ProjectUsersModel.class);
             projectUsers.setUsers(users);
             return projectUsers;
         }

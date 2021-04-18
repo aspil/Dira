@@ -8,10 +8,10 @@ import di.uoa.gr.dira.repositories.IssueRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
 import di.uoa.gr.dira.util.MapperHelper;
-import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepository> implements IIssueService {
@@ -28,8 +28,7 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
         Project project = projectRepository.findById(projectId).orElse(null);
 
         if (project != null) {
-            HashMap<IssueModel, IssueModel> issues = MapperHelper.mapList(mapper, project.getIssues(), new TypeToken<IssueModel>() {
-            }.getType());
+            List<IssueModel> issues = MapperHelper.mapList(mapper, project.getIssues(), IssueModel.class);
             ProjectIssueModel projectIssues = mapper.map(project, ProjectIssueModel.class);
             projectIssues.setIssues(issues);
             return projectIssues;
@@ -40,10 +39,8 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
     @Override
     public void createIssueToProject(Long projectId, IssueModel issueModel) {
         Project project = projectRepository.findById(projectId).orElse(null);
-
         //TODO: fix this, maybe we'll need model mapper from model to entity
         if (project != null) {
-
         }
     }
 
