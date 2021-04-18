@@ -3,6 +3,7 @@ package di.uoa.gr.dira.entities;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class SubscriptionPlan {
@@ -44,5 +45,18 @@ public class SubscriptionPlan {
 
     public void setPlan(SubscriptionPlanEnum plan) {
         this.plan = plan;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SubscriptionPlan)) return false;
+        SubscriptionPlan that = (SubscriptionPlan) o;
+        return id.equals(that.id) && plan == that.plan;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, plan);
     }
 }

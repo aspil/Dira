@@ -19,4 +19,11 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
         Customer customer = repository.findByUsername(username).orElse(null);
         return customer != null && PasswordManager.encoder().matches(password, customer.getPassword());
     }
+
+    @Override
+    public CustomerModel findByUsername(String username) {
+        return repository.findByUsername(username)
+                .map(customer -> mapper.<CustomerModel>map(customer, modelType))
+                .orElse(null);
+    }
 }

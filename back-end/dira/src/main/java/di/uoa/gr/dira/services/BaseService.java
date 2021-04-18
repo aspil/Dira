@@ -12,8 +12,8 @@ import java.util.List;
 public abstract class BaseService<TModel, TEntity, ID, TRepo extends JpaRepository<TEntity, ID>> implements IService<TModel, ID> {
     protected final TRepo repository;
     protected final ModelMapper mapper;
-    private final Type modelType;
-    private final Type entityType;
+    protected final Type modelType;
+    protected final Type entityType;
 
     protected BaseService(TRepo repository) {
         Type[] genericClassTypes = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments();
@@ -31,8 +31,9 @@ public abstract class BaseService<TModel, TEntity, ID, TRepo extends JpaReposito
 
     @Override
     public TModel findById(ID id) {
-        TEntity entity = repository.findById(id).orElse(null);
-        return entity != null ? mapper.map(entity, modelType) : null;
+        return repository.findById(id)
+                .map(entity -> mapper.<TModel>map(entity, modelType))
+                .orElse(null);
     }
 
     @Override
