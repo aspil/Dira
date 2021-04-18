@@ -1,6 +1,6 @@
 package di.uoa.gr.dira.services
 
-import di.uoa.gr.dira.entities.Customer
+import di.uoa.gr.dira.entities.customer.Customer
 import di.uoa.gr.dira.models.customer.CustomerModel
 import di.uoa.gr.dira.repositories.CustomerRepository
 import di.uoa.gr.dira.services.customerService.CustomerService

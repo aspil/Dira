@@ -1,7 +1,7 @@
 package di.uoa.gr.dira.services.issueService;
 
-import di.uoa.gr.dira.entities.Issue;
-import di.uoa.gr.dira.entities.Project;
+import di.uoa.gr.dira.entities.issue.Issue;
+import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.models.issue.IssueModel;
 import di.uoa.gr.dira.models.project.ProjectIssueModel;
 import di.uoa.gr.dira.repositories.IssueRepository;
@@ -10,7 +10,6 @@ import di.uoa.gr.dira.services.BaseService;
 import di.uoa.gr.dira.util.MapperHelper;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Service

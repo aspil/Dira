@@ -1,5 +1,6 @@
-package di.uoa.gr.dira.entities;
+package di.uoa.gr.dira.entities.customer;
 
+import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import lombok.Data;
 

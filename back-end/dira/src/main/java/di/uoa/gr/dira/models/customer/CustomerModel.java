@@ -2,7 +2,7 @@ package di.uoa.gr.dira.models.customer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import di.uoa.gr.dira.entities.Customer;
+import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;

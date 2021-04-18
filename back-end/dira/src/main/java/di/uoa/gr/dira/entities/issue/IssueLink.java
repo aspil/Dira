@@ -1,4 +1,4 @@
-package di.uoa.gr.dira.entities;
+package di.uoa.gr.dira.entities.issue;
 
 public class IssueLink {
     long id;

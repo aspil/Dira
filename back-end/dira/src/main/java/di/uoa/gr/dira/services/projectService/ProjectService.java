@@ -1,7 +1,7 @@
 package di.uoa.gr.dira.services.projectService;
 
-import di.uoa.gr.dira.entities.Customer;
-import di.uoa.gr.dira.entities.Project;
+import di.uoa.gr.dira.entities.customer.Customer;
+import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.models.project.ProjectUsersModel;

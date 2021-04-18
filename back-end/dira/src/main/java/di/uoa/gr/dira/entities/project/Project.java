@@ -1,5 +1,7 @@
-package di.uoa.gr.dira.entities;
+package di.uoa.gr.dira.entities.project;
 
+import di.uoa.gr.dira.entities.customer.Customer;
+import di.uoa.gr.dira.entities.issue.Issue;
 import lombok.Data;
 
 import javax.persistence.*;

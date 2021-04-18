@@ -1,4 +1,4 @@
-package di.uoa.gr.dira.entities;
+package di.uoa.gr.dira.entities.project;
 
 public class Permission {
     long id;
