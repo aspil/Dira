@@ -8,7 +8,7 @@ import java.util.Objects;
 @Entity
 public class SubscriptionPlan {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "subscription_plan_id")
     Long id;
 
