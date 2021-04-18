@@ -25,15 +25,13 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
 
     @Override
     public ProjectUsersModel findUsersByProjectId(Long id) {
-        Project project = repository.findById(id).orElse(null);
-
-        if (project != null) {
-            List<CustomerModel> users = MapperHelper.mapList(mapper, project.getCustomers(), CustomerModel.class);
-            ProjectUsersModel projectUsers = mapper.map(project, ProjectUsersModel.class);
-            projectUsers.setUsers(users);
-            return projectUsers;
-        }
-        return null;
+        return repository.findById(id)
+                .map(project -> {
+                    List<CustomerModel> users = MapperHelper.mapList(mapper, project.getCustomers(), CustomerModel.class);
+                    ProjectUsersModel projectUsers = mapper.map(project, ProjectUsersModel.class);
+                    projectUsers.setUsers(users);
+                    return projectUsers;
+                }).orElse(null);
     }
 
     @Override
