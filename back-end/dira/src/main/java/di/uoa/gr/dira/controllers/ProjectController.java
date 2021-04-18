@@ -1,4 +1,4 @@
-package di.uoa.gr.dira.groovy.controllers;
+package di.uoa.gr.dira.controllers;
 
 import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.models.project.ProjectUsersModel;

@@ -5,6 +5,7 @@ import di.uoa.gr.dira.models.customer.CustomerModel
 import di.uoa.gr.dira.groovy.services.customerService.CustomerService
 import di.uoa.gr.dira.repositories.CustomerRepository
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum
+import org.junit.jupiter.api.Test
 import spock.lang.Shared
 import spock.lang.Specification
 

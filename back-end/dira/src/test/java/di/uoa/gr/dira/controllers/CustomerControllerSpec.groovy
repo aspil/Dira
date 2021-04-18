@@ -1,4 +1,4 @@
-package di.uoa.gr.dira.groovy.controllers
+package di.uoa.gr.dira.controllers
 
 import spock.lang.Specification
 

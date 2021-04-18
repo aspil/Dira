@@ -1,4 +1,4 @@
-package di.uoa.gr.dira.groovy.controllers;
+package di.uoa.gr.dira.controllers;
 
 import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.groovy.services.customerService.ICustomerService;
