@@ -22,6 +22,12 @@ dependencies {
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.0'
     runtimeOnly 'org.postgresql:postgresql'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    // mandatory dependencies for using Spock
+    compile "org.codehaus.groovy:groovy:3.0.7"
+    testCompile platform("org.spockframework:spock-bom:2.0-M4-groovy-3.0")
+    testCompile "org.spockframework:spock-core"
+    testCompile "org.spockframework:spock-junit4"
+    // you can remove this if your code does not rely on old JUnit 4 rules
 }
 
 test {

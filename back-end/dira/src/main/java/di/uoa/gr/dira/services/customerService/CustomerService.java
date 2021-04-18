@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CustomerService extends BaseService<CustomerModel, Customer, Long, CustomerRepository> implements ICustomerService {
-    CustomerService(CustomerRepository repository) {
+    public CustomerService(CustomerRepository repository) {
         super(repository);
         CustomerModel.configureMapper(mapper);
     }
