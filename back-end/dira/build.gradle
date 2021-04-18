@@ -1,9 +1,9 @@
 plugins {
-	id 'org.springframework.boot' version '2.4.4'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'java'
-	id 'application'
-	id 'groovy'
+    id 'org.springframework.boot' version '2.4.4'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'application'
+    id 'groovy'
 }
 
 group = 'di.uoa.gr'
@@ -11,28 +11,22 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.hibernate:hibernate-gradle-plugin:5.4.30.Final'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.0'
-	implementation 'org.codehaus.groovy:groovy:3.0.5'
-	runtimeOnly 'org.postgresql:postgresql'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation('org.spockframework:spock-core:2.0-M3-groovy-3.0')
-	testImplementation('org.spockframework:spock-spring:2.0-M3-groovy-3.0')
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.hibernate:hibernate-gradle-plugin:5.4.30.Final'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.0'
+    runtimeOnly 'org.postgresql:postgresql'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 mainClassName = 'di.uoa.gr.dira.DiraApplication'

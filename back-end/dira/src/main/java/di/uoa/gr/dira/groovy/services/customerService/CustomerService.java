@@ -1,10 +1,10 @@
-package di.uoa.gr.dira.services.customerService;
+package di.uoa.gr.dira.groovy.services.customerService;
 
 import di.uoa.gr.dira.entities.Customer;
 import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.security.PasswordManager;
-import di.uoa.gr.dira.services.BaseService;
+import di.uoa.gr.dira.groovy.services.BaseService;
 import org.springframework.stereotype.Service;
 
 @Service

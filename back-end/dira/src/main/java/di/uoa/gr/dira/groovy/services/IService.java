@@ -1,4 +1,4 @@
-package di.uoa.gr.dira.services;
+package di.uoa.gr.dira.groovy.services;
 
 
 import java.util.List;

@@ -1,9 +1,8 @@
-package di.uoa.gr.dira.controllers;
+package di.uoa.gr.dira.groovy.controllers;
 
 import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.models.project.ProjectUsersModel;
-import di.uoa.gr.dira.services.projectService.IProjectService;
-import org.springframework.stereotype.Repository;
+import di.uoa.gr.dira.groovy.services.projectService.IProjectService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
