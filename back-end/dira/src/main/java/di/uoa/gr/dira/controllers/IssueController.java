@@ -29,7 +29,7 @@ public class IssueController {
 
     @GetMapping("{id}")
     @ResponseBody
-    public IssueModel retrieveIssueWithProjectId(@PathVariable Long issueId) {
-        return service.findIssueWithProjectId(issueId);
+    public IssueModel retrieveIssueWithProjectId(@PathVariable Long id) {
+        return service.findIssueWithProjectId(id);
     }
 }
