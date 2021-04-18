@@ -2,6 +2,7 @@ package di.uoa.gr.dira.entities;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 public class Issue {
@@ -206,5 +207,18 @@ public class Issue {
 
     public void setResolved(boolean resolved) {
         this.resolved = resolved;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Issue issue = (Issue) obj;
+        return Objects.equals(id, issue.id) && Objects.equals(project, issue.project);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, project);
     }
 }

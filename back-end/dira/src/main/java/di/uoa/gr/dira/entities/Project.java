@@ -1,8 +1,8 @@
 package di.uoa.gr.dira.entities;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 public class Project {
@@ -28,7 +28,7 @@ public class Project {
 
     @OneToMany
     @JoinColumn(name = "issue_id")
-    private Set<Issue> issues;
+    private HashMap<Issue, Issue> issues;
 
 
     public Project() {
@@ -78,11 +78,11 @@ public class Project {
         this.customers = customers;
     }
 
-    public Set<Issue> getIssues() {
+    public HashMap<Issue, Issue> getIssues() {
         return issues;
     }
 
-    public void setIssues(Set<Issue> issues) {
+    public void setIssues(HashMap<Issue, Issue> issues) {
         this.issues = issues;
     }
 }

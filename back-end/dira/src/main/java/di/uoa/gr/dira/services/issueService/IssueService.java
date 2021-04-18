@@ -11,7 +11,7 @@ import di.uoa.gr.dira.util.MapperHelper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.HashMap;
 
 @Service
 public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepository> implements IIssueService {
@@ -24,17 +24,31 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
     }
 
     @Override
-    public ProjectIssueModel findAllIssuesByProjectId(Long id) {
-        Project project = projectRepository.findById(id).orElse(null);
+    public ProjectIssueModel findAllIssuesByProjectId(Long projectId) {
+        Project project = projectRepository.findById(projectId).orElse(null);
 
         if (project != null) {
-            Set<IssueModel> issues = MapperHelper.mapList(mapper, project.getIssues(), new TypeToken<IssueModel>() {
+            HashMap<IssueModel, IssueModel> issues = MapperHelper.mapList(mapper, project.getIssues(), new TypeToken<IssueModel>() {
             }.getType());
             ProjectIssueModel projectIssues = mapper.map(project, ProjectIssueModel.class);
             projectIssues.setIssues(issues);
             return projectIssues;
         }
         return null;
+    }
+
+    @Override
+    public ProjectIssueModel createIssueToProject(Long projectId, IssueModel issueModel) {
+        Project project = projectRepository.findById(projectId).orElse(null);
+
+        if (project != null) {
+            HashMap<IssueModel, IssueModel> issues = MapperHelper.mapList(mapper, project.getIssues(), new TypeToken<IssueModel>() {
+            }.getType());
+            issues.put(issueModel, issueModel);
+            ProjectIssueModel projectIssues = mapper.map(project, ProjectIssueModel.class);
+            projectIssues.setIssues(issues);
+            return projectIssues;
+        }
     }
 
 }

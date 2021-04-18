@@ -1,6 +1,8 @@
 package di.uoa.gr.dira.models.issue;
 
 
+import java.util.Objects;
+
 public class IssueModel {
     private Long id;
     private String key;
@@ -28,5 +30,18 @@ public class IssueModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        IssueModel that = (IssueModel) obj;
+        return Objects.equals(id, that.id) && Objects.equals(key, that.key) && Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, key, name);
     }
 }

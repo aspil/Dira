@@ -3,12 +3,13 @@ package di.uoa.gr.dira.models.project;
 
 import di.uoa.gr.dira.models.issue.IssueModel;
 
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Objects;
 
 public class ProjectIssueModel {
     private Long id;
     private String name;
-    Set<IssueModel> issues;
+    HashMap<IssueModel, IssueModel> issues;
 
     public Long getId() {
         return id;
@@ -26,11 +27,12 @@ public class ProjectIssueModel {
         this.name = name;
     }
 
-    public Set<IssueModel> getIssues() {
+    public HashMap<IssueModel, IssueModel> getIssues() {
         return issues;
     }
 
-    public void setIssues(Set<IssueModel> issues) {
+    public void setIssues(HashMap<IssueModel, IssueModel> issues) {
         this.issues = issues;
     }
+
 }
