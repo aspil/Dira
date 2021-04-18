@@ -1,9 +1,12 @@
 package di.uoa.gr.dira.entities;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Data
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,60 +31,4 @@ public class Project {
     @OneToMany
     @JoinColumn(name = "issue_id")
     private List<Issue> issues;
-
-
-    public Project() {
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public List<Customer> getCustomers() {
-        return customers;
-    }
-
-    public void setCustomers(List<Customer> customers) {
-        this.customers = customers;
-    }
-
-    public List<Issue> getIssues() {
-        return issues;
-    }
-
-    public void setIssues(List<Issue> issues) {
-        this.issues = issues;
-    }
 }
