@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("project")
+@RequestMapping("projects")
 public class ProjectController {
     private final IProjectService service;
 
@@ -16,19 +16,19 @@ public class ProjectController {
         this.service = service;
     }
 
-    @GetMapping("all")
+    @GetMapping
     @ResponseBody
     public List<ProjectModel> getAllProjects() {
         return service.findAll();
     }
 
-    @PostMapping("all")
+    @PostMapping
     @ResponseBody
     public ProjectModel createProject(@RequestBody ProjectModel project) {
         return service.save(project);
     }
 
-    @DeleteMapping("all")
+    @DeleteMapping
     public void deleteAllProjects() {
         service.deleteAll();
     }

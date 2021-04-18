@@ -1,0 +1,40 @@
+package di.uoa.gr.dira.services.issueService;
+
+import di.uoa.gr.dira.entities.Issue;
+import di.uoa.gr.dira.entities.Project;
+import di.uoa.gr.dira.models.issue.IssueModel;
+import di.uoa.gr.dira.models.project.ProjectIssueModel;
+import di.uoa.gr.dira.repositories.IssueRepository;
+import di.uoa.gr.dira.repositories.ProjectRepository;
+import di.uoa.gr.dira.services.BaseService;
+import di.uoa.gr.dira.util.MapperHelper;
+import org.modelmapper.TypeToken;
+import org.springframework.stereotype.Service;
+
+import java.util.Set;
+
+@Service
+public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepository> implements IIssueService {
+
+    ProjectRepository projectRepository;
+
+    IssueService(IssueRepository repository, ProjectRepository projectRepository) {
+        super(repository);
+        this.projectRepository = projectRepository;
+    }
+
+    @Override
+    public ProjectIssueModel findAllIssuesByProjectId(Long id) {
+        Project project = projectRepository.findById(id).orElse(null);
+
+        if (project != null) {
+            Set<IssueModel> issues = MapperHelper.mapList(mapper, project.getIssues(), new TypeToken<IssueModel>() {
+            }.getType());
+            ProjectIssueModel projectIssues = mapper.map(project, ProjectIssueModel.class);
+            projectIssues.setIssues(issues);
+            return projectIssues;
+        }
+        return null;
+    }
+
+}

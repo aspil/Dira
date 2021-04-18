@@ -8,7 +8,11 @@ public class Issue {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "issue_id")
-    private long id;
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     private long epicId;
     private long typeId;

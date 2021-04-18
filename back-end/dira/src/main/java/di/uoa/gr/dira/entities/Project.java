@@ -2,28 +2,34 @@ package di.uoa.gr.dira.entities;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "project_id")
-    Long id;
+    private Long id;
 
     @Column(nullable = false, length = 15)
-    String key;
+    private String key;
 
     @Column(nullable = false)
-    String name;
+    private String name;
 
-    String description;
+    private String description;
 
     @ManyToMany
     @JoinTable(name = "project_customer",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "customer_id")
     )
-    List<Customer> customers;
+    private List<Customer> customers;
+
+    @OneToMany
+    @JoinColumn(name = "issue_id")
+    private Set<Issue> issues;
+
 
     public Project() {
     }
@@ -70,5 +76,13 @@ public class Project {
 
     public void setCustomers(List<Customer> customers) {
         this.customers = customers;
+    }
+
+    public Set<Issue> getIssues() {
+        return issues;
+    }
+
+    public void setIssues(Set<Issue> issues) {
+        this.issues = issues;
     }
 }
