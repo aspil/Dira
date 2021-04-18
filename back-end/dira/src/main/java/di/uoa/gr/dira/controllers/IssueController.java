@@ -17,13 +17,13 @@ public class IssueController {
 
     @GetMapping
     @ResponseBody
-    public ProjectIssueModel getAllIssuesWithProjectId(@PathVariable("projectId") Long projectId) {
+    public ProjectIssueModel getAllIssuesWithProjectId(@PathVariable Long projectId) {
         return service.findAllIssuesByProjectId(projectId);
     }
 
     @PostMapping
     @ResponseBody
-    public void createIssueWithProjectId(@PathVariable("projectId") Long projectId, @RequestBody IssueModel issueModel) {
+    public void createIssueWithProjectId(@PathVariable Long projectId, @RequestBody IssueModel issueModel) {
         service.createIssueToProject(projectId, issueModel);
     }
 
