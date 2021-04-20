@@ -19,7 +19,7 @@ then
 
     # Step 3: Install PostgreSQL
 
-    yes | sudo apt-get install postgresql postgresql-contrib
+    sudo apt-get -y install postgresql postgresql-contrib
 
 fi
 
