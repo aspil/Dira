@@ -16,8 +16,9 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
 
     @Override
     public boolean authenticateUser(String username, String password) {
-        Customer customer = repository.findByUsername(username).orElse(null);
-        return customer != null && PasswordManager.encoder().matches(password, customer.getPassword());
+        return repository.findByUsername(username)
+                .map(customer -> PasswordManager.encoder().matches(password, customer.getPassword()))
+                .orElse(false);
     }
 
     @Override
