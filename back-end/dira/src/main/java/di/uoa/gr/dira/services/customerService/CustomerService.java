@@ -5,6 +5,7 @@ import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.security.PasswordManager;
 import di.uoa.gr.dira.services.BaseService;
+import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -25,5 +26,12 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
         return repository.findByUsername(username)
                 .map(customer -> mapper.<CustomerModel>map(customer, modelType))
                 .orElse(null);
+    }
+
+    @Override
+    public void updatePlan(Long customerId) {
+        Customer customer = repository.findById(customerId).orElse(null);
+        customer.setSubscriptionPlanFromEnum(SubscriptionPlanEnum.PREMIUM);
+        repository.save(customer);
     }
 }
