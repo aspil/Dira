@@ -24,7 +24,7 @@ public class IssueController {
 
     @PostMapping
     public void createIssueWithProjectId(@PathVariable Long projectId, @RequestBody IssueModel issueModel) {
-        service.createIssueToProject(projectId, issueModel);
+        service.createIssueWithProjectId(projectId, issueModel);
     }
 
     @GetMapping("{id}")

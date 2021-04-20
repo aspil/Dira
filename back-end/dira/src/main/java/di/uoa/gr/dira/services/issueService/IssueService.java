@@ -24,19 +24,14 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
 
     @Override
     public ProjectIssuesModel findAllIssuesByProjectId(Long projectId) {
-        Project project = projectRepository.findById(projectId).orElse(null);
-
-        if (project != null) {
-            List<IssueModel> issues = MapperHelper.mapList(mapper, project.getIssues(), IssueModel.class);
-            ProjectIssuesModel projectIssues = mapper.map(project, ProjectIssuesModel.class);
-            projectIssues.setIssues(issues);
-            return projectIssues;
-        }
-        return null;
+        return projectRepository.findById(projectId)
+                .map(project -> mapper.map(project, ProjectIssuesModel.class))
+                .orElse(null);
     }
 
     @Override
-    public void createIssueToProject(Long projectId, IssueModel issueModel) {
+    public void createIssueWithProjectId(Long projectId, IssueModel issueModel) {
+        IssueModel saved = super.save(issueModel);
         Project project = projectRepository.findById(projectId).orElse(null);
         //TODO: fix this, maybe we'll need model mapper from model to entity
         if (project != null) {
