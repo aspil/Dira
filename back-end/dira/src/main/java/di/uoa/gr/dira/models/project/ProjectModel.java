@@ -2,10 +2,27 @@ package di.uoa.gr.dira.models.project;
 
 import di.uoa.gr.dira.models.IModel;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class ProjectModel implements IModel<Long> {
+    @NotNull
     private Long id;
+
+    @NotNull
+    @NotEmpty
+    @NotBlank
+    @Size(min = 1, max = 15)
     private String key;
+
+    @NotNull
+    @NotEmpty
+    @NotBlank
+    @Size(min = 1, max = 255)
     private String name;
+
     private String description;
 
     public ProjectModel() {

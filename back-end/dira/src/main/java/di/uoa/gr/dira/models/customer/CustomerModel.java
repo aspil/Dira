@@ -5,14 +5,44 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import di.uoa.gr.dira.models.IModel;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 
+import javax.validation.constraints.*;
+
 public class CustomerModel implements IModel<Long> {
+    @NotNull
     private Long id;
+
+    @NotNull
+    @NotEmpty
+    @NotBlank
+    @Size(min = 1, max = 50)
     private String username;
+
+    @NotNull
+    @NotEmpty
+    @NotBlank
+    @Size(min = 1, max = 50)
     private String name;
+
+    @NotNull
+    @NotEmpty
+    @NotBlank
+    @Size(min = 1, max = 50)
     private String surname;
+
+    @NotNull
+    @NotEmpty
+    @NotBlank
+    @Email
     private String email;
+
     @JsonIgnore
+    @NotNull
+    @NotEmpty
+    @NotBlank
+    @Size(min = 8)
     private String password;
+
+    @NotNull
     private SubscriptionPlanEnum subscriptionPlan;
 
     public CustomerModel() {

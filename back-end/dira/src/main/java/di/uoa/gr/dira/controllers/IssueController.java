@@ -1,7 +1,7 @@
 package di.uoa.gr.dira.controllers;
 
 import di.uoa.gr.dira.models.issue.IssueModel;
-import di.uoa.gr.dira.models.project.ProjectIssueModel;
+import di.uoa.gr.dira.models.project.ProjectIssuesModel;
 import di.uoa.gr.dira.services.issueService.IssueService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +16,7 @@ public class IssueController {
     }
 
     @GetMapping
-    public ProjectIssueModel getAllIssuesWithProjectId(@PathVariable Long projectId) {
+    public ProjectIssuesModel getAllIssuesWithProjectId(@PathVariable Long projectId) {
         return service.findAllIssuesByProjectId(projectId);
     }
 
