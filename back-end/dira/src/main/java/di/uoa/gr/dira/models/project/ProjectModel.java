@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class ProjectModel implements IModel<Long> {
-    @NotNull
     private Long id;
 
     @NotNull

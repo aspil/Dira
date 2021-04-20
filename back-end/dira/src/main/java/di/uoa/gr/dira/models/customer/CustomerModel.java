@@ -1,14 +1,15 @@
 package di.uoa.gr.dira.models.customer;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import di.uoa.gr.dira.models.IModel;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
 
+//@Data
+//@NoArgsConstructor
 public class CustomerModel implements IModel<Long> {
-    @NotNull
     private Long id;
 
     @NotNull
@@ -35,7 +36,6 @@ public class CustomerModel implements IModel<Long> {
     @Email
     private String email;
 
-    @JsonIgnore
     @NotNull
     @NotEmpty
     @NotBlank
@@ -48,6 +48,7 @@ public class CustomerModel implements IModel<Long> {
     public CustomerModel() {
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -88,12 +89,10 @@ public class CustomerModel implements IModel<Long> {
         this.email = email;
     }
 
-    @JsonIgnore
     public String getPassword() {
         return password;
     }
 
-    @JsonProperty
     public void setPassword(String password) {
         this.password = password;
     }

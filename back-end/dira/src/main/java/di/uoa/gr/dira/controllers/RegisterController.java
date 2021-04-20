@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 
 @RestController
 @Validated
@@ -18,7 +20,7 @@ public class RegisterController {
     }
 
     @PostMapping("register")
-    public CustomerModel registerCostumer(@RequestBody CustomerModel customerModel) {
+    public @Valid CustomerModel registerCostumer(@RequestBody @Valid CustomerModel customerModel) {
         return service.save(customerModel);
     }
 }

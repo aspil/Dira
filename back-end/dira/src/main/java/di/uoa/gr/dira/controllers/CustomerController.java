@@ -5,6 +5,7 @@ import di.uoa.gr.dira.services.customerService.ICustomerService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,7 +19,7 @@ public class CustomerController {
     }
 
     @GetMapping
-    public List<CustomerModel> getAllCustomers() {
+    public List<@Valid CustomerModel> getAllCustomers() {
         return service.findAll();
     }
 
@@ -28,7 +29,7 @@ public class CustomerController {
     }
 
     @GetMapping("{id}")
-    public CustomerModel getCustomerById(@PathVariable Long id) {
+    public @Valid CustomerModel getCustomerById(@PathVariable Long id) {
         return service.findById(id);
     }
 

@@ -1,6 +1,7 @@
 package di.uoa.gr.dira.entities.customer;
 
 import di.uoa.gr.dira.entities.project.Project;
+import di.uoa.gr.dira.security.PasswordManager;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import lombok.Data;
 
@@ -51,5 +52,9 @@ public class Customer {
                 this.subscriptionPlan = SubscriptionPlan.STANDARD;
                 break;
         }
+    }
+
+    public void setFromRawPassword(String rawPassword) {
+        this.password = PasswordManager.encoder().encode(rawPassword);
     }
 }

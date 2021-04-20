@@ -7,11 +7,8 @@ import di.uoa.gr.dira.models.project.ProjectIssuesModel;
 import di.uoa.gr.dira.repositories.IssueRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
-import di.uoa.gr.dira.util.mapper.MapperHelper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepository> implements IIssueService {

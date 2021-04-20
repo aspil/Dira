@@ -12,6 +12,7 @@ public class CustomerModelMapConfiguration implements IMapConfiguration {
     @Override
     public void configure(ModelMapper mapper) {
         TypeMap<CustomerModel, Customer> typeMap = mapper.createTypeMap(CustomerModel.class, Customer.class);
+        typeMap.addMappings(m -> m.map(CustomerModel::getPassword, Customer::setFromRawPassword));
         typeMap.addMappings(m -> m.map(CustomerModel::getSubscriptionPlan, Customer::setSubscriptionPlanFromEnum));
     }
 }
