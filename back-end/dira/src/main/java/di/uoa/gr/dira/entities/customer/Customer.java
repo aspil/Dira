@@ -54,6 +54,12 @@ public class Customer {
         }
     }
 
+    /**
+     * Sets the password of the entity from the raw password
+     * by using the `PasswordManager`
+     *
+     * @param rawPassword The raw password
+     */
     public void setFromRawPassword(String rawPassword) {
         this.password = PasswordManager.encoder().encode(rawPassword);
     }
