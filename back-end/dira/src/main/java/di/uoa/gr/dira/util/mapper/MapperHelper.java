@@ -1,4 +1,4 @@
-package di.uoa.gr.dira.util;
+package di.uoa.gr.dira.util.mapper;
 
 import org.modelmapper.ModelMapper;
 

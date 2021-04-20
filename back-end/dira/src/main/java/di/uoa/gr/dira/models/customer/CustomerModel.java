@@ -2,27 +2,20 @@ package di.uoa.gr.dira.models.customer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
+import org.springframework.stereotype.Component;
 
 public class CustomerModel {
-    Long id;
-    String username;
-    String name;
-    String surname;
-    String email;
+    private Long id;
+    private String username;
+    private String name;
+    private String surname;
+    private String email;
     @JsonIgnore
-    String password;
-    SubscriptionPlanEnum subscriptionPlan;
+    private String password;
+    private SubscriptionPlanEnum subscriptionPlan;
 
     public CustomerModel() {
-    }
-
-    public static void configureMapper(ModelMapper mapper) {
-        TypeMap<CustomerModel, Customer> typeMap = mapper.createTypeMap(CustomerModel.class, Customer.class);
-        typeMap.addMappings(m -> m.map(CustomerModel::getSubscriptionPlan, Customer::setSubscriptionPlanFromEnum));
     }
 
     public Long getId() {

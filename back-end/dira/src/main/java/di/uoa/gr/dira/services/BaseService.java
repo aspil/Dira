@@ -1,6 +1,6 @@
 package di.uoa.gr.dira.services;
 
-import di.uoa.gr.dira.util.MapperHelper;
+import di.uoa.gr.dira.util.mapper.MapperHelper;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,10 +15,10 @@ public abstract class BaseService<TModel, TEntity, ID, TRepo extends JpaReposito
     protected final Type modelType;
     protected final Type entityType;
 
-    protected BaseService(TRepo repository) {
+    protected BaseService(TRepo repository, ModelMapper mapper) {
         Type[] genericClassTypes = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments();
         this.repository = repository;
-        this.mapper = new ModelMapper();
+        this.mapper = mapper;
         this.modelType = genericClassTypes[0];
         this.entityType = genericClassTypes[1];
     }

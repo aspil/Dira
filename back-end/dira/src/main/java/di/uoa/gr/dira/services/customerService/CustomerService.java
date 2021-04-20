@@ -5,13 +5,13 @@ import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.security.PasswordManager;
 import di.uoa.gr.dira.services.BaseService;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CustomerService extends BaseService<CustomerModel, Customer, Long, CustomerRepository> implements ICustomerService {
-    public CustomerService(CustomerRepository repository) {
-        super(repository);
-        CustomerModel.configureMapper(mapper);
+    public CustomerService(CustomerRepository repository, ModelMapper mapper) {
+        super(repository, mapper);
     }
 
     @Override

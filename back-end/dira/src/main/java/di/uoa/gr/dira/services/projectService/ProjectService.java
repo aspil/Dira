@@ -2,36 +2,27 @@ package di.uoa.gr.dira.services.projectService;
 
 import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.entities.project.Project;
-import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.models.project.ProjectUsersModel;
 import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
-import di.uoa.gr.dira.util.MapperHelper;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @Service
 public class ProjectService extends BaseService<ProjectModel, Project, Long, ProjectRepository> implements IProjectService {
     CustomerRepository customerRepository;
 
-    ProjectService(ProjectRepository repository, CustomerRepository customerRepository) {
-        super(repository);
+    ProjectService(ProjectRepository repository, CustomerRepository customerRepository, ModelMapper mapper) {
+        super(repository, mapper);
         this.customerRepository = customerRepository;
     }
 
     @Override
     public ProjectUsersModel findUsersByProjectId(Long id) {
-        return repository.findById(id)
-                .map(project -> {
-                    List<CustomerModel> users = MapperHelper.mapList(mapper, project.getCustomers(), CustomerModel.class);
-                    ProjectUsersModel projectUsers = mapper.map(project, ProjectUsersModel.class);
-                    projectUsers.setUsers(users);
-                    return projectUsers;
-                }).orElse(null);
+        return repository.findById(id).map(project -> mapper.map(project, ProjectUsersModel.class)).orElse(null);
     }
 
     @Override

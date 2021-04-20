@@ -1,10 +1,10 @@
 package di.uoa.gr.dira.models.project;
 
 public class ProjectModel {
-    Long id;
-    String key;
-    String name;
-    String description;
+    private Long id;
+    private String key;
+    private String name;
+    private String description;
 
     public ProjectModel() {
     }

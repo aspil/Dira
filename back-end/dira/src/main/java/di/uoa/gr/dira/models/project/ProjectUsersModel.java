@@ -5,9 +5,9 @@ import di.uoa.gr.dira.models.customer.CustomerModel;
 import java.util.List;
 
 public class ProjectUsersModel {
-    Long id;
-    String key;
-    List<CustomerModel> users;
+    private Long id;
+    private String key;
+    private List<CustomerModel> users;
 
     public Long getId() {
         return id;
