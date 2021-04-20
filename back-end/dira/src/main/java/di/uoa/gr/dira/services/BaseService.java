@@ -41,8 +41,7 @@ public abstract class BaseService<TModel extends IModel<ID>, TEntity, ID, TRepo 
     public TModel save(TModel model) {
         TEntity entity = mapper.map(model, entityType);
         TEntity saved = repository.save(entity);
-        TModel newModel = mapper.map(saved, modelType);
-        return newModel;
+        return mapper.map(saved, modelType);
     }
 
     @Override

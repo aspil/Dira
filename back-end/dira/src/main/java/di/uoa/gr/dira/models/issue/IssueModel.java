@@ -2,48 +2,27 @@ package di.uoa.gr.dira.models.issue;
 
 
 import di.uoa.gr.dira.models.IModel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Objects;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+@Data
+@NoArgsConstructor
 public class IssueModel implements IModel<Long> {
     private Long id;
+    @NotNull
+    @NotBlank
+    @NotEmpty
+    @Size(min = 1, max = 255)
     private String key;
+
+    @NotNull
+    @NotBlank
+    @NotEmpty
+    @Size(min = 1)
     private String name;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        IssueModel that = (IssueModel) obj;
-        return Objects.equals(id, that.id) && Objects.equals(key, that.key) && Objects.equals(name, that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, key, name);
-    }
 }
