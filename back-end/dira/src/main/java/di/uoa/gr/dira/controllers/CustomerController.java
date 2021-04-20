@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("users")
 public class CustomerController {
     private final ICustomerService service;
 
@@ -15,19 +15,17 @@ public class CustomerController {
         this.service = service;
     }
 
-    @GetMapping("all")
-    @ResponseBody
+    @GetMapping
     public List<CustomerModel> getAllCustomers() {
         return service.findAll();
     }
 
-    @DeleteMapping("all")
+    @DeleteMapping
     public void deleteAllCustomers() {
         service.deleteAll();
     }
 
     @GetMapping("{id}")
-    @ResponseBody
     public CustomerModel getCustomerById(@PathVariable Long id) {
         return service.findById(id);
     }

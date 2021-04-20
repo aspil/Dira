@@ -17,13 +17,11 @@ public class ProjectController {
     }
 
     @GetMapping
-    @ResponseBody
     public List<ProjectModel> getAllProjects() {
         return service.findAll();
     }
 
     @PostMapping
-    @ResponseBody
     public ProjectModel createProject(@RequestBody ProjectModel project) {
         return service.save(project);
     }
@@ -34,7 +32,6 @@ public class ProjectController {
     }
 
     @GetMapping("{id}")
-    @ResponseBody
     public ProjectModel getProjectById(@PathVariable Long id) {
         return service.findById(id);
     }
@@ -45,7 +42,6 @@ public class ProjectController {
     }
 
     @GetMapping("{id}/users")
-    @ResponseBody
     public ProjectUsersModel getAllProjectUsers(@PathVariable Long id) {
         return service.findUsersByProjectId(id);
     }

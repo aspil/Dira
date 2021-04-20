@@ -16,19 +16,16 @@ public class IssueController {
     }
 
     @GetMapping
-    @ResponseBody
     public ProjectIssueModel getAllIssuesWithProjectId(@PathVariable Long projectId) {
         return service.findAllIssuesByProjectId(projectId);
     }
 
     @PostMapping
-    @ResponseBody
     public void createIssueWithProjectId(@PathVariable Long projectId, @RequestBody IssueModel issueModel) {
         service.createIssueToProject(projectId, issueModel);
     }
 
     @GetMapping("{id}")
-    @ResponseBody
     public IssueModel retrieveIssueWithProjectId(@PathVariable Long id) {
         return service.findIssueWithProjectId(id);
     }
