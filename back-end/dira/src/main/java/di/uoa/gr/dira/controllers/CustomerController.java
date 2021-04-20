@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController
 @Validated
+@RestController
 @RequestMapping("users")
 public class CustomerController {
     private final ICustomerService service;
@@ -45,7 +45,7 @@ public class CustomerController {
     }
 
     @GetMapping("{id}/projects")
-    public List<ProjectModel> getCustomerProjects(@PathVariable Long id) {
+    public List<@Valid ProjectModel> getCustomerProjects(@PathVariable Long id) {
         return service.getAllProjects(id);
     }
 }

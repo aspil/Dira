@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+import javax.validation.Valid;
+
 @Validated
+@RestController
 public class LoginController {
     private final ICustomerService service;
 
@@ -17,7 +19,7 @@ public class LoginController {
     }
 
     @PostMapping("login")
-    public boolean login(@RequestBody CustomerLoginModel customerLoginModel) {
+    public boolean login(@Valid @RequestBody CustomerLoginModel customerLoginModel) {
         return service.authenticateUser(customerLoginModel.getUsername(), customerLoginModel.getPassword());
     }
 }

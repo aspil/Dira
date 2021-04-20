@@ -6,10 +6,11 @@ import di.uoa.gr.dira.services.projectService.IProjectService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
-@RestController
 @Validated
+@RestController
 @RequestMapping("projects")
 public class ProjectController {
     private final IProjectService service;
@@ -19,12 +20,13 @@ public class ProjectController {
     }
 
     @GetMapping
-    public List<ProjectModel> getAllProjects() {
+    public List<@Valid ProjectModel> getAllProjects() {
         return service.findAll();
     }
 
     @PostMapping
-    public ProjectModel createProject(@RequestBody ProjectModel project) {
+    public @Valid
+    ProjectModel createProject(@Valid @RequestBody ProjectModel project) {
         return service.save(project);
     }
 
@@ -34,7 +36,8 @@ public class ProjectController {
     }
 
     @GetMapping("{id}")
-    public ProjectModel getProjectById(@PathVariable Long id) {
+    public @Valid
+    ProjectModel getProjectById(@PathVariable Long id) {
         return service.findById(id);
     }
 
@@ -44,7 +47,8 @@ public class ProjectController {
     }
 
     @GetMapping("{id}/users")
-    public ProjectUsersModel getAllProjectUsers(@PathVariable Long id) {
+    public @Valid
+    ProjectUsersModel getAllProjectUsers(@PathVariable Long id) {
         return service.findUsersByProjectId(id);
     }
 
