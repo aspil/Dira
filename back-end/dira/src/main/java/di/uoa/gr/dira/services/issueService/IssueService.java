@@ -3,7 +3,7 @@ package di.uoa.gr.dira.services.issueService;
 import di.uoa.gr.dira.entities.issue.Issue;
 import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.models.issue.IssueModel;
-import di.uoa.gr.dira.models.project.ProjectIssueModel;
+import di.uoa.gr.dira.models.project.ProjectIssuesModel;
 import di.uoa.gr.dira.repositories.IssueRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
@@ -23,12 +23,12 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
     }
 
     @Override
-    public ProjectIssueModel findAllIssuesByProjectId(Long projectId) {
+    public ProjectIssuesModel findAllIssuesByProjectId(Long projectId) {
         Project project = projectRepository.findById(projectId).orElse(null);
 
         if (project != null) {
             List<IssueModel> issues = MapperHelper.mapList(mapper, project.getIssues(), IssueModel.class);
-            ProjectIssueModel projectIssues = mapper.map(project, ProjectIssueModel.class);
+            ProjectIssuesModel projectIssues = mapper.map(project, ProjectIssuesModel.class);
             projectIssues.setIssues(issues);
             return projectIssues;
         }

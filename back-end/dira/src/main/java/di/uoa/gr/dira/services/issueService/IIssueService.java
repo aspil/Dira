@@ -1,11 +1,11 @@
 package di.uoa.gr.dira.services.issueService;
 
 import di.uoa.gr.dira.models.issue.IssueModel;
-import di.uoa.gr.dira.models.project.ProjectIssueModel;
+import di.uoa.gr.dira.models.project.ProjectIssuesModel;
 import di.uoa.gr.dira.services.IService;
 
 public interface IIssueService extends IService<IssueModel, Long> {
-    ProjectIssueModel findAllIssuesByProjectId(Long id);
+    ProjectIssuesModel findAllIssuesByProjectId(Long id);
     void createIssueToProject(Long projectId, IssueModel issueModel);
     IssueModel findIssueWithProjectId(Long issueId);
 }

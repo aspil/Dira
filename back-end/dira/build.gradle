@@ -20,6 +20,8 @@ dependencies {
     implementation 'org.hibernate:hibernate-gradle-plugin:5.4.30.Final'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.0'
+    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+
     runtimeOnly 'org.postgresql:postgresql'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     // mandatory dependencies for using Spock

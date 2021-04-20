@@ -2,11 +2,13 @@ package di.uoa.gr.dira.controllers;
 
 import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.services.customerService.ICustomerService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping("users")
 public class CustomerController {
     private final ICustomerService service;

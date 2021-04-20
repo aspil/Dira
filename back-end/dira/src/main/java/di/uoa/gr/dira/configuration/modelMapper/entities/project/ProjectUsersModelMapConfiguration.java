@@ -14,7 +14,7 @@ public class ProjectUsersModelMapConfiguration implements IMapConfiguration {
     @Override
     public void configure(ModelMapper mapper) {
         TypeMap<Project, ProjectUsersModel> typeMap = mapper.createTypeMap(Project.class, ProjectUsersModel.class);
-        typeMap.addMappings(m -> m.using(ListConverter.withMapper(mapper, CustomerModel.class))
+        typeMap.addMappings(mapping -> mapping.using(ListConverter.withMapper(mapper, CustomerModel.class))
                 .map(Project::getCustomers, ProjectUsersModel::setUsers)
         );
     }
