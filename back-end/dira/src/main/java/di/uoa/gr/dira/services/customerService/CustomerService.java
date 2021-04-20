@@ -32,7 +32,9 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
     @Override
     public void updatePlan(Long customerId) {
         Customer customer = repository.findById(customerId).orElse(null);
-        customer.setSubscriptionPlanFromEnum(SubscriptionPlanEnum.PREMIUM);
-        repository.save(customer);
+        if (customer != null) {
+            customer.setSubscriptionPlanFromEnum(SubscriptionPlanEnum.PREMIUM);
+            repository.save(customer);
+        }
     }
 }
