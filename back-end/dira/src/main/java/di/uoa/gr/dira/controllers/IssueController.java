@@ -3,10 +3,12 @@ package di.uoa.gr.dira.controllers;
 import di.uoa.gr.dira.models.issue.IssueModel;
 import di.uoa.gr.dira.models.project.ProjectIssuesModel;
 import di.uoa.gr.dira.services.issueService.IssueService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@Validated
 @RequestMapping("projects/{projectId}/issues")
 public class IssueController {
     private final IssueService service;
