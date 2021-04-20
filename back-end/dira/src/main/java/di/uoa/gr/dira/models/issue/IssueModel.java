@@ -1,9 +1,11 @@
 package di.uoa.gr.dira.models.issue;
 
 
+import di.uoa.gr.dira.models.IModel;
+
 import java.util.Objects;
 
-public class IssueModel {
+public class IssueModel implements IModel<Long> {
     private Long id;
     private String key;
     private String name;

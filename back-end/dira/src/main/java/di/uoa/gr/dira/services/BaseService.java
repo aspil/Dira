@@ -1,5 +1,6 @@
 package di.uoa.gr.dira.services;
 
+import di.uoa.gr.dira.models.IModel;
 import di.uoa.gr.dira.util.mapper.MapperHelper;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,7 +10,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseService<TModel, TEntity, ID, TRepo extends JpaRepository<TEntity, ID>> implements IService<TModel, ID> {
+public abstract class BaseService<TModel extends IModel<ID>, TEntity, ID, TRepo extends JpaRepository<TEntity, ID>> implements IService<TModel, ID> {
     protected final TRepo repository;
     protected final ModelMapper mapper;
     protected final Type modelType;
@@ -38,6 +39,11 @@ public abstract class BaseService<TModel, TEntity, ID, TRepo extends JpaReposito
 
     @Override
     public TModel save(TModel model) {
+        if (repository.findById(model.getId()).isPresent()) {
+            // TODO: Throw exception like a true Java developer
+            return null;
+        }
+
         TEntity entity = mapper.map(model, entityType);
         TEntity saved = repository.save(entity);
         return mapper.map(saved, modelType);

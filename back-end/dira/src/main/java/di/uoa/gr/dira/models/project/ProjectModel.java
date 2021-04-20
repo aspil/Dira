@@ -1,6 +1,8 @@
 package di.uoa.gr.dira.models.project;
 
-public class ProjectModel {
+import di.uoa.gr.dira.models.IModel;
+
+public class ProjectModel implements IModel<Long> {
     private Long id;
     private String key;
     private String name;

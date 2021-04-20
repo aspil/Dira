@@ -2,10 +2,10 @@ package di.uoa.gr.dira.models.customer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import di.uoa.gr.dira.models.IModel;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
-import org.springframework.stereotype.Component;
 
-public class CustomerModel {
+public class CustomerModel implements IModel<Long> {
     private Long id;
     private String username;
     private String name;
