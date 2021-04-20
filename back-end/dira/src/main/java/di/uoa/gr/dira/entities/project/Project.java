@@ -33,4 +33,8 @@ public class Project {
     @OneToMany
     @JoinColumn(name = "issue_id")
     private List<Issue> issues;
+
+    @OneToMany
+    @JoinColumn(name = "permission_id")
+    private List<Permission> permissions;
 }

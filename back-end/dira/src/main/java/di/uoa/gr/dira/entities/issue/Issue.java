@@ -3,6 +3,7 @@ package di.uoa.gr.dira.entities.issue;
 import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.entities.project.Project;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -31,6 +32,10 @@ public class Issue {
     @OneToOne
     @JoinColumn(name = "issue_status_id")
     private IssueStatus status;
+
+    @OneToMany
+    @JoinColumn(name = "issue_link_id")
+    private List<IssueLink> issueLinks;
 
     @ManyToMany
     @JoinTable(name = "issue_labels",
@@ -68,8 +73,10 @@ public class Issue {
 
     private String description;
 
+    @Column(nullable = false)
     private Date created;
 
+    @Column(nullable = false)
     private Date updated;
 
     private Date dueDate;
@@ -80,7 +87,9 @@ public class Issue {
 
     private long loggedTime;
 
+    @Column(nullable = false)
     private String timeUnit;
 
+    @ColumnDefault(value = "false")
     private boolean resolved;
 }
