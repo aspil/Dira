@@ -31,8 +31,10 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
 
         if (project != null) {
             Customer customer = customerRepository.findById(userId).orElse(null);
-            project.getCustomers().add(customer);
-            repository.save(project);
+            if (customer != null) {
+                project.getCustomers().add(customer);
+                repository.save(project);
+            }
         }
     }
 
@@ -42,8 +44,10 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
 
         if (project != null) {
             Customer customer = customerRepository.findById(userId).orElse(null);
-            project.getCustomers().remove(customer);
-            repository.save(project);
+            if (customer != null) {
+                project.getCustomers().remove(customer);
+                repository.save(project);
+            }
         }
     }
 }
