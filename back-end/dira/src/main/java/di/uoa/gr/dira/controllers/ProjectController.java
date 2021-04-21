@@ -56,4 +56,9 @@ public class ProjectController {
     public void addUserToProjectWithId(@PathVariable Long id, @PathVariable Long userId) {
         service.addUserToProjectWithId(id, userId);
     }
+
+    @DeleteMapping("{id}/users/{userId}")
+    public void deleteUserFromProjectWithId(@PathVariable Long id, @PathVariable Long userId) {
+        service.deleteUserFromProjectWithId(id, userId);
+    }
 }

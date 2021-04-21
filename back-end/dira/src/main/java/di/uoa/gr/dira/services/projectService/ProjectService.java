@@ -35,4 +35,15 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
             repository.save(project);
         }
     }
+
+    @Override
+    public void deleteUserFromProjectWithId(Long id, Long userId) {
+        Project project = repository.findById(id).orElse(null);
+
+        if (project != null) {
+            Customer customer = customerRepository.findById(userId).orElse(null);
+            project.getCustomers().remove(customer);
+            repository.save(project);
+        }
+    }
 }

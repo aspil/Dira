@@ -8,4 +8,6 @@ public interface IProjectService extends IService<ProjectModel, Long> {
     ProjectUsersModel findUsersByProjectId(Long id);
 
     void addUserToProjectWithId(Long id, Long userId);
+
+    void deleteUserFromProjectWithId(Long id, Long userId);
 }
