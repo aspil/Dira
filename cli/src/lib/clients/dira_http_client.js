@@ -3,6 +3,8 @@
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const GET = "GET";
 const POST = "POST";
+const PUT = "PUT";
+const DELETE = "DELETE";
 
 function make_request(options) {
     return new Promise((resolve, reject) => {
@@ -56,6 +58,16 @@ class DiraHttpClient {
 
     post(options) {
         options.method = POST;
+        return make_request(options);
+    }
+
+    put(options) {
+        options.method = PUT;
+        return make_request(options);
+    }
+
+    delete(options) {
+        options.method = DELETE;
         return make_request(options);
     }
 }

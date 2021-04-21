@@ -11,25 +11,4 @@ class DiraClient {
     }
 }
 
-class DiraUserClient extends DiraClient {
-    constructor() {
-        super();
-        this.base_url = `${this.base_url}/users`;
-    }
-
-    get_all_users() {
-        return this.http_client.get({
-            url: this.base_url,
-            headers: this.headers
-        }).then(JSON.parse).catch(console.error);
-    }
-
-    get_user_by_id(id) {
-        return this.http_client.get({
-            url: this.base_url,
-            headers: this.headers,
-        }).then(JSON.parse).catch(console.error);
-    }
-}
-
-module.exports = { DiraClient, DiraUserClient };
+module.exports = DiraClient;

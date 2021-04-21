@@ -1,3 +1,4 @@
+'use strict';
 const { Command, flags } = require('@oclif/command');
 const DiraUserClient = require("../../lib/clients/dira_client").DiraUserClient;
 const client = new DiraUserClient();
