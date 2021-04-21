@@ -52,8 +52,8 @@ public class ProjectController {
         return service.findUsersByProjectId(id);
     }
 
-    @PostMapping("{id}/users")
-    public void addUserToProjectWithId(@PathVariable Long id) {
-        service.addUserToProjectWithId(id);
+    @PostMapping("{id}/users/{userId}")
+    public void addUserToProjectWithId(@PathVariable Long id, @PathVariable Long userId) {
+        service.addUserToProjectWithId(id, userId);
     }
 }

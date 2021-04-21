@@ -7,5 +7,5 @@ import di.uoa.gr.dira.services.IService;
 public interface IProjectService extends IService<ProjectModel, Long> {
     ProjectUsersModel findUsersByProjectId(Long id);
 
-    void addUserToProjectWithId(Long id);
+    void addUserToProjectWithId(Long id, Long userId);
 }

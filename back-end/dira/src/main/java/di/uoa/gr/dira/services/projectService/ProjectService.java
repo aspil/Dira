@@ -26,11 +26,11 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     }
 
     @Override
-    public void addUserToProjectWithId(Long id) {
+    public void addUserToProjectWithId(Long id, Long userId) {
         Project project = repository.findById(id).orElse(null);
 
         if (project != null) {
-            Customer customer = customerRepository.findById(1L).orElse(null);
+            Customer customer = customerRepository.findById(userId).orElse(null);
             project.getCustomers().add(customer);
             repository.save(project);
         }
