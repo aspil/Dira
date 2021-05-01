@@ -1,4 +1,4 @@
-import { Button, TextField, makeStyles, Container } from '@material-ui/core'
+import { Button, TextField, Container, makeStyles } from '@material-ui/core'
 import { useState } from 'react'
 
 const useStyles = makeStyles({
@@ -19,8 +19,8 @@ const LoginForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-      setUserError(!user)
-      setPassError(!pass)
+    setUserError(!user)
+    setPassError(!pass)
 
     if (user && pass) {
       console.log(`${user}\n${pass}`)
