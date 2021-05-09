@@ -14,19 +14,44 @@ class DiraUserClient extends DiraClient {
         }).then(JSON.parse).catch(console.error);
     }
 
+    delete_all_users() {
+        return this.http_client.delete({
+            url: this.base_url,
+            headers: this.headers
+        }).catch(console.error);
+    }
+
     get_user_by_id(id) {
         return this.http_client.get({
-            url: this.base_url,
+            url: `${this.base_url}/${id}`,
             headers: this.headers,
         }).then(JSON.parse).catch(console.error);
     }
 
-    create_user(user) {
+    delete_user_by_id(id) {
+        return this.http_client.delete({
+            url: `${this.base_url}/${id}`,
+            headers: this.headers
+        }).catch(console.error);
+    }
+
+    register_user(user) {
         return this.http_client.post({
-            url: `${super.base_url}/register`,
+            url: `${this.original_base_url}/register`,
             headers: this.headers,
             data: user
         }).then(JSON.parse).catch(console.error);
+    }
+
+    login_user(username, password) {
+        return this.http_client.get({
+            url: `${this.original_base_url}/login`,
+            headers: this.headers,
+            data: {
+                username: username,
+                password: password
+            }
+        }).catch(console.error);
     }
 }
 

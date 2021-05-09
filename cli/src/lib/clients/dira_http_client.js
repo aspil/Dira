@@ -6,10 +6,31 @@ const POST = "POST";
 const PUT = "PUT";
 const DELETE = "DELETE";
 
+function format_query_params(params) {
+    if (params && typeof(params) === 'object') {
+        params = Object.keys(params).map((key) => {
+            return `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`;
+        }).join('&');
+    }
+
+    return params;
+}
+
+function prepare_body_data(data) {
+    if (data && typeof(data) === 'object') {
+        data = JSON.stringify(data);
+    }
+
+    return data;
+}
+
 function make_request(options) {
     return new Promise((resolve, reject) => {
         var request = new XMLHttpRequest();
-        request.open(options.method, options.url);
+        var params = format_query_params(options.params);
+        var url = params ? `${options.url}?${params}` : options.url;
+
+        request.open(options.method, url);
 
         request.onload = () => {
             if (request.readyState === 4) {
@@ -37,14 +58,12 @@ function make_request(options) {
             });
         }
 
-        var params = options.params;
-        if (params && typeof params === 'object') {
-            params = Object.keys(params).map(function (key) {
-                return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
-            }).join('&');
+        if (options.data) {
+            const data = prepare_body_data(options.data);
+            request.send(data);
+        } else {
+            request.send();
         }
-
-        request.send(params);
     });
 }
 

@@ -3,6 +3,7 @@ const DiraHttpClient = require("./dira_http_client");
 
 class DiraClient {
     constructor(base_url = "http://localhost:8080") {
+        this.original_base_url = base_url;
         this.base_url = base_url;
         this.http_client = new DiraHttpClient();
         this.headers = {
