@@ -20,6 +20,7 @@ public class ProjectController {
     }
 
     @GetMapping
+    /* TODO: retrieve all projects depending on user's visibility */
     public List<@Valid ProjectModel> getAllProjects() {
         return service.findAll();
     }
@@ -35,30 +36,14 @@ public class ProjectController {
         service.deleteAll();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{projectId}")
     public @Valid
-    ProjectModel getProjectById(@PathVariable Long id) {
-        return service.findById(id);
+    ProjectModel getProjectById(@PathVariable Long projectId) {
+        return service.findById(projectId);
     }
 
-    @DeleteMapping("{id}")
-    public void deleteProjectById(@PathVariable Long id) {
-        service.deleteById(id);
-    }
-
-    @GetMapping("{id}/users")
-    public @Valid
-    ProjectUsersModel getAllProjectUsers(@PathVariable Long id) {
-        return service.findUsersByProjectId(id);
-    }
-
-    @PostMapping("{id}/users/{userId}")
-    public void addUserToProjectWithId(@PathVariable Long id, @PathVariable Long userId) {
-        service.addUserToProjectWithId(id, userId);
-    }
-
-    @DeleteMapping("{id}/users/{userId}")
-    public void deleteUserFromProjectWithId(@PathVariable Long id, @PathVariable Long userId) {
-        service.deleteUserFromProjectWithId(id, userId);
+    @DeleteMapping("{projectId}")
+    public void deleteProjectById(@PathVariable Long projectId) {
+        service.deleteById(projectId);
     }
 }
