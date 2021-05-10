@@ -25,12 +25,26 @@ public class IssueController {
     }
 
     @PostMapping
-    public void createIssueWithProjectId(@PathVariable Long projectId, @Valid @RequestBody IssueModel issueModel) {
-        service.createIssueWithProjectId(projectId, issueModel);
+    public @Valid
+    IssueModel createIssueWithProjectId(@PathVariable Long projectId, @Valid @RequestBody IssueModel issueModel) {
+        return service.createIssueWithProjectId(projectId, issueModel);
     }
 
     @GetMapping("{id}")
-    public @Valid IssueModel retrieveIssueWithProjectId(@PathVariable Long id) {
-        return service.findIssueWithProjectId(id);
+    public @Valid
+    IssueModel retrieveIssueWithProjectId(@PathVariable Long projectId, @PathVariable Long id) {
+        return service.findIssueWithProjectId(projectId, id);
+    }
+
+    @PutMapping("{id}")
+    public @Valid
+    IssueModel updateIssueWithProjectId(@PathVariable Long projectId, @Valid @RequestBody IssueModel issueModel) {
+        return service.updateIssueWithProjectId(projectId, issueModel);
+    }
+
+    @DeleteMapping("{id}")
+    public @Valid
+    void deleteIssueWithProjectId(@PathVariable Long projectId, @Valid @RequestBody IssueModel issueModel) {
+        service.deleteIssueWithProjectId(projectId, issueModel);
     }
 }
