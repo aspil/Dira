@@ -42,6 +42,12 @@ public class ProjectController {
         return service.findById(projectId);
     }
 
+    @PutMapping("{projectId}")
+    public @Valid
+    ProjectModel updateProjectWithId(@Valid @RequestBody ProjectModel projectModel) {
+        return service.updateProjectWithId(projectModel);
+    }
+
     @DeleteMapping("{projectId}")
     public void deleteProjectById(@PathVariable Long projectId) {
         service.deleteById(projectId);

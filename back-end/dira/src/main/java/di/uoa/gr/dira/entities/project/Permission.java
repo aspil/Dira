@@ -21,5 +21,5 @@ public class Permission {
     @JoinColumn(name = "customer_id")
     private Customer user;
 
-    private int permissions;
+    private int permission;
 }

@@ -10,6 +10,8 @@ import di.uoa.gr.dira.services.BaseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public class ProjectService extends BaseService<ProjectModel, Project, Long, ProjectRepository> implements IProjectService {
@@ -39,6 +41,17 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     }
 
     @Override
+    public ProjectModel updateProjectWithId(ProjectModel projectModel) {
+        super.delete(projectModel);
+        ProjectModel updated = super.save(projectModel);
+        Optional<Project> project = repository.findById(updated.getId());
+        if (!project.isPresent()) return null;
+
+        // TODO: maybe need a seperate model
+        return null;
+    }
+
+    @Override
     public void deleteUserFromProjectWithId(Long id, Long userId) {
         Project project = repository.findById(id).orElse(null);
 
@@ -50,4 +63,5 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
             }
         }
     }
+
 }
