@@ -18,12 +18,14 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("login")
 public class LoginController {
+    private final AuthenticationManager authenticationManager;
+    private final JwtProvider jwtProvider;
 
-//    @Autowired
-    AuthenticationManager authenticationManager;
+    LoginController(AuthenticationManager authenticationManager, JwtProvider jwtProvider) {
+        this.authenticationManager = authenticationManager;
+        this.jwtProvider = jwtProvider;
+    }
 
-//    @Autowired
-    JwtProvider jwtProvider;
 
     @PostMapping()
     public String login(@Valid @RequestBody CustomerLoginModel customerLoginModel) {

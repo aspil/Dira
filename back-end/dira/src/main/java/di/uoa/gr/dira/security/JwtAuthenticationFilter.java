@@ -24,12 +24,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private ICustomerService customerService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
         String jwt = getJWTFromRequest(request);
         if ((jwt != null) && tokenProvider.validateJwt(jwt)) {
-            Long userId = tokenProvider.getCustomerIdFromJWT(jwt);
+            String username = tokenProvider.getCustomerUsernameFromJwt(jwt);
 
-            CustomerModel customer = customerService.findById(userId);
+            CustomerModel customer = customerService.findByUsername(username);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(customer, null, new ArrayList<>());
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }

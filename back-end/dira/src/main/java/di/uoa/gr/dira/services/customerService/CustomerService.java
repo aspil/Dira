@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @Service
 public class CustomerService extends BaseService<CustomerModel, Customer, Long, CustomerRepository> implements ICustomerService, UserDetailsService {
@@ -49,11 +50,11 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
 
     @Override
     public void updatePlan(Long customerId) {
-        Customer customer = repository.findById(customerId).orElse(null);
-        if (customer != null) {
-            customer.setSubscriptionPlanFromEnum(SubscriptionPlanEnum.PREMIUM);
-            repository.save(customer);
-        }
+        repository.findById(customerId)
+                .ifPresent(customer -> {
+                    customer.setSubscriptionPlanFromEnum(SubscriptionPlanEnum.PREMIUM);
+                    repository.save(customer);
+                });
     }
 
     @Override
@@ -65,10 +66,8 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Customer> customer = repository.findByUsername(username);
-        if (customer.isPresent()) {
-            return new User(customer.get().getUsername(), customer.get().getPassword(), new ArrayList<>());
-        }
-        throw new UsernameNotFoundException(username);
+        return repository.findByUsername(username)
+                .map(customer -> new User(customer.getUsername(), customer.getPassword(), new ArrayList<>()))
+                .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 }
