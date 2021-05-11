@@ -10,12 +10,19 @@ import di.uoa.gr.dira.services.BaseService;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import di.uoa.gr.dira.util.mapper.MapperHelper;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 @Service
-public class CustomerService extends BaseService<CustomerModel, Customer, Long, CustomerRepository> implements ICustomerService {
+public class CustomerService extends BaseService<CustomerModel, Customer, Long, CustomerRepository> implements ICustomerService, UserDetailsService {
     public CustomerService(CustomerRepository repository, ModelMapper mapper) {
         super(repository, mapper);
     }
@@ -43,11 +50,11 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
 
     @Override
     public void updatePlan(Long customerId) {
-        Customer customer = repository.findById(customerId).orElse(null);
-        if (customer != null) {
-            customer.setSubscriptionPlanFromEnum(SubscriptionPlanEnum.PREMIUM);
-            repository.save(customer);
-        }
+        repository.findById(customerId)
+                .ifPresent(customer -> {
+                    customer.setSubscriptionPlanFromEnum(SubscriptionPlanEnum.PREMIUM);
+                    repository.save(customer);
+                });
     }
 
     @Override
@@ -55,5 +62,12 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
         return repository.findById(customerId)
                 .map(customer -> MapperHelper.<Project, ProjectModel>mapList(mapper, customer.getProjects(), ProjectModel.class))
                 .orElse(null);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return repository.findByUsername(username)
+                .map(customer -> new User(customer.getUsername(), customer.getPassword(), new ArrayList<>()))
+                .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 }
