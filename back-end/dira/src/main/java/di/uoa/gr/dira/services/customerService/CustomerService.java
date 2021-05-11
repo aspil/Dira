@@ -35,6 +35,13 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
     }
 
     @Override
+    public CustomerModel findByEmail(String email) {
+        return repository.findByEmail(email)
+                .map(customer -> mapper.<CustomerModel>map(customer, modelType))
+                .orElse(null);
+    }
+
+    @Override
     public void updatePlan(Long customerId) {
         Customer customer = repository.findById(customerId).orElse(null);
         if (customer != null) {
