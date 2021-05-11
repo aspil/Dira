@@ -1,7 +1,6 @@
 package di.uoa.gr.dira.security;
 
 import io.jsonwebtoken.*;
-import di.uoa.gr.dira.entities.customer.Customer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,7 +25,7 @@ public class JwtProvider {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.ES512, jwtSecret)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
 
     }
