@@ -1,6 +1,5 @@
 package di.uoa.gr.dira.services.permissionService;
 
-import di.uoa.gr.dira.entities.issue.Issue;
 import di.uoa.gr.dira.entities.project.Permission;
 import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.models.project.ProjectUserPermissionModel;
