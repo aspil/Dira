@@ -48,7 +48,7 @@ public class PermissionService extends BaseService<ProjectUserPermissionModel, P
     }
 
     @Override
-    public @Valid ProjectUserPermissionModel updateUserPermission(Long projectId, ProjectUserPermissionModel userPermissionModel) {
+    public @Valid ProjectUserPermissionModel updateUserPermission(Long projectId, Long permissionId, ProjectUserPermissionModel userPermissionModel) {
         super.delete(userPermissionModel);
         ProjectUserPermissionModel updated = super.save(userPermissionModel);
         Optional<Permission> permission = repository.findById(updated.getId());

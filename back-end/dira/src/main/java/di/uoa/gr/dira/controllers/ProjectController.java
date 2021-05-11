@@ -27,13 +27,9 @@ public class ProjectController {
 
     @PostMapping
     public @Valid
+    // TODO: fix this
     ProjectModel createProject(@Valid @RequestBody ProjectModel project) {
         return service.save(project);
-    }
-
-    @DeleteMapping
-    public void deleteAllProjects() {
-        service.deleteAll();
     }
 
     @GetMapping("{projectId}")
@@ -44,11 +40,13 @@ public class ProjectController {
 
     @PutMapping("{projectId}")
     public @Valid
+    // TODO: add path variable projectId
     ProjectModel updateProjectWithId(@Valid @RequestBody ProjectModel projectModel) {
         return service.updateProjectWithId(projectModel);
     }
 
     @DeleteMapping("{projectId}")
+    // TODO: fix delete
     public void deleteProjectById(@PathVariable Long projectId) {
         service.deleteById(projectId);
     }

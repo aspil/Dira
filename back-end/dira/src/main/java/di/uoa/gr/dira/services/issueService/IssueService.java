@@ -52,12 +52,8 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
 
     @Override
     public IssueModel updateIssueWithProjectId(Long projectId, IssueModel issueModel) {
-        super.delete(issueModel);
-        IssueModel updated = super.save(issueModel);
-        Optional<Issue> issue = repository.findById(updated.getId());
-        if (!issue.isPresent()) return null;
-
-        return getIssueModel(projectId, updated);
+        // TODO: check if already exists
+        return super.save(issueModel);
     }
 
     @Nullable
@@ -68,6 +64,7 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
             List<Issue> projectIssues = project.getIssues();
             if (projectIssues != null) {
                 repository.findById(updated.getId()).ifPresent(projectIssues::add);
+                projectRepository.save(project);
                 return updated;
             }
         }
@@ -82,6 +79,7 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
         if (project != null && issue.isPresent()) {
             project.getIssues().remove(issue);
             super.delete(issueModel);
+            projectRepository.save(project);
         }
     }
 

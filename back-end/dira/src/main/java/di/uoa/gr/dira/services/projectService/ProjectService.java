@@ -32,6 +32,7 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         Project project = repository.findById(id).orElse(null);
 
         if (project != null) {
+            // TODO: search the list by userId, without querying the database
             Customer customer = customerRepository.findById(userId).orElse(null);
             if (customer != null) {
                 project.getCustomers().add(customer);
@@ -41,6 +42,7 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     }
 
     @Override
+    // TODO: fix
     public ProjectModel updateProjectWithId(ProjectModel projectModel) {
         super.delete(projectModel);
         ProjectModel updated = super.save(projectModel);
@@ -52,10 +54,12 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     }
 
     @Override
+    // TODO: fix
     public void deleteUserFromProjectWithId(Long id, Long userId) {
         Project project = repository.findById(id).orElse(null);
 
         if (project != null) {
+            // TODO: search the list by userId, without querying the database
             Customer customer = customerRepository.findById(userId).orElse(null);
             if (customer != null) {
                 project.getCustomers().remove(customer);

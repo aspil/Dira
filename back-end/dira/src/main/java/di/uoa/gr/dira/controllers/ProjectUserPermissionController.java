@@ -30,8 +30,10 @@ public class ProjectUserPermissionController {
     }
 
     @PutMapping("{permissionId}")
-    public @Valid ProjectUserPermissionModel updateUserPermission(@PathVariable Long projectId, @Valid @RequestBody ProjectUserPermissionModel userPermissionModel) {
-        return service.updateUserPermission(projectId, userPermissionModel);
+    public @Valid ProjectUserPermissionModel updateUserPermission(@PathVariable Long projectId,
+                                                                  @PathVariable Long permissionId,
+                                                                  @Valid @RequestBody ProjectUserPermissionModel userPermissionModel) {
+        return service.updateUserPermission(projectId, permissionId, userPermissionModel);
     }
 
     @DeleteMapping("{permissionId}")
