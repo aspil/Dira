@@ -22,6 +22,8 @@ dependencies {
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.0'
     implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.4.5'
+//    implementation group: 'com.auth0', name: 'java-jwt', version: '2.0.1'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.6.0'
 
 
     runtimeOnly 'org.postgresql:postgresql'
