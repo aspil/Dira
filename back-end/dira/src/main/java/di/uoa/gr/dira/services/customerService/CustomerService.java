@@ -10,12 +10,18 @@ import di.uoa.gr.dira.services.BaseService;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import di.uoa.gr.dira.util.mapper.MapperHelper;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class CustomerService extends BaseService<CustomerModel, Customer, Long, CustomerRepository> implements ICustomerService {
+public class CustomerService extends BaseService<CustomerModel, Customer, Long, CustomerRepository> implements ICustomerService, UserDetailsService {
     public CustomerService(CustomerRepository repository, ModelMapper mapper) {
         super(repository, mapper);
     }
@@ -55,5 +61,14 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
         return repository.findById(customerId)
                 .map(customer -> MapperHelper.<Project, ProjectModel>mapList(mapper, customer.getProjects(), ProjectModel.class))
                 .orElse(null);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<Customer> customer = repository.findByUsername(username);
+        if (customer.isPresent()) {
+            return new User(customer.get().getUsername(), customer.get().getPassword(), new ArrayList<>());
+        }
+        throw new UsernameNotFoundException(username);
     }
 }
