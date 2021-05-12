@@ -14,6 +14,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class IssueModel implements IModel<Long> {
     private Long id;
+
     @NotNull
     @NotBlank
     @NotEmpty
