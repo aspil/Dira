@@ -1,7 +1,7 @@
 package di.uoa.gr.dira.controllers;
 
 import di.uoa.gr.dira.models.customer.CustomerModel;
-import di.uoa.gr.dira.services.customerService.ICustomerService;
+import di.uoa.gr.dira.services.registerService.IRegisterService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,20 +14,14 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("register")
 public class RegisterController {
-    private final ICustomerService service;
+    private final IRegisterService service;
 
-    public RegisterController(ICustomerService service) {
+    public RegisterController(IRegisterService service) {
         this.service = service;
     }
 
     @PostMapping()
     public CustomerModel registerCostumer(@Valid @RequestBody CustomerModel customerModel) {
-        if (service.findByEmail(customerModel.getEmail()) != null) {
-            return null;
-        }
-        if (service.findByUsername(customerModel.getUsername()) != null) {
-            return null;
-        }
-        return service.save(customerModel);
+       return service.registerCostumer(customerModel);
     }
 }
