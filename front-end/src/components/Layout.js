@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core";
-import Nav from "./Nav"
+import Nav from "./Home_Nav"
 
 const useStyles = makeStyles(theme => ({
   toolbar: theme.mixins.toolbar
