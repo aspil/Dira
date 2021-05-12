@@ -12,7 +12,7 @@ import javax.validation.Valid;
 
 @Validated
 @RestController
-@RequestMapping("register")
+@RequestMapping("/api/auth/register")
 public class RegisterController {
     private final IRegisterService service;
 
