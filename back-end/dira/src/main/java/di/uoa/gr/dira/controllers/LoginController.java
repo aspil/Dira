@@ -1,11 +1,7 @@
 package di.uoa.gr.dira.controllers;
 
 import di.uoa.gr.dira.models.customer.CustomerLoginModel;
-import di.uoa.gr.dira.security.JwtProvider;
-import di.uoa.gr.dira.services.customerService.ICustomerService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import di.uoa.gr.dira.services.loginService.ILoginService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,28 +12,20 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("login")
+@RequestMapping("/api/auth/login")
 public class LoginController {
-    private final AuthenticationManager authenticationManager;
-    private final JwtProvider jwtProvider;
+    private final ILoginService loginService;
 
-    LoginController(AuthenticationManager authenticationManager, JwtProvider jwtProvider) {
-        this.authenticationManager = authenticationManager;
-        this.jwtProvider = jwtProvider;
+    public LoginController(ILoginService loginService) {
+        this.loginService = loginService;
     }
-
 
     @PostMapping()
     public String login(@Valid @RequestBody CustomerLoginModel customerLoginModel) {
-//        return service.authenticateUser(customerLoginModel.getUsername(), customerLoginModel.getPassword());
-        Authentication auth = authenticationManager.authenticate( // TODO: fix NullPointerException
-                new UsernamePasswordAuthenticationToken(
-                        customerLoginModel.getUsername(),
-                        customerLoginModel.getPassword()
-                )
-        );
+        Authentication auth = loginService.authenticateUser(customerLoginModel.getUsername(), customerLoginModel.getPassword())
+                .orElseThrow(() -> new RuntimeException("Couldn't authenticate user"));
 
         SecurityContextHolder.getContext().setAuthentication(auth);
-        return jwtProvider.generateToken(auth);
+        return loginService.generateToken(auth);
     }
 }
