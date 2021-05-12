@@ -1,6 +1,8 @@
 package di.uoa.gr.dira.security;
 
+import di.uoa.gr.dira.exception.InvalidTokenException;
 import io.jsonwebtoken.*;
+import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,13 +11,18 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-public class JwtProvider {
+public class JwtProvider implements IJwtProvider {
 
-    @Value("${app.jwtSecret}")
-    private String jwtSecret;
+    private static final Logger logger = Logger.getLogger(JwtProvider.class);
 
-    @Value("${app.jwtExpirationTime}")
-    private int jwtExpirationTime;
+    private final String jwtSecret;
+
+    private final int jwtExpirationTime;
+
+    public JwtProvider(@Value("${app.jwt.secret}") String jwtSecret,  @Value("${app.jwt.expirationTime}") int jwtExpirationTime) {
+        this.jwtSecret = jwtSecret;
+        this.jwtExpirationTime = jwtExpirationTime;
+    }
 
     public String generateToken(Authentication auth) {
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
