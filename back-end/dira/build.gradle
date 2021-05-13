@@ -15,28 +15,37 @@ repositories {
 }
 
 dependencies {
+    // Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Database
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.hibernate:hibernate-gradle-plugin:5.4.30.Final'
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.0'
-    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.4.5'
-//    implementation group: 'com.auth0', name: 'java-jwt', version: '2.0.1'
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.6.0'
 
+    // Model Mapper
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.0'
 
-    runtimeOnly 'org.postgresql:postgresql'
+    // Validation
+    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.4.5'
+
+    // Dev tools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    // mandatory dependencies for using Spock
+
+    // Spock/Tests
     compile "org.codehaus.groovy:groovy:3.0.7"
     testCompile platform("org.spockframework:spock-bom:2.0-M4-groovy-3.0")
     testCompile "org.spockframework:spock-core"
     testCompile "org.spockframework:spock-junit4"
-    // you can remove this if your code does not rely on old JUnit 4 rules
+
+    // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
-
     testCompileOnly 'org.projectlombok:lombok:1.18.20'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
 }
