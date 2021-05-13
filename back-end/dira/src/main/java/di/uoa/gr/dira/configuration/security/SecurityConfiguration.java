@@ -3,7 +3,6 @@ package di.uoa.gr.dira.configuration.security;
 import di.uoa.gr.dira.security.JwtAuthenticationFilter;
 import di.uoa.gr.dira.security.PasswordManager;
 import di.uoa.gr.dira.services.customerService.CustomerService;
-import di.uoa.gr.dira.services.customerService.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,8 +19,23 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    private final CustomerService customerService;
+
     @Autowired
-    private CustomerService customerService;
+    public SecurityConfiguration(CustomerService customerService) {
+        this.customerService = customerService;
+    }
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -38,10 +52,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/").permitAll(); // Currently, all requests are authorized
-//                .anyRequest().authenticated(); // Every request except the authorized must be authenticated
+//                .antMatchers("/api/auth/**") // Permit only register and login
+//                .permitAll()
+//                .anyRequest().authenticated();  // Every request except the authorized must be authenticated
+                .antMatchers("/") // All requests are authorized
+                .permitAll();
 
-        http.addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
