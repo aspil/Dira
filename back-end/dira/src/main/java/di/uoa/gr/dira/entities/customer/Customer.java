@@ -40,6 +40,10 @@ public class Customer implements UserDetails {
     private SubscriptionPlan subscriptionPlan;
 
     @ManyToMany
+    @JoinTable(name = "project_customer",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id")
+    )
     private List<Project> projects;
 
     @Transient

@@ -3,13 +3,11 @@ package di.uoa.gr.dira.security;
 import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import io.jsonwebtoken.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 @Component
-@RequiredArgsConstructor
 public class JwtHelper {
     public String generateToken(CustomerModel customer) {
         return Jwts.builder()

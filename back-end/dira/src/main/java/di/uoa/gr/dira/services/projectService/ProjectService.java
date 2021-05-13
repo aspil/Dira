@@ -10,8 +10,8 @@ import di.uoa.gr.dira.services.BaseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
-
 
 @Service
 public class ProjectService extends BaseService<ProjectModel, Project, Long, ProjectRepository> implements IProjectService {
@@ -21,6 +21,16 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         super(repository, mapper);
         this.customerRepository = customerRepository;
     }
+
+    @Override
+    public ProjectModel createProject(Long customerId, ProjectModel projectModel) {
+        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new RuntimeException(""));
+        Project project = mapper.map(projectModel, entityType);
+        project.setCustomers(new ArrayList<>());
+        project.getCustomers().add(customer);
+        return mapper.map(repository.save(project), modelType);
+    }
+
 
     @Override
     public ProjectUsersModel findUsersByProjectId(Long id) {

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class JwtSubject {
-    private final long id;
+    private final Long id;
     private final String username;
     private final SubscriptionPlanEnum subscriptionPlan;
 

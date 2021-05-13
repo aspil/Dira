@@ -1,8 +1,9 @@
 package di.uoa.gr.dira.controllers;
 
 import di.uoa.gr.dira.models.project.ProjectModel;
-import di.uoa.gr.dira.models.project.ProjectUsersModel;
+import di.uoa.gr.dira.security.JwtHelper;
 import di.uoa.gr.dira.services.projectService.IProjectService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,9 +15,11 @@ import java.util.List;
 @RequestMapping("projects")
 public class ProjectController {
     private final IProjectService service;
+    private final JwtHelper jwtHelper;
 
-    public ProjectController(IProjectService service) {
+    public ProjectController(IProjectService service, JwtHelper jwtHelper) {
         this.service = service;
+        this.jwtHelper = jwtHelper;
     }
 
     @GetMapping
@@ -26,10 +29,12 @@ public class ProjectController {
     }
 
     @PostMapping
-    public @Valid
-    // TODO: fix this
-    ProjectModel createProject(@Valid @RequestBody ProjectModel project) {
-        return service.save(project);
+    public @Valid ProjectModel createProject(
+            @Valid @RequestBody ProjectModel project,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
+    ) {
+        Long customerId = jwtHelper.getId(jwtToken);
+        return service.createProject(customerId, project);
     }
 
     @GetMapping("{projectId}")
@@ -38,10 +43,9 @@ public class ProjectController {
         return service.findById(projectId);
     }
 
-    @PutMapping("{projectId}")
-    public @Valid
     // TODO: add path variable projectId
-    ProjectModel updateProjectWithId(@Valid @RequestBody ProjectModel projectModel) {
+    @PutMapping("{projectId}")
+    public @Valid ProjectModel updateProjectWithId(@Valid @RequestBody ProjectModel projectModel) {
         return service.updateProjectWithId(projectModel);
     }
 
