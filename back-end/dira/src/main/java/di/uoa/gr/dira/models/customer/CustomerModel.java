@@ -46,6 +46,6 @@ public class CustomerModel implements IModel<Long> {
     private SubscriptionPlanEnum subscriptionPlan;
 
     public String createJwtSubject() {
-        return String.format("%s,%s", username, subscriptionPlan.toString());
+        return String.format("%d,%s,%s", id, username, subscriptionPlan.toString());
     }
 }

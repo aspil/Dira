@@ -1,6 +1,5 @@
 package di.uoa.gr.dira.security;
 
-import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.repositories.CustomerRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
