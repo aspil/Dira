@@ -45,9 +45,9 @@
 		- GET 			/users/{userID} (both self-view and other users)
 		
 	- Login:
-		- POST			/login
+		- POST			/api/auth/login
 		- POST			/logout
 	
 	- Register:
-		- POST			/register (register a new user)
+		- POST			/api/auth/register (register a new user)
 		- POST      	/register/confirm (confirmation token)
