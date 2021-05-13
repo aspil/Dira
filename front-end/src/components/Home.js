@@ -1,12 +1,13 @@
 import HomeNav from './HomeNav';
+import logo from "../Images/dira_icon.png"
+import Footer from "./Footer"
 
 function Home() {
   return (
     <div className="home">
       <div className="home_grad1">
         <HomeNav/>
-        
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <img src={logo} alt="dira logo" id="dira logo"/>
           
           <form>
           <input type="text" placeholder="Email Adress"></input>
@@ -24,8 +25,10 @@ function Home() {
         <div style={{textAlign:"center"}}>
           <button>Start for free</button>
         </div>
-        <br/><br/><br/>
+        <br/><br/><br/><br/><br/><br/>
+
       </div>
+      <Footer/>
     </div>
   );
 }
