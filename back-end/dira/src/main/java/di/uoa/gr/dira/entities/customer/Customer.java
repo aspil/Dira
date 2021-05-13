@@ -4,13 +4,17 @@ import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.security.PasswordManager;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Data
-public class Customer {
+public class Customer implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
@@ -38,6 +42,9 @@ public class Customer {
     @ManyToMany
     private List<Project> projects;
 
+    @Transient
+    private boolean enabled = true;
+
     /**
      * Sets the subscription plan based on the value of `SubscriptionPlanEnum` provided
      *
@@ -62,5 +69,30 @@ public class Customer {
      */
     public void setFromRawPassword(String rawPassword) {
         this.password = PasswordManager.encoder().encode(rawPassword);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return enabled;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return enabled;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return enabled;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 }

@@ -1,29 +1,31 @@
 package di.uoa.gr.dira.configuration.security;
 
+import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.security.JwtAuthenticationFilter;
 import di.uoa.gr.dira.security.PasswordManager;
-import di.uoa.gr.dira.services.customerService.CustomerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    private final CustomerRepository customerRepository;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    private final CustomerService customerService;
-
-    @Autowired
-    public SecurityConfiguration(CustomerService customerService) {
-        this.customerService = customerService;
+    public SecurityConfiguration(CustomerRepository customerRepository, JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.customerRepository = customerRepository;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Override
@@ -32,14 +34,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManager();
     }
 
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter();
-    }
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(customerService).passwordEncoder(PasswordManager.encoder());
+        auth.userDetailsService(username -> customerRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new RuntimeException(""))
+        ).passwordEncoder(PasswordManager.encoder());
     }
 
     @Override
@@ -52,18 +52,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-//                .antMatchers("/api/auth/**") // Permit only register and login
-//                .permitAll()
-//                .anyRequest().authenticated();  // Every request except the authorized must be authenticated
-                .antMatchers("/") // All requests are authorized
-                .permitAll();
+                .antMatchers(HttpMethod.POST, "/register").permitAll()
+                .antMatchers(HttpMethod.POST, "/login").permitAll()
+                .anyRequest()
+                .authenticated();
 
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
-    @Bean(BeanIds.AUTHENTICATION_MANAGER)
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 }

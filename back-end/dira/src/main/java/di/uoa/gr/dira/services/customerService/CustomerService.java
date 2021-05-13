@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 @Service
-public class CustomerService extends BaseService<CustomerModel, Customer, Long, CustomerRepository> implements ICustomerService, UserDetailsService {
+public class CustomerService extends BaseService<CustomerModel, Customer, Long, CustomerRepository> implements ICustomerService {
     public CustomerService(CustomerRepository repository, ModelMapper mapper) {
         super(repository, mapper);
     }
@@ -62,12 +62,5 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
         return repository.findById(customerId)
                 .map(customer -> MapperHelper.<Project, ProjectModel>mapList(mapper, customer.getProjects(), ProjectModel.class))
                 .orElse(null);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.findByUsername(username)
-                .map(customer -> new User(customer.getUsername(), customer.getPassword(), new ArrayList<>()))
-                .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 }
