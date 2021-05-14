@@ -142,12 +142,12 @@ button{
   background-image: linear-gradient(to bottom, rgb(0, 132, 255) , rgb(255, 255, 255));
 }
 
-.register img {
+.register,.login img {
   margin:-8%;
   max-width:50%;
   height:auto;
 }
-.register .login_grad{
+.register,.login .login_grad{
   background-color: rgb(239, 240, 241);
   max-width: 22%;
   border-radius: 5px;;
@@ -158,19 +158,19 @@ button{
   border-left:2px solid lightgray;
 }
 
-.register input{
+.register,.login input{
   border-width: thin;
   width:80%;
   font-size: large;
   padding: 10px;
 }
-.register button{
+.register,.login button{
   width: 11vw;
   height: 5vh;
   font-size: 23px;
   border-radius: 5px;
   margin-top: 15px; 
 }
-.register a{
+.register,.login a{
   color: rgb(0, 132, 255);
 }

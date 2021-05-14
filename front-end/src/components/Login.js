@@ -1,19 +1,21 @@
 import logo from "../Images/dira_icon.png"
 
-const Register = () => {
+const Login = () => {
     return (
-      <div className="register">
+      <div className="login">
         <div style={{textAlign:"center"}}>
             <img src={logo} alt="dira logo" id="dira logo"/>
             <div className="login_grad" style={{textAlign:"center"}}>
-                <h1 style={{fontWeight:"normal", margin:"15px"}}>Register</h1>
+                <h1 style={{fontWeight:"normal", margin:"15px"}}>Login</h1>
                 
                 <input type="text" placeholder="Username or email address"></input>
                 <input type="text" placeholder="Password"></input>
-                <input type="text" placeholder="Confirm Password"></input>
-                <br></br>
-                <button>Create Account</button>
-                <p style={{margin: "15px"}}>Already a member? <a href="/Login">Register</a></p>
+                <div style={{textAlign:"right", marginRight:"3.5vh"}}>
+                <a href="/Contact" >Forgot Password?</a>
+                </div>
+
+                <p><button>Login</button></p>
+                <p style={{margin: "15px"}}>Don't have an account? <a href="/Register">Register</a></p>
                 <a href="/Contact">Contact Us</a>
             </div>
         </div>
@@ -22,4 +24,4 @@ const Register = () => {
     );
   }
    
-  export default Register;
+  export default Login;
