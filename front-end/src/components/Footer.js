@@ -7,9 +7,9 @@ const Footer = () => {
           <a href="/pricing">Pricing</a>
           <a href="/contact">Contact</a>
         </div>
-        <input type="text" placeholder="Email Adress" style={{margin:0}}></input>
+        <input type="text" placeholder="Email Adress" style={{margin:0,borderWidth:"thin"}}></input>
         <a href="/subscribe">SUBSCRIBE</a>
-
+        
       </div>
     );
   }

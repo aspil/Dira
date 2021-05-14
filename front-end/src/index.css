@@ -12,10 +12,10 @@ body {
   font-family: 'Open Sans';
   color: #333;
 }
-.home_grad1 {
+.home .home_grad1 {
   background-image: linear-gradient(to bottom, rgb(0, 132, 255) , rgb(255, 255, 255));
 }
-.home_grad2 {
+.home .home_grad2 {
   background-image: linear-gradient(to top, rgb(0, 132, 255) , rgb(255, 255, 255));
 }
 .home_nav {
@@ -62,7 +62,7 @@ body {
   margin-right: auto;
   width: 52%;
 }
-.home button{
+button{
   color: #f2f2f2;
   font-weight: bold;
   margin: 0px;
@@ -130,6 +130,47 @@ body {
   padding: 1.5vw;
   border-radius: 5px;
 }
+
 .footer a:hover {
   text-decoration: underline;
+}
+
+
+/* login and register */
+
+.home_grad1 {
+  background-image: linear-gradient(to bottom, rgb(0, 132, 255) , rgb(255, 255, 255));
+}
+
+.register img {
+  margin:-8%;
+  max-width:50%;
+  height:auto;
+}
+.register .login_grad{
+  background-color: rgb(239, 240, 241);
+  max-width: 22%;
+  border-radius: 5px;;
+  margin: 0 auto;
+  border-top:2px solid lightgray;
+  border-bottom:2px solid lightgray;
+  border-right:2px solid lightgray;
+  border-left:2px solid lightgray;
+}
+
+.register input{
+  border-width: thin;
+  width:80%;
+  font-size: large;
+  padding: 10px;
+}
+.register button{
+  width: 11vw;
+  height: 5vh;
+  font-size: 23px;
+  border-radius: 5px;
+  margin-top: 15px; 
+}
+.register a{
+  color: rgb(0, 132, 255);
 }

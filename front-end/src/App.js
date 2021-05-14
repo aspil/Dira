@@ -39,11 +39,13 @@
 // }
 
 import Home from './components/Home';
+import Login from './components/Register';
 
 function App() {
   return (
     <div className="App">
-      <Home/>
+      <Login/>
+      {/* <Home/> */}
     </div>
   );
 }
