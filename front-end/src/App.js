@@ -41,12 +41,16 @@
 import Home from './components/Home';
 import Register from './components/Register';
 import Login from './components/Login';
+import Password_Recovery_1 from './components/Password_Recovery_1';
+import Password_Recovery_2 from './components/Password_Recovery_2';
+import Password_Recovery_3 from './components/Password_Recovery_3';
+
 
 
 function App() {
   return (
     <div className="App">
-      <Login/>
+        <Password_Recovery_1/>
       {/* <Home/> */}
     </div>
   );

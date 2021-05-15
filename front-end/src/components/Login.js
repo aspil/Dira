@@ -10,7 +10,7 @@ const Login = () => {
                 
                 <input type="text" placeholder="Username or email address"></input>
                 <input type="text" placeholder="Password"></input>
-                <div style={{textAlign:"right", marginRight:"3.5vh"}}>
+                <div style={{textAlign:"right", marginRight:"1.8vw"}}>
                 <a href="/Contact" >Forgot Password?</a>
                 </div>
 
