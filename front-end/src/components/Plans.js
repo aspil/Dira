@@ -8,7 +8,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import CheckIcon from '@material-ui/icons/Check';
-import { Clear } from '@material-ui/icons';
+import { BorderHorizontal, BorderRight, Clear } from '@material-ui/icons';
 
 const useStyles = makeStyles({
   title: {
@@ -77,6 +77,16 @@ const useStyles = makeStyles({
   table: {
     width: '50%',
     margin: '2rem auto',
+    border: 'solid lightskyblue 1px'
+  },
+  stdCell: {
+    backgroundColor: 'aliceblue',
+    borderBottomColor: 'lightskyblue',
+    borderLeft: 'solid rgb(0, 132, 255) 2px',
+    borderRight: 'solid rgb(0, 132, 255) 2px'
+  },
+  cell: {
+    borderColor: 'lightskyblue'
   }
 })
 
@@ -165,6 +175,11 @@ const Plan = () => {
                 <TableRow>
                   {tableHead.map(col => (
                     <TableCell
+                      classes= {
+                        tableHead.indexOf(col)===1 ? 
+                        {root: classes.stdCell} :
+                        {root: classes.cell}
+                      }
                       align ={tableHead.indexOf(col) === 0 ? 'left' : 'center'}
                     >
                       {col}
@@ -177,6 +192,11 @@ const Plan = () => {
                   <TableRow key={row[0]}>
                     {row.map((col) => (
                       <TableCell
+                        classes= {
+                          row.indexOf(col)===1 ? 
+                          {root: classes.stdCell} :
+                          {root: classes.cell}
+                        }
                         align ={row.indexOf(col) === 0 ? 'left' : 'center'}
                       >
                         {col}
