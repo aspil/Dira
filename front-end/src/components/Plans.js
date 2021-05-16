@@ -1,14 +1,26 @@
 import HomeNav from './HomeNav';
-import logo from "../Images/dira_icon.png"
-import Footer from "./Footer"
 import { Card, CardContent, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core'
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import CheckIcon from '@material-ui/icons/Check';
+import { Clear } from '@material-ui/icons';
 
 const useStyles = makeStyles({
   title: {
     fontSize: '5rem',
     textAlign: 'center',
     color: 'white',
+    margin: '5rem 0'
+  },
+  subtitle: {
+    fontSize: '3rem',
+    textAlign: 'center',
+    color: 'dimgray',
     margin: '5rem 0'
   },
   card: {
@@ -62,13 +74,50 @@ const useStyles = makeStyles({
     marginLeft: '20%',
     marginBottom: '1rem'
   },
+  table: {
+    width: '50%',
+    margin: '2rem auto',
+  }
 })
 
 const Plan = () => {
   const classes = useStyles()
 
+  const tableHead = [
+    '',
+    'Standard',
+    'Premium'
+  ]
+
+  const tableContent = [
+    [
+      'User limit (per project)',
+      '7',
+      '100'
+    ],
+    [
+      'Scrum statistic reports',
+      <CheckIcon />,
+      <CheckIcon />,
+    ],
+    [
+      'Private projects',
+      <Clear />,
+      <CheckIcon />,
+    ],
+    [
+      'Project roles',
+      <Clear />,
+      <CheckIcon />,
+    ],
+    [
+      'Support',
+      'Business Hours',
+      '24/7 Premium Support'
+    ],
+  ]
   return (
-    <div >
+    <div>
       <div className='home_grad1'>
         <HomeNav/>
         <h1 className={classes.title}>
@@ -103,6 +152,42 @@ const Plan = () => {
             </Card>
           </Grid>
         </Grid>
+      </div>
+      <div>
+        <h1 className={classes.subtitle}>
+          Features
+        </h1>
+        
+        <div className={classes.table}>
+          <TableContainer component={Paper}>
+            <Table aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  {tableHead.map(col => (
+                    <TableCell
+                      align ={tableHead.indexOf(col) === 0 ? 'left' : 'center'}
+                    >
+                      {col}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {tableContent.map((row) => (
+                  <TableRow key={row[0]}>
+                    {row.map((col) => (
+                      <TableCell
+                        align ={row.indexOf(col) === 0 ? 'left' : 'center'}
+                      >
+                        {col}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
       </div>
     </div>
   );
