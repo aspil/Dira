@@ -49,11 +49,11 @@ body {
   text-decoration: underline;
 }
 .home_nav a.boxxed_button{
-  color: 'black';
-  border-style: "solid";
-  border-color: "white";
+  border-color: white;
+  border-style: solid;
   border-width: 1px;
   border-radius: 5px;
+  padding: 0.5rem;
 }
 
 .home img{
