@@ -12,7 +12,7 @@ import org.springframework.web.util.WebUtils;
 @ControllerAdvice
 public class RestExceptionHandler {
     @ExceptionHandler({
-            CustomerNotFoundException.class
+            CustomerNotFoundException.class,
     })
     public final ResponseEntity<RestApiError> handleException(Exception ex, WebRequest request) {
         HttpHeaders headers = new HttpHeaders();

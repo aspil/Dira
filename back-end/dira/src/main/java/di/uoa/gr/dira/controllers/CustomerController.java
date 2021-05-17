@@ -1,6 +1,5 @@
 package di.uoa.gr.dira.controllers;
 
-import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.models.project.ProjectModel;
