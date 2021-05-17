@@ -20,6 +20,7 @@ public class RegisterService implements IRegisterService {
             logger.error("Email '" + customerModel.getEmail() + "' already exists.");
             return null;
         }
+
         if (customerService.findByUsername(customerModel.getUsername()) != null) {
             logger.error("Username '" + customerModel.getUsername() + "' already exists.");
             return null;

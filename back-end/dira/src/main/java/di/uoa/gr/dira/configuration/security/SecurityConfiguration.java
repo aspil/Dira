@@ -52,10 +52,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/register").permitAll()
-                .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .anyRequest()
-                .authenticated();
+                .antMatchers("/").permitAll();
+//                .antMatchers(HttpMethod.POST, "/register").permitAll()
+//                .antMatchers(HttpMethod.POST, "/login").permitAll()
+//                .anyRequest()
+//                .authenticated();
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }

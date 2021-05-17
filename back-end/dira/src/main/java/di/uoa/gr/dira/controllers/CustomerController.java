@@ -1,5 +1,7 @@
 package di.uoa.gr.dira.controllers;
 
+import di.uoa.gr.dira.entities.customer.Customer;
+import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.services.customerService.ICustomerService;
@@ -31,7 +33,11 @@ public class CustomerController {
 
     @GetMapping("{id}")
     public @Valid CustomerModel getCustomerById(@PathVariable Long id) {
-        return service.findById(id);
+        CustomerModel customerModel = service.findById(id);
+        if (customerModel == null) {
+            throw new CustomerNotFoundException("id", id.toString());
+        }
+        return customerModel;
     }
 
     @DeleteMapping("{id}")
