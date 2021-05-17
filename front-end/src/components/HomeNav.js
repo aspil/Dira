@@ -7,7 +7,7 @@ const HomeNav = () => {
         <a href="/pricing">Pricing</a>
         <a href="/contact">Contact</a>
         <a href="/sign_in">Sign in</a>
-          <a href="/sign_up" className="boxxed_button">Sign up</a>
+        <a href="/sign_up" id="boxxed_button">Sign up</a>
       </div>
     </div>
   );

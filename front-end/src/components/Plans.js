@@ -8,7 +8,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import CheckIcon from '@material-ui/icons/Check';
-import { BorderHorizontal, BorderRight, Clear } from '@material-ui/icons';
+import Clear from '@material-ui/icons';
 
 const useStyles = makeStyles({
   title: {
