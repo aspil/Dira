@@ -9,6 +9,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class BaseService<TModel extends IModel<ID>, TEntity, ID, TRepo extends JpaRepository<TEntity, ID>> implements IService<TModel, ID> {
     protected final TRepo repository;
@@ -31,10 +32,8 @@ public abstract class BaseService<TModel extends IModel<ID>, TEntity, ID, TRepo 
     }
 
     @Override
-    public TModel findById(ID id) {
-        return repository.findById(id)
-                .map(entity -> mapper.<TModel>map(entity, modelType))
-                .orElse(null);
+    public Optional<TModel> findById(ID id) {
+        return repository.findById(id).map(entity -> mapper.<TModel>map(entity, modelType));
     }
 
     @Override

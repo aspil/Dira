@@ -4,6 +4,7 @@ import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.services.customerService.ICustomerService;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,16 +33,16 @@ public class CustomerController {
 
     @GetMapping("{id}")
     public @Valid CustomerModel getCustomerById(@PathVariable Long id) {
-        CustomerModel customerModel = service.findById(id);
-        if (customerModel == null) {
-            throw new CustomerNotFoundException("id", id.toString());
-        }
-        return customerModel;
+        return service.findById(id).orElseThrow(() -> new CustomerNotFoundException("id", id.toString()));
     }
 
     @DeleteMapping("{id}")
     public void deleteCustomerById(@PathVariable Long id) {
-        service.deleteById(id);
+        try  {
+            service.deleteById(id);
+        } catch (EmptyResultDataAccessException ignored) {
+            throw new CustomerNotFoundException("id", id.toString());
+        }
     }
 
     @PutMapping("{id}/update")

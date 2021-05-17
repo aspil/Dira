@@ -1,6 +1,7 @@
 package di.uoa.gr.dira.exceptions;
 
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
+import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.util.WebUtils;
 public class RestExceptionHandler {
     @ExceptionHandler({
             CustomerNotFoundException.class,
+            ProjectNotFoundException.class
     })
     public final ResponseEntity<RestApiError> handleException(Exception ex, WebRequest request) {
         HttpHeaders headers = new HttpHeaders();
@@ -20,9 +22,20 @@ public class RestExceptionHandler {
         if (ex instanceof CustomerNotFoundException) {
             HttpStatus status = HttpStatus.NOT_FOUND;
             return handleCustomerNotFoundException((CustomerNotFoundException) ex, headers, status, request);
+        } else if (ex instanceof ProjectNotFoundException) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            return handleProjectNotFoundException((ProjectNotFoundException) ex, headers, status, request);
         }
 
         return null;
+    }
+
+    private ResponseEntity<RestApiError> handleProjectNotFoundException(
+            ProjectNotFoundException ex,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
+        return handleExceptionInternal(ex, new RestApiError(ex.getMessage()), headers, status, request);
     }
 
     protected ResponseEntity<RestApiError> handleCustomerNotFoundException(

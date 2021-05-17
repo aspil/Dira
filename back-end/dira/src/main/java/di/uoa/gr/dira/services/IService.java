@@ -2,12 +2,13 @@ package di.uoa.gr.dira.services;
 
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface IService<TModel, ID> {
     List<TModel> findAll();
 
-    TModel findById(ID id);
+    Optional<TModel> findById(ID id);
 
     TModel save(TModel model);
 

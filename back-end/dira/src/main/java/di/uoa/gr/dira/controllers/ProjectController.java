@@ -1,9 +1,11 @@
 package di.uoa.gr.dira.controllers;
 
+import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
 import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.security.JwtHelper;
 import di.uoa.gr.dira.services.projectService.IProjectService;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +31,7 @@ public class ProjectController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public @Valid ProjectModel createProject(
             @Valid @RequestBody ProjectModel project,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
@@ -40,7 +43,7 @@ public class ProjectController {
     @GetMapping("{projectId}")
     public @Valid
     ProjectModel getProjectById(@PathVariable Long projectId) {
-        return service.findById(projectId);
+        return service.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("id", projectId.toString()));
     }
 
     // TODO: add path variable projectId
