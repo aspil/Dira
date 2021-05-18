@@ -2,7 +2,9 @@ package di.uoa.gr.dira.entities.project;
 
 import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.entities.issue.Issue;
+import di.uoa.gr.dira.shared.ProjectVisibility;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.List;
@@ -37,4 +39,9 @@ public class Project {
     @OneToMany
     @JoinColumn(name = "permission_id")
     private List<Permission> permissions;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
+    @ColumnDefault("0")
+    private ProjectVisibility visibility;
 }

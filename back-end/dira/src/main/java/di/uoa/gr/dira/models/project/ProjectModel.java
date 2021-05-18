@@ -1,6 +1,7 @@
 package di.uoa.gr.dira.models.project;
 
 import di.uoa.gr.dira.models.IModel;
+import di.uoa.gr.dira.shared.ProjectVisibility;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -27,4 +28,7 @@ public class ProjectModel implements IModel<Long> {
     private String name;
 
     private String description;
+
+    @NotNull
+    private ProjectVisibility visibility;
 }

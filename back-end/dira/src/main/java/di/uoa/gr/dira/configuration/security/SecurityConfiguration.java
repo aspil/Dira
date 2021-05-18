@@ -1,5 +1,6 @@
 package di.uoa.gr.dira.configuration.security;
 
+import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.security.JwtAuthenticationFilter;
 import di.uoa.gr.dira.security.PasswordManager;
@@ -38,7 +39,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(username -> customerRepository
                 .findByUsername(username)
-                .orElseThrow(() -> new RuntimeException(""))
+                .orElseThrow(() -> new CustomerNotFoundException("username", username))
         ).passwordEncoder(PasswordManager.encoder());
     }
 

@@ -4,6 +4,7 @@ import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
 import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.security.JwtHelper;
 import di.uoa.gr.dira.services.projectService.IProjectService;
+import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -25,9 +26,13 @@ public class ProjectController {
     }
 
     @GetMapping
-    /* TODO: retrieve all projects depending on user's visibility */
-    public List<@Valid ProjectModel> getAllProjects() {
-        return service.findAll();
+    public List<@Valid ProjectModel> getAllProjects(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
+        SubscriptionPlanEnum customerSubscriptionPlan = jwtHelper.getSubscriptionPlan(jwtToken);
+        if (customerSubscriptionPlan == SubscriptionPlanEnum.STANDARD) {
+            return service.findAllPublicProjects();
+        } else {
+            return service.findAll();
+        }
     }
 
     @PostMapping

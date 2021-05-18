@@ -7,11 +7,15 @@ import di.uoa.gr.dira.models.project.ProjectUsersModel;
 import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
+import di.uoa.gr.dira.shared.ProjectVisibility;
+import di.uoa.gr.dira.util.mapper.MapperHelper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectService extends BaseService<ProjectModel, Project, Long, ProjectRepository> implements IProjectService {
@@ -20,6 +24,16 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     ProjectService(ProjectRepository repository, CustomerRepository customerRepository, ModelMapper mapper) {
         super(repository, mapper);
         this.customerRepository = customerRepository;
+    }
+
+    @Override
+    public List<ProjectModel> findAllPublicProjects() {
+        List<Project> publicProjects = repository.findAll()
+                .stream()
+                .filter(project -> project.getVisibility() == ProjectVisibility.PUBLIC)
+                .collect(Collectors.toList());
+
+        return MapperHelper.mapList(mapper, publicProjects, modelType);
     }
 
     @Override
