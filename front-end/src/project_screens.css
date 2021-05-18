@@ -42,25 +42,25 @@
 * {box-sizing: border-box;}
 
 /* Button used to open the contact form - fixed at the bottom of the page */
-.open-button {
-  background-color: #555;
-  color: white;
-  padding: 16px 20px;
-  border: none;
-  cursor: pointer;
-  opacity: 0.8;
+.settingsPopupReference {
+  background-color: rgb(0, 132, 255);
+  /* color: white;
+  position: relative; */
+  width: 2vw;
+  height: auto;
   position: fixed;
-  bottom: 23px;
-  right: 28px;
-  width: 280px;
+  right: 1vw;
+}
+.settingsPopupReference:hover {
+  cursor: pointer;
 }
 
 /* The popup form - hidden by default */
 .form-popup {
   display: none;
-  position: fixed;
-  bottom: 0;
-  right: 15px;
+  position:fixed;
+  top: 10%;
+  right: 1%; 
   border: 3px solid #f1f1f1;
   z-index: 9;
 }
@@ -107,4 +107,4 @@
 /* Add some hover effects to buttons */
 .form-container .btn:hover, .open-button:hover {
   opacity: 1;
-}
+  }
