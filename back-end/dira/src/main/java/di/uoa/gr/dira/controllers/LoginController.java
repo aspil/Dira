@@ -26,10 +26,13 @@ public class LoginController {
         this.jwtHelper = jwtHelper;
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Void> login(@Valid @RequestBody CustomerLoginModel customerLoginModel) {
         try {
-            CustomerModel customer = loginService.authenticateUser(customerLoginModel.getUsername(), customerLoginModel.getPassword());
+            CustomerModel customer = loginService.authenticateUser(
+                    customerLoginModel.getUsername(),
+                    customerLoginModel.getPassword()
+            );
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, jwtHelper.generateToken(customer))

@@ -2,11 +2,9 @@ package di.uoa.gr.dira.controllers;
 
 import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.services.registerService.IRegisterService;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -20,8 +18,9 @@ public class RegisterController {
         this.service = service;
     }
 
-    @PostMapping()
-    public CustomerModel registerCostumer(@Valid @RequestBody CustomerModel customerModel) {
-       return service.registerCostumer(customerModel);
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public @Valid CustomerModel registerCustomer(@Valid @RequestBody CustomerModel customerModel) {
+        return service.registerCustomer(customerModel);
     }
 }
