@@ -5,7 +5,7 @@ import { useState } from "react";
 
 
 
-const Password_Recovery_1 = () => {
+const Password_Recovery = () => {
 
   
   const [step, setStep] = useState(1);
@@ -58,4 +58,4 @@ const Password_Recovery_1 = () => {
   );
 }
    
-  export default Password_Recovery_1;
+  export default Password_Recovery;

@@ -2,7 +2,7 @@ import logo from "../Images/dira_icon.png"
 
 const Login = () => {
     return (
-      <div className="login">
+      <div className="login" >
         <div style={{textAlign:"center"}}>
             <img src={logo} alt="dira logo" id="dira logo"/>
             <div className="login_grad" style={{textAlign:"center"}}>
