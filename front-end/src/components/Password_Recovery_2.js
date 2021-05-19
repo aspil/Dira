@@ -1,7 +1,6 @@
+import { Link } from "react-router-dom";
 import logo from "../Images/dira_icon.png"
 import arrows from "../Images/arrows.png"
-
-
 
 const Password_Recovery_2 = () => {
     return (
@@ -16,7 +15,7 @@ const Password_Recovery_2 = () => {
                 <input type="text" placeholder="Code"></input>
 
                 <p><button>Continue</button></p>
-                <a href="/Contact">Contact Us</a>
+                <Link to="/contact">Contact Us</Link>
             </div>
         </div>
 

@@ -1,18 +1,38 @@
 
-// import Home from './components/Home';
-// import Register from './components/Register';
-// import Login from './components/Login';
-// import Password_Recovery_1 from './components/PasswordRecovery';
-// import Plan from './components/Plans'
-
+import Home from './components/Home';
+import Register from './components/Register';
+import Login from './components/Login';
+import Plan from './components/Plans'
+import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import ProjectMain from './components/ProjectMain'
+import PasswordRecovery from './components/PasswordRecovery';
 
 function App() {
   return (
-    <div className="App">
-        <ProjectMain/>
-      {/* <Home/> */}
-    </div>
+    <Router>
+      <div className="App">
+          <Switch>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route path="/sign_in">
+              <Login />
+            </Route>
+            <Route path="/register">
+              <Register />
+            </Route>
+            <Route path="/proj_main">
+              <ProjectMain />
+            </Route>
+            <Route path="/pricing">
+              <Plan/>
+            </Route>
+            <Route path="/recover">
+              <PasswordRecovery/>
+            </Route>
+          </Switch>
+      </div>
+    </Router>
   );
 }
 

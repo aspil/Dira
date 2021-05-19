@@ -1,14 +1,16 @@
+import { Link } from "react-router-dom";
+
 const Footer = () => {
     return (
       <div className="footer">
         <h1>Dira</h1>
         <div className="links">
-          <a href="/">Features</a>
-          <a href="/pricing">Pricing</a>
-          <a href="/contact">Contact</a>
+          <Link to="/">Features</Link>
+          <Link to="/pricing">Pricing</Link>
+          <Link to="/contact">Contact</Link>
         </div>
         <input type="text" placeholder="Email Adress" style={{margin:0,borderWidth:"thin"}}></input>
-        <a href="/subscribe">SUBSCRIBE</a>
+        <Link to="/subscribe">SUBSCRIBE</Link>
         
       </div>
     );

@@ -1,4 +1,5 @@
 import logo from "../Images/dira_icon.png"
+import { Link } from "react-router-dom";
 import arrows from "../Images/arrows.png"
 
 
@@ -19,7 +20,7 @@ const Password_Recovery_3 = () => {
               <p style={{textAlign:'left', marginLeft:"1.8vw", marginBottom:"-1vh"}}>Confirm your password:</p>
               <input type="text" placeholder="Confirm Password"></input>
               <p><button style={{fontSize:"1vw"}}>Update Password</button></p>
-              <a href="/Contact">Contact Us</a>
+              <Link to="/contact">Contact Us</Link>
             </div>
         </div>
 

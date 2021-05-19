@@ -1,4 +1,5 @@
 import logo from "../Images/dira_icon.png"
+import { Link } from "react-router-dom";
 
 const Register = () => {
     return (
@@ -13,8 +14,8 @@ const Register = () => {
                 <input type="text" placeholder="Confirm Password"></input>
                 <br></br>
                 <button>Create Account</button>
-                <p style={{margin: "15px"}}>Already a member? <a href="/Login">Register</a></p>
-                <a href="/Contact">Contact Us</a>
+                <p style={{margin: "15px"}}>Already a member? <Link to="/sign_in">Sign in</Link></p>
+                <Link to="/contact">Contact Us</Link>
             </div>
         </div>
 

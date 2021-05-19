@@ -1,13 +1,15 @@
+import { Link } from "react-router-dom";
+
 const HomeNav = () => {
   return (
     <div className="home_nav">
-      <h1>Dira</h1>
+      <h1><Link to="/">Dira</Link></h1>
       <div className="links">
-        <a href="/">Features</a>
-        <a href="/pricing">Pricing</a>
-        <a href="/contact">Contact</a>
-        <a href="/sign_in">Sign in</a>
-        <a href="/sign_up" id="boxxed_button">Sign up</a>
+        <Link to="/">Features</Link>
+        <Link to="/pricing">Pricing</Link>
+        <Link to="/contact">Contact</Link>
+        <Link to="/sign_in">Sign in</Link>
+        <Link to="/register" id="boxxed_button">Sign up</Link>
       </div>
     </div>
   );
