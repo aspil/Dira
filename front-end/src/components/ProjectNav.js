@@ -12,18 +12,17 @@ const ProjectNav = () => {
       document.getElementById("myForm").style.display = "none";
     }
   }
+  
 
   // openSettings();
   return (
     
     <div className="projectnav">
       <h1>Dira</h1>
-      <div className="links">
+      <div className="right_links">
         <Link to="/pricing" className="boxxed_button">Go Premium</Link>
         <Link to="/contact">Contact</Link>
-        <img src={accountIcon} alt="accountIcon" className="settingsPopupReference" onClick={openSettings}/>
-
-        {/* <a  onClick={openSettings}>Open Form</a> */}
+        <img src={accountIcon} alt="accountIcon" className="settingsPopupReference" onClick={openSettings}></img>
       </div>
       <div class="form-popup" id="myForm">
         <form class="form-container">
