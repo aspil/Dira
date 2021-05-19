@@ -1,11 +1,11 @@
 import logo from "../Images/dira_icon.png"
 import arrows from "../Images/arrows.png"
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 
 
-
-const Password_Recovery = () => {
+const PasswordRecovery = () => {
 
   
   const [step, setStep] = useState(1);
@@ -30,19 +30,19 @@ const Password_Recovery = () => {
           <br></br>    
           <p style={{textAlign:'left', marginLeft:"1.8vw", marginBottom:"-1vh"}}>Enter your new password:</p>
 
-          {step == 1 && 
+          {step === 1 && 
             <div>
             <input type="text" placeholder="E-mail"></input>
             <p><button onClick={sendEmail}>Continue</button></p>
             </div>
           }   
-          {step == 2 && 
+          {step === 2 && 
             <div>
             <input type="text" placeholder="Code"></input>
             <p><button onClick={checkCode}>Continue</button></p>
             </div>
           }
-          {step == 3 && 
+          {step === 3 && 
             <div>
             <input type="text" placeholder="Password"></input>
             <p style={{textAlign:'left', marginLeft:"1.8vw", marginBottom:"-1vh"}}>Confirm your password:</p>
@@ -50,7 +50,7 @@ const Password_Recovery = () => {
             <p><button onClick={resetPassword} style={{fontSize:"1vw"} }>Update Password</button></p>
             </div>
           }
-          <a href="/Contact">Contact Us</a>
+          <Link to="/contact">Contact Us</Link>
 
           </div>
       </div>
@@ -58,4 +58,4 @@ const Password_Recovery = () => {
   );
 }
    
-  export default Password_Recovery;
+  export default PasswordRecovery;

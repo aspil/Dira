@@ -26,10 +26,13 @@ body {
   /* max-width: 1500px; */
   margin: 0 auto;
 }
-.home_nav h1{
+.home_nav h1 a{
   font-size: 5vh;
   color: #f2f2f2;
   padding-left: 10%;
+}
+.home_nav h1 a:hover{
+  text-decoration: none;
 }
 .home_nav .links {
   margin-left: auto;

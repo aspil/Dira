@@ -3,6 +3,7 @@ import Footer from './Footer';
 import { useState } from "react";
 
 
+import SideNav from './SideNav';
 // import logo from "../Images/dira_icon.png"
 
 const ProjectMain = () => {
@@ -21,6 +22,14 @@ const ProjectMain = () => {
   return (
     <div className="projectmain">
       <ProjectNav/>
+      <div className="center">
+        <SideNav/>
+        <div className="content">
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic incidunt blanditiis, esse sequi nulla dicta et veniam tenetur corrupti earum ducimus vel, similique expedita sit voluptatum accusantium minus ex aliquid!
+          </p>
+        </div>
+      </div>
 
       <div className = "leftPanel" style={{width:"60%", margin:"0.5%"}}>
         {/* projectButtons */}
