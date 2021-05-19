@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css'
 import './project_screens.css'
+import './side_navigation.css'
 
 
 ReactDOM.render(
