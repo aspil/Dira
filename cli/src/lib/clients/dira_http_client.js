@@ -1,4 +1,4 @@
-'use stict';
+'use strict';
 
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const GET = "GET";
@@ -7,7 +7,7 @@ const PUT = "PUT";
 const DELETE = "DELETE";
 
 function format_query_params(params) {
-    if (params && typeof(params) === 'object') {
+    if (params && typeof (params) === 'object') {
         params = Object.keys(params).map((key) => {
             return `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`;
         }).join('&');
@@ -17,11 +17,26 @@ function format_query_params(params) {
 }
 
 function prepare_body_data(data) {
-    if (data && typeof(data) === 'object') {
+    if (data && typeof (data) === 'object') {
         data = JSON.stringify(data);
     }
 
     return data;
+}
+
+function make_response_headers(request) {
+    var headers = request.getAllResponseHeaders();
+    var headersArray = headers.trim().split(/[\r\n]+/);
+
+    var headerMap = {};
+    headersArray.forEach(function (line) {
+        var parts = line.split(': ');
+        const header = parts.shift();
+        const value = parts.join(': ');
+        headerMap[header] = value;
+    });
+
+    return headerMap;
 }
 
 function make_request(options) {
@@ -35,10 +50,12 @@ function make_request(options) {
         request.onload = () => {
             if (request.readyState === 4) {
                 if (request.status >= 200 && request.status < 300) {
-                    resolve(request.responseText);
+                    const headers = make_response_headers(request);
+                    const response = new Response(headers, request.responseText);
+                    resolve(response);
                 } else {
                     reject({
-                        status: this.status,
+                        status: request.status,
                         statusText: request.statusText
                     });
                 }
@@ -47,7 +64,7 @@ function make_request(options) {
 
         request.onerror = () => {
             reject({
-                status: this.status,
+                status: request.status,
                 statusText: request.statusText
             });
         };
@@ -65,6 +82,21 @@ function make_request(options) {
             request.send();
         }
     });
+}
+
+class Response {
+    constructor(headers, body) {
+        this.headers = headers;
+        this.body = body;
+    }
+
+    get_headers() {
+        return this.headers;
+    }
+
+    get_body() {
+        return this.body;
+    }
 }
 
 class DiraHttpClient {
@@ -91,4 +123,4 @@ class DiraHttpClient {
     }
 }
 
-module.exports = DiraHttpClient;
+module.exports = { DiraHttpClient, Response };

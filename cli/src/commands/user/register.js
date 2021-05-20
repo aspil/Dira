@@ -1,26 +1,15 @@
 'use strict';
 
 const { Command, flags } = require('@oclif/command');
-var inquirer = require("inquirer");
 const email_validator = require("email-validator");
+const get_answers_serialized = require('../../io_utils').get_answers_serialized;
 const DiraUserClient = require("../../lib/clients/dira_user_client");
+const questions = require('../../questions');
 const client = new DiraUserClient();
 
 const register_user_questions = [
-    {
-        type: 'input',
-        name: 'username',
-        message: 'Enter a username',
-    },
-    {
-        type: 'password',
-        name: 'password',
-        mask: '*',
-        message: 'Enter a password',
-        validate: (pass) => {
-            return pass.length >= 8 ? true : "Your password must be at least 8 characters long";
-        }
-    },
+    questions.username,
+    questions.password,
     {
         type: 'input',
         name: 'name',
@@ -47,11 +36,6 @@ const register_user_questions = [
     }
 ];
 
-function ask_for_user_register_info() {
-    return inquirer.prompt(register_user_questions)
-        .then((answers) => JSON.stringify(answers));
-}
-
 class RegisterUserCommand extends Command {
     async run() {
         const { flags } = this.parse(RegisterUserCommand);
@@ -64,7 +48,7 @@ class RegisterUserCommand extends Command {
                 this.error("The user data that you provided are an invalid JSON");
             }
         } else {
-            data = await ask_for_user_register_info();
+            data = await get_answers_serialized(register_user_questions);
         }
 
         const user = await client.register_user(data);
@@ -91,7 +75,7 @@ to enter this kind of infromation.
 `;
 
 RegisterUserCommand.flags = {
-    data: flags.string({ char: 'd', description: 'The data of the user to register in JSON format'})
+    data: flags.string({ char: 'd', description: 'The data of the user to register in JSON format' })
 }
 
 module.exports = RegisterUserCommand;
