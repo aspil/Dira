@@ -6,6 +6,7 @@ import Plan from './components/Plans'
 import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import ProjectMain from './components/ProjectMain'
 import PasswordRecovery from './components/PasswordRecovery';
+import Backlog from './components/Backlog';
 
 function App() {
   return (
@@ -29,6 +30,9 @@ function App() {
             </Route>
             <Route path="/recover">
               <PasswordRecovery/>
+            </Route>
+            <Route path="/backlog">
+              <Backlog/>
             </Route>
           </Switch>
       </div>
