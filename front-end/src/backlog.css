@@ -67,7 +67,7 @@
 .backlog .center_content main .flex_cont .sprints {
   width: 49%;
 }
-.backlog .center_content main .flex_cont .issues .text{
+.backlog .center_content main .flex_cont .issues .head{
   display: flex;
   justify-content: space-between;
   height: 5rem;
@@ -78,7 +78,10 @@
   background-color: white;
   padding: 0;
 }
-.backlog main .flex_cont .issues .text .info{
+.backlog main .flex_cont .issues .head .info{
+  align-self: center;
+}
+.backlog main .flex_cont .issues .head form{
   align-self: center;
 }
 .backlog .center_content main .flex_cont .issues li{
