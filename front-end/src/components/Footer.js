@@ -11,7 +11,7 @@ const Footer = () => {
           <Link to="/contact">Contact Us</Link>
         </div>
         <input type="text" placeholder="Email Adress" style={{margin:0,borderWidth:"thin"}}></input>
-        <Link to="/subscribe">SUBSCRIBE</Link>
+        <Link className="sub_link" to="/subscribe">SUBSCRIBE</Link>
         
       </div>
     );

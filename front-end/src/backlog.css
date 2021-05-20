@@ -1,0 +1,94 @@
+.backlog {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+}
+.backlog .projectnav {
+  flex-grow: 0;
+}
+.backlog .center_content {
+  flex-grow: 1;
+  display: flex;
+}
+.backlog .footer {
+  flex-grow: 0;
+  width: 100vw;
+  box-sizing: border-box;
+}
+.backlog .footer .sub_link {
+  margin-right: 0;
+  padding-right: 0;
+}
+.backlog .center_content nav {
+  flex-grow: 0;
+  flex-basis: 40%;
+  max-width: 300px;
+  background-color: rgb(129, 185, 238);
+}
+.backlog .center_content main {
+  flex-grow: 1;
+  flex-basis: 80%;
+  margin: 40px;
+  display: flex;
+  flex-direction: column;
+}
+.backlog .center_content nav ul {
+  list-style-type: none;
+  padding: 0;
+  padding-top: 10px;
+}
+.backlog .center_content nav a {
+  display: block;
+  text-align: center;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  margin-right: 5px;
+  text-decoration: none;
+}
+.backlog .center_content nav a:hover {
+  background-color: rgb(41, 138, 230);
+  box-shadow: 0 0 10px 2px black;
+}
+.backlog .center_content main .flex_cont {
+  margin-top: 1em;
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-between;
+}
+.backlog .center_content main .flex_cont .issues {
+  width: 49%;
+  padding: 10px;
+  background-color: rgb(129, 185, 238);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.backlog .center_content main .flex_cont .sprints {
+  width: 49%;
+}
+.backlog .center_content main .flex_cont .issues .head{
+  display: flex;
+  justify-content: space-between;
+  height: 5rem;
+}
+.backlog .center_content main .flex_cont .issues ul{
+  flex-grow: 1;
+  list-style-type: none;
+  background-color: white;
+  padding: 0;
+}
+.backlog main .flex_cont .issues .head .info{
+  align-self: center;
+}
+.backlog main .flex_cont .issues .head form{
+  align-self: center;
+}
+.backlog .center_content main .flex_cont .issues li{
+  border-bottom: 1px solid black;
+}
+.backlog .center_content main .flex_cont .issues a{
+  display: block;
+  padding-left: 5px;
+  text-decoration: none;
+}
