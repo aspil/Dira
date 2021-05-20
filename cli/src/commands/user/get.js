@@ -1,11 +1,11 @@
 'use strict';
 const { Command, flags } = require('@oclif/command');
 const DiraUserClient = require("../../lib/clients/dira_user_client");
-const client = new DiraUserClient();
 
 
 class GetUserCommand extends Command {
     async run() {
+        const client = new DiraUserClient();
         const { flags } = this.parse(GetUserCommand);
         if (flags.all) {
             const users = await client.get_all_users();
@@ -24,7 +24,7 @@ GetUserCommand.description = `Retrieve user information
 `;
 
 GetUserCommand.flags = {
-    all: flags.boolean({ char: 'a', description: 'Get all users' }),
+    all: flags.boolean({ char: 'a', description: 'Get all users', default: true }),
     id: flags.integer({ description: 'Get user by id' }),
 };
 

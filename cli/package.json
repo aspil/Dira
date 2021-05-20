@@ -13,6 +13,7 @@
     "@oclif/plugin-help": "^3.2.2",
     "email-validator": "^2.0.4",
     "inquirer": "^8.0.0",
+    "inquirer-confirm": "^2.0.7",
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {

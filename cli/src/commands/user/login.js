@@ -24,4 +24,4 @@ LoginUserCommand.flags = {
     password: flags.string({char: 'p', description: 'The password of the user to login' })
 };
 
-module.exports = LoginUserCommand;
+module.exports = LoginUserCommand; 
