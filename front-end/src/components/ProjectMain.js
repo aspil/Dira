@@ -2,10 +2,6 @@ import ProjectNav from './ProjectNav';
 import Footer from './Footer';
 import { useState } from "react";
 
-
-import SideNav from './SideNav';
-// import logo from "../Images/dira_icon.png"
-
 const ProjectMain = () => {
 
   const [listState, setListState] = useState("showProjects");
@@ -34,17 +30,15 @@ const ProjectMain = () => {
   return (
     <div className="projectmain">
       <ProjectNav/>
-      <div className="center">
-      </div>
 
       <div className = "leftPanel" style={{width:"60%", margin:"0.5%"}}>
-        {/* projectButtons */}
+{/* projectButtons */}
         <div className = "projectButtons">
           <button > + New Project</button>
           <button style={{backgroundColor:"black"}}>Join a Project</button>
         </div>
         <div style={{clear: "both"}}>
-          {/* listButtons */}
+{/* listButtons */}
           <div className = "listButtons">
             { listState == "showProjects" &&
               <div>
@@ -59,7 +53,7 @@ const ProjectMain = () => {
             </div>
             }
           </div>
-          {/* tables */}
+{/* tables */}
           { listState == "showProjects" &&
           <table id = "main_table">
             <tr>
@@ -94,11 +88,10 @@ const ProjectMain = () => {
             ))}
           </table>
           }
-
         </div>
       </div>
-
-      <div style={{clear: "both"}}>
+{/* Footer */}
+      <div style={{clear: "both", position:"absolute", bottom:"0", width:"100%"}}>
         <Footer/>
       </div>
 
@@ -108,12 +101,3 @@ const ProjectMain = () => {
  
 export default ProjectMain;
 
-// const Home = () => {
-//   return (
-//     <div>
-//       Home page
-//     </div>
-//   );
-// }
- 
-// export default Home;

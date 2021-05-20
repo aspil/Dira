@@ -6,6 +6,7 @@ import Plan from './components/Plans'
 import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import ProjectMain from './components/ProjectMain'
 import PasswordRecovery from './components/PasswordRecovery';
+import Members from './components/Members';
 
 function App() {
   return (
@@ -13,22 +14,25 @@ function App() {
       <div className="App">
           <Switch>
             <Route exact path="/">
-              <Home />
+              <Home/>
             </Route>
             <Route path="/sign_in">
-              <Login />
+              <Login/>
             </Route>
             <Route path="/register">
-              <Register />
+              <Register/>
             </Route>
             <Route path="/proj_main">
-              <ProjectMain />
+              <ProjectMain/>
             </Route>
             <Route path="/pricing">
               <Plan/>
             </Route>
             <Route path="/recover">
               <PasswordRecovery/>
+            </Route>
+            <Route path="/members">
+              <Members/>
             </Route>
           </Switch>
       </div>

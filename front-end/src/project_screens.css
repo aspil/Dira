@@ -2,12 +2,15 @@
   display: flex;
   align-items: center;
   background-color: rgb(0, 132, 255);
+  max-block-size: 7vh;
 }
+
 .projectnav h1{
   font-size: 5vh;
   color: #f2f2f2;
   padding-left: 10%;
 }
+
 .projectnav .right_links {
   margin-left: auto;
   margin-right: 2vw;
@@ -21,15 +24,23 @@
   color: #f2f2f2;
   border-radius: 5px;
   margin-right: 2vw;
-
 }
+
 .projectnav img{
   position: fixed;
+}
+
+.projectnav img:hover{
+  /* background-color: white; */
+  border-radius: 30px;
+  box-shadow: 0 4px 8px 0 lightgray, 0 4px 8px 0 lightgray;
+  
 }
 
 .projectnav a:hover {
   text-decoration: underline;
 }
+
 .projectnav a.boxxed_button{
   border-color: white;
   border-style: solid;
@@ -38,9 +49,12 @@
   padding: 0.5rem;
 }
 
-
-
-/* * {box-sizing: border-box;} */
+.projectnav a.boxxed_button:hover {
+  background-color: #f2f2f2;
+  color: rgb(0, 132, 255);
+  transition: 0.2s;
+  
+}
 
 .settingsPopupReference {
   background-color: rgb(0, 132, 255);
@@ -49,6 +63,7 @@
   position: fixed;
   right: 1vw;
 }
+
 .settingsPopupReference:hover {
   cursor: pointer;
 }
@@ -56,9 +71,9 @@
 .form-popup {
   display: none;
   position:fixed;
-  top: 10%;
-  right: 1%; 
-  border: 3px solid #f1f1f1;
+  top: 7.1%;
+  right: 0.1%; 
+  border: 1px solid #ddd;
   z-index: 9;
 }
 
@@ -74,68 +89,123 @@
 }
 
 .form-container .btn {
-  background-color: #04AA6D;
+  background-color: rgb(84, 212, 68);
   color: white;
-  padding: 16px 20px;
-  border: none;
+  padding: 8px 10px;
   cursor: pointer;
   width: 100%;
-  margin-bottom:10px;
+  margin-bottom:1px;
   opacity: 0.8;
 }
 
 .form-container .btn:hover, .open-button:hover {
   opacity: 1;
-  }
+}
 
 /* Project_Main */
 .projectmain .leftPanel{
   margin: 0 auto;
-
 }
+
 .projectmain .projectButtons{
   padding-top: 2vh;
   padding-bottom: 1vh;
   float: right;
 }
+
 .projectmain .projectButtons button{
   padding:1vh;
   margin-left: 1vh;
   border-radius: 5px;
 }
+
 .projectmain .listButtons button{
   width: 50%;
   padding: 1vh;
 }
+
 .projectmain .listButtons .pressedButton{
   background-color: rgb(0, 132, 255);
   color: #f2f2f2;
   border: 1px solid rgb(0, 132, 255);
-
 }
+
 .projectmain .listButtons .unpressedButton{
   background-color: #f2f2f2;
   color: rgb(0, 132, 255);
   border: 1px solid #ddd;
-
 }
-#main_table {
+
+.projectmain #main_table {
   border-collapse: collapse;
   width: 100%;
 }
 
-#main_table td, #customers th {
+.projectmain #main_table td, #customers th {
   border: 1px solid #ddd;
   padding: 1vh;
 }
 
-#main_table tr:nth-child(even){background-color: #f2f2f2;}
+.projectmain #main_table tr:nth-child(even){background-color: #f2f2f2;}
 
-#main_table tr:hover {background-color: #ddd;}
+.projectmain #main_table tr:hover {background-color: #ddd;}
 
-#main_table th {
+.projectmain #main_table th {
   border: 1px solid #ddd;
   padding: 1vh;
   text-align: left;
+}
 
+
+
+/* Members */
+
+.members .content{
+  margin-left: 2vw;
+}
+.members .content #project_name{
+  margin-top: 2vh;
+}
+.members .content .main_panel{
+  background-color: rgb(168, 208, 248);
+  border-radius: 5px;
+  max-width: 60%;
+  border:2px solid lightgray;
+  padding: 2vh 2vw;
+  align-items: center;
+
+  
+}
+.members .content .main_panel #team_members{
+  color: #f2f2f2;
+  float: left;
+}
+.members .content .main_panel button{
+  float: right;
+  border-radius: 3px;
+  width: 18vw;
+  font-size: 1.6em;
+  margin-top: 0.1em;
+}
+
+.members .content #main_table {
+  margin-top: 6vh;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.members .content #main_table td, #customers th {
+  border: 1px solid #ddd;
+  padding: 1vh;
+}
+
+.members .content #main_table tr:nth-child(even){background-color: #f2f2f2;}
+.members .content #main_table tr:nth-child(odd){background-color: white;}
+
+.members .content #main_table tr:hover {background-color: #ddd;}
+
+.members .content #main_table th {
+  border: 1px solid #ddd;
+  padding: 1vh;
+  text-align: left;
 }

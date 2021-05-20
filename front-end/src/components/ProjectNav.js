@@ -12,16 +12,12 @@ const ProjectNav = () => {
       document.getElementById("myForm").style.display = "none";
     }
   }
-  
-
-  // openSettings();
   return (
-    
     <div className="projectnav">
       <h1>Dira</h1>
       <div className="right_links">
+        <Link to="/new_project">+ New Project</Link>
         <Link to="/pricing" className="boxxed_button">Go Premium</Link>
-        <Link to="/contact">Contact</Link>
         <img src={accountIcon} alt="accountIcon" className="settingsPopupReference" onClick={openSettings}></img>
       </div>
       <div class="form-popup" id="myForm">
