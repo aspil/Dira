@@ -3,6 +3,7 @@ import ProjectNav from './ProjectNav';
 import Footer from './Footer';
 import { useState } from "react";
 import { PlayForWorkOutlined } from '@material-ui/icons';
+import x_icon from "../Images/x_icon.png"
 
 const Members = () => {
 
@@ -16,7 +17,7 @@ const Members = () => {
         <div className="members">
             <ProjectNav/>
             {/* <SideNav/> */}
-            <div className="content">
+            {/* <div className="content">
                 <h1 id="project_name">KFC is coming to Greece</h1>
                 <div className="main_panel">
                     <h1 id="team_members">Team Members</h1>
@@ -36,11 +37,21 @@ const Members = () => {
                         ))}
                     </table>
                 </div>
-            
-            
-            
-            
+            </div> */}
+            <div className="add_members_popup">
+                <div>
+                <h2>Add Members</h2>
+                <img src={x_icon} alt="accountIcon"></img>
+                </div>
+                <form className="members_form">
+                <input type="text" placeholder="Email Address"></input>
+                <input type="text" placeholder="Email Address"></input>
+                <input type="text" placeholder="Email Address"></input>
+                <button>Add</button>
+
+                </form>
             </div>
+
             <div style={{clear: "both", position:"absolute", bottom:"0", width:"100%"}}>
                 <Footer/>
             </div>
