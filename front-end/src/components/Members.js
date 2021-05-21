@@ -14,6 +14,17 @@ const Members = () => {
       ])
 
     return (
+        // Gia na doylepsei to sidebar
+    // <div className="members proj_page">
+    //   <ProjectNav />
+    //   <div className="center_content">
+    //     <SideNav />
+    //     <main>
+    // *** CODE HERE ***
+    //     </main>
+    //   </div>
+    //   <Footer />
+    // </div>
         <div className="members">
             <ProjectNav/>
             {/* <SideNav/> */}

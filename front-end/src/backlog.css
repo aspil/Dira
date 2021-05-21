@@ -1,44 +1,40 @@
-.backlog {
+.proj_page {
   height: 100vh;
   width: 100vw;
   display: flex;
   flex-direction: column;
 }
-.backlog .projectnav {
+.proj_page .projectnav {
   flex-grow: 0;
 }
-.backlog .center_content {
+.proj_page .center_content {
   flex-grow: 1;
   display: flex;
 }
-.backlog .footer {
+.proj_page .footer {
   flex-grow: 0;
-  width: 100vw;
-  box-sizing: border-box;
 }
-.backlog .footer .sub_link {
-  margin-right: 0;
-  padding-right: 0;
-}
-.backlog .center_content nav {
+.sidebar {
   flex-grow: 0;
-  flex-basis: 40%;
+  flex-basis: 30%;
   max-width: 300px;
   background-color: rgb(129, 185, 238);
 }
-.backlog .center_content main {
+.proj_page .center_content main {
   flex-grow: 1;
-  flex-basis: 80%;
+  flex-basis: 70%;
   margin: 40px;
+}
+.backlog .center_content main {
   display: flex;
   flex-direction: column;
 }
-.backlog .center_content nav ul {
+.sidebar ul {
   list-style-type: none;
   padding: 0;
   padding-top: 10px;
 }
-.backlog .center_content nav a {
+.sidebar a {
   display: block;
   text-align: center;
   font-size: 1.5rem;
@@ -46,7 +42,7 @@
   margin-right: 5px;
   text-decoration: none;
 }
-.backlog .center_content nav a:hover {
+.sidebar a:hover {
   background-color: rgb(41, 138, 230);
   box-shadow: 0 0 10px 2px black;
 }

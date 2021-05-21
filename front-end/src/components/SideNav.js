@@ -17,7 +17,7 @@ const SideNav = (/*{ links }*/) => {
   ]
 
   return (
-    <nav>
+    <nav className="sidebar">
       <ul>
         {links.map((item) => (
           <li><Link to={item.path}>{item.name}</Link></li>
