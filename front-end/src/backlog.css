@@ -14,12 +14,7 @@
 .proj_page .footer {
   flex-grow: 0;
 }
-.sidebar {
-  flex-grow: 0;
-  flex-basis: 30%;
-  max-width: 300px;
-  background-color: rgb(129, 185, 238);
-}
+
 .proj_page .center_content main {
   flex-grow: 1;
   flex-basis: 70%;
@@ -29,23 +24,7 @@
   display: flex;
   flex-direction: column;
 }
-.sidebar ul {
-  list-style-type: none;
-  padding: 0;
-  padding-top: 10px;
-}
-.sidebar a {
-  display: block;
-  text-align: center;
-  font-size: 1.5rem;
-  padding: 0.5rem;
-  margin-right: 5px;
-  text-decoration: none;
-}
-.sidebar a:hover {
-  background-color: rgb(41, 138, 230);
-  box-shadow: 0 0 10px 2px black;
-}
+
 .backlog .center_content main .flex_cont {
   margin-top: 1em;
   flex-grow: 1;

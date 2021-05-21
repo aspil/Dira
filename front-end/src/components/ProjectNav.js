@@ -14,7 +14,7 @@ const ProjectNav = () => {
   }
   return (
     <div className="projectnav">
-      <h1>Dira</h1>
+      <Link to="/proj_main" className="dira_link">Dira</Link>
       <div className="right_links">
         <Link to="/new_project">+ New Project</Link>
         <Link to="/pricing" className="boxxed_button">Go Premium</Link>
