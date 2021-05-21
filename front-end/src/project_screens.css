@@ -224,6 +224,8 @@
   border:2px solid lightgray;
   border-radius: 5px;
   padding: 2vh 1.5vw;
+  box-shadow: 12px 12px 7px grey;
+
 }
 
 .members .add_members_popup h2{

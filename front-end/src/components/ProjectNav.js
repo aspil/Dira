@@ -23,7 +23,6 @@ const ProjectNav = () => {
       <div class="form-popup" id="myForm">
         <form class="form-container">
           <p>"Username"</p>
-
           <button type="submit" class="btn">Upgrade</button>
           <button type="button" class="btn">Logout</button>
         </form>
