@@ -1,5 +1,10 @@
 import { Link } from "react-router-dom";
+import DiraUserClient from "dira-clients";
+const client = new DiraUserClient();
+
 import logo from "../Images/dira_icon.png"
+
+console.log(await client.get_all_users());
 
 const Login = () => {
     return (
