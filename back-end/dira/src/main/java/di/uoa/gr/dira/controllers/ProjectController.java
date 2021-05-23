@@ -1,6 +1,5 @@
 package di.uoa.gr.dira.controllers;
 
-import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
 import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.security.JwtHelper;
 import di.uoa.gr.dira.services.projectService.IProjectService;
@@ -46,20 +45,26 @@ public class ProjectController {
     }
 
     @GetMapping("{projectId}")
-    public @Valid
-    ProjectModel getProjectById(@PathVariable Long projectId) {
-        return service.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("id", projectId.toString()));
+    public @Valid ProjectModel getProjectById(
+            @PathVariable Long projectId,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
+    ) {
+        SubscriptionPlanEnum customerSubscriptionPlan = jwtHelper.getSubscriptionPlan(jwtToken);
+        return service.getProject(projectId, customerSubscriptionPlan);
     }
 
-    // TODO: add path variable projectId
     @PutMapping("{projectId}")
-    public @Valid ProjectModel updateProjectWithId(@Valid @RequestBody ProjectModel projectModel) {
-        return service.updateProjectWithId(projectModel);
+    public @Valid ProjectModel updateProjectWithId(
+            @PathVariable Long projectId,
+            @RequestBody ProjectModel projectModel
+    ) {
+        return service.updateProjectWithId(projectId, projectModel);
     }
 
     @DeleteMapping("{projectId}")
-    // TODO: fix delete
-    public void deleteProjectById(@PathVariable Long projectId) {
-        service.deleteById(projectId);
+    public void deleteProjectById(
+            @PathVariable Long projectId
+    ) {
+        service.deleteProjectWithId(projectId);
     }
 }
