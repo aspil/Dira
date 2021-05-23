@@ -4,6 +4,8 @@ import App from './App';
 import './index.css'
 import './project_screens.css'
 import './backlog.css'
+import './sidenav.css'
+
 
 
 ReactDOM.render(

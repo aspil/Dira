@@ -63,12 +63,17 @@
   width: 52%;
 }
 button{
-  color: #f2f2f2;
+  color: white;
   font-weight: bold;
   margin: 0px;
   background-color: rgb(84, 212, 68);
   border-width: thin;
   cursor: pointer;
+  opacity: 0.8;
+}
+button:hover{
+  opacity: 1;
+  text-decoration: underline;
 }
 .home form {
   margin-left: 60%;
@@ -200,10 +205,10 @@ button{
 }
 
 .password_recovery .arrows{
-  max-width: 10vw;
+  max-width: 5vw;
 }
-.password_recovery img {
-  margin: -8%;
+.password_recovery #dira_logo {
+  /* margin: -8%; */
   max-width:50%;
   height:auto;
 }

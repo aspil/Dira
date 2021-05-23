@@ -17,7 +17,7 @@ const Backlog = () => {
   }
 
   return (
-    <div className="backlog">
+    <div className="backlog proj_page">
       <ProjectNav />
       <div className="center_content">
         <SideNav />

@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 
 
 const PasswordRecovery = () => {
-
   
   const [step, setStep] = useState(1);
 
@@ -23,11 +22,10 @@ const PasswordRecovery = () => {
   return (
     <div className="password_recovery">
       <div style={{textAlign:"center"}}>
-          <img src={logo} alt="dira logo" id="dira logo"/>
+          <img src={logo} alt="dira logo" id="dira_logo" style={{margin:"-15vh"}}/>
           <div className="login_grad" style={{textAlign:"center"}}>
-          <img src={arrows} alt="arrows"/>
+          <img src={arrows} alt="arrows"style={{width:"6vw",marginTop:"1vh"}}/>
           <h1 style={{fontWeight:"normal", margin:"15px"}}>Password Recovery</h1>
-          <br></br>    
           <p style={{textAlign:'left', marginLeft:"1.8vw", marginBottom:"-1vh"}}>Enter your new password:</p>
 
           {step === 1 && 

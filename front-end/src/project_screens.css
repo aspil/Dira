@@ -5,16 +5,17 @@
   max-block-size: 7vh;
 }
 
-.projectnav h1{
+.projectnav .dira_link{
   font-size: 5vh;
   color: #f2f2f2;
-  padding-left: 10%;
+  margin-left: 5%;
 }
-
+.projectnav .dira_link:hover{
+  text-decoration: none;
+}
 .projectnav .right_links {
   margin-left: auto;
   margin-right: 2vw;
-
 }
 
 .projectnav a {
@@ -56,7 +57,7 @@
   
 }
 
-.settingsPopupReference {
+.projectnav .settingsPopupReference {
   background-color: rgb(0, 132, 255);
   width: 2vw;
   height: auto;
@@ -64,11 +65,11 @@
   right: 1vw;
 }
 
-.settingsPopupReference:hover {
+.projectnav .settingsPopupReference:hover {
   cursor: pointer;
 }
 
-.form-popup {
+.projectnav .form-popup {
   display: none;
   position:fixed;
   top: 7.1%;
@@ -77,30 +78,25 @@
   z-index: 9;
 }
 
-.form-container {
+.projectnav .form-container {
   max-width: 200px;
   padding: 10px;
   background-color: white;
 }
 
-.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+.projectnav .form-container input[type=text]:focus, .form-container input[type=password]:focus {
   background-color: #ddd;
   outline: none;
 }
 
-.form-container .btn {
-  background-color: rgb(84, 212, 68);
+.projectnav .form-container .btn {
   color: white;
   padding: 8px 10px;
   cursor: pointer;
   width: 100%;
   margin-bottom:1px;
-  opacity: 0.8;
 }
 
-.form-container .btn:hover, .open-button:hover {
-  opacity: 1;
-}
 
 /* Project_Main */
 .projectmain .leftPanel{
@@ -156,34 +152,34 @@
   text-align: left;
 }
 
-
-
 /* Members */
 
 .members .content{
   margin-left: 2vw;
 }
+
 .members .content #project_name{
   margin-top: 2vh;
 }
+
 .members .content .main_panel{
   background-color: rgb(168, 208, 248);
   border-radius: 5px;
   max-width: 60%;
   border:2px solid lightgray;
   padding: 2vh 2vw;
-  align-items: center;
-
-  
+  align-items: center;  
 }
+
 .members .content .main_panel #team_members{
-  color: #f2f2f2;
+  color: white;
   float: left;
 }
+
 .members .content .main_panel button{
   float: right;
   border-radius: 3px;
-  width: 18vw;
+  width: 13vw;
   font-size: 1.6em;
   margin-top: 0.1em;
 }
@@ -199,13 +195,69 @@
   padding: 1vh;
 }
 
-.members .content #main_table tr:nth-child(even){background-color: #f2f2f2;}
-.members .content #main_table tr:nth-child(odd){background-color: white;}
+.members .content #main_table tr:nth-child(even){
+  background-color: #f2f2f2;
+}
 
-.members .content #main_table tr:hover {background-color: #ddd;}
+.members .content #main_table tr:nth-child(odd){
+  background-color: white;
+}
+
+.members .content #main_table tr:hover {
+  background-color: #ddd;
+}
 
 .members .content #main_table th {
   border: 1px solid #ddd;
   padding: 1vh;
   text-align: left;
+}
+
+.members .add_members_popup{
+  position: absolute;
+  top:30%;
+  left:50%;
+  width:20%;
+  margin-left:-12.5%;  
+  text-align: center;  
+  background-color: rgb(168, 208, 248);
+  border:2px solid lightgray;
+  border-radius: 5px;
+  padding: 2vh 1.5vw;
+  box-shadow: 12px 12px 7px grey;
+
+}
+
+.members .add_members_popup h2{
+  float:left;
+  color: white;
+  margin-bottom: 1vh;
+}
+
+.members .add_members_popup img{
+  width: 2vw;
+  height: auto;
+  float:right;
+}
+
+.members .add_members_popup img:hover{
+  cursor: pointer;  
+}
+
+.members .add_members_popup input{
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+  border-width: thin;
+  width:90%;
+  font-size: large;
+  padding: 1vh;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.members .add_members_popup button{
+  border-radius: 3px;
+  width: 10vw;
+  font-size: 1.6em;
+  margin-top: 0.6em;
 }
