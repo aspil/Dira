@@ -47,7 +47,7 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     public ProjectModel createProject(Long customerId, ProjectModel projectModel) {
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
         Project project = mapper.map(projectModel, entityType);
-        if ((customer.getSubscriptionPlan().getPlan() == SubscriptionPlanEnum.STANDARD) && (project.getVisibility().equals(ProjectVisibility.PRIVATE))) {
+        if ((customer.getSubscriptionPlan().getPlan().equals(SubscriptionPlanEnum.STANDARD)) && (project.getVisibility().equals(ProjectVisibility.PRIVATE))) {
             throw new ActionNotPermittedException();
         }
         project.setCustomers(new ArrayList<>());
@@ -60,7 +60,7 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     @Override
     public ProjectModel getProject(Long projectId, SubscriptionPlanEnum subscriptionPlan) {
         Project project = repository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
-        if (project.getVisibility().equals(ProjectVisibility.PRIVATE) && subscriptionPlan == SubscriptionPlanEnum.STANDARD) {
+        if (project.getVisibility().equals(ProjectVisibility.PRIVATE) && subscriptionPlan.equals(SubscriptionPlanEnum.STANDARD)) {
             throw new ActionNotPermittedException();
         }
 
@@ -81,8 +81,8 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         List<Customer> customers = project.getCustomers();
         for (int i = 0; i != customers.size(); ++i) {
             customers.get(i).getProjects().remove(project);
-            customerRepository.save(customers.get(i));
         }
+        customerRepository.saveAll(customers);
         repository.deleteById(projectId);
     }
 
@@ -104,23 +104,10 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
 
     @Override
     public void deleteUserFromProjectWithId(Long id, Long userId) {
-        boolean userFound = false;
         Project project = repository.findById(id).orElseThrow(() -> new ProjectNotFoundException("projectId", id.toString()));
-
         List<Customer> customers = project.getCustomers();
-        if (!customers.isEmpty()) {
-            for (int i = 0; i != customers.size(); ++i) {
-                if (customers.get(i).getId().equals(userId)) {
-                    userFound = true;
-                    customers.remove(i);
-                    repository.save(project);
-                    break;
-                }
-            }
-        }
-
-        if (!userFound) {
-            throw new CustomerNotFoundException("userId", userId.toString());
-        }
+        Customer customer = customers.stream().filter(user -> user.getId().equals(userId)).findFirst().orElseThrow(() -> new CustomerNotFoundException("userId", userId.toString()));
+        customers.remove(customer);
+        repository.save(project);
     }
 }
