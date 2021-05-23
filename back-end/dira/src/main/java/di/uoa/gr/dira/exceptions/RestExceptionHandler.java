@@ -65,7 +65,7 @@ public class RestExceptionHandler {
     }
 
     private ResponseEntity<RestApiError> handleActionNotPermittedException(
-            Exception ex,
+            ActionNotPermittedException ex,
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {
