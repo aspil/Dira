@@ -1,9 +1,8 @@
 'use strict';
 const { Command, flags } = require('@oclif/command');
-const DiraProjectClient = require("../../lib/clients/dira_project_client");
-const DiraUserClient = require("../../lib/clients/dira_user_client");
-const io_utils = require("../../io_utils");
+const { DiraUserClient, DiraProjectClient } = require("dira-clients");
 const confirm = require('inquirer-confirm');
+const io_utils = require("../../io_utils");
 const questions = require('../../questions');
 
 async function login_and_get_token() {

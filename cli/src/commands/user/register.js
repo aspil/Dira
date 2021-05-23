@@ -2,8 +2,8 @@
 
 const { Command, flags } = require('@oclif/command');
 const email_validator = require("email-validator");
-const get_answers_serialized = require('../../io_utils').get_answers_serialized;
-const DiraUserClient = require("../../lib/clients/dira_user_client");
+const { DiraUserClient } = require("dira-clients");
+const { get_answers_serialized } = require('../../io_utils');
 const questions = require('../../questions');
 const client = new DiraUserClient();
 

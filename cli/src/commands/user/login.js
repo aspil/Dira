@@ -1,7 +1,7 @@
 'use strict';
 const { Command, flags } = require('@oclif/command');
-const get_answers = require('../../io_utils').get_answers;
-const DiraUserClient = require("../../lib/clients/dira_user_client");
+const { DiraUserClient } = require("dira-clients");
+const { get_answers } = require('../../io_utils');
 var questions = require('../../questions');
 const client = new DiraUserClient();
 

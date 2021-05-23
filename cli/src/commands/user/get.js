@@ -1,6 +1,6 @@
 'use strict';
 const { Command, flags } = require('@oclif/command');
-const DiraUserClient = require("../../lib/clients/dira_user_client");
+const { DiraUserClient } = require("dira-clients");
 
 
 class GetUserCommand extends Command {
