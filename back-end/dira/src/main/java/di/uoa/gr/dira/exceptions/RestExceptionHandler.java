@@ -33,7 +33,7 @@ public class RestExceptionHandler {
             HttpStatus status = HttpStatus.NOT_FOUND;
             return handleProjectNotFoundException((ProjectNotFoundException) ex, headers, status, request);
         } else if (ex instanceof ActionNotPermittedException) {
-            HttpStatus status = HttpStatus.BAD_REQUEST;
+            HttpStatus status = HttpStatus.FORBIDDEN;
             return handleActionNotPermittedException((ActionNotPermittedException) ex, headers, status, request);
         }
 
