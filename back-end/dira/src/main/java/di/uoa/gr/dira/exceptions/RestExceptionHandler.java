@@ -4,6 +4,7 @@ import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
 import di.uoa.gr.dira.exceptions.customer.CustomerAlreadyExistsException;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
+import di.uoa.gr.dira.exceptions.project.permission.PermissionNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,9 @@ public class RestExceptionHandler {
         } else if (ex instanceof ProjectNotFoundException) {
             HttpStatus status = HttpStatus.NOT_FOUND;
             return handleProjectNotFoundException((ProjectNotFoundException) ex, headers, status, request);
+        } else if (ex instanceof PermissionNotFoundException) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            return handlePermissionNotFoundException((PermissionNotFoundException) ex, headers, status, request);
         } else if (ex instanceof ActionNotPermittedException) {
             HttpStatus status = HttpStatus.FORBIDDEN;
             return handleActionNotPermittedException((ActionNotPermittedException) ex, headers, status, request);
@@ -61,6 +65,14 @@ public class RestExceptionHandler {
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {
+        return handleExceptionInternal(ex, new RestApiError(ex.getMessage()), headers, status, request);
+    }
+
+    private ResponseEntity<RestApiError> handlePermissionNotFoundException(
+            PermissionNotFoundException ex,
+           HttpHeaders headers,
+           HttpStatus status,
+           WebRequest request) {
         return handleExceptionInternal(ex, new RestApiError(ex.getMessage()), headers, status, request);
     }
 
