@@ -1,0 +1,243 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
+
+/* base styles */
+* {
+  margin: 0;
+  font-family: 'Open Sans';
+  color: #333;
+}
+/* Homepage */
+.home .home_grad1 {
+  background-image: linear-gradient(to bottom, rgb(0, 132, 255) , rgb(255, 255, 255));
+}
+.home .home_grad2 {
+  background-image: linear-gradient(to top, rgb(0, 132, 255) , rgb(255, 255, 255));
+}
+.home_nav {
+  padding: 0.4%;
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+}
+.home_nav h1 a{
+  font-size: 5vh;
+  color: #f2f2f2;
+  padding-left: 10%;
+}
+.home_nav h1 a:hover{
+  text-decoration: none;
+}
+.home_nav .links {
+  margin-left: auto;
+
+}
+.home_nav a {
+  font-size:x-large;
+  font-weight: bold;
+  margin-right: 36px;
+  text-decoration: none;
+  padding: 5px;
+  color: #f2f2f2;
+  border-radius: 5px;
+}
+.home_nav a:hover {
+  text-decoration: underline;
+}
+.home_nav a#boxxed_button{
+  border-color: #f2f2f2;
+  border-style: solid;
+  border-width: 3px;
+  border-radius: 5px;
+  padding: 0.5rem;
+}
+.home_nav a#boxxed_button:hover {
+  background-color: #f2f2f2;
+  color: rgb(0, 132, 255);
+  transition: 0.2s;
+}
+
+.home img{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 52%;
+}
+button{
+  color: white;
+  font-weight: bold;
+  margin: 0px;
+  background-color: rgb(84, 212, 68);
+  border-width: thin;
+  cursor: pointer;
+  opacity: 0.8;
+}
+button:hover{
+  opacity: 1;
+  text-decoration: underline;
+}
+.home form {
+  margin-left: 60%;
+  margin-right: 10%;
+  height: 3.5vh;
+}
+.home form button,input { 
+  margin: 15px; 
+  border-radius: 3px;
+}
+
+.home form input{
+  width: 45%;
+  height: 100%;
+  border-width: thin;
+}
+.home form button{
+  height: 113%;
+  width: 30%;
+  font-size: 17px;
+}
+
+.home .home_grad2 button{
+    width: 15vw;
+    height: 6vh;
+    font-size: 25px;
+    border-radius: 5px;
+
+}
+/* Footer */
+.footer {
+  border-top: 1px solid #f2f2f2;
+  background-color: rgb(0, 132, 255);
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  font-size:x-large;
+  /* font-weight: bold; */
+  color: #f2f2f2;
+  width: 100%;
+  }
+
+.footer img{
+  max-height:10vh;
+  max-width:9vw;
+  margin-left: 10vh;
+}
+.footer .links {
+  margin-left: auto;
+  margin-right: auto;
+
+}
+.footer a {
+  color: #f2f2f2;
+  margin-right: 36px;
+  text-decoration: none;
+  padding: 1.5vw;
+  border-radius: 5px;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.home_grad1 {
+  background-image: linear-gradient(to bottom, rgb(0, 132, 255) , rgb(255, 255, 255));
+}
+
+/* login, register,password recovery  */
+
+.register img {
+  margin:-8%;
+  max-width:50%;
+  height:auto;
+}
+.register .login_grad{
+  background-color: rgb(239, 240, 241);
+  margin:0 auto;
+  width: 22%;
+  border-radius: 5px;
+  border:2px solid lightgray;
+}
+
+.register input{
+  border-width: thin;
+  width:80%;
+  font-size: large;
+  padding: 10px;
+}
+.register button{
+  width: 11vw;
+  height: 5vh;
+  font-size: 23px;
+  border-radius: 5px;
+  margin-top: 15px; 
+}
+.register a{
+  color: rgb(0, 132, 255);
+}
+
+.login img {
+  margin:-8%;
+  max-width:50%;
+  height:auto;
+}
+.login .login_grad{
+  background-color: rgb(239, 240, 241);
+  margin:0 auto;
+  width: 22%;
+  border-radius: 5px;
+  border:2px solid lightgray;
+}
+
+.login input{
+  border-width: thin;
+  width:80%;
+  font-size: large;
+  padding: 10px;
+}
+.login button{
+  width: 11vw;
+  height: 5vh;
+  font-size: 23px;
+  border-radius: 5px;
+  margin-top: 15px; 
+}
+.login a{
+  color: rgb(0, 132, 255);
+}
+
+.password_recovery .arrows{
+  max-width: 5vw;
+}
+.password_recovery #dira_logo {
+  /* margin: -8%; */
+  max-width:50%;
+  height:auto;
+}
+
+.password_recovery .login_grad{
+  width: 22%;
+  background-color: rgb(239, 240, 241);
+  border-radius: 5px;
+  margin: 0 auto;
+  margin-bottom: 10vh;
+  border-top:2px solid lightgray;
+  border-bottom:2px solid lightgray;
+  border-right:2px solid lightgray;
+  border-left:2px solid lightgray;
+}
+
+.password_recovery input{
+  border-width: thin;
+  width:80%;
+  font-size: large;
+  padding: 10px;
+}
+.password_recovery button{
+  width: 11vw;
+  height: 5vh;
+  font-size: 23px;
+  border-radius: 5px;
+  margin-top: 15px; 
+}
+.password_recovery a{
+  color: rgb(0, 132, 255);
+}
