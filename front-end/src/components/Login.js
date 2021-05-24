@@ -1,18 +1,38 @@
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import logo from "../Images/dira_icon.png"
-// import dira_client from "dira-clients";
+import dira_client from "dira-clients";
 import { useState } from "react";
 
-// const client = 
+const client = new dira_client();
+client.register_user(
+  {
+    "username": "tester",
+    "name": "Tester",
+    "surname": "Mc Tester",
+    "email": "test@otenet.gr",
+    "password": "12345678",
+    "subscriptionPlan": "STANDARD"
+}
+)
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const history = useHistory();
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    console.log(email, password);
+    client
+      .login_user(email, password)
+      .then((token) => {
+        console.log(token);
+        // history.push('/proj_main');
+      })
+      .catch(() => {
+        alert('Error');
+      });
+
   }
   return (
     <div className="login" >
@@ -20,7 +40,7 @@ const Login = () => {
           <img src={logo} alt="dira logo" id="dira logo"/>
           <div className="login_grad" style={{textAlign:"center"}}>
               <h1 style={{fontWeight:"normal", margin:"15px"}}>Login</h1>
-              <form onSubmit={onSubmit}>
+              <form onSubmit={onSubmit} noValidate>
                 <input 
                   type="email" 
                   placeholder="Email address" 
