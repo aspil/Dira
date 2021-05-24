@@ -118,7 +118,11 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     public void deleteUserFromAllProjects(Long userId) {
         Customer customer = customerRepository.findById(userId).orElseThrow(() -> new CustomerNotFoundException("userId", userId.toString()));
 
-        customer.getProjects().forEach(project -> project.getCustomers().remove(customer));
+        customer.getProjects().forEach(project -> {
+            project.getCustomers().remove(customer);
+            Permission deletedPermissionId = permissionService.deleteUserPermissionByUserId(project.getId(), userId);
+            project.getPermissions().remove(deletedPermissionId);
+        });
         customerRepository.save(customer);
     }
 

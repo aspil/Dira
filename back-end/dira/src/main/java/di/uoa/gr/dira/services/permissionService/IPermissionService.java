@@ -1,5 +1,6 @@
 package di.uoa.gr.dira.services.permissionService;
 
+import di.uoa.gr.dira.entities.project.Permission;
 import di.uoa.gr.dira.models.project.ProjectUserPermissionModel;
 import di.uoa.gr.dira.services.IService;
 
@@ -10,4 +11,5 @@ public interface IPermissionService extends IService<ProjectUserPermissionModel,
     void createUserPermission(Long projectId, ProjectUserPermissionModel userPermissionModel);
     ProjectUserPermissionModel updateUserPermission(Long projectId, Long permissionId, ProjectUserPermissionModel userPermissionModel);
     void deleteUserPermission(Long projectId, Long permissionId);
+    Permission deleteUserPermissionByUserId(Long projectId, Long userId);
 }
