@@ -1,0 +1,11 @@
+{
+  "name": "dira-clients",
+  "version": "1.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "George Liontos <sdi1600094@di.uoa.gr>",
+  "license": "ISC"
+}
