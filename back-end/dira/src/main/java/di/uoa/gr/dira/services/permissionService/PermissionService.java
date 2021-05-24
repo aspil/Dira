@@ -66,18 +66,4 @@ public class PermissionService extends BaseService<ProjectUserPermissionModel, P
         super.delete(userPermissionModel);
 
     }
-
-    /**
-     * @param projectId is the id of the project to search for the user's permissions
-     * @param userId is the id of the user with the permissions that need to be removed
-     * @return the object of the deleted permission
-     */
-    public Permission deleteUserPermissionByUserId(Long projectId, Long userId) {
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
-        Permission permission = repository.findByUserId(userId).orElseThrow(() -> new PermissionNotFoundException("userId", userId.toString()));
-
-        project.getPermissions().remove(permission);
-        projectRepository.save(project);
-        return permission;
-    }
 }

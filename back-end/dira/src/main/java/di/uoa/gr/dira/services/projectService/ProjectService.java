@@ -9,6 +9,7 @@ import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
 import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.models.project.ProjectUsersModel;
 import di.uoa.gr.dira.repositories.CustomerRepository;
+import di.uoa.gr.dira.repositories.PermissionRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
 import di.uoa.gr.dira.services.permissionService.IPermissionService;
@@ -25,12 +26,12 @@ import java.util.stream.Collectors;
 @Service
 public class ProjectService extends BaseService<ProjectModel, Project, Long, ProjectRepository> implements IProjectService {
     CustomerRepository customerRepository;
-    IPermissionService permissionService;
+    PermissionRepository permissionRepository;
 
-    ProjectService(ProjectRepository repository, CustomerRepository customerRepository, IPermissionService permissionService, ModelMapper mapper) {
+    ProjectService(ProjectRepository repository, CustomerRepository customerRepository, PermissionRepository permissionRepository, ModelMapper mapper) {
         super(repository, mapper);
         this.customerRepository = customerRepository;
-        this.permissionService = permissionService;
+        this.permissionRepository = permissionRepository;
     }
 
 
@@ -111,6 +112,9 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         List<Customer> customers = project.getCustomers();
         Customer customer = customers.stream().filter(user -> user.getId().equals(userId)).findFirst().orElseThrow(() -> new CustomerNotFoundException("userId", userId.toString()));
         customers.remove(customer);
+
+        project.getPermissions().removeIf(permission -> permission.getUser().getId().equals(customer.getId()));
+
         repository.save(project);
     }
 
@@ -120,8 +124,7 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
 
         customer.getProjects().forEach(project -> {
             project.getCustomers().remove(customer);
-            Permission deletedPermissionId = permissionService.deleteUserPermissionByUserId(project.getId(), userId);
-            project.getPermissions().remove(deletedPermissionId);
+            project.getPermissions().removeIf(permission -> permission.getUser().getId().equals(customer.getId()));
         });
         customerRepository.save(customer);
     }
