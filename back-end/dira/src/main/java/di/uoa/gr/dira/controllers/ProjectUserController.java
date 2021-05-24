@@ -4,10 +4,13 @@ package di.uoa.gr.dira.controllers;
 import di.uoa.gr.dira.models.project.ProjectUsersModel;
 import di.uoa.gr.dira.security.JwtHelper;
 import di.uoa.gr.dira.services.projectService.IProjectService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.attribute.standard.Media;
 import javax.validation.Valid;
 
 @Validated
@@ -22,12 +25,19 @@ public class ProjectUserController {
         this.jwtHelper = jwtHelper;
     }
 
+    @ApiOperation(
+            value = "Retrieves all the users inside the project with the given id",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @GetMapping
-    public @Valid
-    ProjectUsersModel getAllProjectUsers(@PathVariable Long projectId) {
+    public @Valid ProjectUsersModel getAllProjectUsers(@PathVariable Long projectId) {
         return service.findUsersByProjectId(projectId);
     }
 
+    @ApiOperation(
+            value = "Adds a user to the project with the given id",
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
     @PostMapping
     public void addUserToProjectWithId(
             @PathVariable Long projectId,
@@ -37,6 +47,9 @@ public class ProjectUserController {
         service.addUserToProjectWithId(projectId, customerId);
     }
 
+    @ApiOperation(
+            value = "Deletes a user from the project with the given id"
+    )
     @DeleteMapping("{userId}")
     public void deleteUserFromProjectWithId(@PathVariable Long projectId, @PathVariable Long userId) {
         service.deleteUserFromProjectWithId(projectId, userId);

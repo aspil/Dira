@@ -4,8 +4,13 @@ import di.uoa.gr.dira.models.customer.CustomerLoginModel;
 import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.security.JwtHelper;
 import di.uoa.gr.dira.services.loginService.ILoginService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
+import io.swagger.annotations.ResponseHeader;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +31,12 @@ public class LoginController {
         this.jwtHelper = jwtHelper;
     }
 
+    @ApiOperation(
+            value = "Authenticate user and produce JWT token",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            responseHeaders = @ResponseHeader(name = HttpHeaders.AUTHORIZATION, response = String.class)
+    )
     @PostMapping
     public ResponseEntity<Void> login(@Valid @RequestBody CustomerLoginModel customerLoginModel) {
         try {
