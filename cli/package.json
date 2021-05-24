@@ -1,0 +1,60 @@
+{
+  "name": "dira",
+  "description": "The Dira command line interface",
+  "version": "0.1.0",
+  "author": "George Liontos @GeorgeLS",
+  "bin": {
+    "dira": "./bin/run"
+  },
+  "bugs": "https://github.com/GeorgeLS/dira/issues",
+  "dependencies": {
+    "@oclif/command": "^1.8.0",
+    "@oclif/config": "^1.17.0",
+    "@oclif/plugin-help": "^3.2.2",
+    "dira-clients": "^1.0.0",
+    "email-validator": "^2.0.4",
+    "inquirer": "^8.1.0",
+    "inquirer-confirm": "^2.0.7",
+    "xmlhttprequest": "^1.8.0"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1.26.0",
+    "@oclif/test": "^1.2.8",
+    "chai": "^4.3.4",
+    "eslint": "^5.16.0",
+    "eslint-config-oclif": "^3.1.0",
+    "globby": "^10.0.2",
+    "mocha": "^5.2.0",
+    "nyc": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json",
+    "/src"
+  ],
+  "homepage": "https://github.com/GeorgeLS/dira",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "src/index.js",
+  "oclif": {
+    "commands": "./src/commands",
+    "bin": "dira",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "repository": "GeorgeLS/dira",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "posttest": "eslint .",
+    "prepack": "oclif-dev manifest && oclif-dev readme",
+    "test": "nyc mocha --forbid-only \"test/**/*.test.js\"",
+    "version": "oclif-dev readme && git add README.md"
+  }
+}
