@@ -7,6 +7,7 @@ import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.security.PasswordManager;
 import di.uoa.gr.dira.services.BaseService;
+import di.uoa.gr.dira.services.projectService.IProjectService;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import di.uoa.gr.dira.util.mapper.MapperHelper;
 import org.modelmapper.ModelMapper;
@@ -16,8 +17,11 @@ import java.util.List;
 
 @Service
 public class CustomerService extends BaseService<CustomerModel, Customer, Long, CustomerRepository> implements ICustomerService {
-    public CustomerService(CustomerRepository repository, ModelMapper mapper) {
+    IProjectService projectService;
+
+    public CustomerService(CustomerRepository repository, IProjectService projectService, ModelMapper mapper) {
         super(repository, mapper);
+        this.projectService = projectService;
     }
 
     @Override
@@ -55,5 +59,11 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
         return repository.findById(customerId)
                 .map(customer -> MapperHelper.<Project, ProjectModel>mapList(mapper, customer.getProjects(), ProjectModel.class))
                 .orElse(null);
+    }
+
+    @Override
+    public void deleteById(Long userId) {
+        projectService.deleteUserFromAllProjects(userId);
+        super.deleteById(userId);
     }
 }

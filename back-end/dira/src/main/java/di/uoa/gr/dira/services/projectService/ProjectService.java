@@ -1,6 +1,7 @@
 package di.uoa.gr.dira.services.projectService;
 
 import di.uoa.gr.dira.entities.customer.Customer;
+import di.uoa.gr.dira.entities.project.Permission;
 import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
@@ -10,6 +11,7 @@ import di.uoa.gr.dira.models.project.ProjectUsersModel;
 import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
+import di.uoa.gr.dira.services.permissionService.IPermissionService;
 import di.uoa.gr.dira.shared.ProjectVisibility;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import di.uoa.gr.dira.util.mapper.MapperHelper;
@@ -18,16 +20,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class ProjectService extends BaseService<ProjectModel, Project, Long, ProjectRepository> implements IProjectService {
     CustomerRepository customerRepository;
+    IPermissionService permissionService;
 
-    ProjectService(ProjectRepository repository, CustomerRepository customerRepository, ModelMapper mapper) {
+    ProjectService(ProjectRepository repository, CustomerRepository customerRepository, IPermissionService permissionService, ModelMapper mapper) {
         super(repository, mapper);
         this.customerRepository = customerRepository;
+        this.permissionService = permissionService;
     }
 
 
@@ -110,4 +113,13 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         customers.remove(customer);
         repository.save(project);
     }
+
+    @Override
+    public void deleteUserFromAllProjects(Long userId) {
+        Customer customer = customerRepository.findById(userId).orElseThrow(() -> new CustomerNotFoundException("userId", userId.toString()));
+
+        customer.getProjects().forEach(project -> project.getCustomers().remove(customer));
+        customerRepository.save(customer);
+    }
+
 }
