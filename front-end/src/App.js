@@ -2,40 +2,55 @@ import Home from './components/Home';
 import Register from './components/Register';
 import Login from './components/Login';
 import Plan from './components/Plans'
-import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route, Switch, useHistory} from 'react-router-dom';
 import ProjectMain from './components/ProjectMain'
 import PasswordRecovery from './components/PasswordRecovery';
 import Members from './components/Members';
 import Backlog from './components/Backlog';
+import { useState } from 'react';
+import dira_client from "dira-clients";
 
 function App() {
+  const history = useHistory();
+  const [token, setToken] = useState(localStorage.jwtoken);
+  const client = new dira_client();
+
   return (
     <Router>
       <div className="App">
           <Switch>
             <Route exact path="/">
-              <Home/>
+              { token !== undefined && <Redirect to="/proj_main" /> }
+              { token === undefined && <Home/> }
             </Route>
             <Route path="/sign_in">
-              <Login/>
+              { token !== undefined && <Redirect to="/proj_main" /> }
+              { token === undefined && <Login setToken={setToken} client={client} /> }
             </Route>
             <Route path="/register">
-              <Register/>
+              { token !== undefined && <Redirect to="/proj_main" /> }
+              { token === undefined && <Register client={client} /> }
             </Route>
-            <Route path="/proj_main">
-              <ProjectMain/>
+            <Route path="/recover">
+              { token !== undefined && <Redirect to="/proj_main" /> }
+              { token === undefined && <PasswordRecovery/> }
             </Route>
+
             <Route path="/pricing">
               <Plan/>
             </Route>
-            <Route path="/recover">
-              <PasswordRecovery/>
+
+            <Route path="/proj_main">
+              { token === undefined && <Redirect to="/sign_in" /> }
+              { token !== undefined && <ProjectMain/> }
             </Route>
             <Route path="/backlog">
-              <Backlog/>
+              { token === undefined && <Redirect to="/sign_in" /> }
+              { token !== undefined && <Backlog/> }
             </Route>
             <Route path="/members">
-              <Members/>
+              { token === undefined && <Redirect to="/sign_in" /> }
+              { token !== undefined && <Members/> }
             </Route>
           </Switch>
       </div>

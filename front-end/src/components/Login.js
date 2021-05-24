@@ -1,22 +1,10 @@
 import { Link, useHistory } from "react-router-dom";
 import logo from "../Images/dira_icon.png"
-import dira_client from "dira-clients";
 import { useState } from "react";
 
-const client = new dira_client();
-client.register_user(
-  {
-    "username": "tester",
-    "name": "Tester",
-    "surname": "Mc Tester",
-    "email": "test@otenet.gr",
-    "password": "12345678",
-    "subscriptionPlan": "STANDARD"
-}
-)
 
-const Login = () => {
-  const [email, setEmail] = useState('');
+const Login = ({ setToken, client }) => {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const history = useHistory();
 
@@ -24,10 +12,12 @@ const Login = () => {
     e.preventDefault();
 
     client
-      .login_user(email, password)
+      .login_user(username, password)
       .then((token) => {
         console.log(token);
-        // history.push('/proj_main');
+        localStorage.jwtoken = token;
+        setToken(token);
+        history.push('/proj_main');
       })
       .catch(() => {
         alert('Error');
@@ -42,10 +32,10 @@ const Login = () => {
               <h1 style={{fontWeight:"normal", margin:"15px"}}>Login</h1>
               <form onSubmit={onSubmit} noValidate>
                 <input 
-                  type="email" 
-                  placeholder="Email address" 
-                  onChange = {(e) => {setEmail(e.target.value)}}
-                  value={email}/>
+                  type="text" 
+                  placeholder="Username" 
+                  onChange = {(e) => {setUsername(e.target.value)}}
+                  value={username}/>
                 <input 
                   type="password" 
                   placeholder="Password" 
