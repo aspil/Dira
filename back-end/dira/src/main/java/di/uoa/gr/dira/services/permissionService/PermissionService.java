@@ -59,11 +59,17 @@ public class PermissionService extends BaseService<ProjectUserPermissionModel, P
     @Override
     public void deleteUserPermission(Long projectId, Long permissionId) {
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
-        Permission permission = repository.findById(permissionId).orElseThrow(() -> new PermissionNotFoundException("permissionId", permissionId.toString()));
+
+        Permission permission = project.getPermissions()
+                .stream()
+                .filter(obj -> obj.getId().equals(permissionId))
+                .findAny()
+                .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
+
+        project.getPermissions().remove(permission);
+        projectRepository.save(project);
 
         ProjectUserPermissionModel userPermissionModel = mapper.map(permission, ProjectUserPermissionModel.class);
-        project.getPermissions().remove(permission);
         super.delete(userPermissionModel);
-
     }
 }
