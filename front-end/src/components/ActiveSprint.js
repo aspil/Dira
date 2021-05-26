@@ -15,7 +15,7 @@ const ActiveSprint = () => {
     const [issue_panel, handleIssuePanel] = useState("hide");
 
     const [inactiveIssues, setInactiveIssues] = useState([
-        { title: 'Takis', dueDate: '14/5/2021', briefDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit', id: 1 },
+        { title: 'Takis Papadakis', dueDate: '14/5/2021', briefDescription: 'Lorem ipsum dolor sit amet', id: 1 },
         { title: 'Lakis', dueDate: '14/5/2021', briefDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur adipiscing elit', id: 2 },
         { title: 'Lakis', dueDate: '14/5/2021', briefDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit', id: 3 },
         { title: 'Akis', dueDate: '14/5/2021', briefDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit', id: 4 },
@@ -24,7 +24,7 @@ const ActiveSprint = () => {
       const [activeIssues, setActiveIssues] = useState([
         { title: 'Makis', dueDate: '14/5/2021', briefDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit', id: 1 },
         { title: 'Takis', dueDate: '14/5/2021', briefDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit', id: 2 },
-        { title: 'Lakis', dueDate: '14/5/2021', briefDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit', id: 3 },
+        { title: 'Lakis Petroulakis', dueDate: '14/5/2021', briefDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit', id: 3 },
         { title: 'Akis', dueDate: '14/5/2021', briefDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit', id: 4 }
       ])
       const [doneIssues, setDoneIssues] = useState([
@@ -54,6 +54,8 @@ const ActiveSprint = () => {
                                     <p>{issue.briefDescription}</p>
                                     <div className="issueShortInfo">
                                         <p>{issue.title}</p>
+                                        <text id = "issueEpic">Epic</text>
+                                        <div id="spacer" style={{height:"13px"}}></div>
                                         <p id ="dueDate">{issue.dueDate}</p>
                                     </div>
                                 </div>
@@ -68,6 +70,8 @@ const ActiveSprint = () => {
                                     <p>{issue.briefDescription}</p>
                                         <div className="issueShortInfo">
                                             <p>{issue.title}</p>
+                                            <text id = "issueEpic">Epic</text>
+                                            <div id="spacer" style={{height:"13px"}}/>
                                             <p id ="dueDate">{issue.dueDate}</p>
                                         </div>
                                     </div>
@@ -82,6 +86,8 @@ const ActiveSprint = () => {
                                     <p>{issue.briefDescription}</p>
                                         <div className="issueShortInfo">
                                             <p>{issue.title}</p>
+                                            <text id = "issueEpic">Epic</text> 
+                                            <div id="spacer" style={{height:"13px"}}/>
                                             <p id ="dueDate">{issue.dueDate}</p>
                                         </div>
                                     </div>
@@ -130,13 +136,15 @@ const ActiveSprint = () => {
                                 <text className="label" id="assignee">Assignee: </text>
                                 <text className="answer" id="assigneeAnswer">Makis</text>
                                 <br/>
-                                <br/>
                                 <text className="label" id="reporter">Reporter: </text>
                                 <text id="reporterAnswer">Takis</text>
                                 <br/>
                                 <br/>
                                 <text className="label" id="dateCreated">Created on: </text>
                                 <text className="answer" id="dateCreatedAnswer">10/3/2021</text>
+                                <br/>
+                                <text className="label" id="DueDate">Due date: </text>
+                                <text className="answer" id="DueDateAnswer">2/5/2021</text>
                                 <br/>
                                 <text className="label" id="timeLeft">Time Remaining: </text>
                                 <text className="answer" id="timeLeftAnswer">5 days</text>

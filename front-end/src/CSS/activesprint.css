@@ -67,6 +67,7 @@
   background-color: lightblue;
   padding: 5px;
   border-radius: 10px;
+  border: 1px solid gray;
   box-shadow: 7px 7px 10px lightgray;
 }
 .active_sprint .issues{
@@ -95,10 +96,23 @@
   padding: 3px;
   position: relative;
 }
+.active_sprint .issueShortInfo #issueEpic{
+  /* font-size: 25px; */
+  font-weight: bold;
+  color: white;
+  border: 1px solid gray;
+  background-color: rgb(84, 212, 68);
+  border-radius: 5px;
+  padding-left:5px;
+  padding-right:5px;
+  margin-left: 3px;
+}
 .active_sprint .issueShortInfo #dueDate{
   color: gray;
   position: absolute;
+  height: 10px;
   bottom: 0px;
+  /* right:0; */
 }
 
 /* Issue Panel */
