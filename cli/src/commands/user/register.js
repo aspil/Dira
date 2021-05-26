@@ -5,7 +5,6 @@ const email_validator = require("email-validator");
 const { DiraUserClient } = require("dira-clients");
 const { get_answers_serialized } = require('../../io_utils');
 const questions = require('../../questions');
-const client = new DiraUserClient();
 
 const register_user_questions = [
     questions.username,
@@ -38,6 +37,7 @@ const register_user_questions = [
 
 class RegisterUserCommand extends Command {
     async run() {
+        const client = new DiraUserClient();
         const { flags } = this.parse(RegisterUserCommand);
         if (flags.data) {
             var data = null;
