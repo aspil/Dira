@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import './index.css'
-import './project_screens.css'
-import './backlog.css'
-import './sidenav.css'
+import './CSS/index.css'
+import './CSS/project_screens.css'
+import './CSS/backlog.css'
+import './CSS/sidenav.css'
+import './CSS/activesprint.css'
+
 
 
 

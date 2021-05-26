@@ -5,6 +5,7 @@ import Plan from './components/Plans'
 import { BrowserRouter as Router, Redirect, Route, Switch, useHistory} from 'react-router-dom';
 import ProjectMain from './components/ProjectMain'
 import PasswordRecovery from './components/PasswordRecovery';
+import ActiveSprint from './components/ActiveSprint';
 import Members from './components/Members';
 import Backlog from './components/Backlog';
 import { useState } from 'react';
@@ -45,12 +46,18 @@ function App() {
               { token !== undefined && <ProjectMain/> }
             </Route>
             <Route path="/backlog">
-              { token === undefined && <Redirect to="/sign_in" /> }
-              { token !== undefined && <Backlog/> }
+              {/* { token === undefined && <Redirect to="/sign_in" /> }
+              { token !== undefined && <Backlog/> } */}
+              <Backlog/>
             </Route>
             <Route path="/members">
               { token === undefined && <Redirect to="/sign_in" /> }
               { token !== undefined && <Members/> }
+            </Route>
+            <Route path="/active_sprint">
+              {/* { token === undefined && <Redirect to="/sign_in" /> }
+              { token !== undefined && <ActiveSprint/> } */}
+              <ActiveSprint/>
             </Route>
           </Switch>
       </div>

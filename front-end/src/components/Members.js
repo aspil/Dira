@@ -13,15 +13,15 @@ const Members = () => {
     const hide_members_popup = () => {
         handleMembersPopup("hide");
     }
-
+    
     const show_members_popup = () => {
         handleMembersPopup("show");
     }
-
+    
     const handlePopupButtonClick = () => {
         hide_members_popup();
     }
-
+    
     const [members, setMembers] = useState([
         { name: 'Makis', dateJoined: '14/5/2021', role: 'developer', id: 1 },
         { name: 'Takis', dateJoined: '2/11/2019', role: 'admin', id: 2 },

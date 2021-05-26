@@ -1,12 +1,11 @@
 .projectnav {
+  
   display: flex;
-  align-items: center;
   background-color: rgb(0, 132, 255);
-  max-block-size: 7vh;
 }
 
 .projectnav .dira_link{
-  font-size: 5vh;
+  font-size: 45px;
   color: #f2f2f2;
   margin-left: 5%;
 }
@@ -14,25 +13,22 @@
   text-decoration: none;
 }
 .projectnav .right_links {
+  display: flex;
+  align-items: center;
   margin-left: auto;
-  margin-right: 2vw;
+  margin-right: 10px;
 }
 
 .projectnav a {
-  font-size:x-large;
+  font-size:25px;
   font-weight: bold;
   text-decoration: none;
   color: #f2f2f2;
   border-radius: 5px;
-  margin-right: 2vw;
-}
-
-.projectnav img{
-  position: fixed;
+  margin-right: 20px;
 }
 
 .projectnav img:hover{
-  /* background-color: white; */
   border-radius: 30px;
   box-shadow: 0 4px 8px 0 lightgray, 0 4px 8px 0 lightgray;
   
@@ -47,7 +43,8 @@
   border-style: solid;
   border-width: 2px;
   border-radius: 5px;
-  padding: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .projectnav a.boxxed_button:hover {
@@ -59,10 +56,10 @@
 
 .projectnav .settingsPopupReference {
   background-color: rgb(0, 132, 255);
-  width: 2vw;
+  width: 40px;
   height: auto;
-  position: fixed;
-  right: 1vw;
+  /* margin-bottom: -10px; */
+
 }
 
 .projectnav .settingsPopupReference:hover {
