@@ -8,17 +8,18 @@ const Epics = () => {
 
 
     return (
-        <div className="Epics">
-            <ProjectNav/>
+        <div className="epics proj_page">
+      <ProjectNav />
+      <div className="center_content">
+        <SideNav />
+        <main>
 
-            <SideNav/>
-
-            <div style={{clear: "both", position:"absolute", bottom:"0", width:"100%"}}>
-                <Footer/>
-            </div>
-        </div>
-
-    );
+            
+        </main>
+      </div>
+      <Footer />
+    </div>
+  );
 }
         
     export default Epics;

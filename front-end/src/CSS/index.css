@@ -6,6 +6,23 @@
   font-family: 'Open Sans';
   color: #333;
 }
+/* Scrollbar */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 /* Homepage */
 .home .home_grad1 {
   background-image: linear-gradient(to bottom, rgb(0, 132, 255) , rgb(255, 255, 255));
