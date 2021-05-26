@@ -17,4 +17,9 @@ function warn(msg) {
     log(`${warn_tag} ${msg}`);
 }
 
-module.exports = { info, error, warn, log };
+function fatal(msg) {
+    error(msg);
+    process.exit(1);
+}
+
+module.exports = { info, error, warn, log, fatal };

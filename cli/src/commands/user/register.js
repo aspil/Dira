@@ -1,10 +1,11 @@
 'use strict';
 
 const { Command, flags } = require('@oclif/command');
-const email_validator = require("email-validator");
 const { DiraUserClient } = require("dira-clients");
-const { get_answers_serialized } = require('../../io_utils');
+const email_validator = require("email-validator");
+const io_utils = require('../../io_utils');
 const questions = require('../../questions');
+const logging = require("../../logging");
 
 const register_user_questions = [
     questions.username,
@@ -39,22 +40,25 @@ class RegisterUserCommand extends Command {
     async run() {
         const client = new DiraUserClient();
         const { flags } = this.parse(RegisterUserCommand);
+
         if (flags.data) {
             var data = null;
             try {
                 data = JSON.parse(flags.data);
             }
             catch {
-                this.error("The user data that you provided are an invalid JSON");
+                logging.fatal("The user data that you provided are an invalid JSON");
             }
         } else {
-            data = await get_answers_serialized(register_user_questions);
+            data = await io_utils.get_answers_serialized(register_user_questions);
         }
 
         const user = await client.register_user(data);
         if (user) {
-            this.log("New user was created succesfully");
-            this.log(user);
+            logging.log();
+            logging.info("New user was created succesfully");
+            logging.log();
+            console.table(user);
         }
     }
 }

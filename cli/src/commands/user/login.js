@@ -1,29 +1,31 @@
 'use strict';
-const { info, error, log } = require('../../logging');
 const { Command, flags } = require('@oclif/command');
 const { DiraUserClient } = require("dira-clients");
-const { get_answers, save_auth_token } = require('../../io_utils');
+const logging = require('../../logging');
+const io_utils = require('../../io_utils');
 var questions = require('../../questions');
 
 class LoginUserCommand extends Command {
     async run() {
         const client = new DiraUserClient();
         const { flags } = this.parse(LoginUserCommand);
-        var username = flags.username || await get_answers(questions.username);
-        var password = flags.password || await get_answers(questions.password);
+        var username = flags.username || await io_utils.get_answers(questions.username);
+        var password = flags.password || await io_utils.get_answers(questions.password);
 
         const user = await client.login_user(username, password);
 
         if (user) {
-            log();
-            info("User logged in successfully");
-            info("Saving authentication token for future use");
-            log();
-            // save_auth_token(user.token);
+            logging.log();
+            logging.info("User logged in successfully");
+            logging.info("Saving authentication token for future use");
+            logging.log();
+
+            io_utils.save_auth_token(user.token);
+
             delete user.token;
             console.table(user);
         } else {
-            error("Could not log in user");
+            logging.error("Could not log in user");
         }
     }
 }
