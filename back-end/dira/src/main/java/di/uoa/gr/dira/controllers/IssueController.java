@@ -25,7 +25,8 @@ public class IssueController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @GetMapping
-    public @Valid ProjectIssuesModel getAllIssuesWithProjectId(@PathVariable Long projectId) {
+    public @Valid ProjectIssuesModel getAllIssuesWithProjectId(
+            @PathVariable Long projectId) {
         return service.findAllIssuesByProjectId(projectId);
     }
 
@@ -36,7 +37,9 @@ public class IssueController {
     )
     @PostMapping
     public @Valid
-    IssueModel createIssueWithProjectId(@PathVariable Long projectId, @Valid @RequestBody IssueModel issueModel) {
+    IssueModel createIssueWithProjectId(
+            @PathVariable Long projectId,
+            @Valid @RequestBody IssueModel issueModel) {
         return service.createIssueWithProjectId(projectId, issueModel);
     }
 
@@ -44,10 +47,12 @@ public class IssueController {
             value = "Retrieves the issue with the given id",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @GetMapping("{id}")
+    @GetMapping("{issueId}")
     public @Valid
-    IssueModel retrieveIssueWithProjectId(@PathVariable Long projectId, @PathVariable Long id) {
-        return service.findIssueWithProjectId(projectId, id);
+    IssueModel retrieveIssueWithProjectId(
+            @PathVariable Long projectId,
+            @PathVariable Long issueId) {
+        return service.findIssueWithProjectId(projectId, issueId);
     }
 
     @ApiOperation(
@@ -55,19 +60,24 @@ public class IssueController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @PutMapping("{id}")
+    @PutMapping("{issueId}")
     public @Valid
-    IssueModel updateIssueWithProjectId(@PathVariable Long projectId, @Valid @RequestBody IssueModel issueModel) {
-        return service.updateIssueWithProjectId(projectId, issueModel);
+    IssueModel updateIssueWithProjectId(
+            @PathVariable Long projectId,
+            @PathVariable Long issueId,
+            @Valid @RequestBody IssueModel issueModel) {
+        return service.updateIssueWithProjectId(projectId, issueId, issueModel);
     }
 
     @ApiOperation(
             value = "Deletes the issue with the given id",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @DeleteMapping("{id}")
+    @DeleteMapping("{issueId}")
     public @Valid
-    void deleteIssueWithProjectId(@PathVariable Long projectId, @Valid @RequestBody IssueModel issueModel) {
-        service.deleteIssueWithProjectId(projectId, issueModel);
+    void deleteIssueWithProjectId(
+            @PathVariable Long projectId,
+            @PathVariable Long issueId) {
+        service.deleteIssueWithProjectId(projectId, issueId);
     }
 }

@@ -8,6 +8,6 @@ public interface IIssueService extends IService<IssueModel, Long> {
     ProjectIssuesModel findAllIssuesByProjectId(Long id);
     IssueModel createIssueWithProjectId(Long projectId, IssueModel issueModel);
     IssueModel findIssueWithProjectId(Long projectId, Long issueId);
-    IssueModel updateIssueWithProjectId(Long projectId, IssueModel issueModel);
-    void deleteIssueWithProjectId(Long projectId, IssueModel issueModel);
+    IssueModel updateIssueWithProjectId(Long projectId, Long issueId, IssueModel issueModel);
+    void deleteIssueWithProjectId(Long projectId, Long issueId);
 }
