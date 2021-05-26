@@ -11,7 +11,7 @@
     "@oclif/command": "^1.8.0",
     "@oclif/config": "^1.17.0",
     "@oclif/plugin-help": "^3.2.2",
-    "dira-clients": "^1.0.0",
+    "dira-clients": "^1.1.0",
     "email-validator": "^2.0.4",
     "inquirer": "^8.1.0",
     "inquirer-confirm": "^2.0.7",
