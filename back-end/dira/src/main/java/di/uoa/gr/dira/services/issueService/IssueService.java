@@ -3,6 +3,8 @@ package di.uoa.gr.dira.services.issueService;
 import com.sun.istack.Nullable;
 import di.uoa.gr.dira.entities.issue.Issue;
 import di.uoa.gr.dira.entities.project.Project;
+import di.uoa.gr.dira.exceptions.issue.IssueNotFoundException;
+import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
 import di.uoa.gr.dira.models.issue.IssueModel;
 import di.uoa.gr.dira.models.project.ProjectIssuesModel;
 import di.uoa.gr.dira.repositories.IssueRepository;
@@ -24,20 +26,18 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
     }
 
     @Nullable
-    private IssueModel getIssueModel(Long projectId, IssueModel updated) {
-        Project project = projectRepository.findById(projectId).orElse(null);
+    private IssueModel addIssueToProject(Long projectId, IssueModel updated) {
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
 
-        if (project != null) {
-            List<Issue> projectIssues = project.getIssues();
-            if (projectIssues != null) {
-                repository.findById(updated.getId()).ifPresent(projectIssues::add);
-                projectRepository.save(project);
-                return updated;
-            }
+        List<Issue> projectIssues = project.getIssues();
+        if (projectIssues != null) {
+            repository.findById(updated.getId()).ifPresent(projectIssues::add);
+            projectRepository.save(project);
+            return updated;
         }
+
         return null;
     }
-
 
     @Override
     public ProjectIssuesModel findAllIssuesByProjectId(Long projectId) {
@@ -49,55 +49,37 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
     @Override
     public IssueModel createIssueWithProjectId(Long projectId, IssueModel issueModel) {
         IssueModel saved = super.save(issueModel);
-        return getIssueModel(projectId, saved);
+        return addIssueToProject(projectId, saved);
     }
 
     @Override
     public IssueModel findIssueWithProjectId(Long projectId, Long issueId) {
-        Project project = projectRepository.findById(projectId).orElse(null);
-        Issue issue = repository.findById(issueId).orElse(null);
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
 
-        if (project != null && issue != null) {
-            Issue projects_issue = project.getIssues().stream().filter(obj -> obj.equals(issue)).findAny().orElse(null);
-            if (projects_issue != null) {
-                return mapper.map(projects_issue, IssueModel.class);
-            }
-        }
-        return null;
+        Issue issue = project.getIssues()
+                .stream()
+                .filter(obj -> obj.getId().equals(issueId))
+                .findAny()
+                .orElseThrow(() -> new IssueNotFoundException("issueId", issueId.toString()));
+
+        return mapper.map(issue, IssueModel.class);
     }
 
     @Override
-    public IssueModel updateIssueWithProjectId(Long projectId, IssueModel issueModel) {
-        Issue issue = repository.findById(issueModel.getId()).orElse(null);
-
-        if (issue == null) {
-            return null;
-        }
-
-        return super.save(issueModel);
+    public IssueModel updateIssueWithProjectId(Long projectId, Long issueId, IssueModel issueModel) {
+        super.delete(issueModel);
+        IssueModel updatedIssue = super.save(issueModel);
+        return addIssueToProject(projectId, updatedIssue);
     }
 
     @Override
-    public void deleteIssueWithProjectId(Long projectId, IssueModel issueModel) {
-        Issue issue = null;
-        Project project = projectRepository.findById(projectId).orElse(null);
+    public void deleteIssueWithProjectId(Long projectId, Long issueId) {
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
 
-        if (project != null) {
-            List<Issue> projectIssues = project.getIssues();
-            for (int i = 0; i != projectIssues.size(); ++i) {
-                if (projectIssues.get(i).getId().equals(issueModel.getId())) {
-                    issue = projectIssues.remove(i);
-                    break;
-                }
-            }
-            if (issue != null) {
-                super.delete(issueModel);
-                projectRepository.save(project);
-            }
-//            else {
-//                throw new Exception();
-//            }
-        }
-    }
+        List<Issue> projectIssues = project.getIssues();
+        Issue issue = projectIssues.stream().filter(obj -> obj.getId().equals(issueId)).findAny().orElseThrow(() -> new IssueNotFoundException("issueId", issueId.toString()));
+        projectIssues.remove(issue);
 
-}
+        super.delete(mapper.map(issue, IssueModel.class));
+        projectRepository.save(project);
+    }}
