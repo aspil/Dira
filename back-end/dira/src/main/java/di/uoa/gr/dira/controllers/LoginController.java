@@ -38,7 +38,7 @@ public class LoginController {
             responseHeaders = @ResponseHeader(name = HttpHeaders.AUTHORIZATION, response = String.class)
     )
     @PostMapping
-    public ResponseEntity<Void> login(@Valid @RequestBody CustomerLoginModel customerLoginModel) {
+    public ResponseEntity<@Valid CustomerModel> login(@Valid @RequestBody CustomerLoginModel customerLoginModel) {
         try {
             CustomerModel customer = loginService.authenticateUser(
                     customerLoginModel.getUsername(),
@@ -47,7 +47,7 @@ public class LoginController {
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, jwtHelper.generateToken(customer))
-                    .build();
+                    .body(customer);
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
