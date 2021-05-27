@@ -2,7 +2,7 @@ import accountIcon from "../Images/profile_icon.png"
 import { Link } from "react-router-dom";
 
 
-const ProjectNav = () => {
+const ProjectNav = ({ username }) => {
 
   const openSettings = () => {
     if(document.getElementById("myForm").style.display == "none"){
@@ -22,7 +22,7 @@ const ProjectNav = () => {
       </div>
       <div class="form-popup" id="myForm">
         <form class="form-container">
-          <p>"Username"</p>
+          <p><strong>{username}</strong></p>
           <button type="submit" class="btn">Upgrade</button>
           <button type="button" class="btn">Logout</button>
         </form>

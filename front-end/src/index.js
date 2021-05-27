@@ -8,6 +8,7 @@ import './CSS/sidenav.css'
 import './CSS/activesprint.css'
 import './CSS/members.css'
 import './CSS/epics.css'
+import './CSS/popup.css'
 
 
 

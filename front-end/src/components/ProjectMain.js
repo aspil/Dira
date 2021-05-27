@@ -1,10 +1,67 @@
 import ProjectNav from './ProjectNav';
 import Footer from './Footer';
+import Popup from './Popup';
 import { useState } from "react";
 
-const ProjectMain = () => {
-
+const ProjectMain = ({ username, projectClient, token }) => {
+  const [newProject, setNewProject] = useState([
+    {
+      id: 1,
+      required: true,
+      name: 'name',
+      value: '',
+      list: false,
+      label: 'Project Name',
+    },
+    {
+      id: 2,
+      required: false,
+      name: 'description',
+      value: '',
+      list: false,
+      label: 'Project Description',
+    },
+    {
+      id: 3,
+      required: true,
+      name: 'key',
+      value: '',
+      list: false,
+      label: 'Project Key',
+    },
+    {
+      id: 4,
+      required: true,
+      name: 'visibility',
+      value: 'PUBLIC',
+      list: true,
+      datalist_id: 'visibilities',
+      datalist: ['PRIVATE', 'PUBLIC'],
+      label: 'Project Visibility',
+    },
+  ])
   const [listState, setListState] = useState("showProjects");
+
+// popup functionality
+  const handleProjCreation = (e) => {
+    e.preventDefault();
+    
+    projectClient.set_authorization_token(token);
+
+    projectClient.create_project({
+      "description": newProject[1].value,
+      "key": newProject[2].value,
+      "name": newProject[0].value,
+      "visibility": newProject[3].value
+    }).then(res => console.log('success')).catch(err => console.log('error'));
+
+  }
+
+const handleProjCreateClick = () => {
+    const popup = document.getElementsByClassName("popup")[0];
+    popup.style.display = "block";
+  }
+// ****************************
 
   const swapList = () => {
     if(listState=="showProjects"){
@@ -29,12 +86,18 @@ const ProjectMain = () => {
 
   return (
     <div className="projectmain">
-      <ProjectNav/>
+      <Popup 
+        title="Create New Project" 
+        inputs={newProject} 
+        setInputs={setNewProject}
+        handleSubmit={handleProjCreation}
+      />
+      <ProjectNav username={username}/>
 
       <div className = "leftPanel" style={{width:"60%", margin:"0.5%"}}>
 {/* projectButtons */}
         <div className = "projectButtons">
-          <button > + New Project</button>
+          <button onClick={handleProjCreateClick}> + New Project</button>
           <button style={{backgroundColor:"black"}}>Join a Project</button>
         </div>
         <div style={{clear: "both"}}>
