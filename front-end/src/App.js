@@ -7,6 +7,7 @@ import ProjectMain from './components/ProjectMain'
 import PasswordRecovery from './components/PasswordRecovery';
 import ActiveSprint from './components/ActiveSprint';
 import Members from './components/Members';
+import Epics from './components/Epics';
 import Backlog from './components/Backlog';
 import { useState } from 'react';
 import dira_client from "dira-clients";
@@ -42,8 +43,9 @@ function App() {
             </Route>
 
             <Route path="/proj_main">
-              { token === undefined && <Redirect to="/sign_in" /> }
-              { token !== undefined && <ProjectMain/> }
+              {/* { token === undefined && <Redirect to="/sign_in" /> }
+              { token !== undefined && <ProjectMain/> } */}
+              <ProjectMain/>
             </Route>
             <Route path="/backlog">
               {/* { token === undefined && <Redirect to="/sign_in" /> }
@@ -51,13 +53,19 @@ function App() {
               <Backlog/>
             </Route>
             <Route path="/members">
-              { token === undefined && <Redirect to="/sign_in" /> }
-              { token !== undefined && <Members/> }
+              {/* { token === undefined && <Redirect to="/sign_in" /> }
+              { token !== undefined && <Members/> } */}
+              <Members/>
             </Route>
             <Route path="/active_sprint">
               {/* { token === undefined && <Redirect to="/sign_in" /> }
               { token !== undefined && <ActiveSprint/> } */}
               <ActiveSprint/>
+            </Route>
+            <Route path="/epics">
+              {/* { token === undefined && <Redirect to="/sign_in" /> }
+              { token !== undefined && <ActiveSprint/> } */}
+              <Epics/>
             </Route>
           </Switch>
       </div>

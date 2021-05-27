@@ -28,6 +28,20 @@ const Members = () => {
         { name: 'Lakis', dateJoined: '3/8/2018', role: 'developer', id: 3 },
         { name: 'Akis', dateJoined: '16/5/2020', role: 'developer', id: 4 },
         { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
+        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
+        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
+        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
+        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
+        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
+        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
+        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
+        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
+        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
+        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
+        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
+        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
+        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
+        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
       ])
 
     return (
@@ -44,20 +58,22 @@ const Members = () => {
                     <div className="main_panel">
                         <h1 id="team_members">Team Members</h1>
                         <button onClick={show_members_popup}>+ Add Members</button>
-                        <table id = "main_table">
-                            <tr>
-                            <th>Name</th>
-                            <th>Date Joined</th>
-                            <th>Role</th>
-                            </tr>
-                            {members.map(member => (
-                                <tr key={member.id}>
-                                <td>{member.name}</td>
-                                <td>{member.dateJoined}</td>
-                                <td>{member.role}</td>
+                        <div className="table_wrapper">
+                            <table id = "main_table">
+                                <tr>
+                                <th>Name</th>
+                                <th>Date Joined</th>
+                                <th>Role</th>
                                 </tr>
-                            ))}
-                        </table>
+                                {members.map(member => (
+                                    <tr key={member.id}>
+                                    <td>{member.name}</td>
+                                    <td>{member.dateJoined}</td>
+                                    <td>{member.role}</td>
+                                    </tr>
+                                ))}
+                            </table>
+                        </div>
                     </div>
                 </div>
                 {/* Popup */}
@@ -79,15 +95,6 @@ const Members = () => {
         </div>
         <Footer />
     </div>
-        // <div className="members">
-        //     <ProjectNav/>            
-        //     
-
-        //     <div style={{clear: "both", position:"absolute", bottom:"0", width:"100%"}}>
-        //         <Footer/>
-        //     </div>
-        // </div> 
-
     );
 }
         

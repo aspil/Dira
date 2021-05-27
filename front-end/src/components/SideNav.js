@@ -5,7 +5,7 @@ const SideNav = (/*{ links }*/) => {
   const links = [
     {
       name: "Active Sprint",
-      path: "/"
+      path: "/active_sprint"
     },
     {
       name: "Backlog",
@@ -13,7 +13,7 @@ const SideNav = (/*{ links }*/) => {
     },
     {
       name: "Epics",
-      path: "/"
+      path: "/epics"
     },
     {
       name: "Members",

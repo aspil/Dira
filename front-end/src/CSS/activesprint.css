@@ -101,7 +101,7 @@
   font-weight: bold;
   color: white;
   border: 1px solid gray;
-  background-color: rgb(84, 212, 68);
+  background-color: orange;
   border-radius: 5px;
   padding-left:5px;
   padding-right:5px;
@@ -121,9 +121,9 @@
   border: 2px solid lightgray;
   border-radius: 10px;
   padding: 10px;
-  height: 665px;
+  max-height: 665px;
   overflow-y: auto;
-  box-shadow: 12px 12px 7px grey;
+  box-shadow: 7px 7px 10px lightgray;
 }
 .active_sprint .issuePanel #issueName{
   float:"left"
@@ -133,7 +133,7 @@
   font-weight: bold;
   color: white;
   border: 1px solid gray;
-  background-color: rgb(84, 212, 68);
+  background-color: orange;
   border-radius: 5px;
   padding-right: 8px;
   padding-left: 8px;

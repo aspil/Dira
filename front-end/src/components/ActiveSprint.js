@@ -8,11 +8,11 @@ import { Box } from '@material-ui/core';
 
 const ActiveSprint = () => {
 
+    const [issue_panel, handleIssuePanel] = useState("hide");
+
     const showIssuePanel = () => {
         handleIssuePanel("show")
     }
-
-    const [issue_panel, handleIssuePanel] = useState("hide");
 
     const [inactiveIssues, setInactiveIssues] = useState([
         { title: 'Takis Papadakis', dueDate: '14/5/2021', briefDescription: 'Lorem ipsum dolor sit amet', id: 1 },
@@ -55,7 +55,7 @@ const ActiveSprint = () => {
                                     <div className="issueShortInfo">
                                         <p>{issue.title}</p>
                                         <text id = "issueEpic">Epic</text>
-                                        <div id="spacer" style={{height:"13px"}}></div>
+                                        <div id="spacer" style={{height:"13px"}}/>
                                         <p id ="dueDate">{issue.dueDate}</p>
                                     </div>
                                 </div>
