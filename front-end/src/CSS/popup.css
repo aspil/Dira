@@ -1,0 +1,7 @@
+div.popup {
+  display: none;
+  position: fixed;
+  top: 300px;
+  left: 500px;
+  background-color: rgb(0, 132, 255);
+}
