@@ -29,7 +29,22 @@ const Epics = () => {
       hideCreateEpicPopup();
   }
   // Create Epic Colors
-  
+
+  const [epic_color, handleNewEpicColor] = useState("none");
+
+  const selectNewEpicColor = (new_color) => {
+    if(epic_color!="none"){
+      document.getElementById(epic_color).style.border = "none";
+      document.getElementById(epic_color).style.padding = "1px";
+      document.getElementById(epic_color).style.boxShadow = "none";
+
+    }
+    document.getElementById(new_color).style.border = "1px solid white";
+    document.getElementById(new_color).style.padding = "0px";
+    document.getElementById(new_color).style.boxShadow = "5px 5px 3px black";
+    handleNewEpicColor(new_color);
+  }
+// Epics
   const [epics, setEpics] = useState([
       { name: 'Makis', dueDate: '14/5/2021', role: 'developer', id: 1 },
       { name: 'Takis', dueDate: '2/11/2019', role: 'admin', id: 2 },
@@ -127,15 +142,15 @@ const Epics = () => {
                           <textarea type="range" placeholder="Description"></textarea>
                           <p style={{textAlign:"left", fontWeight:"bold", marginBottom:"15px"}}>Select epic color:</p>
                           <div className="colors">
-                            <div class="box brown"/>
-                            <div class="box red"/>
-                            <div class="box orange"/>
-                            <div class="box yellow"/>
-                            <div class="box green"/> 
-                            <div class="box blue"/>
-                            <div class="box pink"/>
-                            <div class="box purple"/>
-                            <div class="box black"/>
+                            <div class="box" id= "brown" onClick={() => selectNewEpicColor("brown")}/>
+                            <div class="box" id= "red" onClick={() => selectNewEpicColor("red")}/>
+                            <div class="box" id= "orange" onClick={() => selectNewEpicColor("orange")}/>
+                            <div class="box" id= "yellow" onClick={() => selectNewEpicColor("yellow")}/>
+                            <div class="box" id= "green" onClick={() => selectNewEpicColor("green")}/> 
+                            <div class="box" id= "blue" onClick={() => selectNewEpicColor("blue")}/>
+                            <div class="box" id= "pink" onClick={() => selectNewEpicColor("pink")}/>
+                            <div class="box" id= "purple" onClick={() => selectNewEpicColor("purple")}/>
+                            <div class="box" id= "black" onClick={() => selectNewEpicColor("black")}/>
 
                           </div> 
                           <button onClick={handlePopupButtonClick}>Create</button>

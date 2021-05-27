@@ -138,19 +138,24 @@
   background-color: rgb(168, 208, 248);
   border:2px solid lightgray;
   border-radius: 5px;
-  padding: 2vh 1.5vw;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+
   box-shadow: 12px 12px 7px grey;
 }
 
 .epics .create_epic_popup h2{
   float:left;
   color: white;
-  margin-bottom: 1vh;
+  margin-bottom: 10px;
 }
 
 .epics .create_epic_popup img{
-  width: 2vw;
+  width: 35px;
   height: auto;
+  margin-right: -20px;
   float:right;
 }
 
@@ -197,36 +202,37 @@
 	height:30px; 
   margin-left: 13px;
   border-radius: 3px;
-  border: 2px solid white;
+  padding: 1px;
 } 
+.epics .box:hover{ 
+
+  cursor: pointer;  
+}
  
-.epics .red{ 
+.epics #red{ 
 	background:red; 
 } 
-.epics .green{ 
+.epics #green{ 
 	background:rgb(2, 204, 2); 
 } 
-.epics .blue{ 
+.epics #blue{ 
 	background:#00f; 
 } 
-.epics .orange{ 
+.epics #orange{ 
 	background:orange; 
 } 
-.epics .brown{ 
+.epics #brown{ 
 	background:rgb(133, 53, 0); 
 } 
-.epics .black{ 
+.epics #black{ 
 	background:black; 
 } 
-.epics .orange{ 
-	background:orange; 
-} 
-.epics .yellow{ 
+.epics #yellow{ 
 	background:yellow; 
 } 
-.epics .pink{ 
+.epics #pink{ 
 	background:rgb(245, 90, 224); 
 } 
-.epics .purple{ 
+.epics #purple{ 
 	background:purple; 
 } 
