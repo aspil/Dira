@@ -6,6 +6,7 @@ import './CSS/project_screens.css'
 import './CSS/backlog.css'
 import './CSS/sidenav.css'
 import './CSS/activesprint.css'
+import './CSS/popup.css'
 
 
 

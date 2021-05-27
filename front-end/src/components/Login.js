@@ -3,7 +3,7 @@ import logo from "../Images/dira_icon.png"
 import { useState } from "react";
 
 
-const Login = ({ setToken, client }) => {
+const Login = ({ setToken, client, setUserInfo }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const history = useHistory();
@@ -13,10 +13,14 @@ const Login = ({ setToken, client }) => {
 
     client
       .login_user(username, password)
-      .then((token) => {
-        console.log(token);
-        localStorage.jwtoken = token;
-        setToken(token);
+      .then((user) => {
+        console.log(user);
+        localStorage.jwtoken = user.token;
+        setUserInfo({
+          username: user.username,
+          email: user.email,
+        })
+        setToken(user.token);
         history.push('/proj_main');
       })
       .catch(() => {
