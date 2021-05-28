@@ -8,6 +8,8 @@ import { useState } from "react";
 
 const Create_project = () => {
 
+  const premium_user = "yes"
+  
   function myFunction() {
     var popup = document.getElementById("myPopup");
     popup.classList.toggle("show");
@@ -33,18 +35,38 @@ const Create_project = () => {
                   </div>
                   <br/>
                   <p>Access:</p>
-                  <div style={{display:"flex", alignItems:"center"}}>
-                    <div className = "accessOptions">  
-                      <input className = "accessInput" type="radio" name="gender" id="public" value="public"/>
-                      <label for="public">Public</label>
+                  {premium_user === "no" && 
+                    <div>
+                      <div style={{display:"flex", alignItems:"center"}}>
+                        <div className = "accessOptions">  
+                          <input className = "accessInput" type="radio" name="access" id="public" value="public" checked/>
+                          <label for="public">Public</label>
+                        </div>
+                        <div className = "accessOptions">
+                          <input className = "accessInput" type="radio" name="access" id="private" value="private" disabled/>
+                          <label for="private">Private</label>
+                        </div>
+                      </div> 
+                      <p style={{fontWeight:"normal"}}><Link to="/register">Upgrade to Premium</Link> to create private projects.</p>
                     </div>
-                    <div className = "accessOptions">
-                      <input className = "accessInput" type="radio" name="gender" id="private" value="private"/>
-                      <label for="private">Private</label>
+                  }
+                  {premium_user === "yes" && 
+                    <div>
+                      <div style={{display:"flex", alignItems:"center"}}>
+                        <div className = "accessOptions">  
+                          <input className = "accessInput" type="radio" name="access" id="public" value="public" checked/>
+                          <label for="public">Public</label>
+                        </div>
+                        <div className = "accessOptions">
+                          <input className = "accessInput" type="radio" name="access" id="private" value="private"/>
+                          <label for="private">Private</label>
+                        </div>
+                      </div> 
                     </div>
-                  </div> 
-                  <p style={{fontWeight:"normal"}}><Link to="/register">Upgrade to Premium</Link> to create private projects.</p>
+                  }
                 </div>
+
+
                 <button type="submit">Create Project</button>
               </form>
           </div>
