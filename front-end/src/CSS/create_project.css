@@ -1,0 +1,94 @@
+.createProject #dira_logo {
+  margin:-8%;
+  max-width:50%;
+  height:auto;
+}
+.createProject .login_grad{
+  background-color: rgb(239, 240, 241);
+  margin:0 auto;
+  width: 22%;
+  border-radius: 5px;
+  border:2px solid lightgray;
+  padding:15px;
+}
+.createProject p{
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.createProject .textInput{
+  border-width: 1px;
+  width:90%;
+  font-size: 20px;
+  padding: 5px;
+  margin: 0;
+  margin-bottom: 7px;
+
+}
+.createProject #projectKey{
+  width:40%;
+  margin-bottom: 7px;
+
+}
+
+.createProject #questionmark {
+  width: 65px;
+  cursor: pointer;
+  
+}
+.createProject button{
+  padding: 5px;
+  font-size: 23px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+.createProject a{
+  color: rgb(0, 132, 255);
+}
+
+
+/* Popup */
+.createProject .questionmark_popup {
+  position: relative;
+  display: inline-block;
+}
+
+/* The actual popup */
+.createProject .questionmark_popup .popuptext {
+  visibility: hidden;
+  width: 240px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  left: 105%;
+  top: -35px;
+}
+
+
+/* Toggle this class - hide and show the popup */
+.createProject .questionmark_popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 0.5s;
+  animation: fadeIn 0.5s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;} 
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
+
+.createProject .accessInput{
+  margin:0;
+  margin-right: 2px;
+}
+.createProject .accessOptions{
+  margin-right: 20px;
+}

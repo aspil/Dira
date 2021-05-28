@@ -9,9 +9,9 @@ import './CSS/activesprint.css'
 import './CSS/members.css'
 import './CSS/epics.css'
 import './CSS/popup.css'
-
-
-
+import './CSS/login.css'
+import './CSS/register.css'
+import './CSS/create_project.css'
 
 ReactDOM.render(
   <React.StrictMode>
