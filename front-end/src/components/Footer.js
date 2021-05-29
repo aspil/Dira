@@ -8,10 +8,7 @@ const Footer = () => {
         <div className="links">
           <Link to="/">Features</Link>
           <Link to="/pricing">Pricing</Link>
-          <Link to="/contact">Contact Us</Link>
         </div>
-        <input type="text" placeholder="Email Adress" style={{margin:0,borderWidth:"thin"}}></input>
-        <Link className="sub_link" to="/subscribe">SUBSCRIBE</Link>
         
       </div>
     );

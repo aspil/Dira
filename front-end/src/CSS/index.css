@@ -139,15 +139,16 @@ button:hover{
   margin-left: 10vh;
 }
 .footer .links {
+  text-align: right;
   margin-left: auto;
-  margin-right: auto;
+  /* margin-right: auto; */
 
 }
 .footer a {
   color: #f2f2f2;
-  margin-right: 36px;
+  margin-right: 60px;
   text-decoration: none;
-  padding: 1.5vw;
+  padding: 20px;
   border-radius: 5px;
 }
 

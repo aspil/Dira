@@ -70,6 +70,11 @@ function App() {
               { token === undefined && <Redirect to="/sign_in" /> }
               { token !== undefined && <ActiveSprint username={userInfo.username}/> }
             </Route>
+            <Route path="/epics">
+              { token === undefined && <Redirect to="/sign_in" /> }
+              { token !== undefined && <Epics username={userInfo.username}/> }
+            
+            </Route>
           </Switch>
       </div>
     </Router>
