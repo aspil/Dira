@@ -34,8 +34,7 @@ Here they can see some of the features of the software, get informed about its p
 and join at any moment using the *Sign up* button.
 
 Users that are already registered can use the *Sign in* button on the header to redirect them 
-at a login page. Also, users may contact the administration team for further info, using
-the *Contact Us* anchor on the footer.
+at a login page.
 
 ### 1.2 Pricing Plans
 
@@ -44,16 +43,6 @@ the *Contact Us* anchor on the footer.
 This prototype provides users two options they can take in order to use the software.
 More information about the plans can be found in the [srs file](srs.md).
 
-### 1.3 Contact Page
-
-![Contact Page](prototypes/contact.png?raw=true "Contact Page")
-
-The above prototype is describing the *Contact Page*.
-
-The User can fill theses input fields, pick a specific -or not- subject and contact with the team of Dira by pressing the *Submit* button.
-
-The *Sign up* anchor is redirecting the user to *Register Page*.\
-The *Sign in* anchor is redirecting the user to *Login Page*.
 
 ## 2. User Authentication
 
@@ -65,7 +54,7 @@ In User Authentication we assume the Login process, the Register process etc.
 ![Login](prototypes/login.png?raw=true "Login")
 
 The above prototype is describing the "Login Page" .
-The user should should enter their username and password and jump into their main page by pressing the *Submit* button.
+The user should enter their username and password and jump into their main page by pressing the *Submit* button.
 
 Also, we provide a *Keep me logged in* option which can keep the user logged in for this specific device, until the user logs out.
 
@@ -118,7 +107,7 @@ After that, the user will redirect automatically to  *Login Page*.
 
 This prototype provides the user a handful of options regarding the user's projects.
 They can navigate between the projects they are member to, and the recent issues from those projects.
-Also, we provide a calendar-like panel which will contain issue deadlines.
+
 
 ## 3. Project Prototypes
 
