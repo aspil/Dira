@@ -52,7 +52,6 @@
   display: inline-block;
 }
 
-/* The actual popup */
 .createProject .questionmark_popup .popuptext {
   visibility: hidden;
   width: 240px;
@@ -66,15 +65,12 @@
   top: -35px;
 }
 
-
-/* Toggle this class - hide and show the popup */
 .createProject .questionmark_popup .show {
   visibility: visible;
   -webkit-animation: fadeIn 0.5s;
   animation: fadeIn 0.5s;
 }
 
-/* Add animation (fade in the popup) */
 @-webkit-keyframes fadeIn {
   from {opacity: 0;} 
   to {opacity: 1;}
@@ -85,6 +81,7 @@
   to {opacity:1 ;}
 }
 
+/* Radio Inputs */
 .createProject .accessInput{
   margin:0;
   margin-right: 2px;
@@ -92,3 +89,4 @@
 .createProject .accessOptions{
   margin-right: 20px;
 }
+

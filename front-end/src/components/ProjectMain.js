@@ -54,7 +54,6 @@ const ProjectMain = ({ username, projectClient, token }) => {
       "name": newProject[0].value,
       "visibility": newProject[3].value
     }).then(res => console.log('success')).catch(err => console.log('error'));
-
   }
 
 const handleProjCreateClick = () => {

@@ -8,8 +8,8 @@ import { useState } from "react";
 
 const Create_project = () => {
 
-  const premium_user = "yes"
-  
+  const premium_user = "no"
+
   function myFunction() {
     var popup = document.getElementById("myPopup");
     popup.classList.toggle("show");
@@ -39,26 +39,26 @@ const Create_project = () => {
                     <div>
                       <div style={{display:"flex", alignItems:"center"}}>
                         <div className = "accessOptions">  
-                          <input className = "accessInput" type="radio" name="access" id="public" value="public" checked/>
+                          <input className = "accessInput" type="radio" id="public" value="public" checked/>
                           <label for="public">Public</label>
                         </div>
                         <div className = "accessOptions">
-                          <input className = "accessInput" type="radio" name="access" id="private" value="private" disabled/>
-                          <label for="private">Private</label>
+                          <input className = "accessInput" type="radio" id="private" value="private" disabled/>
+                          <label for="private" style={{opacity:"0.5"}}>Private</label>
                         </div>
                       </div> 
-                      <p style={{fontWeight:"normal"}}><Link to="/register">Upgrade to Premium</Link> to create private projects.</p>
+                      <p style={{fontWeight:"normal"}}><Link to="/pricing">Upgrade to Premium</Link> to create private projects.</p>
                     </div>
                   }
                   {premium_user === "yes" && 
                     <div>
                       <div style={{display:"flex", alignItems:"center"}}>
                         <div className = "accessOptions">  
-                          <input className = "accessInput" type="radio" name="access" id="public" value="public" checked/>
+                          <input className = "accessInput" type="radio" id="public" value="public" checked/>
                           <label for="public">Public</label>
                         </div>
                         <div className = "accessOptions">
-                          <input className = "accessInput" type="radio" name="access" id="private" value="private"/>
+                          <input className = "accessInput" type="radio" id="private" value="private"/>
                           <label for="private">Private</label>
                         </div>
                       </div> 
