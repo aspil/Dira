@@ -16,12 +16,12 @@ public class RegisterService implements IRegisterService {
     }
 
     public CustomerModel registerCustomer(CustomerModel customerModel) throws CustomerAlreadyExistsException {
-        if (customerService.findByUsername(customerModel.getUsername()) != null) {
+        if (customerService.findByUsername(customerModel.getUsername()).isPresent()) {
             logger.error("Username '" + customerModel.getUsername() + "' already exists.");
             throw new CustomerAlreadyExistsException("username", customerModel.getUsername());
         }
 
-        if (customerService.findByEmail(customerModel.getEmail()) != null) {
+        if (customerService.findByEmail(customerModel.getEmail()).isPresent()) {
             logger.error("Email '" + customerModel.getEmail() + "' already exists.");
             throw new CustomerAlreadyExistsException("email", customerModel.getEmail());
         }

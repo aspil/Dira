@@ -5,7 +5,6 @@ import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.repositories.CustomerRepository;
-import di.uoa.gr.dira.security.PasswordManager;
 import di.uoa.gr.dira.services.BaseService;
 import di.uoa.gr.dira.services.projectService.IProjectService;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
@@ -14,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerService extends BaseService<CustomerModel, Customer, Long, CustomerRepository> implements ICustomerService {
@@ -25,24 +25,13 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
     }
 
     @Override
-    public boolean authenticateUser(String username, String password) {
-        return repository.findByUsername(username)
-                .map(customer -> PasswordManager.encoder().matches(password, customer.getPassword()))
-                .orElse(false);
+    public Optional<CustomerModel> findByUsername(String username) {
+        return repository.findByUsername(username).map(customer -> mapper.<CustomerModel>map(customer, modelType));
     }
 
     @Override
-    public CustomerModel findByUsername(String username) {
-        return repository.findByUsername(username)
-                .map(customer -> mapper.<CustomerModel>map(customer, modelType))
-                .orElse(null);
-    }
-
-    @Override
-    public CustomerModel findByEmail(String email) {
-        return repository.findByEmail(email)
-                .map(customer -> mapper.<CustomerModel>map(customer, modelType))
-                .orElse(null);
+    public Optional<CustomerModel> findByEmail(String email) {
+        return repository.findByEmail(email).map(customer -> mapper.<CustomerModel>map(customer, modelType));
     }
 
     @Override
@@ -55,7 +44,7 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
     }
 
     @Override
-    public List<ProjectModel> getAllProjects(Long customerId) {
+    public List<ProjectModel> getCustomerProjects(Long customerId) {
         return repository.findById(customerId)
                 .map(customer -> MapperHelper.<Project, ProjectModel>mapList(mapper, customer.getProjects(), ProjectModel.class))
                 .orElse(null);

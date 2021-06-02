@@ -78,6 +78,6 @@ public class CustomerController {
     )
     @GetMapping("{id}/projects")
     public List<@Valid ProjectModel> getCustomerProjects(@PathVariable Long id) {
-        return service.getAllProjects(id);
+        return service.getCustomerProjects(id);
     }
 }
