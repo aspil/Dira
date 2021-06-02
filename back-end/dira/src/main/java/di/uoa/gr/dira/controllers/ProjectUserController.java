@@ -2,7 +2,6 @@ package di.uoa.gr.dira.controllers;
 
 
 import di.uoa.gr.dira.models.project.ProjectUsersModel;
-import di.uoa.gr.dira.security.JwtHelper;
 import di.uoa.gr.dira.services.projectService.IProjectService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpHeaders;
@@ -10,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.attribute.standard.Media;
 import javax.validation.Valid;
 
 @Validated
@@ -18,11 +16,9 @@ import javax.validation.Valid;
 @RequestMapping("projects/{projectId}/users")
 public class ProjectUserController {
     private final IProjectService service;
-    private final JwtHelper jwtHelper;
 
-    public ProjectUserController(IProjectService service, JwtHelper jwtHelper) {
+    public ProjectUserController(IProjectService service) {
         this.service = service;
-        this.jwtHelper = jwtHelper;
     }
 
     @ApiOperation(
@@ -38,13 +34,13 @@ public class ProjectUserController {
             value = "Adds a user to the project with the given id",
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    @PostMapping
+    @PostMapping("{userId}")
     public void addUserToProjectWithId(
             @PathVariable Long projectId,
+            @PathVariable Long userId,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
     ) {
-        Long customerId = jwtHelper.getId(jwtToken);
-        service.addUserToProjectWithId(projectId, customerId);
+        service.addUserToProjectWithId(projectId, userId);
     }
 
     @ApiOperation(

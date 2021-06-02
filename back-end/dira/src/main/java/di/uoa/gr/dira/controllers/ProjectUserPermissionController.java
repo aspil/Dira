@@ -13,7 +13,7 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping("projects/{projectId}/users/permission")
+@RequestMapping("projects/{projectId}/users/permissions")
 public class ProjectUserPermissionController {
     private final IPermissionService service;
 

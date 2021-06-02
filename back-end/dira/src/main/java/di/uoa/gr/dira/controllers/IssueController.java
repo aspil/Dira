@@ -30,8 +30,7 @@ public class IssueController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @GetMapping
-    public @Valid ProjectIssuesModel getAllIssuesWithProjectId(
-            @PathVariable Long projectId) {
+    public @Valid ProjectIssuesModel getAllIssuesWithProjectId(@PathVariable Long projectId) {
         return service.findAllIssuesByProjectId(projectId);
     }
 
