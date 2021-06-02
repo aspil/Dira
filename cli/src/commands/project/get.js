@@ -20,19 +20,21 @@ class GetProjectCommand extends Command {
         client.set_authorization_token(token);
 
         if (flags.all) {
-            const projects = await client.get_all_projects();
-            if (projects && projects.length) {
-                console.table(projects);
-            } else {
-                logging.info("No projects were found");
-            }
+            client.get_all_projects()
+                .then(projects => {
+                    if (projects && projects.length) {
+                        console.table(projects);
+                    } else {
+                        logging.info("No projects were found");
+                    }
+                }).catch(err => {
+                    logging.error("Something went wrong");
+                    logging.info(`Reason: ${err.error.message}`);
+                });
         } else if (flags.id) {
-            const project = await client.get_project_by_id(flags.id);
-            if (project) {
-                console.table(project);
-            } else {
-                logging.info(`No project with id '${flags.id}' was found`);
-            }
+            client.get_project_by_id(flags.id)
+                .then(console.table)
+                .catch(err => logging.info(err.error.message));
         }
     }
 }

@@ -22,17 +22,20 @@ class GetProjectUserCommand extends Command {
         client.set_authorization_token(token);
 
         if (flags.all) {
-            const projectUsers = await client.get_all_users_in_project_by_id(projectId);
-            if (projectUsers && projectUsers.users.length) {
-                const data = projectUsers.users.map(user => Object.assign({
-                    projectId: projectUsers.id,
-                    projectKey: projectUsers.key
-                }, user));
+            client.get_all_users_in_project_by_id(projectId)
+                .then(projectUsers => {
+                    if (projectUsers && projectUsers.users.length) {
+                        const data = projectUsers.users.map(user => Object.assign({
+                            projectId: projectUsers.id,
+                            projectKey: projectUsers.key
+                        }, user));
 
-                console.table(data);
-            } else {
-                logging.info(`No users were found for project with id '${projectId}'`)
-            }
+                        console.table(data);
+                    }
+                }).catch(err => {
+                    logging.error("Something went wrong");
+                    logging.info(`Reason: ${err.error.message}`);
+                });
         }
     }
 }

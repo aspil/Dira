@@ -53,13 +53,16 @@ class RegisterUserCommand extends Command {
             data = await io_utils.get_answers_serialized(register_user_questions);
         }
 
-        const user = await client.register_user(data);
-        if (user) {
-            logging.log();
-            logging.info("New user was created succesfully");
-            logging.log();
-            console.table(user);
-        }
+        client.register_user(data)
+            .then(user => {
+                logging.log();
+                logging.info("New user was created succesfully");
+                logging.log();
+                console.table(user);
+            }).catch(err => {
+                logging.error("Could not register new user");
+                logging.info(`Reason: ${err.error.message}`);
+            });
     }
 }
 

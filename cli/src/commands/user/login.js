@@ -12,21 +12,21 @@ class LoginUserCommand extends Command {
         var username = flags.username || await io_utils.get_answers(questions.username);
         var password = flags.password || await io_utils.get_answers(questions.password);
 
-        const user = await client.login_user(username, password);
+        client.login_user(username, password)
+            .then(user => {
+                logging.log();
+                logging.info("User logged in successfully");
+                logging.info("Saving authentication token for future use");
+                logging.log();
 
-        if (user) {
-            logging.log();
-            logging.info("User logged in successfully");
-            logging.info("Saving authentication token for future use");
-            logging.log();
+                io_utils.save_auth_token(user.token);
 
-            io_utils.save_auth_token(user.token);
-
-            delete user.token;
-            console.table(user);
-        } else {
-            logging.error("Could not log in user");
-        }
+                delete user.token;
+                console.table(user);
+            }).catch(err => {
+                logging.error("Could not log in user");
+                logging.info(`Reason: ${err.error.message}`);
+            });
     }
 }
 

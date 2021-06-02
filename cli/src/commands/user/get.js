@@ -2,6 +2,7 @@
 const { Command, flags } = require('@oclif/command');
 const { DiraUserClient } = require("dira-clients");
 const logging = require("../../logging");
+
 class GetUserCommand extends Command {
     async run() {
         const client = new DiraUserClient();
@@ -12,19 +13,21 @@ class GetUserCommand extends Command {
         }
 
         if (flags.all) {
-            const users = await client.get_all_users();
-            if (users && users.length) {
-                console.table(users);
-            } else {
-                logging.info("No users were found");
-            }
+            client.get_all_users()
+                .then(users => {
+                    if (users && users.length) {
+                        console.table(users);
+                    } else {
+                        logging.info("No users were found");
+                    }
+                }).catch(err => {
+                    logging.error("Something went wrong");
+                    logging.info(`Reason ${err.error.message}`);
+                });
         } else if (flags.id) {
-            const user = await client.get_user_by_id(flags.id);
-            if (user) {
-                console.table(user);
-            } else {
-                logging.info(`User with id '${flags.id}' was not found`);
-            }
+            client.get_user_by_id(flags.id)
+                .then(console.table)
+                .catch(err => logging.info(err.error.message));
         }
     }
 }
