@@ -19,6 +19,7 @@ const Login = ({ setToken, client, setUserInfo }) => {
         setUserInfo({
           username: user.username,
           email: user.email,
+          id: user.id
         })
         setToken(user.token);
         history.push('/proj_main');

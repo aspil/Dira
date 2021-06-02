@@ -1,0 +1,407 @@
+{
+	"info": {
+		"_postman_id": "9f09c96a-24ac-465e-9478-f5cc6b48fcb3",
+		"name": "Dira testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Project",
+			"item": [
+				{
+					"name": "Create Project",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"description\": \"p_d_{{$randomLoremWord}}\",\n  \"id\": 0,\n  \"key\": \"p_k_{{$randomLoremWord}}\",\n  \"name\": \"p_n_{{$randomProductName}}\",\n  \"visibility\": \"PUBLIC\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/dira/projects",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"dira",
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get project with ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/dira/projects/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"dira",
+								"projects",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all projects",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/dira/projects",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"dira",
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete project with ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Project Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/dira/projects/1/users",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"dira",
+								"projects",
+								"1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var jsonReq = JSON.parse(request.data);",
+									"postman.setEnvironmentVariable(\"currentUsername\", jsonData.username);",
+									"postman.setEnvironmentVariable(\"currentPassword\", jsonReq.password);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{$randomUserName}}\",\n    \"name\": \"{{$randomFirstName}}\",\n    \"surname\": \"{{$randomLastName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"{{$randomPassword}}\",\n    \"subscriptionPlan\": \"PREMIUM\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/dira/register",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"dira",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var auth_token = pm.response.headers.get(\"Authorization\");",
+									"pm.environment.set(\"AuthToken\", auth_token)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{currentUsername}}\",\n    \"password\": \"{{currentPassword}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/dira/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"dira",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/dira/users",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"dira",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/dira/users/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"dira",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Projects",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/dira/users/1/projects",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"dira",
+								"users",
+								"1",
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User with ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/dira/users/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"dira",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Issue",
+			"item": [
+				{
+					"name": "Get all issues",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/dira/projects/1/issues/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"dira",
+								"projects",
+								"1",
+								"issues",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"description\": \"i_d{{$randomLoremWord}}\",\n  \"id\": 0,\n  \"key\": \"i_k_{{$randomLoremWord}}\",\n  \"priority\": 0,\n  \"title\": \"i_t_{{$randomLoremWord}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/dira/projects/1/issues",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"dira",
+								"projects",
+								"1",
+								"issues"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get issue with id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Issue with ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
