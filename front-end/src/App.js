@@ -11,6 +11,7 @@ import Epics from './components/Epics';
 import Backlog from './components/Backlog';
 import { useState } from 'react';
 import { DiraProjectClient, DiraUserClient } from "dira-clients";
+import CreateProject from './components/CreateProject';
 
 function App() {
   const history = useHistory();
@@ -18,6 +19,7 @@ function App() {
   const [userInfo, setUserInfo] = useState({
     username: null,
     email: null,
+    id: null
   });
   const userClient = new DiraUserClient();
   const projectClient = new DiraProjectClient();
@@ -52,11 +54,7 @@ function App() {
 
             <Route path="/proj_main">
               { token === undefined && <Redirect to="/sign_in" /> }
-              { token !== undefined && <ProjectMain 
-                                          username={userInfo.username} 
-                                          projectClient={projectClient}
-                                          token={token}
-                                        /> }
+              { token !== undefined && <ProjectMain username={userInfo.username}/> }
             </Route>
             <Route path="/backlog">
               { token === undefined && <Redirect to="/sign_in" /> }
@@ -73,7 +71,13 @@ function App() {
             <Route path="/epics">
               { token === undefined && <Redirect to="/sign_in" /> }
               { token !== undefined && <Epics username={userInfo.username}/> }
-            
+            </Route>
+            <Route path="/create_project">
+              { token === undefined && <Redirect to="/sign_in" /> }
+              { token !== undefined && <CreateProject 
+                                          projectClient={projectClient}
+                                          token={token}
+                                        /> }
             </Route>
           </Switch>
       </div>
