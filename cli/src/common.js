@@ -10,8 +10,11 @@ async function prompt_login_and_get_token() {
     const user_client = new DiraUserClient();
     const username = await io_utils.get_answers(questions.username);
     const password = await io_utils.get_answers(questions.password);
-    const user = await user_client.login_user(username, password);
-    return user ? user.token : null;
+    return await user_client.login_user(username, password)
+        .then(user => {
+            io_utils.save_auth_token(user.token);
+            return user.token;
+        }).catch(_err => null);
 }
 
 async function try_get_auth_token_from_fs_or_prompt_for_login() {
@@ -21,8 +24,13 @@ async function try_get_auth_token_from_fs_or_prompt_for_login() {
 
         const confirmed = await confirm("Do you want to login?").then(() => true, () => false);
         if (confirmed) {
-            token = await prompt_login_and_get_token();
-            io_utils.save_auth_token(token);
+            token = await prompt_login_and_get_token()
+                .then(token => {
+                    if (token) {
+                        io_utils.save_auth_token(token);
+                    }
+                    return token;
+                });
         }
     }
 

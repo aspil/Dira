@@ -41,8 +41,8 @@ class RegisterUserCommand extends Command {
         const client = new DiraUserClient();
         const { flags } = this.parse(RegisterUserCommand);
 
+        var data;
         if (flags.data) {
-            var data = null;
             try {
                 data = JSON.parse(flags.data);
             }
