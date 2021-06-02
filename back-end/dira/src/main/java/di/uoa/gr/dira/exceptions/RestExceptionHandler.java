@@ -9,6 +9,7 @@ import di.uoa.gr.dira.exceptions.project.permission.PermissionNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -20,7 +21,8 @@ public class RestExceptionHandler {
             CustomerNotFoundException.class,
             CustomerAlreadyExistsException.class,
             ProjectNotFoundException.class,
-            ActionNotPermittedException.class
+            ActionNotPermittedException.class,
+            BadCredentialsException.class,
     })
     public final ResponseEntity<RestApiError> handleException(Exception ex, WebRequest request) {
         HttpHeaders headers = new HttpHeaders();
@@ -43,6 +45,9 @@ public class RestExceptionHandler {
         } else if (ex instanceof ActionNotPermittedException) {
             HttpStatus status = HttpStatus.FORBIDDEN;
             return handleActionNotPermittedException((ActionNotPermittedException) ex, headers, status, request);
+        } else if (ex instanceof BadCredentialsException) {
+            HttpStatus status = HttpStatus.UNAUTHORIZED;
+            return handleBadCredentialsException((BadCredentialsException) ex, headers, status, request);
         }
 
         return null;
@@ -79,17 +84,25 @@ public class RestExceptionHandler {
             WebRequest request) {
         return handleExceptionInternal(ex, new RestApiError(ex.getMessage()), headers, status, request);
     }
-    
+
     private ResponseEntity<RestApiError> handlePermissionNotFoundException(
             PermissionNotFoundException ex,
-           HttpHeaders headers,
-           HttpStatus status,
-           WebRequest request) {
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
         return handleExceptionInternal(ex, new RestApiError(ex.getMessage()), headers, status, request);
     }
 
     private ResponseEntity<RestApiError> handleActionNotPermittedException(
             ActionNotPermittedException ex,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
+        return handleExceptionInternal(ex, new RestApiError(ex.getMessage()), headers, status, request);
+    }
+
+    private ResponseEntity<RestApiError> handleBadCredentialsException(
+            BadCredentialsException ex,
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {

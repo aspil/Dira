@@ -37,17 +37,13 @@ public class LoginController {
     )
     @PostMapping
     public ResponseEntity<@Valid CustomerModel> login(@Valid @RequestBody CustomerLoginModel customerLoginModel) {
-        try {
-            CustomerModel customer = loginService.authenticateUser(
-                    customerLoginModel.getUsername(),
-                    customerLoginModel.getPassword()
-            );
+        CustomerModel customer = loginService.authenticateUser(
+                customerLoginModel.getUsername(),
+                customerLoginModel.getPassword()
+        );
 
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.AUTHORIZATION, jwtHelper.generateToken(customer))
-                    .body(customer);
-        } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, jwtHelper.generateToken(customer))
+                .body(customer);
     }
 }

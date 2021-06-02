@@ -1,7 +1,6 @@
 package di.uoa.gr.dira.configuration.security;
 
 import di.uoa.gr.dira.configuration.spring.SpringProfiles;
-import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.security.JwtAuthenticationFilter;
 import di.uoa.gr.dira.security.PasswordManager;
@@ -9,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,12 +22,12 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    private final CustomerRepository customerRepository;
+    private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfiguration(CustomerRepository customerRepository, JwtAuthenticationFilter jwtAuthenticationFilter) {
-        this.customerRepository = customerRepository;
+    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter, AuthenticationProvider authenticationProvider) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.authenticationProvider = authenticationProvider;
     }
 
     @Override
@@ -38,10 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(username -> customerRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new CustomerNotFoundException("username", username))
-        ).passwordEncoder(PasswordManager.encoder());
+        auth.authenticationProvider(authenticationProvider);
     }
 
     @Override
