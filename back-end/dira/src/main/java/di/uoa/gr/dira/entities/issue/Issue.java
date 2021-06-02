@@ -87,8 +87,8 @@ public class Issue {
 
     private long loggedTime;
 
-    @Column(nullable = false)
-    private String timeUnit;
+//    @Column(nullable = false)
+//    private String timeUnit;
 
     @ColumnDefault(value = "false")
     private boolean resolved;

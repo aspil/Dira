@@ -2,7 +2,7 @@ package di.uoa.gr.dira.models.project;
 
 
 import di.uoa.gr.dira.models.IModel;
-import di.uoa.gr.dira.models.issue.IssueModel;
+import di.uoa.gr.dira.models.issue.IssueResponseModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +24,6 @@ public class ProjectIssuesModel implements IModel<Long> {
     private String name;
 
     @NotNull
-    List<IssueModel> issues;
+    List<IssueResponseModel> issues;
 
 }
