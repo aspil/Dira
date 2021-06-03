@@ -4,28 +4,31 @@ import ProjectNav from './ProjectNav'
 import Footer from './Footer'
 import SideNav from './SideNav'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Search } from '@material-ui/icons'
 
 const Backlog = () => {
-
   const [create_issue_popup, handleMembersPopup] = useState("show");
-
-  const hide_create_issue_popup = () => {
-    handleMembersPopup("hide");
-}
-
-const show_create_issue_popup = () => {
-    handleMembersPopup("show");
-}
-
-const handlePopupButtonClick = () => {
-    hide_create_issue_popup();
-}
-
   const [issues, setIssues] = useState([
     {name: "issue 1"},{name: "issue 2"}
   ])
+
+  const { projectId } = useParams();
+
+  console.log(projectId);
+
+  const hide_create_issue_popup = () => {
+    handleMembersPopup("hide");
+  }
+
+  const show_create_issue_popup = () => {
+      handleMembersPopup("show");
+  }
+
+  const handlePopupButtonClick = () => {
+      hide_create_issue_popup();
+  }
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

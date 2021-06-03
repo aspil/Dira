@@ -11,6 +11,7 @@ const CreateProject = ({ projectClient, token }) => {
   const [description, setDescription] = useState("");
   const [key, setKey] = useState("");
   const [visibility, setVisibility] = useState("PUBLIC");
+  const history = useHistory();
 
   const premium_user = "no"
   function myFunction() {
@@ -31,6 +32,8 @@ const CreateProject = ({ projectClient, token }) => {
     })
       .then(res => console.log(res))
       .catch(() => console.log('error'));
+
+    history.push('proj_main');
 
   }
 

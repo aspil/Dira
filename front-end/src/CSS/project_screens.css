@@ -134,6 +134,10 @@
   width: 100%;
 }
 
+.projectmain #main_table td:hover {
+  cursor: pointer;
+}
+
 .projectmain #main_table td, #customers th {
   border: 1px solid #ddd;
   padding: 1vh;

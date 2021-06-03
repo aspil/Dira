@@ -23,7 +23,7 @@ const ProjectNav = ({ username }) => {
       </div>
       <div class="form-popup" id="myForm">
         <form class="form-container">
-          <p><strong>{username}</strong></p>
+          <p style={{textAlign:"center"}}><strong>{username}</strong></p>
           <button type="submit" class="btn">Upgrade</button>
           <button type="button" class="btn">Logout</button>
         </form>

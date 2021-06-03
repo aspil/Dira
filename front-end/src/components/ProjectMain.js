@@ -1,11 +1,14 @@
 import ProjectNav from './ProjectNav';
 import Footer from './Footer';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
+import { History } from '@material-ui/icons';
 
-const ProjectMain = ({ username, projectClient, token }) => {
+const ProjectMain = ({ userInfo, userClient, token }) => {
   const [listState, setListState] = useState("showProjects");
   const history = useHistory()
+  const [projects, setProjects] = useState([]);
 
   const swapList = () => {
     if(listState=="showProjects"){
@@ -16,11 +19,17 @@ const ProjectMain = ({ username, projectClient, token }) => {
     }
   }
 
-  const [projects, setProjects] = useState([
-    { title: 'Project Facebook', due_date: '14/5/2021', type: 'public', id: 1 },
-    { title: 'Mars Landing 2030', due_date: 'DD/MM/YYYY', type: 'private', id: 2 },
-    { title: 'KFC is coming to Greece', due_date: '3/8/2022', type: 'public', id: 3 }
-  ])
+  useEffect(() => {
+    userClient.get_user_projects(userInfo.id)
+      .then((res) => {
+        setProjects(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+
 
   const [issues, setIssues] = useState([
     { title: 'Issue x', project: '14/5/2021', sprint: 'sprint X', status: "active", id: 1 },
@@ -30,7 +39,7 @@ const ProjectMain = ({ username, projectClient, token }) => {
 
   return (
     <div className="projectmain">
-      <ProjectNav username={username}/>
+      <ProjectNav username={userInfo.username}/>
 
       <div className = "leftPanel" style={{width:"60%", margin:"0.5%"}}>
 {/* projectButtons */}
@@ -58,16 +67,16 @@ const ProjectMain = ({ username, projectClient, token }) => {
           { listState == "showProjects" &&
           <table id = "main_table">
             <tr>
-              <th>Title</th>
-              <th>Due Date</th>
-              <th>Type</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Key</th>
             </tr>
             {projects.map(project => (
-                <tr key={project.id}>
-                  <td>{project.title}</td>
-                  <td>{project.due_date}</td>
-                  <td>{project.type}</td>
-                </tr>
+              <tr onClick={() => {history.push(`/backlog/${project.id}`)}} key={project.id}>
+                  <td>{project.name}</td>
+                  <td>{project.description}</td>
+                  <td>{project.key}</td>
+              </tr>
             ))}
           </table>
           }

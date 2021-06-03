@@ -17,9 +17,9 @@ function App() {
   const history = useHistory();
   const [token, setToken] = useState(localStorage.jwtoken);
   const [userInfo, setUserInfo] = useState({
-    username: null,
-    email: null,
-    id: null
+          username: localStorage.username,
+          email: localStorage.email,
+          id: localStorage.id
   });
   const userClient = new DiraUserClient();
   const projectClient = new DiraProjectClient();
@@ -54,9 +54,13 @@ function App() {
 
             <Route path="/proj_main">
               { token === undefined && <Redirect to="/sign_in" /> }
-              { token !== undefined && <ProjectMain username={userInfo.username}/> }
+              { token !== undefined && <ProjectMain 
+                                          userInfo = {userInfo}
+                                          userClient = {userClient}
+                                          token = {token}
+                                       /> }
             </Route>
-            <Route path="/backlog">
+            <Route path="/backlog/:id">
               { token === undefined && <Redirect to="/sign_in" /> }
               { token !== undefined && <Backlog username={userInfo.username}/> }
             </Route>
