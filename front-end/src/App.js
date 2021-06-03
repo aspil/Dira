@@ -60,9 +60,11 @@ function App() {
                                           token = {token}
                                        /> }
             </Route>
-            <Route path="/backlog/:id">
+            <Route path="/backlog/:projectId">
               { token === undefined && <Redirect to="/sign_in" /> }
-              { token !== undefined && <Backlog username={userInfo.username}/> }
+              { token !== undefined && <Backlog
+                                        username={userInfo.username}
+                                        token={token}/> }
             </Route>
             <Route path="/members">
               { token === undefined && <Redirect to="/sign_in" /> }

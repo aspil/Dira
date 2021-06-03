@@ -3,19 +3,43 @@ import x_icon from "../Images/x_icon.png"
 import ProjectNav from './ProjectNav'
 import Footer from './Footer'
 import SideNav from './SideNav'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Search } from '@material-ui/icons'
+import { DiraIssueClient } from "dira-clients";
 
-const Backlog = () => {
+const Backlog = ({ token }) => {
   const [create_issue_popup, handleMembersPopup] = useState("show");
-  const [issues, setIssues] = useState([
-    {name: "issue 1"},{name: "issue 2"}
-  ])
+  const [issues, setIssues] = useState([])
+  const [projectName, setProjectName] = useState('');
 
   const { projectId } = useParams();
 
-  console.log(projectId);
+  const issueClient = new DiraIssueClient(undefined, projectId);
+
+  useEffect(() => {
+    issueClient.set_authorization_token(token);
+
+    issueClient.create_issue({
+      "description": "balblalbal",
+      "id": 0,
+      "key": "jdjdjdjdjj",
+      "labels": [
+        "important",
+        "kfc"
+      ],
+      "priority": 59,
+      "title": "kfcjjjjkfc"
+    })
+
+    issueClient.get_all_issues()
+      .then((res) => {
+        console.log(res);
+        setIssues(res.issues);
+        setProjectName(res.name);
+      })
+      .catch(console.log);
+  }, []);
 
   const hide_create_issue_popup = () => {
     handleMembersPopup("hide");
@@ -42,7 +66,7 @@ const Backlog = () => {
       <div className="center_content">
         <SideNav />
         <main>
-          <h1>Project Name</h1>
+          <h1>{projectName}</h1>
           <div className="flex_cont">
             <div className="issues">
               <div className="head">
