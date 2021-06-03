@@ -2,8 +2,6 @@ import ProjectNav from './ProjectNav';
 import Footer from './Footer';
 import { useEffect, useState } from "react";
 import { useHistory } from 'react-router';
-import { Link } from 'react-router-dom';
-import { History } from '@material-ui/icons';
 
 const ProjectMain = ({ userInfo, userClient, token }) => {
   const [listState, setListState] = useState("showProjects");
