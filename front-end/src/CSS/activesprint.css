@@ -39,9 +39,7 @@
 
 
 /* Styles */
-.active_sprint #content > *{
-  /* background: #3bbced; */
-}
+
 .active_sprint .issues{
   padding: 5px;
 }
@@ -125,9 +123,7 @@
   overflow-y: auto;
   box-shadow: 7px 7px 10px lightgray;
 }
-.active_sprint .issuePanel #issueName{
-  float:"left"
-}
+
 .active_sprint .issuePanel #issueEpic{
   font-size: 25px;
   font-weight: bold;

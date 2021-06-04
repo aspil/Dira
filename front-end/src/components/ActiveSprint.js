@@ -54,7 +54,7 @@ const ActiveSprint = () => {
                                     <p>{issue.briefDescription}</p>
                                     <div className="issueShortInfo">
                                         <p>{issue.title}</p>
-                                        <text id = "issueEpic">Epic</text>
+                                        <text id = "issueEpic">My Epic</text>
                                         <div id="spacer" style={{height:"13px"}}/>
                                         <p id ="dueDate">{issue.dueDate}</p>
                                     </div>
@@ -70,7 +70,7 @@ const ActiveSprint = () => {
                                     <p>{issue.briefDescription}</p>
                                         <div className="issueShortInfo">
                                             <p>{issue.title}</p>
-                                            <text id = "issueEpic">Epic</text>
+                                            <text id = "issueEpic">My Epic</text>
                                             <div id="spacer" style={{height:"13px"}}/>
                                             <p id ="dueDate">{issue.dueDate}</p>
                                         </div>
@@ -86,7 +86,7 @@ const ActiveSprint = () => {
                                     <p>{issue.briefDescription}</p>
                                         <div className="issueShortInfo">
                                             <p>{issue.title}</p>
-                                            <text id = "issueEpic">Epic</text> 
+                                            <text id = "issueEpic">My Epic</text> 
                                             <div id="spacer" style={{height:"13px"}}/>
                                             <p id ="dueDate">{issue.dueDate}</p>
                                         </div>
@@ -97,57 +97,48 @@ const ActiveSprint = () => {
                         {/* Issue Panel*/}
                         {issue_panel === "show" && 
                             <div className = "issuePanel">
-                                <h1 id="issueName">Issue Name</h1>
-                                <br></br>
-                                <text id ="issueEpic">Epic</text>
-                                <br></br>
-                                <br></br>
-                                <h3>Description</h3>
-                                <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                </p>
-                                <br/>
-                                <text className="label" id="status">Status: </text>
-                                <text className="answer" id="statusAnswer">Open</text>
-                                <text className="answer" id="priorityAnswer">Major </text>
-                                <text className="label" id="priority">Priority: </text>
-                                <br/>
-                                <br/>
-                                <text className="label" id="resolution">Resolution: </text>
-                                <text className="answer" id="resolutionAnswer">Unresolved</text>
-                                <br/>
-                                <br/>
-                                <text className="label" id="assignee">Assignee: </text>
-                                <text className="answer" id="assigneeAnswer">Makis</text>
-                                <br/>
-                                <text className="label" id="reporter">Reporter: </text>
-                                <text id="reporterAnswer">Takis</text>
-                                <br/>
-                                <br/>
-                                <text className="label" id="dateCreated">Created on: </text>
-                                <text className="answer" id="dateCreatedAnswer">10/3/2021</text>
-                                <br/>
-                                <text className="label" id="DueDate">Due date: </text>
-                                <text className="answer" id="DueDateAnswer">2/5/2021</text>
-                                <br/>
-                                <text className="label" id="timeLeft">Time Remaining: </text>
-                                <text className="answer" id="timeLeftAnswer">5 days</text>
+                                <div>
+                                    <h1 id="issueName">Issue Name</h1>
+                                    <br></br>
+                                    <text id ="issueEpic">Epic of this Issue</text>
+                                    <br></br>
+                                    <br></br>
+                                    <h3>Description</h3>
+                                    <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit
+
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                                    </p>
+                                    <br/>
+                                    <text className="label" id="status">Status: </text>
+                                    <text className="answer" id="statusAnswer">Open</text>
+                                    <text className="answer" id="priorityAnswer">Major </text>
+                                    <text className="label" id="priority">Priority: </text>
+                                    <br/>
+                                    <text className="label" id="resolution">Resolution: </text>
+                                    <text className="answer" id="resolutionAnswer">Unresolved</text>
+                                    <br/>
+                                    <br/>
+                                    <text className="label" id="assignee">Assignee: </text>
+                                    <text className="answer" id="assigneeAnswer">Makis</text>
+                                    <br/>
+                                    <text className="label" id="reporter">Reporter: </text>
+                                    <text id="reporterAnswer">Takis</text>
+                                    <br/>
+                                    <br/>
+                                    <text className="label" id="dateCreated">Created on: </text>
+                                    <text className="answer" id="dateCreatedAnswer">10/3/2021</text>
+                                    <br/>
+                                    <text className="label" id="DueDate">Due date: </text>
+                                    <text className="answer" id="DueDateAnswer">2/5/2021</text>
+                                    <br/>
+                                    <text className="label" id="timeLeft">Time Remaining: </text>
+                                    <text className="answer" id="timeLeftAnswer">5 days</text>
+                                </div>
                             </div>
                         }   
                     </div>

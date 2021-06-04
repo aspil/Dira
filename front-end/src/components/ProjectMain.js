@@ -51,13 +51,13 @@ const ProjectMain = ({ userInfo, userClient, token }) => {
             { listState == "showProjects" &&
               <div>
               <button className="pressedButton" style={{borderTopLeftRadius:"5px"}}>My Projects</button>
-              <button className="unpressedButton"style={{borderTopRightRadius:"5px"}} onClick={swapList}>My Recet Issues</button>
+              <button className="unpressedButton"style={{borderTopRightRadius:"5px"}} onClick={swapList}>My Active Issues</button>
             </div>
             }
             { listState == "showIssues" &&
               <div>
               <button className="unpressedButton" style={{borderTopLeftRadius:"5px"}} onClick={swapList}>My Projects</button>
-              <button className="pressedButton"style={{borderTopRightRadius:"5px"}}>My Recet Issues</button>
+              <button className="pressedButton"style={{borderTopRightRadius:"5px"}}>My Active Issues</button>
             </div>
             }
           </div>

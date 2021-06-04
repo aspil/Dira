@@ -102,7 +102,7 @@
   border: 2px solid lightgray;
   border-radius: 10px;
   padding: 10px;
-  max-height:create_epic_popup 665px;
+  max-height: 665px;
   overflow-y: auto;
   box-shadow: 7px 7px 10px lightgray;
 }

@@ -20,7 +20,7 @@ const Login = ({ setToken, client, setUserInfo }) => {
         localStorage.email = user.email;
         localStorage.id = user.id;
         setUserInfo({
-          username: localStorage.username,
+          username: localStorage.username,  
           email: localStorage.email,
           id: localStorage.id
         });
