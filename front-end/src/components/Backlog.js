@@ -9,13 +9,9 @@ import { Search } from '@material-ui/icons'
 import { DiraIssueClient } from "dira-clients";
 
 const Backlog = ({ token }) => {
-  const [create_issue_popup, handleMembersPopup] = useState("hide");
-  
-  const [issue_panel, handleIssuePanel] = useState("hide");
-  const showIssuePanel = () => {
-    handleIssuePanel("show")
-  }
 
+
+  
   const [backlogIssues, setBacklogIssues] = useState([
     { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
     { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
@@ -38,12 +34,18 @@ const Backlog = ({ token }) => {
     { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 1 },
     { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 1 },
     { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 1 },
     { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 2 },
     { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 3 }
   ])
+
+
+  const [sprint, handleSprintPanel] = useState("show");
+
+  const [issue_panel, handleIssuePanel] = useState("hide");
+  const showIssuePanel = () => {
+    handleIssuePanel("show")
+  }
+
   const [projectName, setProjectName] = useState('');
 
   const { projectId } = useParams();
@@ -74,16 +76,16 @@ const Backlog = ({ token }) => {
       .catch(console.log);
   }, []);
 
-  const hide_create_issue_popup = () => {
-    handleMembersPopup("hide");
+  // Create issue popup handlers
+  const [create_issue_popup, handleCreateIssuePopup] = useState("hide");
+  const hideCreateIssuePopup = () => {
+    handleCreateIssuePopup("hide");
   }
-
-  const show_create_issue_popup = () => {
-      handleMembersPopup("show");
+  const showCreateIssuePopup = () => {
+    handleCreateIssuePopup("show");
   }
-
   const handlePopupButtonClick = () => {
-      hide_create_issue_popup();
+    hideCreateIssuePopup();
   }
 
 
@@ -99,9 +101,11 @@ const Backlog = ({ token }) => {
       <div className="center_content">
         <SideNav />
         <main>
-          <h1>{projectName}</h1>
+          <div classname="backlogHead" style={{marginBottom:"15px", display:"flex"}}>
+            <h1>Project Name</h1>
+          </div>
           <div className="flex_cont">
-            {/* Backlog */}
+            {/* Backlog Panel*/}
             <div className="backlogPanel">
               <div className="head">
                 <div className="info">
@@ -130,6 +134,9 @@ const Backlog = ({ token }) => {
                   </tr>
                   ))}
                 </table>
+              </div>
+              <div style={{textAlign:"center"}}>
+                <button id="createIssueButton" onClick={showCreateIssuePopup}> + Create New Issue</button>
               </div>
             </div>
             {/* Issue Panel */}
@@ -173,47 +180,58 @@ const Backlog = ({ token }) => {
                 </div>
                 </div>
               }
-            {/* current sprint (if there is one) */}
-            <div className="sprint">
-              <div className="head">
-                <div className="info">
-                  <h2>Active Sprint</h2>
-                  <p className="issue_total">6 Issues</p>
+              {sprint === "show"
+                // current sprint (if there is one)
+                ? 
+                <div className="sprint">
+                  <div className="head">
+                    <div className="info">
+                      <h2>Active Sprint</h2>
+                      <p className="issue_total">6 Issues</p>
+                    </div>
+                    <form onSubmit={handleSubmit}>
+                      <input type="search" placeholder="Search for and issue"/>
+                      <button type="submit">
+                        <Search fontSize="small" />
+                      </button>
+                    </form>
+                  </div>
+                  <div className="tableWrapper">
+                    <table id = "backlogIssuesTable">
+                      <tr>
+                      <th>Title</th>
+                      <th>Date Created</th>
+                      <th>Priority</th>
+                      </tr>
+                      {sprintIssues.map(issue => (
+                      <tr key={issue.id} onClick={showIssuePanel}>
+                      <td>{issue.title}</td>
+                      <td>{issue.dateCreated}</td>
+                      <td>{issue.priority}</td>
+                      </tr>
+                      ))}
+                    </table>
+                  </div>
                 </div>
-                <form onSubmit={handleSubmit}>
-                  <input type="search" placeholder="Search for and issue"/>
-                  <button type="submit">
-                    <Search fontSize="small" />
-                  </button>
-                </form>
-              </div>
-              <div className="tableWrapper">
-                <table id = "backlogIssuesTable">
-                  <tr>
-                  <th>Title</th>
-                  <th>Date Created</th>
-                  <th>Priority</th>
-                  </tr>
-                  {sprintIssues.map(issue => (
-                  <tr key={issue.id} onClick={showIssuePanel}>
-                  <td>{issue.title}</td>
-                  <td>{issue.dateCreated}</td>
-                  <td>{issue.priority}</td>
-                  </tr>
-                  ))}
-                </table>
-              </div>
-            </div>
+                // create sprint button (if there is no sprint)
+                :
+                <div className="createSprint">
+                  <div>
+                    <button id="createSprintButton">Create Sprint</button>
+                  </div>
+                </div>
+              }
+            
           </div>
           {/* Popup */}
           {create_issue_popup === "show" && 
                     <div className="createIssuePopup">
                         <div>
                             <h2>Create a new Issue</h2>
-                            <img src={x_icon} alt="accountIcon" onClick={hide_create_issue_popup}></img>
+                            <img src={x_icon} alt="accountIcon" onClick={hideCreateIssuePopup}></img>
                         </div>
-                        <br />
-                        <br />
+                        <br/>
+                        <br/>
                         <form className="newIssueForm" style={{textAlign:"left"}}>
                           <p>Title:</p>
                             <input type="text" id="issueName" placeholder="Issue Title"></input>
