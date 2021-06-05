@@ -30,9 +30,9 @@ const ProjectMain = ({ userInfo, userClient, token }) => {
 
 
   const [issues, setIssues] = useState([
-    { title: 'Issue x', project: '14/5/2021', sprint: 'sprint X', status: "active", id: 1 },
-    { title: 'Issue X', project: 'DD/MM/YYYY', sprint: 'sprint X', status: "active", id: 2 },
-    { title: 'Issue x', project: '3/8/2022', sprint: 'sprint X', status: "active", id: 3 }
+    { title: 'Issue x', project: '14/5/2021', status: "active", id: 1 },
+    { title: 'Issue X', project: 'DD/MM/YYYY', status: "active", id: 2 },
+    { title: 'Issue x', project: '3/8/2022', status: "active", id: 3 }
   ])
 
   return (
@@ -83,14 +83,12 @@ const ProjectMain = ({ userInfo, userClient, token }) => {
             <tr>
               <th>Title</th>
               <th>Project</th>
-              <th>Sprint</th>
               <th>Status</th>
             </tr>
             {issues.map(issue => (
                 <tr key={issue.id}>
                   <td>{issue.title}</td>
                   <td>{issue.project}</td>
-                  <td>{issue.sprint}</td>
                   <td>{issue.status}</td>
                 </tr>
             ))}

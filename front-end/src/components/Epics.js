@@ -63,7 +63,7 @@ const Epics = () => {
           <main>
               {/* Content */}
             <div id="content">
-              <h1 id="project_name">KFC is coming to Greece</h1>
+              <h1 id="project_name">KFC is coming to Greece (o pinakas einai troll)</h1>
               {/* Main Panel */}
               <div className="main_panel">
                 <h1 id="epics_header">Epics</h1>
@@ -138,22 +138,30 @@ const Epics = () => {
                           <img src={x_icon} id="xIcon" alt="accountIcon" onClick={hideCreateEpicPopup}></img>
                       </div>
                       <form className="create_epic_form">
-                          <input type="text" placeholder="Title"></input>
-                          <textarea type="range" placeholder="Description"></textarea>
-                          <p style={{textAlign:"left", fontWeight:"bold", marginBottom:"15px"}}>Select epic color:</p>
-                          <div className="colors">
-                            <div class="box" id= "brown" onClick={() => selectNewEpicColor("brown")}/>
-                            <div class="box" id= "red" onClick={() => selectNewEpicColor("red")}/>
-                            <div class="box" id= "orange" onClick={() => selectNewEpicColor("orange")}/>
-                            <div class="box" id= "yellow" onClick={() => selectNewEpicColor("yellow")}/>
-                            <div class="box" id= "green" onClick={() => selectNewEpicColor("green")}/> 
-                            <div class="box" id= "blue" onClick={() => selectNewEpicColor("blue")}/>
-                            <div class="box" id= "pink" onClick={() => selectNewEpicColor("pink")}/>
-                            <div class="box" id= "purple" onClick={() => selectNewEpicColor("purple")}/>
-                            <div class="box" id= "black" onClick={() => selectNewEpicColor("black")}/>
-
-                          </div> 
-                          <button onClick={handlePopupButtonClick}>Create</button>
+                        <input type="text" placeholder="Title"></input>
+                        <textarea type="range" placeholder="Description"></textarea>
+                        <div style={{display:"flex"}}>
+                          <text>Priority: </text>
+                          <select name="priority" id="priority" style={{marginLeft:"10px"}}>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                          </select>
+                        </div>
+                        <br/>
+                        <p style={{textAlign:"left", fontWeight:"bold", marginBottom:"15px"}}>Select epic color:</p>                      
+                        <div className="colors">
+                          <div class="box" id= "brown" onClick={() => selectNewEpicColor("brown")}/>
+                          <div class="box" id= "red" onClick={() => selectNewEpicColor("red")}/>
+                          <div class="box" id= "orange" onClick={() => selectNewEpicColor("orange")}/>
+                          <div class="box" id= "yellow" onClick={() => selectNewEpicColor("yellow")}/>
+                          <div class="box" id= "green" onClick={() => selectNewEpicColor("green")}/> 
+                          <div class="box" id= "blue" onClick={() => selectNewEpicColor("blue")}/>
+                          <div class="box" id= "pink" onClick={() => selectNewEpicColor("pink")}/>
+                          <div class="box" id= "purple" onClick={() => selectNewEpicColor("purple")}/>
+                          <div class="box" id= "black" onClick={() => selectNewEpicColor("black")}/>
+                        </div> 
+                        <button onClick={handlePopupButtonClick}>Create</button>
                       </form>
                   </div>
               }   

@@ -39,11 +39,18 @@ const ActiveSprint = () => {
                 <SideNav />
                 <main>
                     <div id="content">
-                        <h1 style={{textAlign:"center"}}>"Sprint Name" Board</h1>
+                        {/* Sprint name */}
+                        <h1 style={{textAlign:"center"}}>"Sprint Title" Board</h1>
                         {/* search */}
                         <div className = "search">
                             <img src={search_icon} alt="accountIcon"></img>
                             <input type="text" placeholder="Search Issue"></input>
+                        </div>
+                        {/* time remaining */}
+                        <div className="timeRemaining">
+                            <text>Time remaining: </text>
+                            <text>X Days</text>
+
                         </div>
                         {/* issue tables */}
                         <div className="issuesPanel" id="inactiveIssuesPanel">
@@ -132,12 +139,6 @@ const ActiveSprint = () => {
                                     <br/>
                                     <text className="label" id="dateCreated">Created on: </text>
                                     <text className="answer" id="dateCreatedAnswer">10/3/2021</text>
-                                    <br/>
-                                    <text className="label" id="DueDate">Due date: </text>
-                                    <text className="answer" id="DueDateAnswer">2/5/2021</text>
-                                    <br/>
-                                    <text className="label" id="timeLeft">Time Remaining: </text>
-                                    <text className="answer" id="timeLeftAnswer">5 days</text>
                                 </div>
                             </div>
                         }   

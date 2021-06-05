@@ -27,6 +27,7 @@
   position: absolute;
   bottom: 0;
   left: 0.5vw;
-  max-width: 270px;
-  max-height: 270px;
+
+  max-width: 95%;
+  max-height: 95%;
 }

@@ -10,8 +10,6 @@ import { DiraIssueClient } from "dira-clients";
 
 const Backlog = ({ token }) => {
 
-
-  
   const [backlogIssues, setBacklogIssues] = useState([
     { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
     { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
@@ -38,8 +36,7 @@ const Backlog = ({ token }) => {
     { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 3 }
   ])
 
-
-  const [sprint, handleSprintPanel] = useState("show");
+  const [sprint, handleSprintPanel] = useState("hide");
 
   const [issue_panel, handleIssuePanel] = useState("hide");
   const showIssuePanel = () => {
@@ -76,6 +73,17 @@ const Backlog = ({ token }) => {
       .catch(console.log);
   }, []);
 
+    // Create sprint popup handlers
+    const [create_sprint_popup, handleCreateSprintPopup] = useState("hide");
+    const hideCreateSprintPopup = () => {
+      handleCreateSprintPopup("hide");
+    }
+    const showCreateSprintPopup = () => {
+      handleCreateSprintPopup("show");
+    }
+    const handleCreateSprintButtonClick = () => {
+      hideCreateSprintPopup();
+    }
   // Create issue popup handlers
   const [create_issue_popup, handleCreateIssuePopup] = useState("hide");
   const hideCreateIssuePopup = () => {
@@ -84,7 +92,7 @@ const Backlog = ({ token }) => {
   const showCreateIssuePopup = () => {
     handleCreateIssuePopup("show");
   }
-  const handlePopupButtonClick = () => {
+  const handleCreateIssueButtonClick = () => {
     hideCreateIssuePopup();
   }
 
@@ -111,6 +119,7 @@ const Backlog = ({ token }) => {
                 <div className="info">
                   <h2>Backlog</h2>
                   <p className="issue_total">6 Issues</p>
+
                 </div>
                 <form onSubmit={handleSubmit}>
                   <input type="search" placeholder="Search for and issue"/>
@@ -152,9 +161,6 @@ const Backlog = ({ token }) => {
                   <p>
                   {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit */}
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit
                   </p>
                   <br/>
                   <text className="label" id="status">Status: </text>
@@ -187,7 +193,11 @@ const Backlog = ({ token }) => {
                   <div className="head">
                     <div className="info">
                       <h2>Active Sprint</h2>
-                      <p className="issue_total">6 Issues</p>
+                      <text style={{fontWeight:"bold"}}>Due date: </text>
+                      <text className="dueDate:">12/5/2022</text>
+                      <br />
+                      <text style={{fontWeight:"bold"}}>Time Remaining: </text>
+                      <text className="timeRemaining:">8 days</text>
                     </div>
                     <form onSubmit={handleSubmit}>
                       <input type="search" placeholder="Search for and issue"/>
@@ -217,53 +227,82 @@ const Backlog = ({ token }) => {
                 :
                 <div className="createSprint">
                   <div>
-                    <button id="createSprintButton">Create Sprint</button>
+                    <button id="createSprintButton" onClick={showCreateSprintPopup}>+ Create Sprint</button>
                   </div>
                 </div>
               }
             
           </div>
-          {/* Popup */}
-          {create_issue_popup === "show" && 
-                    <div className="createIssuePopup">
-                        <div>
-                            <h2>Create a new Issue</h2>
-                            <img src={x_icon} alt="accountIcon" onClick={hideCreateIssuePopup}></img>
-                        </div>
-                        <br/>
-                        <br/>
-                        <form className="newIssueForm" style={{textAlign:"left"}}>
-                          <p>Title:</p>
-                            <input type="text" id="issueName" placeholder="Issue Title"></input>
-                            <p>Description:</p>
-                            <textarea type="range" placeholder="Issue Description"></textarea>
-                            <div className="priority">
-                              <p>Priority:</p>
-                              <select name="priority" id="priority">
-                                <option value="low">Low</option>
-                                <option value="medium">Medium</option>
-                                <option value="high">High</option>
-                              </select>
-                            </div>
-                            <br></br>   
-                            <p>Labels:</p>
-                            <input type="checkbox" id="issueLabelOption" name="label1" value="label_value"/>
-                            <label for="vehicle1"> Label</label>
-                            <input type="checkbox" id="issueLabelOption" name="label2" value="label_value"/>
-                            <label for="vehicle1"> Label</label>
-                            <input type="checkbox" id="issueLabelOption" name="label3" value="label_value"/>
-                            <label for="vehicle1"> Label</label>
-                            <input type="checkbox" id="issueLabelOption" name="label4" value="label_value"/>
-                            <label for="vehicle1"> Label</label>
-                            <input type="checkbox" id="issueLabelOption" name="label5" value="label_value"/>
-                            <label for="vehicle1"> Label</label>
-                            
-                            <div style={{textAlign:"center"}}>
-                              <button onClick={handlePopupButtonClick}>Create Issue</button>
-                            </div>
-                        </form>
+          {/* create Sprint Popup */}
+          {create_sprint_popup === "show" && 
+            <div className="createPopup">
+                <div>
+                    <h2>Create a new Sprint</h2>
+                    <img src={x_icon} alt="accountIcon" onClick={hideCreateSprintPopup}></img>
+                </div>
+                <br/>
+                <br/>
+                <form className="newIssueForm" style={{textAlign:"left"}}>
+                  <p>Title:</p>
+                    <input type="text" id="issueName" placeholder="Sprint Title"></input>
+                    {/* <p>Description:</p>
+                    <textarea type="range" placeholder="Issue Description"></textarea> */}
+                    <div className="priority">
+                      <p>Duration:</p>
+                      <select name="priority" id="priority">
+                        <option value="1week">1 week</option>
+                        <option value="2weeks">2 weeks</option>
+                        <option value="3weeks">3 weeks</option>
+                        <option value="4weeks">4 weeks</option>
+                      </select>
                     </div>
-                }
+                    <div style={{textAlign:"center"}}>
+                      <button onClick={handleCreateSprintButtonClick}>Create Sprint</button>
+                    </div>
+                </form>
+            </div>
+          }
+          {/* create Issue Popup */}
+          {create_issue_popup === "show" && 
+            <div className="createPopup">
+                <div>
+                    <h2>Create a new Issue</h2>
+                    <img src={x_icon} alt="accountIcon" onClick={hideCreateIssuePopup}></img>
+                </div>
+                <br/>
+                <br/>
+                <form className="newIssueForm" style={{textAlign:"left"}}>
+                  <p>Title:</p>
+                    <input type="text" id="issueName" placeholder="Issue Title"></input>
+                    <p>Description:</p>
+                    <textarea type="range" placeholder="Issue Description"></textarea>
+                    <div className="priority">
+                      <p>Priority:</p>
+                      <select name="priority" id="priority">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                      </select>
+                    </div>
+                    <br></br>   
+                    <p>Labels:</p>
+                    <input type="checkbox" id="issueLabelOption" name="label1" value="label_value"/>
+                    <label for="vehicle1"> Label</label>
+                    <input type="checkbox" id="issueLabelOption" name="label2" value="label_value"/>
+                    <label for="vehicle1"> Label</label>
+                    <input type="checkbox" id="issueLabelOption" name="label3" value="label_value"/>
+                    <label for="vehicle1"> Label</label>
+                    <input type="checkbox" id="issueLabelOption" name="label4" value="label_value"/>
+                    <label for="vehicle1"> Label</label>
+                    <input type="checkbox" id="issueLabelOption" name="label5" value="label_value"/>
+                    <label for="vehicle1"> Label</label>
+                    
+                    <div style={{textAlign:"center"}}>
+                      <button onClick={handleCreateIssueButtonClick}>Create Issue</button>
+                    </div>
+                </form>
+            </div>
+          }
         </main>
       </div>
       <Footer />

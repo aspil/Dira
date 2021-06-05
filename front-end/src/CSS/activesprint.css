@@ -9,7 +9,7 @@
   margin: 0 auto;
   grid-template-areas:
       "header   header   header header header header issuePanel issuePanel issuePanel"
-      "search   search   .      .      .      .      issuePanel issuePanel issuePanel"
+      "search   search   time   time   .      .      issuePanel issuePanel issuePanel"
       "inactive inactive active active done   done   issuePanel issuePanel issuePanel"
       "inactive inactive active active done   done   issuePanel issuePanel issuePanel"
       "inactive inactive active active done   done   issuePanel issuePanel issuePanel"
@@ -36,13 +36,17 @@
 .active_sprint .issuePanel{
   grid-area: issuePanel;
 }
-
-
-/* Styles */
-
-.active_sprint .issues{
-  padding: 5px;
+.active_sprint .timeRemaining{
+  grid-area: time;
 }
+
+/* time remaining */
+.timeRemaining{
+  text-align: center;
+  font-size: 20px;
+}
+
+/* Search */
 .active_sprint .search{
   width: 100%;
   align-self: end;
@@ -69,6 +73,7 @@
   box-shadow: 7px 7px 10px lightgray;
 }
 .active_sprint .issues{
+  padding: 5px;
   max-height: 520px;
   overflow-y: auto;
 }
