@@ -30,11 +30,11 @@ const CreateProject = ({ projectClient, token }) => {
       "name": name,
       "visibility": visibility
     })
-      .then(res => console.log(res))
+      .then(res => {
+        console.log(res);
+        history.push('proj_main');
+      })
       .catch(() => console.log('error'));
-
-    history.push('proj_main');
-
   }
 
   return (

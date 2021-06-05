@@ -1,5 +1,5 @@
 import logo from "../Images/dira_icon.png"
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useState } from "react";
 
 const Register = ({ client }) => {
@@ -8,6 +8,7 @@ const Register = ({ client }) => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const history = useHistory();
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -19,7 +20,10 @@ const Register = ({ client }) => {
       "email": email,
       "password": password,
       "subscriptionPlan": "STANDARD"
-    }).then(console.log).catch(() => {
+    }).then(res => {
+      console.log(res);
+      history.push('/')
+    }).catch(() => {
       alert('error');
     })
 
