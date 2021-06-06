@@ -7,6 +7,9 @@ import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.models.IModel;
 import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.models.project.ProjectModel;
+import di.uoa.gr.dira.shared.IssuePriorityEnum;
+import di.uoa.gr.dira.shared.IssueStatusEnum;
+import di.uoa.gr.dira.shared.IssueTypeEnum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -34,17 +37,20 @@ public class IssueRequestModel implements IModel<Long> {
     @Size(min = 1)
     private String title;
 
-//    private IssueRequestModel epic;     // Should be issue id
+//    private IssueRequestModel epic;
+//    private Long epicId;
 
-//    private IssueType type;
-//
-//    private IssueStatus status;
+    @NotNull
+    private IssueTypeEnum type;
 
-    private List<String> labels;
+    @NotNull
+    private IssueStatusEnum status;
 
-//    private CustomerModel reporter;   // Should be customer id
+//    private List<String> labels;
 
-    private int priority;
+//    private CustomerModel reporter;
+
+    private IssuePriorityEnum priority;
 
     private String description;
 

@@ -2,8 +2,13 @@ package di.uoa.gr.dira.entities.issue;
 
 import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.entities.project.Project;
+import di.uoa.gr.dira.shared.IssuePriorityEnum;
+import di.uoa.gr.dira.shared.IssueStatusEnum;
+import di.uoa.gr.dira.shared.IssueTypeEnum;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -25,13 +30,9 @@ public class Issue {
     @JoinColumn(name = "epic_id")
     private Issue epic;
 
-    @OneToOne
-    @JoinColumn(name = "issue_type_id")
-    private IssueType type;
+    private IssueTypeEnum type;
 
-    @OneToOne
-    @JoinColumn(name = "issue_status_id")
-    private IssueStatus status;
+    private IssueStatusEnum status;
 
     @OneToMany
     @JoinColumn(name = "issue_link_id")
@@ -63,7 +64,7 @@ public class Issue {
     )
     private List<IssueFixVersion> fixVersions;
 
-    private int priority;
+    private IssuePriorityEnum priority;
 
     @Column(nullable = false)
     private String key;
