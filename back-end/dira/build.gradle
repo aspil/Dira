@@ -48,6 +48,7 @@ dependencies {
     testCompile "org.spockframework:spock-junit4"
     testCompile group: 'org.spockframework', name: 'spock-spring', version: '2.0-groovy-3.0'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.5.0'
+    implementation group: 'org.jeasy', name: 'easy-random-core', version: '5.0.0'
 
 
     // Lombok
