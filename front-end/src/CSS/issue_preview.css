@@ -1,0 +1,12 @@
+.issuePreview #issueEpic{
+  font-size: 25px;
+  font-weight: bold;
+  color: white;
+  border: 1px solid gray;
+  background-color: orange;
+  border-radius: 5px;
+  padding-right: 8px;
+  padding-left: 8px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}

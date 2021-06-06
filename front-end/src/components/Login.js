@@ -30,12 +30,14 @@ const Login = ({ setToken, client, setUserInfo }) => {
       .catch(() => {
         alert('Error');
       });
-
+  }
+  const redirectToMain = () => {
+    history.push('/proj_main')
   }
   return (
     <div className="login" >
       <div style={{textAlign:"center"}}>
-          <img src={logo} alt="dira logo" id="dira logo"/>
+          <img src={logo} alt="dira logo" id="dira logo" onClick={redirectToMain}/>
           <div className="login_grad" style={{textAlign:"center"}}>
               <h1 style={{fontWeight:"normal", margin:"15px"}}>Login</h1>
               <form onSubmit={onSubmit} noValidate>

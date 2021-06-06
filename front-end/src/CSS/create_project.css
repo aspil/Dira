@@ -3,6 +3,9 @@
   max-width:50%;
   height:auto;
 }
+.createProject #dira_logo:hover {
+  cursor: pointer;
+}
 .createProject .login_grad{
   background-color: rgb(239, 240, 241);
   margin:0 auto;

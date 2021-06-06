@@ -9,6 +9,7 @@ import ActiveSprint from './components/ActiveSprint';
 import Members from './components/Members';
 import Epics from './components/Epics';
 import Backlog from './components/Backlog';
+import IssuePreview from './components/IssuePreview';
 import { useState } from 'react';
 import { DiraProjectClient, DiraUserClient } from "dira-clients";
 import CreateProject from './components/CreateProject';
@@ -77,6 +78,10 @@ function App() {
             <Route path="/epics">
               { token === undefined && <Redirect to="/sign_in" /> }
               { token !== undefined && <Epics username={userInfo.username}/> }
+            </Route>
+            <Route path="/issue_preview">
+              { token === undefined && <Redirect to="/sign_in" /> }
+              { token !== undefined && <IssuePreview username={userInfo.username}/> }
             </Route>
             <Route path="/create_project">
               { token === undefined && <Redirect to="/sign_in" /> }

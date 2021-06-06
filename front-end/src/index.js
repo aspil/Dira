@@ -12,6 +12,7 @@ import './CSS/popup.css'
 import './CSS/login.css'
 import './CSS/register.css'
 import './CSS/create_project.css'
+import './CSS/issue_preview.css'
 
 ReactDOM.render(
   <React.StrictMode>

@@ -28,11 +28,13 @@ const Register = ({ client }) => {
     })
 
   }
-
+  const redirectToMain = () => {
+    history.push('/')
+  }
   return (
     <div className="register">
       <div style={{textAlign:"center"}}>
-          <img src={logo} alt="dira logo" id="dira logo"/>
+          <img src={logo} alt="dira logo" id="dira logo" onClick={redirectToMain}/>
           <div className="login_grad" style={{textAlign:"center"}}>
               <h1 style={{fontWeight:"normal", margin:"15px"}}>Register</h1>
               <form noValidate onSubmit = {onSubmit}>
