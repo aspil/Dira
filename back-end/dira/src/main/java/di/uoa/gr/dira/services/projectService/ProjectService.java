@@ -120,7 +120,6 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
 
     @Override
     public void addUserToProjectWithId(Long projectId, Long inviterId, Long inviteeId) {
-        customerRepository.findById(inviterId).orElseThrow(() -> new CustomerNotFoundException("userId", inviterId.toString()));
         Project project = checkPermissions(projectId, inviterId);
         Customer customer = customerRepository.findById(inviteeId).orElseThrow(() -> new CustomerNotFoundException("userId", inviteeId.toString()));
         Permission permission = new Permission();
@@ -144,7 +143,7 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         Customer customer = customers.stream()
                 .filter(user -> user.getId().equals(userId))
                 .findFirst()
-                .orElseThrow(() -> new CustomerNotFoundException("userId", projectOwnerId.toString()));
+                .orElseThrow(() -> new CustomerNotFoundException("userId", userId.toString()));
         customers.remove(customer);
 
         repository.save(project);
