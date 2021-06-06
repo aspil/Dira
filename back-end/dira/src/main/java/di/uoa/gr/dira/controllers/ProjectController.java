@@ -76,9 +76,11 @@ public class ProjectController {
     @PutMapping("{projectId}")
     public @Valid ProjectModel updateProjectWithId(
             @PathVariable Long projectId,
-            @RequestBody ProjectModel projectModel
+            @RequestBody ProjectModel projectModel,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
     ) {
-        return service.updateProjectWithId(projectId, projectModel);
+        Long customerId = jwtHelper.getId(jwtToken);
+        return service.updateProjectWithId(projectId, customerId, projectModel);
     }
 
     @ApiOperation(
@@ -87,7 +89,8 @@ public class ProjectController {
     )
     @DeleteMapping("{projectId}")
     public void deleteProjectById(
-            @PathVariable Long projectId
+            @PathVariable Long projectId,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
     ) {
         service.deleteProjectWithId(projectId);
     }

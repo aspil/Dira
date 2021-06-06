@@ -83,8 +83,15 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
 
 
     @Override
-    public ProjectModel updateProjectWithId(Long projectId, ProjectModel projectModel) {
+    public ProjectModel updateProjectWithId(Long projectId, Long customerId, ProjectModel projectModel) {
+        customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
         Project project = repository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
+
+        project.getPermissions()
+                .stream()
+                .filter(permission -> permission.getUser().getId().equals(customerId) && PermissionType.hasAdminPermissions(permission.getPermission()))
+                .findFirst()
+                .orElseThrow(ActionNotPermittedException::new);
 
         return super.save(projectModel);
     }
