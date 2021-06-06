@@ -1,6 +1,5 @@
 package di.uoa.gr.dira.models.customer;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import di.uoa.gr.dira.models.IModel;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
