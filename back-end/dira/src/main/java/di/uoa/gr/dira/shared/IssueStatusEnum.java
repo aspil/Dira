@@ -5,5 +5,5 @@ public enum IssueStatusEnum {
     Open,
     Blocked,
     InDevelopment,
-    Toest
+    ToTest
 }

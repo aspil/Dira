@@ -1,6 +1,7 @@
 package di.uoa.gr.dira.services.projectService;
 
 import di.uoa.gr.dira.entities.customer.Customer;
+import di.uoa.gr.dira.entities.project.Permission;
 import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
@@ -11,6 +12,7 @@ import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.repositories.PermissionRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
+import di.uoa.gr.dira.shared.PermissionType;
 import di.uoa.gr.dira.shared.ProjectVisibility;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import di.uoa.gr.dira.util.mapper.MapperHelper;
@@ -52,8 +54,18 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         if ((customer.getSubscriptionPlan().getPlan().equals(SubscriptionPlanEnum.STANDARD)) && (project.getVisibility().equals(ProjectVisibility.PRIVATE))) {
             throw new ActionNotPermittedException();
         }
+        // setting permissions when creating a project
+        project.setPermissions(new ArrayList<>());
+        Permission permission = new Permission();
+        permission.setPermission(PermissionType.ADMIN);
+        permission = permissionRepository.save(permission);
+        project.getPermissions().add(permission);
+
+        // adding customer who created the project
         project.setCustomers(new ArrayList<>());
         project.getCustomers().add(customer);
+
+        project.setIssues(new ArrayList<>());
 
         return mapper.map(repository.save(project), modelType);
     }

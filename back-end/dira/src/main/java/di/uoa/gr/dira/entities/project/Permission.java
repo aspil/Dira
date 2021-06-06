@@ -1,6 +1,7 @@
 package di.uoa.gr.dira.entities.project;
 
 import di.uoa.gr.dira.entities.customer.Customer;
+import di.uoa.gr.dira.shared.PermissionType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
