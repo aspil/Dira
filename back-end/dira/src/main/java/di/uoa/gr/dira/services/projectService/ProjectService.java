@@ -33,7 +33,7 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         this.customerRepository = customerRepository;
         this.permissionRepository = permissionRepository;
     }
-    
+
     private Project checkPermissions(Long projectId, Long customerId) {
         customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
         Project project = repository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
@@ -95,7 +95,6 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     @Override
     public ProjectModel updateProjectWithId(Long projectId, Long customerId, ProjectModel projectModel) {
         checkPermissions(projectId, customerId);
-
         return super.save(projectModel);
     }
 
@@ -114,13 +113,21 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
 
     @Override
     public ProjectUsersModel findUsersByProjectId(Long id) {
-        return repository.findById(id).map(project -> mapper.map(project, ProjectUsersModel.class)).orElseThrow(() -> new ProjectNotFoundException("projectId", id.toString()));
+        return repository.findById(id)
+                .map(project -> mapper.map(project, ProjectUsersModel.class))
+                .orElseThrow(() -> new ProjectNotFoundException("projectId", id.toString()));
     }
 
     @Override
-    public void addUserToProjectWithId(Long id, Long userId) {
-        Project project = repository.findById(id).orElseThrow(() -> new ProjectNotFoundException("projectId", id.toString()));
-        Customer customer = customerRepository.findById(userId).orElseThrow(() -> new CustomerNotFoundException("userId", userId.toString()));
+    public void addUserToProjectWithId(Long projectId, Long inviterId, Long inviteeId) {
+        customerRepository.findById(inviterId).orElseThrow(() -> new CustomerNotFoundException("userId", inviterId.toString()));
+        Project project = checkPermissions(projectId, inviterId);
+        Customer customer = customerRepository.findById(inviteeId).orElseThrow(() -> new CustomerNotFoundException("userId", inviteeId.toString()));
+        Permission permission = new Permission();
+        permission.setUser(customer);
+        permission.setPermission(PermissionType.READ);
+        permission = permissionRepository.save(permission);
+        project.getPermissions().add(permission);
         project.getCustomers().add(customer);
         repository.save(project);
     }
