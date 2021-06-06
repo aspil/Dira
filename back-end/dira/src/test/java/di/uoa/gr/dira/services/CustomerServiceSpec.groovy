@@ -1,21 +1,28 @@
 package di.uoa.gr.dira.services
 
+import di.uoa.gr.dira.configuration.ModelMapperConfiguration
 import di.uoa.gr.dira.entities.customer.Customer
 import di.uoa.gr.dira.models.customer.CustomerModel
 import di.uoa.gr.dira.repositories.CustomerRepository
 import di.uoa.gr.dira.services.customerService.CustomerService
+import di.uoa.gr.dira.services.projectService.IProjectService
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum
-import spock.lang.Shared;
+import org.modelmapper.ModelMapper
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification;
 
+@ContextConfiguration(classes = ModelMapperConfiguration.class)
 class CustomerServiceSpec extends Specification {
-    @Shared
     private CustomerService service
-    private CustomerRepository repository
+    private final IProjectService projectService = Mock()
+    private final CustomerRepository customerRepository = Mock()
+
+    @Autowired
+    private ModelMapper mapper
 
     void setup() {
-        repository = Stub(CustomerRepository.class)
-        service = new CustomerService(repository)
+        service = new CustomerService(customerRepository, projectService, mapper)
     }
 
     static Customer exampleCustomer() {
@@ -32,13 +39,13 @@ class CustomerServiceSpec extends Specification {
 
     void "customer not in db is not returned"() {
         given: "the database has no record of the customer"
-        repository.findById(1L) >> Optional.empty()
+        customerRepository.findById(1L) >> Optional.empty()
 
         when: "we search for the customer"
-        CustomerModel customer = service.findById(1L)
+        Optional<CustomerModel> customer = service.findById(1L)
 
         then: "the customer returned should be null"
-        customer == null
+        customer.isEmpty()
     }
 
     void "customer with username is returned"() {
@@ -46,12 +53,14 @@ class CustomerServiceSpec extends Specification {
         Customer customer = exampleCustomer()
 
         and: "the database has a record of the customer with specific username"
-        repository.findByUsername("test") >> Optional.of(customer)
+        customerRepository.findByUsername("test") >> Optional.of(customer)
 
         when: "we search the customer by username"
-        CustomerModel model = service.findByUsername("test")
+        Optional<CustomerModel> optionalModel = service.findByUsername("test")
 
         then: "the customer is returned"
+        optionalModel.isPresent()
+        CustomerModel model = optionalModel.get()
         model.getId() == customer.getId()
         model.getName() == customer.getName()
         model.getSurname() == customer.getSurname()
@@ -59,4 +68,6 @@ class CustomerServiceSpec extends Specification {
         model.getEmail() == customer.getEmail()
         model.getSubscriptionPlan() == customer.getSubscriptionPlan().getPlan()
     }
+
+
 }
