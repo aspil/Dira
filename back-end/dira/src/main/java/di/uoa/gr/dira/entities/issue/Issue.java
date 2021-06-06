@@ -22,6 +22,7 @@ public class Issue {
     @Column(name = "issue_id")
     private Long id;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;

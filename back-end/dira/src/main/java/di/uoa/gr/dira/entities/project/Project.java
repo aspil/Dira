@@ -32,8 +32,7 @@ public class Project {
     )
     private List<Customer> customers;
 
-    @OneToMany
-    @JoinColumn(name = "issue_id")
+    @OneToMany(mappedBy="project", cascade = CascadeType.REMOVE)
     private List<Issue> issues;
 
     @OneToMany
