@@ -17,12 +17,11 @@ import spock.lang.Specification;
 
 @ContextConfiguration(classes = ModelMapperConfiguration.class)
 class CustomerServiceSpec extends Specification {
+    @Autowired
+    private ModelMapper mapper
     private CustomerService service
     private final IProjectService projectService = Mock()
     private final CustomerRepository customerRepository = Mock()
-
-    @Autowired
-    private ModelMapper mapper
 
     void setup() {
         service = new CustomerService(customerRepository, projectService, mapper)

@@ -28,14 +28,11 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     CustomerRepository customerRepository;
     PermissionRepository permissionRepository;
 
-    ProjectService(ProjectRepository repository, CustomerRepository customerRepository, PermissionRepository permissionRepository, ModelMapper mapper) {
+    public ProjectService(ProjectRepository repository, CustomerRepository customerRepository, PermissionRepository permissionRepository, ModelMapper mapper) {
         super(repository, mapper);
         this.customerRepository = customerRepository;
         this.permissionRepository = permissionRepository;
     }
-
-
-    /* ProjectController */
 
     @Override
     public List<ProjectModel> findAllPublicProjects() {
@@ -145,5 +142,4 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         });
         customerRepository.save(customer);
     }
-
 }
