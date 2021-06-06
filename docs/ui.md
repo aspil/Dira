@@ -2,7 +2,7 @@
 
 **[1. Main Pages](#1-main-pages)**\
 [1.1 Home Page](#11-home-page)\
-[1.2 Contact Page](#12-contact-page)
+[1.2 Pricing Plans](#12-pricing-plans)
 
 **[2. User Authentication](#2-user-authentication)**\
 [2.1 Login Page](#21-login-page)\
@@ -18,6 +18,7 @@
 [3.2 Active Sprint Page](#32-active-sprint-page)\
 [3.3 Epics Page](#33-epics-page)\
 [3.4 Members Page](#34-members-page)
+
 ## 1. Main Pages
 
 The following prototypes are describing some main pages of Dira.\

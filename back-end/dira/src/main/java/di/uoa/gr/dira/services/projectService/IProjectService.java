@@ -16,13 +16,13 @@ public interface IProjectService extends IService<ProjectModel, Long> {
 
     void addUserToProjectWithId(Long projectId, Long userId);
 
-    void deleteProjectWithId(Long projectId);
+    void deleteProjectWithId(Long projectId, Long customerId);
 
     void deleteUserFromProjectWithId(Long projectId, Long userId);
 
     void deleteUserFromAllProjects(Long userId);
 
-    ProjectModel updateProjectWithId(Long projectId, ProjectModel projectModel);
+    ProjectModel updateProjectWithId(Long projectId, Long customerId, ProjectModel projectModel);
 
     ProjectModel getProject(Long projectId, SubscriptionPlanEnum subscriptionPlan);
 }

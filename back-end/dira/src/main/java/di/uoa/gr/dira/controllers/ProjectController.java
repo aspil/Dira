@@ -5,7 +5,6 @@ import di.uoa.gr.dira.security.JwtHelper;
 import di.uoa.gr.dira.services.projectService.IProjectService;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -77,9 +76,11 @@ public class ProjectController {
     @PutMapping("{projectId}")
     public @Valid ProjectModel updateProjectWithId(
             @PathVariable Long projectId,
-            @RequestBody ProjectModel projectModel
+            @RequestBody ProjectModel projectModel,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
     ) {
-        return service.updateProjectWithId(projectId, projectModel);
+        Long customerId = jwtHelper.getId(jwtToken);
+        return service.updateProjectWithId(projectId, customerId, projectModel);
     }
 
     @ApiOperation(
@@ -88,8 +89,10 @@ public class ProjectController {
     )
     @DeleteMapping("{projectId}")
     public void deleteProjectById(
-            @PathVariable Long projectId
+            @PathVariable Long projectId,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
     ) {
-        service.deleteProjectWithId(projectId);
+        Long customerId = jwtHelper.getId(jwtToken);
+        service.deleteProjectWithId(projectId, customerId);
     }
 }

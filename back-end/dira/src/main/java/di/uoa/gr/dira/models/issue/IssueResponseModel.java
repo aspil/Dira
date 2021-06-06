@@ -6,6 +6,9 @@ import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.models.IModel;
 import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.models.project.ProjectModel;
+import di.uoa.gr.dira.shared.IssuePriorityEnum;
+import di.uoa.gr.dira.shared.IssueStatusEnum;
+import di.uoa.gr.dira.shared.IssueTypeEnum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,27 +24,30 @@ public class IssueResponseModel implements IModel<Long> {
 
     private String title;
 
-    private ProjectModel project;
+//    private ProjectModel project;
+    private String projectName;
 
 //    private IssueResponseModel epic;
+//    private String epic;
+
+    private IssueTypeEnum type;
 //
-//    private IssueType type;
-//
-//    private IssueStatus status;
+    private IssueStatusEnum status;
 //
 //    private List<IssueLink> issueLinks;
-//
-//    private List<IssueLabel> labels;
+//    private List<String> issueLinks;
+//    private List<String> labels;
 //
 //    private List<IssueComment> comments;
 
 //    private CustomerModel assignee;
+//    private String assignee;
 
-    private CustomerModel reporter;
-
+//    private CustomerModel reporter;
+    private String reporter;
 //    private List<IssueFixVersion> fixVersions;
 
-    private int priority;
+    private IssuePriorityEnum priority;
 
     private String description;
 

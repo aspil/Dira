@@ -20,7 +20,10 @@ const Register = ({ client }) => {
       "email": email,
       "password": password,
       "subscriptionPlan": "STANDARD"
-    }).then(console.log).catch(() => {
+    }).then(res => {
+      console.log(res);
+      history.push('/')
+    }).catch(() => {
       alert('error');
     })
 

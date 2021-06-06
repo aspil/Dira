@@ -12,7 +12,7 @@ import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.repositories.PermissionRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
-import di.uoa.gr.dira.services.permissionService.IPermissionService;
+import di.uoa.gr.dira.shared.PermissionType;
 import di.uoa.gr.dira.shared.ProjectVisibility;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import di.uoa.gr.dira.util.mapper.MapperHelper;
@@ -28,14 +28,24 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     CustomerRepository customerRepository;
     PermissionRepository permissionRepository;
 
-    ProjectService(ProjectRepository repository, CustomerRepository customerRepository, PermissionRepository permissionRepository, ModelMapper mapper) {
+    public ProjectService(ProjectRepository repository, CustomerRepository customerRepository, PermissionRepository permissionRepository, ModelMapper mapper) {
         super(repository, mapper);
         this.customerRepository = customerRepository;
         this.permissionRepository = permissionRepository;
     }
+    
+    private Project checkPermissions(Long projectId, Long customerId) {
+        customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
+        Project project = repository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
 
+        project.getPermissions()
+                .stream()
+                .filter(permission -> permission.getUser().getId().equals(customerId) && PermissionType.hasAdminPermissions(permission.getPermission()))
+                .findFirst()
+                .orElseThrow(ActionNotPermittedException::new);
 
-    /* ProjectController */
+        return project;
+    }
 
     @Override
     public List<ProjectModel> findAllPublicProjects() {
@@ -54,8 +64,18 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         if ((customer.getSubscriptionPlan().getPlan().equals(SubscriptionPlanEnum.STANDARD)) && (project.getVisibility().equals(ProjectVisibility.PRIVATE))) {
             throw new ActionNotPermittedException();
         }
+        // setting permissions when creating a project
+        project.setPermissions(new ArrayList<>());
+        Permission permission = new Permission();
+        permission.setPermission(PermissionType.ADMIN);
+        permission = permissionRepository.save(permission);
+        project.getPermissions().add(permission);
+
+        // adding customer who created the project
         project.setCustomers(new ArrayList<>());
         project.getCustomers().add(customer);
+
+        project.setIssues(new ArrayList<>());
 
         return mapper.map(repository.save(project), modelType);
     }
@@ -73,15 +93,15 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
 
 
     @Override
-    public ProjectModel updateProjectWithId(Long projectId, ProjectModel projectModel) {
-        Project project = repository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
+    public ProjectModel updateProjectWithId(Long projectId, Long customerId, ProjectModel projectModel) {
+        checkPermissions(projectId, customerId);
 
         return super.save(projectModel);
     }
 
     @Override
-    public void deleteProjectWithId(Long projectId) {
-        Project project = repository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
+    public void deleteProjectWithId(Long projectId, Long customerId) {
+        Project project = checkPermissions(projectId, customerId);
         List<Customer> customers = project.getCustomers();
         for (int i = 0; i != customers.size(); ++i) {
             customers.get(i).getProjects().remove(project);
@@ -128,5 +148,4 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         });
         customerRepository.save(customer);
     }
-
 }

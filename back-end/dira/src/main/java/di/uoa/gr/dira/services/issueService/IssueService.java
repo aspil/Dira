@@ -14,7 +14,6 @@ import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.repositories.IssueRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
-import org.jboss.logging.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -37,51 +36,46 @@ public class IssueService extends BaseService<IssueRequestModel, Issue, Long, Is
     }
 
     @Nullable
-    private IssueResponseModel addIssueToProject(Long projectId, Issue updated) {
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
-        updated.setProject(project);
+    private void addIssueToProject(Project project, Issue issue) {
         List<Issue> projectIssues = project.getIssues();
         if (projectIssues != null) {
-//            if (projectIssues.contains(updated))
-//            repository.findById(updated.getId()).ifPresent(projectIssues::add);
-
-            int issueIdx = projectIssues.indexOf(updated);
+            int issueIdx = projectIssues.indexOf(issue);
             if (issueIdx != -1) {
-                projectIssues.set(issueIdx, updated);   /* If issue exists, set instead of re adding to list */
+                projectIssues.set(issueIdx, issue);   /* If issue exists, set instead of re adding to list */
             } else {
-                projectIssues.add(updated);
+                projectIssues.add(issue);
             }
             projectRepository.save(project);
-            return mapper.map(updated, IssueResponseModel.class);
         }
-
-        return null;
     }
 
     @Override
-    public ProjectIssuesModel findAllIssuesByProjectId(Long projectId) {
+    public ProjectIssuesModel findAllIssuesByProjectId(Long projectId) { // TODO filter by issue status(probably)
         return projectRepository.findById(projectId)
                 .map(project -> mapper.map(project, ProjectIssuesModel.class))
+//                .filter()
                 .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
     }
 
     public IssueResponseModel createIssueWithProjectId(Long projectId, Long customerId, IssueRequestModel issueRequestModel) {
         Issue newIssue = mapper.map(issueRequestModel, Issue.class);
-        /* Start populating the new issue */
+        /* Start populating the new issue entity */
         Customer reporter = customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
         newIssue.setReporter(reporter);
-
         newIssue.setCreated(new Date());
         newIssue.setUpdated(newIssue.getCreated());
 
 //        if (newIssue.getEpic() != null) {
-//            Issue epicIssue = repository.findById(newIssue.getEpic().getId()).orElseThrow(() -> new IssueNotFoundException("issueId", newIssue.getEpic().getId().toString()));
+//            Long epicId = newIssue.getEpic().getId();
+//            Issue epicIssue = repository.findById(newIssue.getEpic().getId()).orElseThrow(() -> new IssueNotFoundException("issueId", epicId.toString()));
 //            epicIssue.getIssueLinks().add(mapper.map(epicIssue, IssueLink.class));
 //            repository.save(epicIssue);
 //        }
-
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
+        newIssue.setProject(project);
         newIssue = repository.save(newIssue);
-        return addIssueToProject(projectId, newIssue);
+        addIssueToProject(project, newIssue);
+        return mapper.map(newIssue, IssueResponseModel.class);
     }
 
     @Override
@@ -102,7 +96,11 @@ public class IssueService extends BaseService<IssueRequestModel, Issue, Long, Is
         Issue updatedIssue = mapper.map(issueRequestModel, Issue.class);
         updatedIssue.setUpdated(new Date());
         updatedIssue = repository.save(updatedIssue);
-        return addIssueToProject(projectId, updatedIssue);
+
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
+        addIssueToProject(project, updatedIssue);
+
+        return mapper.map(updatedIssue, IssueResponseModel.class);
     }
 
     @Override
@@ -110,7 +108,11 @@ public class IssueService extends BaseService<IssueRequestModel, Issue, Long, Is
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
 
         List<Issue> projectIssues = project.getIssues();
-        Issue issue = projectIssues.stream().filter(obj -> obj.getId().equals(issueId)).findAny().orElseThrow(() -> new IssueNotFoundException("issueId", issueId.toString()));
+        Issue issue = projectIssues.stream()
+                .filter(obj -> obj.getId().equals(issueId))
+                .findAny()
+                .orElseThrow(() -> new IssueNotFoundException("issueId", issueId.toString()));
+
         projectIssues.remove(issue);
 
         repository.delete(issue);
