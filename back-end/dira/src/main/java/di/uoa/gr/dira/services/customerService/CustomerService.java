@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Service
 public class CustomerService extends BaseService<CustomerModel, Customer, Long, CustomerRepository> implements ICustomerService {
-    IProjectService projectService;
+    private final IProjectService projectService;
 
     public CustomerService(CustomerRepository repository, IProjectService projectService, ModelMapper mapper) {
         super(repository, mapper);
