@@ -2,18 +2,22 @@ import SideNav from './SideNav';
 import ProjectNav from './ProjectNav';
 import Footer from './Footer';
 import { useState } from "react";
-import { Height, PlayForWorkOutlined } from '@material-ui/icons';
+import { useHistory } from "react-router-dom";
 import search_icon from "../Images/search_icon.png"
-import { Box } from '@material-ui/core';
+import edit_icon from "../Images/edit_icon.png"
 
 const ActiveSprint = () => {
+    const history = useHistory();
 
+    // Issue Panel
     const [issue_panel, handleIssuePanel] = useState("hide");
-
     const showIssuePanel = () => {
         handleIssuePanel("show")
     }
-
+    // Edit Issue Button
+    const handleEditIssue = () => {
+        history.push('issue_preview');
+    }
     const [inactiveIssues, setInactiveIssues] = useState([
         { title: 'Takis Papadakis', dueDate: '14/5/2021', briefDescription: 'Lorem ipsum dolor sit amet', id: 1 },
         { title: 'Lakis', dueDate: '14/5/2021', briefDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur adipiscing elit', id: 2 },
@@ -105,7 +109,13 @@ const ActiveSprint = () => {
                         {issue_panel === "show" && 
                             <div className = "issuePanel">
                                 <div>
-                                    <h1 id="issueName">Issue Name</h1>
+                                    <div style={{display:"flex",justifyContent:"space-between"}}>
+                                        <h1 id="issueName">Issue Name</h1>
+                                        <button id="editIssueButton" onClick={handleEditIssue}>
+                                            <img id="pencilIcon" src={edit_icon} alt="Pencil"></img>
+                                            Edit Issue                                        
+                                        </button>
+                                    </div>
                                     <br></br>
                                     <text id ="issueEpic">Epic of this Issue</text>
                                     <br></br>
@@ -117,7 +127,6 @@ const ActiveSprint = () => {
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit
-
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit
                                     </p>
                                     <br/>
@@ -139,6 +148,7 @@ const ActiveSprint = () => {
                                     <br/>
                                     <text className="label" id="dateCreated">Created on: </text>
                                     <text className="answer" id="dateCreatedAnswer">10/3/2021</text>
+                                    
                                 </div>
                             </div>
                         }   

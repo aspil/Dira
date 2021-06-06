@@ -18,6 +18,9 @@ const CreateProject = ({ projectClient, token }) => {
     var popup = document.getElementById("myPopup");
     popup.classList.toggle("show");
   }
+  const redirectToMain = () => {
+    history.push('/')
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -40,7 +43,7 @@ const CreateProject = ({ projectClient, token }) => {
   return (
     <div className="createProject" >
       <div style={{textAlign:"center"}}>
-          <img src={logo} alt="dira logo" id="dira_logo"/>
+          <img src={logo} alt="dira logo" id="dira_logo" onClick={redirectToMain}/>
           <div className="login_grad">
               <h1 style={{fontWeight:"normal", margin:"15px"}}>Create New Project</h1>
               <form onSubmit={handleSubmit}>

@@ -1,5 +1,5 @@
 import logo from "../Images/dira_icon.png"
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useState } from "react";
 
 const Register = ({ client }) => {
@@ -8,6 +8,7 @@ const Register = ({ client }) => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const history = useHistory();
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -24,11 +25,13 @@ const Register = ({ client }) => {
     })
 
   }
-
+  const redirectToMain = () => {
+    history.push('/')
+  }
   return (
     <div className="register">
       <div style={{textAlign:"center"}}>
-          <img src={logo} alt="dira logo" id="dira logo"/>
+          <img src={logo} alt="dira logo" id="dira logo" onClick={redirectToMain}/>
           <div className="login_grad" style={{textAlign:"center"}}>
               <h1 style={{fontWeight:"normal", margin:"15px"}}>Register</h1>
               <form noValidate onSubmit = {onSubmit}>
