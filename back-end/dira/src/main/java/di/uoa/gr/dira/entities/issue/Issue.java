@@ -83,15 +83,6 @@ public class Issue {
 
     private Date dueDate;
 
-    private long estimatedTime;
-
-    private long remainingTime;
-
-    private long loggedTime;
-
-//    @Column(nullable = false)
-//    private String timeUnit;
-
     @ColumnDefault(value = "false")
     private boolean resolved;
 }

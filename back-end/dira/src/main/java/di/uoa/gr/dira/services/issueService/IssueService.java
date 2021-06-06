@@ -3,7 +3,6 @@ package di.uoa.gr.dira.services.issueService;
 import com.sun.istack.Nullable;
 import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.entities.issue.Issue;
-import di.uoa.gr.dira.entities.issue.IssueLink;
 import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.exceptions.issue.IssueNotFoundException;
@@ -15,7 +14,6 @@ import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.repositories.IssueRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
-import org.jboss.logging.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +48,7 @@ public class IssueService extends BaseService<IssueRequestModel, Issue, Long, Is
             projectRepository.save(project);
         }
     }
+
     @Override
     public ProjectIssuesModel findAllIssuesByProjectId(Long projectId) { // TODO filter by issue status(probably)
         return projectRepository.findById(projectId)
@@ -57,13 +56,6 @@ public class IssueService extends BaseService<IssueRequestModel, Issue, Long, Is
 //                .filter()
                 .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
     }
-
-//    @Override
-//    public ProjectIssuesModel findAllIssuesByUserId(Long userId) {
-//        return customerRepository.findById(userId)
-//                .map(project -> mapper.map(project, ProjectIssuesModel.class))
-//                .orElseThrow(() -> new ProjectNotFoundException("projectId", userId.toString()));
-//    }
 
     public IssueResponseModel createIssueWithProjectId(Long projectId, Long customerId, IssueRequestModel issueRequestModel) {
         Issue newIssue = mapper.map(issueRequestModel, Issue.class);
