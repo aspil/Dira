@@ -134,13 +134,18 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
 
 
     @Override
-    public void deleteUserFromProjectWithId(Long id, Long userId) {
-        Project project = repository.findById(id).orElseThrow(() -> new ProjectNotFoundException("projectId", id.toString()));
-        List<Customer> customers = project.getCustomers();
-        Customer customer = customers.stream().filter(user -> user.getId().equals(userId)).findFirst().orElseThrow(() -> new CustomerNotFoundException("userId", userId.toString()));
-        customers.remove(customer);
+    public void deleteUserFromProjectWithId(Long id, Long projectOwnerId, Long userId) {
+        customerRepository.findById(userId).orElseThrow(() -> new CustomerNotFoundException("userId", userId.toString()));
+        Project project = checkPermissions(id, projectOwnerId);
 
-        project.getPermissions().removeIf(permission -> permission.getUser().getId().equals(customer.getId()));
+        project.getPermissions().removeIf(permission -> permission.getUser().getId().equals(userId));
+
+        List<Customer> customers = project.getCustomers();
+        Customer customer = customers.stream()
+                .filter(user -> user.getId().equals(userId))
+                .findFirst()
+                .orElseThrow(() -> new CustomerNotFoundException("userId", projectOwnerId.toString()));
+        customers.remove(customer);
 
         repository.save(project);
     }

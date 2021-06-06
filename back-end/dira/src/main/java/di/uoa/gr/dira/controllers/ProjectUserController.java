@@ -51,7 +51,11 @@ public class ProjectUserController {
             value = "Deletes a user from the project with the given id"
     )
     @DeleteMapping("{userId}")
-    public void deleteUserFromProjectWithId(@PathVariable Long projectId, @PathVariable Long userId) {
-        service.deleteUserFromProjectWithId(projectId, userId);
+    public void deleteUserFromProjectWithId(
+            @PathVariable Long projectId,
+            @PathVariable Long userId,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
+        Long projectOwnerId = jwtHelper.getId(jwtToken);
+        service.deleteUserFromProjectWithId(projectId, projectOwnerId, userId);
     }
 }
