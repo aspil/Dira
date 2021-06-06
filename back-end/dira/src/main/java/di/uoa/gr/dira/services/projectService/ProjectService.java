@@ -33,6 +33,19 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         this.customerRepository = customerRepository;
         this.permissionRepository = permissionRepository;
     }
+    
+    private Project checkPermissions(Long projectId, Long customerId) {
+        customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
+        Project project = repository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
+
+        project.getPermissions()
+                .stream()
+                .filter(permission -> permission.getUser().getId().equals(customerId) && PermissionType.hasAdminPermissions(permission.getPermission()))
+                .findFirst()
+                .orElseThrow(ActionNotPermittedException::new);
+
+        return project;
+    }
 
     @Override
     public List<ProjectModel> findAllPublicProjects() {
@@ -81,21 +94,14 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
 
     @Override
     public ProjectModel updateProjectWithId(Long projectId, Long customerId, ProjectModel projectModel) {
-        customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
-        Project project = repository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
-
-        project.getPermissions()
-                .stream()
-                .filter(permission -> permission.getUser().getId().equals(customerId) && PermissionType.hasAdminPermissions(permission.getPermission()))
-                .findFirst()
-                .orElseThrow(ActionNotPermittedException::new);
+        checkPermissions(projectId, customerId);
 
         return super.save(projectModel);
     }
 
     @Override
-    public void deleteProjectWithId(Long projectId) {
-        Project project = repository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
+    public void deleteProjectWithId(Long projectId, Long customerId) {
+        Project project = checkPermissions(projectId, customerId);
         List<Customer> customers = project.getCustomers();
         for (int i = 0; i != customers.size(); ++i) {
             customers.get(i).getProjects().remove(project);

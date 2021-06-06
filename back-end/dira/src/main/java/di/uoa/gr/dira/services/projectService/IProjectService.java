@@ -16,7 +16,7 @@ public interface IProjectService extends IService<ProjectModel, Long> {
 
     void addUserToProjectWithId(Long projectId, Long userId);
 
-    void deleteProjectWithId(Long projectId);
+    void deleteProjectWithId(Long projectId, Long customerId);
 
     void deleteUserFromProjectWithId(Long projectId, Long userId);
 

@@ -92,6 +92,7 @@ public class ProjectController {
             @PathVariable Long projectId,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
     ) {
-        service.deleteProjectWithId(projectId);
+        Long customerId = jwtHelper.getId(jwtToken);
+        service.deleteProjectWithId(projectId, customerId);
     }
 }
