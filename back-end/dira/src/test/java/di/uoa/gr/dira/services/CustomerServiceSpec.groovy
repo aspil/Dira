@@ -13,7 +13,7 @@ import org.jeasy.random.EasyRandomParameters.Range
 import org.modelmapper.ModelMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
-import spock.lang.Specification;
+import spock.lang.Specification
 
 @ContextConfiguration(classes = ModelMapperConfiguration.class)
 class CustomerServiceSpec extends Specification {
