@@ -89,4 +89,4 @@ public class Issue {
 
     @ColumnDefault(value = "false")
     private boolean resolved;
-} 
+}

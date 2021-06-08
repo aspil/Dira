@@ -1,21 +1,44 @@
 -- Insert subscription plan static data
-insert into subscription_plan(subscription_plan_id, plan) values (1, 'STANDARD');
-insert into subscription_plan(subscription_plan_id, plan) values (2, 'PREMIUM');
+INSERT INTO subscription_plan(
+    subscription_plan_id,
+    plan
+)
+SELECT 1, 'STANDARD'
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM subscription_plan
+    WHERE plan = 'STANDARD'
+);
 
+INSERT INTO subscription_plan(
+    subscription_plan_id,
+    plan
+)
+SELECT 2, 'PREMIUM'
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM subscription_plan
+    WHERE plan = 'PREMIUM'
+);
 
 -- Insert customer static data
-insert into customer(
+INSERT INTO customer(
     username,
     name,
     surname,
     email,
     password,
     subscription_plan_id
-) values (
+)
+SELECT
     'tester',
     'Tester',
     'Mc Tester',
     'test@otenet.gr',
     '$2a$10$bb/RXy.KPolaCeW14ADg0eC9.kchxyHCu5T5m.C1GBHkA.vdK5ST.', -- 12345678
     1
-);
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM customer
+    WHERE username = 'tester'
+)
