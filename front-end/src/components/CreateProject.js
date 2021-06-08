@@ -37,7 +37,7 @@ const CreateProject = ({ projectClient, token }) => {
         console.log(res);
         history.push('proj_main');
       })
-      .catch(() => console.log('error'));
+      .catch((err) => console.log(err));
   }
 
   return (

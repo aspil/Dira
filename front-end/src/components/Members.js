@@ -6,7 +6,7 @@ import { PlayForWorkOutlined } from '@material-ui/icons';
 import x_icon from "../Images/x_icon.png"
 
 
-const Members = () => {
+const Members = ({ username, doLogout }) => {
 
     const [members_popup, handleMembersPopup] = useState("hide");
 
@@ -47,7 +47,7 @@ const Members = () => {
     return (
         // Gia na doylepsei to sidebar
     <div className="members proj_page">
-        <ProjectNav />
+        <ProjectNav username={username} doLogout={doLogout} />
         <div className="center_content">
             <SideNav />
             <main>

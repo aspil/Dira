@@ -15,14 +15,10 @@ const Login = ({ setToken, client, setUserInfo }) => {
       .login_user(username, password)
       .then((user) => {
         console.log(user);
-        localStorage.jwtoken = user.token;
-        localStorage.username = user.username;
-        localStorage.email = user.email;
-        localStorage.id = user.id;
         setUserInfo({
-          username: localStorage.username,  
-          email: localStorage.email,
-          id: localStorage.id
+          username: user.username,  
+          email: user.email,
+          id: user.id
         });
         setToken(user.token);
         history.push('/proj_main');
