@@ -3,7 +3,10 @@ package di.uoa.gr.dira.entities.customer;
 import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.security.PasswordManager;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,6 +17,9 @@ import java.util.List;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@DynamicUpdate
 public class Customer implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

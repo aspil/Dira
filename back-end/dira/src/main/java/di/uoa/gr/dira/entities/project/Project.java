@@ -3,14 +3,20 @@ package di.uoa.gr.dira.entities.project;
 import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.entities.issue.Issue;
 import di.uoa.gr.dira.shared.ProjectVisibility;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@DynamicUpdate
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,8 +41,7 @@ public class Project {
     @OneToMany(mappedBy="project", cascade = CascadeType.REMOVE)
     private List<Issue> issues;
 
-    @OneToMany
-    @JoinColumn(name = "permission_id")
+    @OneToMany(mappedBy="project", cascade = CascadeType.REMOVE)
     private List<Permission> permissions;
 
     @Column(nullable = false)
