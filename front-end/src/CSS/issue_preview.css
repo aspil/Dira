@@ -1,5 +1,31 @@
+.issuePreview text{
+  font-size: 20px;
+}
+
+.issuePreview .issuePreviewWrapper{
+  width: 60%;
+  background-color: lightblue;
+  padding: 30px;
+  border-radius: 5px;
+}
+
+.issuePreview .headWrapper{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.issuePreview .headWrapper .label{
+  font-weight: bold;
+}
+
+.issuePreview .headWrapper .answer{
+  margin-left: 7px;
+}
+
 .issuePreview #issueEpic{
-  font-size: 25px;
+  font-size: 23px;
   font-weight: bold;
   color: white;
   border: 1px solid gray;
@@ -9,4 +35,40 @@
   padding-left: 8px;
   padding-top: 3px;
   padding-bottom: 3px;
+  }
+.issuePreview .issueInfoWrapper{
+  border-radius: 5px;
+  padding: 20px;
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid white;
+}
+
+.issuePreview textarea{
+  border-width: thin;
+  font-size: large;
+  width: 450px;
+  height:140px;
+  padding: 5px;
+  margin-top: 0;
+  border-radius: 3px
+}
+
+.issuePreview .checkboxAndLabel{
+  float: left;
+}
+.issuePreview .labelInput{
+  margin: 0;
+  margin-right: 3px;
+  margin-left: 18px;
+}
+
+
+.issuePreview button {
+  margin-top: 25px;
+  border-radius: 5px;
+  font-size: 25px;
+  padding-right: 10px;
+  padding-left: 10px;
 }
