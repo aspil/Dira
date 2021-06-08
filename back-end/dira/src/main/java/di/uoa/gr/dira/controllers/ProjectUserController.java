@@ -2,6 +2,7 @@ package di.uoa.gr.dira.controllers;
 
 
 import di.uoa.gr.dira.models.project.ProjectUsersModel;
+import di.uoa.gr.dira.security.JwtHelper;
 import di.uoa.gr.dira.services.projectService.IProjectService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpHeaders;
@@ -16,9 +17,11 @@ import javax.validation.Valid;
 @RequestMapping("projects/{projectId}/users")
 public class ProjectUserController {
     private final IProjectService service;
+    private final JwtHelper jwtHelper;
 
-    public ProjectUserController(IProjectService service) {
+    public ProjectUserController(IProjectService service, JwtHelper jwtHelper) {
         this.service = service;
+        this.jwtHelper = jwtHelper;
     }
 
     @ApiOperation(
@@ -40,14 +43,19 @@ public class ProjectUserController {
             @PathVariable Long userId,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
     ) {
-        service.addUserToProjectWithId(projectId, userId);
+        Long inviter = jwtHelper.getId(jwtToken);
+        service.addUserToProjectWithId(projectId, inviter, userId);
     }
 
     @ApiOperation(
             value = "Deletes a user from the project with the given id"
     )
     @DeleteMapping("{userId}")
-    public void deleteUserFromProjectWithId(@PathVariable Long projectId, @PathVariable Long userId) {
-        service.deleteUserFromProjectWithId(projectId, userId);
+    public void deleteUserFromProjectWithId(
+            @PathVariable Long projectId,
+            @PathVariable Long userId,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
+        Long projectOwnerId = jwtHelper.getId(jwtToken);
+        service.deleteUserFromProjectWithId(projectId, projectOwnerId, userId);
     }
 }

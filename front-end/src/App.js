@@ -10,20 +10,47 @@ import Members from './components/Members';
 import Epics from './components/Epics';
 import Backlog from './components/Backlog';
 import IssuePreview from './components/IssuePreview';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DiraProjectClient, DiraUserClient } from "dira-clients";
 import CreateProject from './components/CreateProject';
 
 function App() {
   const history = useHistory();
-  const [token, setToken] = useState(localStorage.jwtoken);
+  const [token, setToken] = useState(undefined);
   const [userInfo, setUserInfo] = useState({
           username: localStorage.username,
           email: localStorage.email,
           id: localStorage.id
   });
-  const userClient = new DiraUserClient();
-  const projectClient = new DiraProjectClient();
+  const userClient = new DiraUserClient('https://localhost:8080/dira');
+  const projectClient = new DiraProjectClient('https://localhost:8080/dira');
+
+  // upon entry check local storage for any tokens
+  useEffect(() => {
+    localStorage.jwtoken = undefined;
+    localStorage.username = undefined;
+    localStorage.email = undefined;
+    localStorage.id = undefined;
+
+
+  }, [])
+
+  // upon change of token state save in local storage
+  useEffect(() => {
+        localStorage.jwtoken = token;
+        localStorage.username = userInfo.username;
+        localStorage.email = userInfo.email;
+        localStorage.id = userInfo.id;
+  }, [token])
+
+  const doLogout = () => {
+    setToken(undefined);
+    setUserInfo({
+          username: undefined,
+          email: undefined,
+          id: undefined
+    });
+  }
 
   return (
     <Router>
@@ -59,17 +86,22 @@ function App() {
                                           userInfo = {userInfo}
                                           userClient = {userClient}
                                           token = {token}
-                                       /> }
+                                          doLogout = {doLogout}
+                                        /> }
             </Route>
             <Route path="/backlog/:projectId">
               { token === undefined && <Redirect to="/sign_in" /> }
               { token !== undefined && <Backlog
                                         username={userInfo.username}
-                                        token={token}/> }
+                                        token={token}
+                                        doLogout = {doLogout}
+                                        /> }
             </Route>
             <Route path="/members">
               { token === undefined && <Redirect to="/sign_in" /> }
-              { token !== undefined && <Members username={userInfo.username}/> }
+              { token !== undefined && <Members username={userInfo.username}
+                                        doLogout = {doLogout}
+                                        /> }
             </Route>
             <Route path="/active_sprint">
               { token === undefined && <Redirect to="/sign_in" /> }

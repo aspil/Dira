@@ -5,8 +5,11 @@ import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.shared.IssuePriorityEnum;
 import di.uoa.gr.dira.shared.IssueStatusEnum;
 import di.uoa.gr.dira.shared.IssueTypeEnum;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -16,6 +19,9 @@ import java.util.List;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@DynamicUpdate
 public class Issue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,8 +41,7 @@ public class Issue {
 
     private IssueStatusEnum status;
 
-    @OneToMany
-    @JoinColumn(name = "issue_link_id")
+    @OneToMany(mappedBy = "linkedIssue")
     private List<IssueLink> issueLinks;
 
     @ManyToMany
@@ -46,8 +51,7 @@ public class Issue {
     )
     private List<IssueLabel> labels;
 
-    @OneToMany
-    @JoinColumn(name = "issue_comment_id")
+    @OneToMany(mappedBy = "issue")
     private List<IssueComment> comments;
 
     @OneToOne

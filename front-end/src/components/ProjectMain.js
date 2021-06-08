@@ -3,7 +3,7 @@ import Footer from './Footer';
 import { useEffect, useState } from "react";
 import { useHistory } from 'react-router';
 
-const ProjectMain = ({ userInfo, userClient, token }) => {
+const ProjectMain = ({ userInfo, userClient, token, doLogout }) => {
   const [listState, setListState] = useState("showProjects");
   const history = useHistory()
   const [projects, setProjects] = useState([]);
@@ -37,7 +37,7 @@ const ProjectMain = ({ userInfo, userClient, token }) => {
 
   return (
     <div className="projectmain">
-      <ProjectNav username={userInfo.username}/>
+      <ProjectNav username={userInfo.username} doLogout={doLogout}/>
 
       <div className = "leftPanel" style={{width:"60%", margin:"0.5%"}}>
 {/* projectButtons */}

@@ -13,7 +13,7 @@ import org.jeasy.random.EasyRandomParameters.Range
 import org.modelmapper.ModelMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
-import spock.lang.Specification;
+import spock.lang.Specification
 
 @ContextConfiguration(classes = ModelMapperConfiguration.class)
 class CustomerServiceSpec extends Specification {
@@ -62,13 +62,12 @@ class CustomerServiceSpec extends Specification {
         EasyRandomParameters parameters = new EasyRandomParameters()
         parameters.setCollectionSizeRange(new Range<Integer>(2, 2))
         Customer customer = ObjectGenerator.generateObject(Customer.class, parameters)
-        customer.setId(1L)
 
         and: "the database returns the customer with id '1'"
-        customerRepository.findById(1L) >> Optional.of(customer)
+        customerRepository.findById(customer.getId()) >> Optional.of(customer)
 
         when: "we retrieve the project where the user belongs to"
-        List<ProjectModel> projects = service.getCustomerProjects(1L)
+        List<ProjectModel> projects = service.getCustomerProjects(customer.getId())
 
         then: "the projects of the customer are retrieved"
         projects.size() == 2

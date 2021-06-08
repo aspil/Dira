@@ -14,11 +14,11 @@ public interface IProjectService extends IService<ProjectModel, Long> {
 
     ProjectUsersModel findUsersByProjectId(Long projectId);
 
-    void addUserToProjectWithId(Long projectId, Long userId);
+    void addUserToProjectWithId(Long projectId, Long inviter, Long userId);
 
     void deleteProjectWithId(Long projectId, Long customerId);
 
-    void deleteUserFromProjectWithId(Long projectId, Long userId);
+    void deleteUserFromProjectWithId(Long projectId, Long projectOwnerId, Long userId);
 
     void deleteUserFromAllProjects(Long userId);
 

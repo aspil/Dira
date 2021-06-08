@@ -4,6 +4,7 @@ import di.uoa.gr.dira.shared.IssueLinkTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
@@ -11,13 +12,14 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicUpdate
 public class IssueLink {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "issue_link_id")
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "issue_id")
     private Issue linkedIssue;
 
