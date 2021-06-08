@@ -1,9 +1,7 @@
 package di.uoa.gr.dira.configuration.security;
 
 import di.uoa.gr.dira.configuration.spring.SpringProfiles;
-import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.security.JwtAuthenticationFilter;
-import di.uoa.gr.dira.security.PasswordManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
