@@ -64,34 +64,42 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout }) => {
 {/* tables */}
           { listState === "showProjects" &&
           <table id = "main_table">
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Key</th>
-            </tr>
-            {projects.map(project => (
-              <tr onClick={() => {history.push(`/backlog/${project.id}`)}} key={project.id}>
-                  <td>{project.name}</td>
-                  <td>{project.description}</td>
-                  <td>{project.key}</td>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Key</th>
               </tr>
-            ))}
+            </thead>
+            <tbody>
+              {projects.map(project => (
+                <tr onClick={() => {history.push(`/backlog/${project.id}`)}} key={project.id}>
+                    <td>{project.name}</td>
+                    <td>{project.description}</td>
+                    <td>{project.key}</td>
+                </tr>
+              ))}
+            </tbody>
           </table>
           }
           { listState === "showIssues" &&
           <table id = "main_table">
-            <tr>
-              <th>Title</th>
-              <th>Project</th>
-              <th>Status</th>
-            </tr>
-            {issues.map(issue => (
-                <tr key={issue.id}>
-                  <td>{issue.title}</td>
-                  <td>{issue.project}</td>
-                  <td>{issue.status}</td>
-                </tr>
-            ))}
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Project</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {issues.map(issue => (
+                  <tr key={issue.id}>
+                    <td>{issue.title}</td>
+                    <td>{issue.project}</td>
+                    <td>{issue.status}</td>
+                  </tr>
+              ))}
+            </tbody>
           </table>
           }
         </div>

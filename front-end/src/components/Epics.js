@@ -33,7 +33,7 @@ const Epics = () => {
   const [epic_color, handleNewEpicColor] = useState("none");
 
   const selectNewEpicColor = (new_color) => {
-    if(epic_color!="none"){
+    if(epic_color!=="none"){
       document.getElementById(epic_color).style.border = "none";
       document.getElementById(epic_color).style.padding = "1px";
       document.getElementById(epic_color).style.boxShadow = "none";

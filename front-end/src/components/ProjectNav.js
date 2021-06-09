@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const ProjectNav = ({ username, doLogout }) => {
 
   const openSettings = () => {
-    if(document.getElementById("myForm").style.display == "none"){
+    if(document.getElementById("myForm").style.display === "none"){
       document.getElementById("myForm").style.display = "block";
     }
     else{

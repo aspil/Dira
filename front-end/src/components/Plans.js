@@ -175,6 +175,7 @@ const Plan = () => {
                 <TableRow>
                   {tableHead.map(col => (
                     <TableCell
+                      key={tableHead.indexOf(col)}
                       classes= {
                         tableHead.indexOf(col)===1 ? 
                         {root: classes.stdCell} :
@@ -192,6 +193,7 @@ const Plan = () => {
                   <TableRow key={row[0]}>
                     {row.map((col) => (
                       <TableCell
+                        key={row.indexOf(col)}
                         classes= {
                           row.indexOf(col)===1 ? 
                           {root: classes.stdCell} :
