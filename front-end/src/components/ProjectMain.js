@@ -9,7 +9,7 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout }) => {
   const [projects, setProjects] = useState([]);
 
   const swapList = () => {
-    if(listState=="showProjects"){
+    if(listState==="showProjects"){
       setListState("showIssues");
     }
     else{
@@ -48,13 +48,13 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout }) => {
         <div style={{clear: "both"}}>
 {/* listButtons */}
           <div className = "listButtons">
-            { listState == "showProjects" &&
+            { listState === "showProjects" &&
               <div>
               <button className="pressedButton" style={{borderTopLeftRadius:"5px"}}>My Projects</button>
               <button className="unpressedButton"style={{borderTopRightRadius:"5px"}} onClick={swapList}>My Active Issues</button>
             </div>
             }
-            { listState == "showIssues" &&
+            { listState === "showIssues" &&
               <div>
               <button className="unpressedButton" style={{borderTopLeftRadius:"5px"}} onClick={swapList}>My Projects</button>
               <button className="pressedButton"style={{borderTopRightRadius:"5px"}}>My Active Issues</button>
@@ -62,7 +62,7 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout }) => {
             }
           </div>
 {/* tables */}
-          { listState == "showProjects" &&
+          { listState === "showProjects" &&
           <table id = "main_table">
             <tr>
               <th>Name</th>
@@ -78,7 +78,7 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout }) => {
             ))}
           </table>
           }
-          { listState == "showIssues" &&
+          { listState === "showIssues" &&
           <table id = "main_table">
             <tr>
               <th>Title</th>
