@@ -2,7 +2,7 @@ import Home from './components/Home';
 import Register from './components/Register';
 import Login from './components/Login';
 import Plan from './components/Plans'
-import { BrowserRouter as Router, Redirect, Route, Switch, useHistory} from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import ProjectMain from './components/ProjectMain'
 import PasswordRecovery from './components/PasswordRecovery';
 import ActiveSprint from './components/ActiveSprint';
@@ -15,7 +15,6 @@ import { DiraProjectClient, DiraUserClient } from "dira-clients";
 import CreateProject from './components/CreateProject';
 
 function App() {
-  const history = useHistory();
   const [token, setToken] = useState(undefined);
   const [userInfo, setUserInfo] = useState({
           username: localStorage.username,
@@ -97,7 +96,7 @@ function App() {
                                         doLogout = {doLogout}
                                         /> }
             </Route>
-            <Route path="/members">
+            <Route path="/members/:projectId">
               { token === undefined && <Redirect to="/sign_in" /> }
               { token !== undefined && <Members username={userInfo.username}
                                         doLogout = {doLogout}

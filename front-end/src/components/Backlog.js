@@ -10,23 +10,7 @@ import { DiraIssueClient } from "dira-clients";
 
 const Backlog = ({ token }) => {
 
-  const [backlogIssues, setBacklogIssues] = useState([
-    { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue X', dateCreated:"10/5/2023", priority:"high", id: 2 },
-    { title: 'Issue X', dateCreated:"10/5/2023", priority:"high", id: 2 },
-    { title: 'Issue X', dateCreated:"10/5/2023", priority:"high", id: 2 },
-    { title: 'Issue X', dateCreated:"10/5/2023", priority:"high", id: 2 },
-    { title: 'Issue X', dateCreated:"10/5/2023", priority:"high", id: 2 },
-    { title: 'Issue X', dateCreated:"10/5/2023", priority:"high", id: 2 },
-    { title: 'Issue X', dateCreated:"10/5/2023", priority:"high", id: 2 },
-    { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 3 }
-  ])
+  const [backlogIssues, setBacklogIssues] = useState([])
   const [sprintIssues, setSprintIssues] = useState([
     { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 1 },
     { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 1 },
@@ -46,31 +30,34 @@ const Backlog = ({ token }) => {
   const [projectName, setProjectName] = useState('');
 
   const { projectId } = useParams();
-  const issueClient = new DiraIssueClient(undefined, projectId);
+  const issueClient = new DiraIssueClient('https://localhost:8080/dira', projectId);
 
 
   useEffect(() => {
     issueClient.set_authorization_token(token);
 
-    issueClient.create_issue({
-      "description": "balblalbal",
-      "id": 0,
-      "key": "jdjdjdjdjj",
-      "labels": [
-        "important",
-        "kfc"
-      ],
-      "priority": 59,
-      "title": "kfcjjjjkfc"
-    })
+    // issueClient.create_issue({
+    //   "description": "balblalbal",
+    //   "id": 0,
+    //   "key": "jdjdjdjdjj",
+    //   "priority": 0,
+    //   "status": "Open",
+    //   "title": "kfcjjjjkfc",
+    //   "type": "Epic"
+    // }).catch((err) => {
+    //   console.log('error during creation of issue');
+    //   console.log(err);
+    // })
 
     issueClient.get_all_issues()
       .then((res) => {
         console.log(res);
-        setBacklogIssues(res.backlogIssues);
+        setBacklogIssues(res.issues);
         setProjectName(res.name);
       })
-      .catch(console.log);
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
     // Create sprint popup handlers
@@ -107,10 +94,10 @@ const Backlog = ({ token }) => {
     <div className="backlog proj_page">
       <ProjectNav />
       <div className="center_content">
-        <SideNav />
+        <SideNav projectId={projectId} />
         <main>
           <div classname="backlogHead" style={{marginBottom:"15px", display:"flex"}}>
-            <h1>Project Name</h1>
+            <h1>{projectName}</h1>
           </div>
           <div className="flex_cont">
             {/* Backlog Panel*/}

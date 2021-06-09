@@ -4,11 +4,13 @@ import Footer from './Footer';
 import { useState } from "react";
 import { PlayForWorkOutlined } from '@material-ui/icons';
 import x_icon from "../Images/x_icon.png"
+import { useParams } from 'react-router';
 
 
 const Members = ({ username, doLogout }) => {
 
     const [members_popup, handleMembersPopup] = useState("hide");
+    const { projectId } = useParams();
 
     const hide_members_popup = () => {
         handleMembersPopup("hide");
@@ -21,6 +23,7 @@ const Members = ({ username, doLogout }) => {
     const handlePopupButtonClick = () => {
         hide_members_popup();
     }
+
     
     const [members, setMembers] = useState([
         { name: 'Makis', dateJoined: '14/5/2021', role: 'developer', id: 1 },
@@ -49,7 +52,7 @@ const Members = ({ username, doLogout }) => {
     <div className="members proj_page">
         <ProjectNav username={username} doLogout={doLogout} />
         <div className="center_content">
-            <SideNav />
+        <SideNav projectId={projectId} />
             <main>
                 {/* Content */}
                 <div className="content">
