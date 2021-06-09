@@ -1,11 +1,10 @@
 package di.uoa.gr.dira.services
 
 import di.uoa.gr.dira.configuration.ModelMapperConfiguration
+import di.uoa.gr.dira.configuration.spring.SpringProfiles
 import di.uoa.gr.dira.entities.customer.Customer
-import di.uoa.gr.dira.entities.customer.SubscriptionPlan
 import di.uoa.gr.dira.entities.project.Project
 import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException
-import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException
 import di.uoa.gr.dira.models.project.ProjectModel
 import di.uoa.gr.dira.repositories.CustomerRepository
 import di.uoa.gr.dira.repositories.PermissionRepository
@@ -16,9 +15,11 @@ import di.uoa.gr.dira.shared.SubscriptionPlanEnum
 import di.uoa.gr.dira.utils.ObjectGenerator
 import org.modelmapper.ModelMapper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
+@ActiveProfiles(SpringProfiles.TEST)
 @ContextConfiguration(classes = ModelMapperConfiguration.class)
 class ProjectServiceSpec extends Specification {
     @Autowired
@@ -54,7 +55,7 @@ class ProjectServiceSpec extends Specification {
         given: "We have a public project"
         Project project = ObjectGenerator.generateObject(Project.class)
         project.setVisibility(ProjectVisibility.PUBLIC)
-        projectRepository.find() >> project
+        projectRepository.findById(project.getId()) >> Optional.of(project)
 
         and: "We have a customer with STANDARD plan"
         Customer customer = ObjectGenerator.generateObject(Customer.class)
@@ -63,23 +64,17 @@ class ProjectServiceSpec extends Specification {
 
         when: "The customer requests to retrieve the public project"
         SubscriptionPlanEnum subscriptionPlanEnum = customerRepository.findByUsername("test").get().getSubscriptionPlan().getPlan()
-        Optional<ProjectModel> optionalProjectModel = service.getProject(project.getId(), subscriptionPlanEnum) as Optional<ProjectModel>
+        ProjectModel projectModel = service.getProject(project.getId(), subscriptionPlanEnum)
 
         then: "We get the project"
-        optionalProjectModel.isPresent()
-        ProjectModel projectModel = optionalProjectModel.get()
-        projectModel.description == project.description
-        projectModel.id == project.id
-        projectModel.key == project.key
-        projectModel.name == project.name
-        projectModel.visibility == project.visibility
+        projectModel == mapper.map(project, ProjectModel.class)
     }
 
     void "return exception when customer with STANDARD plan requests for private project"() {
         given: "We have a private project"
         Project project = ObjectGenerator.generateObject(Project.class)
         project.setVisibility(ProjectVisibility.PRIVATE)
-        projectRepository.find() >> project
+        projectRepository.findById(project.getId()) >> Optional.of(project)
 
         and: "We have a customer with STANDARD plan"
         Customer customer = ObjectGenerator.generateObject(Customer.class)
@@ -88,7 +83,7 @@ class ProjectServiceSpec extends Specification {
 
         when: "The customer requests to retrieve the private project"
         SubscriptionPlanEnum subscriptionPlanEnum = customerRepository.findByUsername("test").get().getSubscriptionPlan().getPlan()
-        Optional<ProjectModel> optionalProjectModel = service.getProject(project.getId(), subscriptionPlanEnum) as Optional<ProjectModel>
+        ProjectModel projectModel = service.getProject(project.getId(), subscriptionPlanEnum)
 
         then: "I get an error that action not permitted"
         ActionNotPermittedException ex = thrown(ActionNotPermittedException)
