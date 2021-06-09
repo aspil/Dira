@@ -2,12 +2,16 @@ package di.uoa.gr.dira.services.permissionService;
 
 import di.uoa.gr.dira.entities.project.Permission;
 import di.uoa.gr.dira.entities.project.Project;
+import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
+import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
 import di.uoa.gr.dira.exceptions.project.permission.PermissionNotFoundException;
 import di.uoa.gr.dira.models.project.ProjectUserPermissionModel;
+import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.repositories.PermissionRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
+import di.uoa.gr.dira.shared.PermissionType;
 import di.uoa.gr.dira.util.mapper.MapperHelper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -18,58 +22,61 @@ import java.util.List;
 @Service
 public class PermissionService extends BaseService<ProjectUserPermissionModel, Permission, Long, PermissionRepository> implements IPermissionService {
     ProjectRepository projectRepository;
+    CustomerRepository customerRepository;
 
-    PermissionService(PermissionRepository repository, ProjectRepository projectRepository, ModelMapper mapper) {
+    public PermissionService(PermissionRepository repository, ProjectRepository projectRepository,
+                             CustomerRepository customerRepository, ModelMapper mapper) {
         super(repository, mapper);
         this.projectRepository = projectRepository;
+        this.customerRepository = customerRepository;
+    }
+
+    private Project checkPermissions(Long projectId, Long customerId) {
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
+        customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
+
+        project.getPermissions()
+                .stream()
+                .filter(permission -> permission.getUser().getId().equals(customerId) && PermissionType.hasAdminPermissions(permission.getPermission()))
+                .findFirst()
+                .orElseThrow(ActionNotPermittedException::new);
+
+        return project;
     }
 
     @Override
     public List<ProjectUserPermissionModel> getProjectPermissionsForUsers(Long projectId) {
         return projectRepository.findById(projectId).map(project -> MapperHelper.<Permission, ProjectUserPermissionModel>mapList(mapper, project.getPermissions(), ProjectUserPermissionModel.class))
-                .orElseThrow(() -> new PermissionNotFoundException("projectId", projectId.toString()));
-    }
-
-    private void addPermissionModelToProject(Long projectId, ProjectUserPermissionModel saved) {
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("id", projectId.toString()));
-
-        List<Permission> projectPermission = project.getPermissions();
-        if (projectPermission != null) {
-            repository.findById(saved.getId()).ifPresent(projectPermission::add);
-        }
-
+                .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
     }
 
     @Override
-    public void createUserPermission(Long projectId, ProjectUserPermissionModel userPermissionModel) {
+    public void createUserPermission(Long projectId, Long customerId, ProjectUserPermissionModel userPermissionModel) {
+        Project project = checkPermissions(projectId, customerId);
         ProjectUserPermissionModel saved = super.save(userPermissionModel);
-        addPermissionModelToProject(projectId, saved);
+        project.getPermissions().add(mapper.map(saved, Permission.class));
     }
 
     @Override
-    public @Valid ProjectUserPermissionModel updateUserPermission(Long projectId, Long permissionId, ProjectUserPermissionModel userPermissionModel) {
-        super.delete(userPermissionModel);
-        ProjectUserPermissionModel updated = super.save(userPermissionModel);
-        Permission permission = repository.findById(updated.getId()).orElseThrow(() -> new PermissionNotFoundException("permissionId", permissionId.toString()));
-
-        addPermissionModelToProject(projectId, updated);
-        return updated;
+    public @Valid ProjectUserPermissionModel updateUserPermission(Long projectId,
+                                                                  Long permissionId,
+                                                                  Long customerId,
+                                                                  ProjectUserPermissionModel userPermissionModel) {
+        checkPermissions(projectId, customerId);
+        return super.save(userPermissionModel);
     }
 
     @Override
-    public void deleteUserPermission(Long projectId, Long permissionId) {
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
-
+    public void deleteUserPermission(Long projectId, Long customerId, Long permissionId) {
+        Project project = checkPermissions(projectId, customerId);
         Permission permission = project.getPermissions()
                 .stream()
                 .filter(obj -> obj.getId().equals(permissionId))
                 .findAny()
-                .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
+                .orElseThrow(() -> new PermissionNotFoundException("permissionId", permissionId.toString()));
 
         project.getPermissions().remove(permission);
         projectRepository.save(project);
-
-        ProjectUserPermissionModel userPermissionModel = mapper.map(permission, ProjectUserPermissionModel.class);
-        super.delete(userPermissionModel);
+        repository.delete(permission);
     }
 }

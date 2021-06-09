@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IPermissionService extends IService<ProjectUserPermissionModel, Long> {
     List<ProjectUserPermissionModel> getProjectPermissionsForUsers(Long projectId);
-    void createUserPermission(Long projectId, ProjectUserPermissionModel userPermissionModel);
-    ProjectUserPermissionModel updateUserPermission(Long projectId, Long permissionId, ProjectUserPermissionModel userPermissionModel);
-    void deleteUserPermission(Long projectId, Long permissionId);
+    void createUserPermission(Long projectId, Long customerId, ProjectUserPermissionModel userPermissionModel);
+    ProjectUserPermissionModel updateUserPermission(Long projectId, Long permissionId, Long customerId, ProjectUserPermissionModel userPermissionModel);
+    void deleteUserPermission(Long projectId, Long customerId, Long permissionId);
 }
