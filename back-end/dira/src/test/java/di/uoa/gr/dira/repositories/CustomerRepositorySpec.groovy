@@ -18,12 +18,13 @@ class CustomerRepositorySpec extends Specification {
     @Autowired
     private CustomerRepository repository
 
+    void setup() {
+        ObjectGenerator.initializeDefaultTypeParameters()
+    }
+
     void "insert single customer works"() {
         given: "I have a customer"
-        EasyRandomParameters parameters = new EasyRandomParameters()
-        parameters.setCollectionSizeRange(new EasyRandomParameters.Range<Integer>(0, 0))
-        Customer customer = ObjectGenerator.generateObject(Customer.class, parameters)
-        customer.setId(null)
+        Customer customer = ObjectGenerator.generateObjectWithDefaultTypeParams(Customer.class)
         customer.setSubscriptionPlanFromEnum(SubscriptionPlanEnum.STANDARD)
 
         when: "I insert the customer to the database"
@@ -36,14 +37,10 @@ class CustomerRepositorySpec extends Specification {
 
     void "insert two customers works"() {
         given: "I have two customers"
-        EasyRandomParameters parameters = new EasyRandomParameters()
-        parameters.setCollectionSizeRange(new EasyRandomParameters.Range<Integer>(0, 0))
-        List<Customer> customers = ObjectGenerator.generateObjectList(Customer.class, parameters, 2)
-        customers[0].setId(null)
+        List<Customer> customers = ObjectGenerator.generateObjectListWithDefaultTypeParams(Customer.class, 2)
         customers[0].setSubscriptionPlanFromEnum(SubscriptionPlanEnum.STANDARD)
         customers[0].setUsername("User1")
         customers[1].setEmail("user1@otenet.gr")
-        customers[1].setId(null)
         customers[1].setSubscriptionPlanFromEnum(SubscriptionPlanEnum.PREMIUM)
         customers[1].setUsername("User2")
         customers[1].setEmail("user2@otenet.gr")
@@ -60,10 +57,7 @@ class CustomerRepositorySpec extends Specification {
     void "insert customer with same username throws exception"() {
         given: "I have a customer"
         String username = "usernamer"
-        EasyRandomParameters parameters = new EasyRandomParameters()
-        parameters.setCollectionSizeRange(new EasyRandomParameters.Range<Integer>(0, 0))
-        Customer customer = ObjectGenerator.generateObject(Customer.class, parameters)
-        customer.setId(null)
+        Customer customer = ObjectGenerator.generateObjectWithDefaultTypeParams(Customer.class)
         customer.setSubscriptionPlanFromEnum(SubscriptionPlanEnum.STANDARD)
         customer.setUsername(username)
 
@@ -71,8 +65,7 @@ class CustomerRepositorySpec extends Specification {
         repository.save(customer)
 
         when: "I try to insert a customer with the same username"
-        Customer secondCustomer = ObjectGenerator.generateObject(Customer.class, parameters)
-        secondCustomer.setId(null)
+        Customer secondCustomer = ObjectGenerator.generateObjectWithDefaultTypeParams(Customer.class)
         secondCustomer.setSubscriptionPlanFromEnum(SubscriptionPlanEnum.STANDARD)
         secondCustomer.setUsername(username)
         repository.save(secondCustomer)
