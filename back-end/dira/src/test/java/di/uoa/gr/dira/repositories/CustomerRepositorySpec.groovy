@@ -3,13 +3,14 @@ package di.uoa.gr.dira.repositories
 import di.uoa.gr.dira.entities.customer.Customer
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum
 import di.uoa.gr.dira.utils.ObjectGenerator
-import org.jeasy.random.EasyRandomParameters
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.test.annotation.DirtiesContext
 import spock.lang.Specification
+
+import javax.transaction.Transactional
 
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -100,7 +101,7 @@ class CustomerRepositorySpec extends Specification {
         customer.get().getEmail() == email
     }
 
-    void "retrieve non existent user"() {
+    void "retrieve non existent customer"() {
         given: "I have a username to search for"
         String username = "non-existent"
 
@@ -111,5 +112,20 @@ class CustomerRepositorySpec extends Specification {
 
         then: "THe user is not found"
         customer.isEmpty()
+    }
+
+    @Transactional
+    void "delete existing customer"() {
+        given: "I have an existing user in my database"
+        Customer customer = repository.findById(1L).get()
+
+        and: "He is not part of any projects"
+        customer.getProjects().isEmpty()
+
+        when: "I try to delete the customer"
+        repository.delete(customer)
+
+        then: "The customer is deleted successfully"
+        repository.findById(1L).isEmpty()
     }
 }
