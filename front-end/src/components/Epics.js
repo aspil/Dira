@@ -1,11 +1,11 @@
 import SideNav from './SideNav';
 import ProjectNav from './ProjectNav';
 import Footer from './Footer';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PlayForWorkOutlined } from '@material-ui/icons';
 import x_icon from "../Images/x_icon.png"
 
-const Epics = () => {
+const Epics = ({ footerHandle }) => {
 
   // Epic Info
   const [epic_panel, handleEpicInfo] = useState("hide");
@@ -53,6 +53,8 @@ const Epics = () => {
     { name: 'Papadakis', dueDate: '25/3/2021', role: 'developer', id: 5 },
     { name: 'Papadakis', dueDate: '25/3/2021', role: 'developer', id: 6 },
   ])
+
+  useEffect(footerHandle, [footerHandle]);
 
   return (
     // Gia na doylepsei to sidebar
@@ -166,7 +168,6 @@ const Epics = () => {
           }
         </main>
       </div>
-      <Footer />
     </div>
   );
 }

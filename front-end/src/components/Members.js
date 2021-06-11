@@ -1,13 +1,10 @@
 import SideNav from './SideNav';
-import ProjectNav from './ProjectNav';
-import Footer from './Footer';
-import { useState } from "react";
-import { PlayForWorkOutlined } from '@material-ui/icons';
+import { useEffect, useState } from "react";
 import x_icon from "../Images/x_icon.png"
 import { useParams } from 'react-router';
 
 
-const Members = ({ username, doLogout }) => {
+const Members = ({ username, doLogout, footerHandle }) => {
 
     const [members_popup, handleMembersPopup] = useState("hide");
     const { projectId } = useParams();
@@ -46,6 +43,8 @@ const Members = ({ username, doLogout }) => {
         { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
         { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
     ])
+
+    useEffect(footerHandle, [footerHandle]);
 
     return (
         // Gia na doylepsei to sidebar
@@ -95,7 +94,6 @@ const Members = ({ username, doLogout }) => {
                     }
                 </main>
             </div>
-            <Footer />
         </div>
     );
 }

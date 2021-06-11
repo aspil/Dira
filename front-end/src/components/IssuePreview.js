@@ -1,11 +1,9 @@
 import SideNav from './SideNav';
-import ProjectNav from './ProjectNav';
-import Footer from './Footer';
-import { useState } from "react";
-import { PlayForWorkOutlined } from '@material-ui/icons';
-import x_icon from "../Images/x_icon.png"
+import { useEffect } from "react";
 
-const IssuePreview = () => {
+const IssuePreview = ({ footerHandle }) => {
+  useEffect(footerHandle, [footerHandle]);
+
   return (
     // Gia na doylepsei to sidebar
     <div className="issuePreview proj_page">
@@ -117,7 +115,6 @@ const IssuePreview = () => {
           </div>
         </main>
       </div>
-      <Footer />
     </div>
   );
 }

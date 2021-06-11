@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { DiraProjectClient, DiraUserClient } from "dira-clients";
 import CreateProject from './components/CreateProject';
 import HomeNav from './components/HomeNav';
+import Footer from './components/Footer';
 
 function App() {
   const [token, setToken] = useState(undefined);
@@ -59,8 +60,26 @@ function App() {
     }
   }
 
+  const showFooterHook = () => {
+    setShowFooter(true);
+
+    return function cleanup() {
+      setShowFooter(false);
+    }
+  }
+
+  const footerStylesHook = () => {
+    setShowFooterStyles(true);
+
+    return function cleanup() {
+      setShowFooterStyles(false);
+    }
+  }
+
   const [isLogged, setIsLogged] = useState(false);
   const [showHomeNav, setShowHomeNav] = useState(true);
+  const [showFooter, setShowFooter] = useState(false);
+  const [showFooterStyles, setShowFooterStyles] = useState(false);
 
   return (
     <Router>
@@ -71,7 +90,7 @@ function App() {
         <Switch>
           <Route exact path="/">
             {token !== undefined && <Redirect to="/proj_main" />}
-            {token === undefined && <Home />}
+            {token === undefined && <Home footerHandle={showFooterHook} />}
           </Route>
           <Route path="/sign_in">
             {token !== undefined && <Redirect to="/proj_main" />}
@@ -104,7 +123,8 @@ function App() {
               userClient={userClient}
               token={token}
               doLogout={doLogout}
-            />}
+              footerHandle={showFooterHook}
+              footerStylesHandle={footerStylesHook} />}
           </Route>
           <Route path="/backlog/:projectId">
             {token === undefined && <Redirect to="/sign_in" />}
@@ -112,25 +132,29 @@ function App() {
               username={userInfo.username}
               token={token}
               doLogout={doLogout}
+              footerHandle={showFooterHook}
             />}
           </Route>
           <Route path="/members/:projectId">
             {token === undefined && <Redirect to="/sign_in" />}
-            {token !== undefined && <Members username={userInfo.username}
-              doLogout={doLogout}
-            />}
+            {token !== undefined &&
+              <Members
+                username={userInfo.username}
+                doLogout={doLogout}
+                footerHandle={showFooterHook} />
+            }
           </Route>
           <Route path="/active_sprint">
             {token === undefined && <Redirect to="/sign_in" />}
-            {token !== undefined && <ActiveSprint username={userInfo.username} />}
+            {token !== undefined && <ActiveSprint username={userInfo.username} footerHandle={showFooterHook} />}
           </Route>
           <Route path="/epics">
             {token === undefined && <Redirect to="/sign_in" />}
-            {token !== undefined && <Epics username={userInfo.username} />}
+            {token !== undefined && <Epics username={userInfo.username} footerHandle={showFooterHook} />}
           </Route>
           <Route path="/issue_preview">
             {token === undefined && <Redirect to="/sign_in" />}
-            {token !== undefined && <IssuePreview username={userInfo.username} />}
+            {token !== undefined && <IssuePreview username={userInfo.username} footerHandle={showFooterHook} />}
           </Route>
           <Route path="/create_project">
             {token === undefined && <Redirect to="/sign_in" />}
@@ -140,6 +164,12 @@ function App() {
             />}
           </Route>
         </Switch>
+
+        {showFooter &&
+          <div style={showFooterStyles ? { clear: "both", position: "absolute", bottom: "0", width: "100%" } : {}}>
+            <Footer />
+          </div>
+        }
       </div>
     </Router>
   );

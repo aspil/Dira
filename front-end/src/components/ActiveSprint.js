@@ -1,12 +1,12 @@
 import SideNav from './SideNav';
 import ProjectNav from './ProjectNav';
 import Footer from './Footer';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import search_icon from "../Images/search_icon.png"
 import edit_icon from "../Images/edit_icon.png"
 
-const ActiveSprint = () => {
+const ActiveSprint = ({ footerHandle }) => {
     const history = useHistory();
 
     // Issue Panel
@@ -35,6 +35,8 @@ const ActiveSprint = () => {
         { title: 'Makis', dueDate: '14/5/2021', briefDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit', id: 1 },
         { title: 'Akis', dueDate: '14/5/2021', briefDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit', id: 2 }
     ])
+
+    useEffect(footerHandle, [footerHandle]);
 
     return (
         <div className="active_sprint proj_page">
@@ -154,7 +156,6 @@ const ActiveSprint = () => {
                     </div>
                 </main>
             </div>
-            <Footer />
         </div>
     );
 }

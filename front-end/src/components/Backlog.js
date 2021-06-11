@@ -8,7 +8,7 @@ import { Link, useParams } from 'react-router-dom'
 import { Search } from '@material-ui/icons'
 import { DiraIssueClient } from "dira-clients";
 
-const Backlog = ({ token }) => {
+const Backlog = ({ token, footerHandle }) => {
 
   const [backlogIssues, setBacklogIssues] = useState([])
   const [sprintIssues, setSprintIssues] = useState([
@@ -59,6 +59,8 @@ const Backlog = ({ token }) => {
         console.log(err);
       });
   }, []);
+
+  useEffect(footerHandle, [footerHandle]);
 
   // Create sprint popup handlers
   const [create_sprint_popup, handleCreateSprintPopup] = useState("hide");
@@ -291,7 +293,6 @@ const Backlog = ({ token }) => {
           }
         </main>
       </div>
-      <Footer />
     </div>
   );
 }

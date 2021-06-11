@@ -3,7 +3,7 @@ import Footer from './Footer';
 import { useEffect, useState } from "react";
 import { useHistory } from 'react-router';
 
-const ProjectMain = ({ userInfo, userClient, token, doLogout }) => {
+const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, footerStylesHandle }) => {
   const [listState, setListState] = useState("showProjects");
   const history = useHistory()
   const [projects, setProjects] = useState([]);
@@ -27,7 +27,8 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout }) => {
       });
   }, []);
 
-
+  useEffect(footerHandle, [footerHandle]);
+  useEffect(footerStylesHandle, [footerStylesHandle]);
 
   const [issues, setIssues] = useState([
     { title: 'Issue x', project: '14/5/2021', status: "active", id: 1 },
@@ -102,10 +103,6 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout }) => {
             </table>
           }
         </div>
-      </div>
-      {/* Footer */}
-      <div style={{ clear: "both", position: "absolute", bottom: "0", width: "100%" }}>
-        <Footer />
       </div>
 
     </div>

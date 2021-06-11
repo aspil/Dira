@@ -1,8 +1,9 @@
-import HomeNav from './HomeNav';
 import logo from "../Images/dira_icon.png"
-import Footer from "./Footer"
+import { useEffect } from 'react';
 
-function Home() {
+function Home({ footerHandle }) {
+  useEffect(footerHandle, [footerHandle]);
+
   return (
     <div className="home">
       <div className="home_grad1">
@@ -27,7 +28,6 @@ function Home() {
         <br /><br /><br /><br /><br /><br />
 
       </div>
-      <Footer />
     </div>
   );
 }
