@@ -12,28 +12,9 @@ const Backlog = ({ token }) => {
 
   const [backlogIssues, setBacklogIssues] = useState([
     { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue X', dateCreated:"10/5/2023", priority:"high", id: 2 },
-    { title: 'Issue X', dateCreated:"10/5/2023", priority:"high", id: 2 },
-    { title: 'Issue X', dateCreated:"10/5/2023", priority:"high", id: 2 },
-    { title: 'Issue X', dateCreated:"10/5/2023", priority:"high", id: 2 },
-    { title: 'Issue X', dateCreated:"10/5/2023", priority:"high", id: 2 },
-    { title: 'Issue X', dateCreated:"10/5/2023", priority:"high", id: 2 },
-    { title: 'Issue X', dateCreated:"10/5/2023", priority:"high", id: 2 },
-    { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 3 }
   ])
   const [sprintIssues, setSprintIssues] = useState([
-    { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 1 },
-    { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 1 },
     { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 2 },
-    { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 3 }
   ])
 
   const [sprint, handleSprintPanel] = useState("hide");

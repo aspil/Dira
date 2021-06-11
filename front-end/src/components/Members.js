@@ -28,20 +28,7 @@ const Members = ({ username, doLogout }) => {
         { name: 'Lakis', dateJoined: '3/8/2018', role: 'developer', id: 3 },
         { name: 'Akis', dateJoined: '16/5/2020', role: 'developer', id: 4 },
         { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
+
       ])
 
     return (

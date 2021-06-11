@@ -145,12 +145,10 @@ const IssuePreview = () => {
   // Done: It has been successfully developed and tested
 // Labels: A custom field that can be filled by the user in order to give a special meaning to the ticket (e.g part of specific functionality features)
 // Description
-
-
-
-// Comments
 // Assignee
 // Reporter
+
+// Comments
 // Dates: 
   // Created, 
   // Updated, 
