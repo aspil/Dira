@@ -10,4 +10,13 @@ public class PermissionType {
     public static boolean hasAdminPermissions(int permission) {
         return ADMIN == (permission & ADMIN);
     }
+    public static boolean hasReadPermissions(int permission) {
+        return READ == (permission & READ);
+    }
+    public static boolean hasWritePermissions(int permission) {
+        return WRITE == (permission & WRITE);
+    }
+    public static boolean hasDeletePermissions(int permission) {
+        return DELETE == (permission & DELETE);
+    }
 }

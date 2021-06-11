@@ -16,6 +16,7 @@ import di.uoa.gr.dira.shared.PermissionType;
 import di.uoa.gr.dira.shared.ProjectVisibility;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import di.uoa.gr.dira.util.mapper.MapperHelper;
+import org.jboss.logging.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -66,18 +67,27 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         }
         // setting permissions when creating a project
         project.setPermissions(new ArrayList<>());
-        Permission permission = new Permission();
-        permission.setPermission(PermissionType.ADMIN);
-        permission = permissionRepository.save(permission);
-        project.getPermissions().add(permission);
+
 
         // adding customer who created the project
         project.setCustomers(new ArrayList<>());
         project.getCustomers().add(customer);
 
         project.setIssues(new ArrayList<>());
+        project = repository.save(project);
 
-        return mapper.map(repository.save(project), ProjectModel.class);
+        /* Create a new permission for this customer in the current project */
+        Permission permission = new Permission();
+        permission.setPermission(PermissionType.ADMIN);
+        permission.setUser(customer);
+        permission.setProject(project);
+        project.getPermissions().add(permission);
+
+        permission = permissionRepository.save(permission);
+
+        project = repository.save(project); // TODO: maybe there is a way to avoid double save. This is a workaround due to circular dependency!
+
+        return mapper.map(project, ProjectModel.class);
     }
 
 
