@@ -1,12 +1,20 @@
 import { Link, useHistory } from "react-router-dom";
 import logo from "../Images/dira_icon.png"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
-const Login = ({ setToken, client, setUserInfo }) => {
+const Login = ({ setToken, client, setUserInfo, setIsLogged, navHandle }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const history = useHistory();
+
+  useEffect(() => {
+    navHandle(false);
+
+    return function cleanup() {
+      navHandle(true);
+    }
+  }, [])
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -16,11 +24,12 @@ const Login = ({ setToken, client, setUserInfo }) => {
       .then((user) => {
         console.log(user);
         setUserInfo({
-          username: user.username,  
+          username: user.username,
           email: user.email,
           id: user.id
         });
         setToken(user.token);
+        setIsLogged(true);
         history.push('/proj_main');
       })
       .catch(() => {
@@ -32,34 +41,34 @@ const Login = ({ setToken, client, setUserInfo }) => {
   }
   return (
     <div className="login" >
-      <div style={{textAlign:"center"}}>
-          <img src={logo} alt="dira logo" id="dira logo" onClick={redirectToMain}/>
-          <div className="login_grad" style={{textAlign:"center"}}>
-              <h1 style={{fontWeight:"normal", margin:"15px"}}>Login</h1>
-              <form onSubmit={onSubmit} noValidate>
-                <input 
-                  type="text" 
-                  placeholder="Username" 
-                  onChange = {(e) => {setUsername(e.target.value)}}
-                  value={username}/>
-                <input 
-                  type="password" 
-                  placeholder="Password" 
-                  onChange = {(e) => {setPassword(e.target.value)}}
-                  value={password}/>
-                <button type="submit">Login</button>
-              </form>
-              <div style={{textAlign:"right", marginRight:"1.8vw"}}>
-              <Link to="/recover" >Forgot Password?</Link>
-              </div>
-
-              <p style={{margin: "15px"}}>Don't have an account? <Link to="/register">Register</Link></p>
-              <Link to="/contact">Contact Us</Link>
+      <div style={{ textAlign: "center" }}>
+        <img src={logo} alt="dira logo" id="dira logo" onClick={redirectToMain} />
+        <div className="login_grad" style={{ textAlign: "center" }}>
+          <h1 style={{ fontWeight: "normal", margin: "15px" }}>Login</h1>
+          <form onSubmit={onSubmit} noValidate>
+            <input
+              type="text"
+              placeholder="Username"
+              onChange={(e) => { setUsername(e.target.value) }}
+              value={username} />
+            <input
+              type="password"
+              placeholder="Password"
+              onChange={(e) => { setPassword(e.target.value) }}
+              value={password} />
+            <button type="submit">Login</button>
+          </form>
+          <div style={{ textAlign: "right", marginRight: "1.8vw" }}>
+            <Link to="/recover" >Forgot Password?</Link>
           </div>
+
+          <p style={{ margin: "15px" }}>Don't have an account? <Link to="/register">Register</Link></p>
+          <Link to="#">Contact Us</Link>
+        </div>
       </div>
 
     </div>
   );
-  }
-   
-  export default Login;
+}
+
+export default Login;
