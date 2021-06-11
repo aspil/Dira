@@ -26,8 +26,8 @@ const Login = ({ setToken, client, setUserInfo, setIsLogged, navHandle }) => {
         setIsLogged(true);
         history.push('/proj_main');
       })
-      .catch(() => {
-        alert('Error');
+      .catch((err) => {
+        console.log(err);
       });
   }
   const redirectToMain = () => {

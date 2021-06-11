@@ -25,8 +25,8 @@ const Register = ({ client, navHandle }) => {
     }).then(res => {
       console.log(res);
       history.push('/')
-    }).catch(() => {
-      alert('error');
+    }).catch((err) => {
+      console.log(err);
     })
 
   }

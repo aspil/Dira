@@ -24,6 +24,11 @@ function App() {
     email: localStorage.email,
     id: localStorage.id
   });
+  const [isLogged, setIsLogged] = useState(false);
+  const [showHomeNav, setShowHomeNav] = useState(true);
+  const [showFooter, setShowFooter] = useState(false);
+  const [showFooterStyles, setShowFooterStyles] = useState(false);
+
   const userClient = new DiraUserClient('https://localhost:8080/dira');
   const projectClient = new DiraProjectClient('https://localhost:8080/dira');
 
@@ -75,11 +80,6 @@ function App() {
       setShowFooterStyles(false);
     }
   }
-
-  const [isLogged, setIsLogged] = useState(false);
-  const [showHomeNav, setShowHomeNav] = useState(true);
-  const [showFooter, setShowFooter] = useState(false);
-  const [showFooterStyles, setShowFooterStyles] = useState(false);
 
   return (
     <Router>
