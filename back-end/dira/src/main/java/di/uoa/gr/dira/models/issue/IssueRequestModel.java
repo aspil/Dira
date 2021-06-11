@@ -46,7 +46,7 @@ public class IssueRequestModel implements IModel<Long> {
     @NotNull
     private IssueStatusEnum status;
 
-//    private List<String> labels;
+    private List<String> labels;
 
 //    private CustomerModel reporter;
 

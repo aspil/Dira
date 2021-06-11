@@ -3,6 +3,7 @@ package di.uoa.gr.dira.entities.issue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -19,5 +20,9 @@ public class IssueLabel {
     private Long id;
 
     @Column(nullable = false)
-    private String label;
+    private String name;
+
+    public IssueLabel(String name) {
+        this.name = name;
+    }
 }

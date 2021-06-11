@@ -33,11 +33,13 @@ public class IssueResponseModel implements IModel<Long> {
     private IssueTypeEnum type;
 //
     private IssueStatusEnum status;
-//
+
 //    private List<IssueLink> issueLinks;
 //    private List<String> issueLinks;
+
+    private List<IssueLabel> labels;
 //    private List<String> labels;
-//
+
 //    private List<IssueComment> comments;
 
 //    private CustomerModel assignee;
@@ -56,14 +58,6 @@ public class IssueResponseModel implements IModel<Long> {
     private Date updated;
 
 //    private Date dueDate;
-//
-//    private long estimatedTime;
-//
-//    private long remainingTime;
-//
-//    private long loggedTime;
-//
-//    private String timeUnit;
 
     private boolean resolved;
 }
