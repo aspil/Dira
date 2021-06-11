@@ -10,22 +10,11 @@ import { DiraIssueClient } from "dira-clients";
 
 const Backlog = ({ token, footerHandle }) => {
 
-<<<<<<< HEAD
   const [backlogIssues, setBacklogIssues] = useState([
     { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
   ])
   const [sprintIssues, setSprintIssues] = useState([
     { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 2 },
-=======
-  const [backlogIssues, setBacklogIssues] = useState([])
-  const [sprintIssues, setSprintIssues] = useState([
-    { title: 'Issue y', dateCreated: "10/5/2023", priority: "high", id: 1 },
-    { title: 'Issue y', dateCreated: "10/5/2023", priority: "high", id: 1 },
-    { title: 'Issue y', dateCreated: "10/5/2023", priority: "high", id: 1 },
-    { title: 'Issue y', dateCreated: "10/5/2023", priority: "high", id: 1 },
-    { title: 'Issue y', dateCreated: "10/5/2023", priority: "high", id: 2 },
-    { title: 'Issue y', dateCreated: "10/5/2023", priority: "high", id: 3 }
->>>>>>> b4ece0eccd05c5d11d36ef2214553a30cf39b75f
   ])
 
   const [sprint, handleSprintPanel] = useState("hide");

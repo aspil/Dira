@@ -28,10 +28,6 @@ const Members = ({ username, doLogout, footerHandle }) => {
         { name: 'Lakis', dateJoined: '3/8/2018', role: 'developer', id: 3 },
         { name: 'Akis', dateJoined: '16/5/2020', role: 'developer', id: 4 },
         { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-<<<<<<< HEAD
-
-      ])
-=======
         { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
         { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
         { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
@@ -49,7 +45,6 @@ const Members = ({ username, doLogout, footerHandle }) => {
     ])
 
     useEffect(footerHandle, [footerHandle]);
->>>>>>> b4ece0eccd05c5d11d36ef2214553a30cf39b75f
 
     return (
         // Gia na doylepsei to sidebar
