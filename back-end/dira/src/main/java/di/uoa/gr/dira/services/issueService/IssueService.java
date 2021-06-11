@@ -86,13 +86,14 @@ public class IssueService extends BaseService<IssueRequestModel, Issue, Long, Is
         newIssue.setLabels(new ArrayList<>());
 
         List<IssueLabel> issueLabelList = newIssue.getLabels();
-        for (String label : issueRequestModel.getLabels()) {
-            IssueLabel issueLabel = issueLabelRepository.findByName(label).orElse(null);
-            if (issueLabel == null) {
-                issueLabel = issueLabelRepository.save(new IssueLabel(label));
+        if (issueLabelList != null) {
+            for (String label : issueRequestModel.getLabels()) {
+                IssueLabel issueLabel = issueLabelRepository.findByName(label).orElse(null);
+                if (issueLabel == null) {
+                    issueLabel = issueLabelRepository.save(new IssueLabel(label));
+                }
+                issueLabelList.add(issueLabel);
             }
-            issueLabelList.add(issueLabel);
-
         }
 //        if (newIssue.getEpic() != null) {
 //            Long epicId = newIssue.getEpic().getId();
