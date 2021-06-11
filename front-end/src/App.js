@@ -144,11 +144,11 @@ function App() {
                 footerHandle={showFooterHook} />
             }
           </Route>
-          <Route path="/active_sprint">
+          <Route path="/active_sprint/:projectId">
             {token === undefined && <Redirect to="/sign_in" />}
             {token !== undefined && <ActiveSprint username={userInfo.username} footerHandle={showFooterHook} />}
           </Route>
-          <Route path="/epics">
+          <Route path="/epics/:projectId">
             {token === undefined && <Redirect to="/sign_in" />}
             {token !== undefined && <Epics username={userInfo.username} footerHandle={showFooterHook} />}
           </Route>

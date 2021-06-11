@@ -7,7 +7,6 @@ import { useParams } from 'react-router';
 const Members = ({ username, doLogout, footerHandle }) => {
 
     const [members_popup, handleMembersPopup] = useState("hide");
-    const { projectId } = useParams();
 
     const hide_members_popup = () => {
         handleMembersPopup("hide");
@@ -50,7 +49,7 @@ const Members = ({ username, doLogout, footerHandle }) => {
         // Gia na doylepsei to sidebar
         <div className="members proj_page">
             <div className="center_content">
-                <SideNav projectId={projectId} />
+                <SideNav />
                 <main>
                     {/* Content */}
                     <div className="content">

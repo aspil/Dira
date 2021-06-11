@@ -10,11 +10,9 @@ import { DiraIssueClient } from "dira-clients";
 
 const Backlog = ({ token, footerHandle }) => {
 
-  const [backlogIssues, setBacklogIssues] = useState([
-    { title: 'Issue x', dateCreated:"10/5/2023", priority:"high", id: 1 },
-  ])
+  const [backlogIssues, setBacklogIssues] = useState([])
   const [sprintIssues, setSprintIssues] = useState([
-    { title: 'Issue y', dateCreated:"10/5/2023", priority:"high", id: 2 },
+    { title: 'Issue y', dateCreated: "10/5/2023", priority: "high", id: 2 },
   ])
 
   const [sprint, handleSprintPanel] = useState("hide");
@@ -33,18 +31,22 @@ const Backlog = ({ token, footerHandle }) => {
   useEffect(() => {
     issueClient.set_authorization_token(token);
 
-    // issueClient.create_issue({
-    //   "description": "balblalbal",
-    //   "id": 0,
-    //   "key": "jdjdjdjdjj",
-    //   "priority": 0,
-    //   "status": "Open",
-    //   "title": "kfcjjjjkfc",
-    //   "type": "Epic"
-    // }).catch((err) => {
-    //   console.log('error during creation of issue');
-    //   console.log(err);
-    // })
+    issueClient.create_issue({
+      "description": "some description",
+      "id": 0,
+      "type": "Epic",
+      "status": 4,
+      "labels": [
+        "bug",
+        "feature"
+      ],
+      "key": "some key",
+      "priority": "Normal",
+      "title": "some title"
+    }).catch((err) => {
+      console.log('error during creation of issue');
+      console.log(err);
+    })
 
     issueClient.get_all_issues()
       .then((res) => {
@@ -92,7 +94,7 @@ const Backlog = ({ token, footerHandle }) => {
   return (
     <div className="backlog proj_page">
       <div className="center_content">
-        <SideNav projectId={projectId} />
+        <SideNav />
         <main>
           <div classname="backlogHead" style={{ marginBottom: "15px", display: "flex" }}>
             <h1>{projectName}</h1>

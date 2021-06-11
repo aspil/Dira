@@ -1,11 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import arrows from "../Images/arrows.png"
 
-const SideNav = ({ projectId }) => {
+const SideNav = () => {
+  const { projectId } = useParams();
+
   const links = [
     {
       name: "Active Sprint",
-      path: "/active_sprint"
+      path: `/active_sprint/${projectId}`
     },
     {
       name: "Backlog",
@@ -13,7 +15,7 @@ const SideNav = ({ projectId }) => {
     },
     {
       name: "Epics",
-      path: "/epics"
+      path: `/epics/${projectId}`
     },
     {
       name: "Members",
@@ -25,12 +27,12 @@ const SideNav = ({ projectId }) => {
     <nav className="sidebar">
       <ul >
         {links.map((item) => (
-          <li><Link to={item.path} style={{paddingLeft:"40px"}}>{item.name}</Link></li>
+          <li><Link to={item.path} style={{ paddingLeft: "40px" }}>{item.name}</Link></li>
         ))}
       </ul>
-      <img src={arrows} alt="arrows" id="arrows"/>
+      <img src={arrows} alt="arrows" id="arrows" />
     </nav>
   );
 }
- 
+
 export default SideNav;
