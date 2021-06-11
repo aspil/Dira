@@ -43,20 +43,21 @@ const Backlog = ({ token, footerHandle }) => {
       "key": "some key",
       "priority": "Normal",
       "title": "some title"
+    }).then(() => {
+      issueClient.get_all_issues()
+        .then((res) => {
+          console.log(res);
+          setBacklogIssues(res.issues);
+          setProjectName(res.name);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }).catch((err) => {
       console.log('error during creation of issue');
       console.log(err);
     })
 
-    issueClient.get_all_issues()
-      .then((res) => {
-        console.log(res);
-        setBacklogIssues(res.issues);
-        setProjectName(res.name);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   }, []);
 
   useEffect(footerHandle, [footerHandle]);
