@@ -1,11 +1,15 @@
 package di.uoa.gr.dira.utils;
 
 import di.uoa.gr.dira.entities.customer.Customer;
+import di.uoa.gr.dira.entities.issue.Issue;
 import di.uoa.gr.dira.entities.project.Project;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
+import org.jeasy.random.FieldPredicates;
 
 import javax.persistence.Id;
+import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,6 +52,7 @@ public class ObjectGenerator {
             initialized = true;
             initializeCustomerParameters();
             initializeProjectParameters();
+            initializeIssueParameters();
         }
     }
 
@@ -63,7 +68,18 @@ public class ObjectGenerator {
         EasyRandomParameters params = new EasyRandomParameters();
         params.setStringLengthRange(new EasyRandomParameters.Range<>(1, 15));
         params.setCollectionSizeRange(new EasyRandomParameters.Range<>(0, 0));
+        params.setDateRange(new EasyRandomParameters.Range<>(LocalDate.parse("2021-01-01"), LocalDate.parse("2021-12-31")));
         params.excludeField(field -> field.getAnnotation(Id.class) != null);
         typeParameters.put(Project.class, params);
+    }
+
+    private static void initializeIssueParameters() {
+        EasyRandomParameters params = new EasyRandomParameters();
+        params.setStringLengthRange(new EasyRandomParameters.Range<>(1, 15));
+        params.setCollectionSizeRange(new EasyRandomParameters.Range<>(0, 0));
+        params.excludeField(field -> field.getAnnotation(Id.class) != null);
+        params.excludeField(FieldPredicates.named("assignee"));
+        params.excludeField(FieldPredicates.named("epic"));
+        typeParameters.put(Issue.class, params);
     }
 }
