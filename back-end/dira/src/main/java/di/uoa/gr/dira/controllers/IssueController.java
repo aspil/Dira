@@ -56,8 +56,10 @@ public class IssueController {
     @GetMapping("{issueId}")
     public @Valid IssueResponseModel retrieveIssueWithProjectId(
             @PathVariable Long projectId,
-            @PathVariable Long issueId) {
-        return service.findIssueWithProjectId(projectId, issueId);
+            @PathVariable Long issueId,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
+        Long customerId = jwtHelper.getId(jwtToken);
+        return service.findIssueWithProjectId(projectId, customerId, issueId);
     }
 
     @ApiOperation(
@@ -69,8 +71,10 @@ public class IssueController {
     public @Valid IssueResponseModel updateIssueWithProjectId(
             @PathVariable Long projectId,
             @PathVariable Long issueId,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken,
             @Valid @RequestBody IssueRequestModel issueRequestModel) {
-        return service.updateIssueWithProjectId(projectId, issueId, issueRequestModel);
+        Long customerId = jwtHelper.getId(jwtToken);
+        return service.updateIssueWithProjectId(projectId, customerId, issueId, issueRequestModel);
     }
 
     @ApiOperation(
@@ -80,7 +84,9 @@ public class IssueController {
     @DeleteMapping("{issueId}")
     public void deleteIssueWithProjectId(
             @PathVariable Long projectId,
-            @PathVariable Long issueId) {
-        service.deleteIssueWithProjectId(projectId, issueId);
+            @PathVariable Long issueId,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
+        Long customerId = jwtHelper.getId(jwtToken);
+        service.deleteIssueWithProjectId(projectId, customerId, issueId);
     }
 }
