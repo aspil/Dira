@@ -15,7 +15,7 @@ const useStyles = makeStyles({
     fontSize: '5rem',
     textAlign: 'center',
     color: 'white',
-    margin: '5rem 0'
+    marginBottom: '5rem'
   },
   subtitle: {
     fontSize: '3rem',
@@ -129,7 +129,6 @@ const Plan = () => {
   return (
     <div>
       <div className='home_grad1'>
-        <HomeNav/>
         <h1 className={classes.title}>
           Plans + Pricing
         </h1>
@@ -151,8 +150,8 @@ const Plan = () => {
               <CardContent className={classes.cont2}>
                 <h1 className={classes.planTitle2}>Premium</h1>
                 <button className={classes.bttn2}>
-                  12&euro; 
-                  <p style={{fontSize:'1rem', color:'inherit'}}>per user</p>
+                  12&euro;
+                  <p style={{ fontSize: '1rem', color: 'inherit' }}>per user</p>
                 </button>
                 <p className={classes.planDesc2}>
                   For startups and organizations that require a fully capable
@@ -167,7 +166,7 @@ const Plan = () => {
         <h1 className={classes.subtitle}>
           Features
         </h1>
-        
+
         <div className={classes.table}>
           <TableContainer component={Paper}>
             <Table aria-label="simple table">
@@ -175,12 +174,13 @@ const Plan = () => {
                 <TableRow>
                   {tableHead.map(col => (
                     <TableCell
-                      classes= {
-                        tableHead.indexOf(col)===1 ? 
-                        {root: classes.stdCell} :
-                        {root: classes.cell}
+                      key={tableHead.indexOf(col)}
+                      classes={
+                        tableHead.indexOf(col) === 1 ?
+                          { root: classes.stdCell } :
+                          { root: classes.cell }
                       }
-                      align ={tableHead.indexOf(col) === 0 ? 'left' : 'center'}
+                      align={tableHead.indexOf(col) === 0 ? 'left' : 'center'}
                     >
                       {col}
                     </TableCell>
@@ -192,12 +192,13 @@ const Plan = () => {
                   <TableRow key={row[0]}>
                     {row.map((col) => (
                       <TableCell
-                        classes= {
-                          row.indexOf(col)===1 ? 
-                          {root: classes.stdCell} :
-                          {root: classes.cell}
+                        key={row.indexOf(col)}
+                        classes={
+                          row.indexOf(col) === 1 ?
+                            { root: classes.stdCell } :
+                            { root: classes.cell }
                         }
-                        align ={row.indexOf(col) === 0 ? 'left' : 'center'}
+                        align={row.indexOf(col) === 0 ? 'left' : 'center'}
                       >
                         {col}
                       </TableCell>
@@ -212,5 +213,5 @@ const Plan = () => {
     </div>
   );
 }
- 
+
 export default Plan;

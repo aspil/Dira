@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 const ProjectNav = ({ username, doLogout }) => {
 
   const openSettings = () => {
-    if(document.getElementById("myForm").style.display == "none"){
+    if (document.getElementById("myForm").style.display === "none") {
       document.getElementById("myForm").style.display = "block";
     }
-    else{
+    else {
       document.getElementById("myForm").style.display = "none";
     }
   }
@@ -23,18 +23,26 @@ const ProjectNav = ({ username, doLogout }) => {
       </div>
       <div className="form-popup" id="myForm">
         <form className="form-container">
-          <p style={{textAlign:"center"}}><strong>{username}</strong></p>
-          <button type="submit" className="btn">Upgrade</button>
-          <button type="button" className="btn"
-          onClick={doLogout}>Logout</button>
+          <p style={{ textAlign: "center" }}><strong>{username}</strong></p>
+          <button
+            type="button"
+            className="btn">
+            Upgrade
+          </button>
+          <button
+            type="button"
+            className="btn"
+            onClick={doLogout}>
+            Logout
+          </button>
         </form>
       </div>
 
-      
+
     </div>
   );
 }
- 
+
 export default ProjectNav;
 
 

@@ -70,15 +70,15 @@ const CreateProject = ({ projectClient, token }) => {
                       <div style={{display:"flex", alignItems:"center"}}>
                         <div className = "accessOptions">  
                           <input className = "accessInput" type="radio" id="public"
-                            name="visibility" value="PUBLIC" checked 
+                            name="visibility" value="PUBLIC" defaultChecked 
                           />
-                          <label for="public">Public</label>
+                          <label htmlFor="public">Public</label>
                         </div>
                         <div className = "accessOptions">
                           <input className = "accessInput" type="radio" id="private" 
                             name="visibility" value="private" disabled
                           />
-                          <label for="private" style={{opacity:"0.5"}}>Private</label>
+                          <label htmlFor="private" style={{opacity:"0.5"}}>Private</label>
                         </div>
                       </div> 
                       <p style={{fontWeight:"normal"}}><Link to="/pricing">Upgrade to Premium</Link> to create private projects.</p>
@@ -89,15 +89,15 @@ const CreateProject = ({ projectClient, token }) => {
                       <div style={{display:"flex", alignItems:"center"}}>
                         <div className = "accessOptions">  
                           <input className = "accessInput" type="radio" id="public" 
-                            name="visibility" value="PUBLIC" onClick={() => setVisibility("PUBLIC")} checked 
+                            name="visibility" value="PUBLIC" onClick={() => setVisibility("PUBLIC")} defaultChecked 
                           />
-                          <label for="public">Public</label>
+                          <label htmlFor="public">Public</label>
                         </div>
                         <div className = "accessOptions">
                           <input className = "accessInput" type="radio" id="private" 
                             name="visibility" value="PRIVATE" onClick={() => setVisibility("PRIVATE")}
                           />
-                          <label for="private">Private</label>
+                          <label htmlFor="private">Private</label>
                         </div>
                       </div> 
                     </div>

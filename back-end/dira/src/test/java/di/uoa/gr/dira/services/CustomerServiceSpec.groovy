@@ -1,6 +1,7 @@
 package di.uoa.gr.dira.services
 
 import di.uoa.gr.dira.configuration.ModelMapperConfiguration
+import di.uoa.gr.dira.configuration.spring.SpringProfiles
 import di.uoa.gr.dira.entities.customer.Customer
 import di.uoa.gr.dira.models.customer.CustomerModel
 import di.uoa.gr.dira.models.project.ProjectModel
@@ -12,9 +13,11 @@ import org.jeasy.random.EasyRandomParameters
 import org.jeasy.random.EasyRandomParameters.Range
 import org.modelmapper.ModelMapper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
+@ActiveProfiles(SpringProfiles.TEST)
 @ContextConfiguration(classes = ModelMapperConfiguration.class)
 class CustomerServiceSpec extends Specification {
     @Autowired
@@ -49,12 +52,7 @@ class CustomerServiceSpec extends Specification {
         then: "the customer is returned"
         optionalModel.isPresent()
         CustomerModel model = optionalModel.get()
-        model.getId() == customer.getId()
-        model.getName() == customer.getName()
-        model.getSurname() == customer.getSurname()
-        model.getUsername() == customer.getUsername()
-        model.getEmail() == customer.getEmail()
-        model.getSubscriptionPlan() == customer.getSubscriptionPlan().getPlan()
+        model == mapper.map(customer, CustomerModel.class)
     }
 
     void "retrieve the projects where the user belongs to"() {

@@ -1,129 +1,125 @@
 import SideNav from './SideNav';
-import ProjectNav from './ProjectNav';
-import Footer from './Footer';
-import { useState } from "react";
-import { PlayForWorkOutlined } from '@material-ui/icons';
-import x_icon from "../Images/x_icon.png"
+import { useEffect } from "react";
 
-const IssuePreview = () => {
+const IssuePreview = ({ footerHandle }) => {
+  useEffect(footerHandle, [footerHandle]);
+
   return (
-      // Gia na doylepsei to sidebar
-  <div className="issuePreview proj_page">
-      <ProjectNav />
+    // Gia na doylepsei to sidebar
+    <div className="issuePreview proj_page">
       <div className="center_content">
-          <SideNav />
-          <main>
-              {/* Content */}
-            <div id="content">
-              <div className="issuePreviewWrapper">
-                <div className="headWrapper">
-                  <text id ="issueEpic">Epic of this issue</text>
-                  <h1 id="issueName">Issue X</h1>
-                  <div>
-                    <text className="label" id ="issueType">Type:</text>
-                    <text className="answer" id ="issueType">"issuetype"</text>
-                  </div>
+        <SideNav />
+        <main>
+          {/* Content */}
+          <div id="content">
+            <div className="issuePreviewWrapper">
+              <div className="headWrapper">
+                <text id="issueEpic">Epic of this issue</text>
+                <h1 id="issueName">Issue X</h1>
+                <div>
+                  <text className="label" id="issueType">Type:</text>
+                  <text className="answer" id="issueType">"issuetype"</text>
                 </div>
-                <div style={{margin:"auto", marginBottom:"15px", alignItems:"center",display:"flex", justifyContent:"space-between"}}>
-                  <div>
-                    <text className="label" id ="reporter">Reporter:</text>
-                    <text className="answer" id ="reporter">"reporter"</text>
-                    <br></br>
-                    <text className="label" id ="assignee">Assignee:</text>
-                    <text className="answer" id ="assignee">"assignee"</text>
-                  </div>
-                </div>
-                <div className="issueInfoWrapper">
-                  {/* Form */}
-                  <form className="issuePreviewForm">
-                    <div style={{margin:"auto", alignItems:"center",display:"flex", justifyContent:"space-between"}}>
-                      {/* Priority */}
-                      <div>
-                        <text>Priority: </text>
-                        <select name="priority" id="priority" value="EDW IPARXON VALUE">
-                          <option value="low">Low</option>
-                          <option value="medium">Medium</option>
-                          <option value="high">High</option>
-                        </select>
-                      </div>
-                      {/* Status */}
-                      <div>
-                        <text>Status: </text>
-                        <select name="status" id="status" value="EDW IPARXON VALUE">
-                          <option value="new">New</option>
-                          <option value="open">Medium</option>
-                          <option value="blocked">Blocked</option>
-                          <option value="active">Active</option>
-                          <option value="toTest">To Test</option>
-                          <option value="resolved">Resolved</option>
-                        </select>
-                      </div>
-                      <div>
-                        {/* Resolution */}
-                        <text>Resolution: </text>
-                        <select name="resolution" id="resolution" value="EDW IPARXON VALUE">
-                          <option value="unresolved">Unresolved</option>
-                          <option value="resolved">Resolved</option>
-                        </select>
-                      </div>
-                    </div>
-                    <br />
-                    <div style={{margin:"auto", alignItems:"center",display:"flex"}}>
-                      <div>
-                        <text>Description:</text>
-                        <textarea type="range" placeholder="Issue Description" value="EDW IPARXON VALUE"></textarea>
-                      </div>
-                      <div style={{margin:"auto"}}>
-                        <text style={{marginLeft:"15px"}}>Labels:</text>
-                        <br></br>
-                        <div className="checkboxAndLabel">
-                          <input className = "labelInput" id="Analysis" type="checkbox"/>
-                          <label for="Analysis">Analysis</label>
-                        </div>
-                        <div className="checkboxAndLabel">
-                          <input className = "labelInput" id="Documentation" type="checkbox"/>
-                          <label for="Documentation">Documentation</label>
-                        </div>
-                        <div className="checkboxAndLabel">
-                          <input className = "labelInput" id="UI" type="checkbox"/>
-                          <label for="UI">UI</label>
-                        </div>
-                        <div className="checkboxAndLabel">
-                          <input className = "labelInput" id="Backend" type="checkbox"/>
-                          <label for="Backend">Backend</label>
-                        </div>
-                        <div className="checkboxAndLabel">
-                          <input className = "labelInput" id="Database" type="checkbox"/>
-                          <label for="Database">Database</label>
-                        </div>
-                        <div className="checkboxAndLabel">
-                          <input className = "labelInput" id="Bug" type="checkbox"/>
-                          <label for="Bug">Bug</label>
-                        </div>
-                        <div className="checkboxAndLabel">
-                          <input className = "labelInput" id="Testing" type="checkbox"/>
-                          <label for="Testing">Testing</label>
-                        </div>
-                        
-                      </div>
-                    </div>
-                    <div style={{textAlign:"center"}}>
-                      <button>Save Changes</button>
-                    </div>
-                  </form>
-                </div>
-                {/* button */}
-                
               </div>
+              <div style={{ margin: "auto", marginBottom: "15px", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
+                <div>
+                  <text className="label" id="reporter">Reporter:</text>
+                  <text className="answer" id="reporter">"reporter"</text>
+                  <br></br>
+                  <text className="label" id="assignee">Assignee:</text>
+                  <text className="answer" id="assignee">"assignee"</text>
+                </div>
+              </div>
+              <div className="issueInfoWrapper">
+                {/* Form */}
+                <form className="issuePreviewForm">
+                  <div style={{ margin: "auto", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
+                    {/* Priority */}
+                    <div>
+                      <text>Priority: </text>
+                      <select name="priority" id="priority" value="EDW IPARXON VALUE">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                      </select>
+                    </div>
+                    {/* Status */}
+                    <div>
+                      <text>Status: </text>
+                      <select name="status" id="status" value="EDW IPARXON VALUE">
+                        <option value="new">New</option>
+                        <option value="open">Medium</option>
+                        <option value="blocked">Blocked</option>
+                        <option value="active">Active</option>
+                        <option value="toTest">To Test</option>
+                        <option value="resolved">Resolved</option>
+                      </select>
+                    </div>
+                    <div>
+                      {/* Resolution */}
+                      <text>Resolution: </text>
+                      <select name="resolution" id="resolution" value="EDW IPARXON VALUE">
+                        <option value="unresolved">Unresolved</option>
+                        <option value="resolved">Resolved</option>
+                      </select>
+                    </div>
+                  </div>
+                  <br />
+                  <div style={{ margin: "auto", alignItems: "center", display: "flex" }}>
+                    <div>
+                      <text>Description:</text>
+                      <textarea type="range" placeholder="Issue Description" value="EDW IPARXON VALUE"></textarea>
+                    </div>
+                    <div style={{ margin: "auto" }}>
+                      <text style={{ marginLeft: "15px" }}>Labels:</text>
+                      <br></br>
+                      <div className="checkboxAndLabel">
+                        <input className="labelInput" id="Analysis" type="checkbox" />
+                        <label for="Analysis">Analysis</label>
+                      </div>
+                      <div className="checkboxAndLabel">
+                        <input className="labelInput" id="Documentation" type="checkbox" />
+                        <label for="Documentation">Documentation</label>
+                      </div>
+                      <div className="checkboxAndLabel">
+                        <input className="labelInput" id="UI" type="checkbox" />
+                        <label for="UI">UI</label>
+                      </div>
+                      <div className="checkboxAndLabel">
+                        <input className="labelInput" id="Backend" type="checkbox" />
+                        <label for="Backend">Backend</label>
+                      </div>
+                      <div className="checkboxAndLabel">
+                        <input className="labelInput" id="Database" type="checkbox" />
+                        <label for="Database">Database</label>
+                      </div>
+                      <div className="checkboxAndLabel">
+                        <input className="labelInput" id="Bug" type="checkbox" />
+                        <label for="Bug">Bug</label>
+                      </div>
+                      <div className="checkboxAndLabel">
+                        <input className="labelInput" id="Testing" type="checkbox" />
+                        <label for="Testing">Testing</label>
+                      </div>
+
+                    </div>
+                  </div>
+                  <div style={{ textAlign: "center" }}>
+                    <button>Save Changes</button>
+                  </div>
+                </form>
+              </div>
+              {/* button */}
+
             </div>
-          </main>
+          </div>
+        </main>
       </div>
-      <Footer />
-  </div>
+    </div>
   );
 }
-        
-  export default IssuePreview;
+
+export default IssuePreview;
 
 
 // ID (autogenerated), Key (autogenerated based on a project's key)

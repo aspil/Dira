@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import arrows from "../Images/arrows.png"
 
-const SideNav = (/*{ links }*/) => {
+const SideNav = ({ projectId }) => {
   const links = [
     {
       name: "Active Sprint",
@@ -9,7 +9,7 @@ const SideNav = (/*{ links }*/) => {
     },
     {
       name: "Backlog",
-      path: "/backlog"
+      path: `/backlog/${projectId}`
     },
     {
       name: "Epics",
@@ -17,7 +17,7 @@ const SideNav = (/*{ links }*/) => {
     },
     {
       name: "Members",
-      path: "/members"
+      path: `/members/${projectId}`
     },
   ]
 

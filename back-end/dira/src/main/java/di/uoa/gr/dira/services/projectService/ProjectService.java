@@ -77,7 +77,7 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
 
         project.setIssues(new ArrayList<>());
 
-        return mapper.map(repository.save(project), modelType);
+        return mapper.map(repository.save(project), ProjectModel.class);
     }
 
 
@@ -145,7 +145,7 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
                 .findFirst()
                 .orElseThrow(() -> new CustomerNotFoundException("userId", userId.toString()));
         customers.remove(customer);
-
+        // we might need to delete the project from customer's project list
         repository.save(project);
     }
 

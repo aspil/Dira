@@ -26,7 +26,7 @@ public class Customer implements UserDetails {
     @Column(name = "customer_id")
     private Long id;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, unique = true)
     private String username;
 
     @Column(nullable = false, length = 50)
@@ -35,7 +35,7 @@ public class Customer implements UserDetails {
     @Column(nullable = false, length = 50)
     private String surname;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
