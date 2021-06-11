@@ -10,13 +10,7 @@ const Register = ({ client, navHandle }) => {
   const [password, setPassword] = useState('')
   const history = useHistory();
 
-  useEffect(() => {
-    navHandle(false);
-
-    return function cleanup() {
-      navHandle(true);
-    }
-  }, [])
+  useEffect(navHandle, [navHandle]);
 
   const onSubmit = (e) => {
     e.preventDefault()

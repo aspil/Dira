@@ -19,13 +19,7 @@ const PasswordRecovery = ({ navHandle }) => {
     setStep(4);
   }
 
-  useEffect(() => {
-    navHandle(false);
-
-    return function cleanup() {
-      navHandle(true);
-    }
-  }, [])
+  useEffect(navHandle, [navHandle]);
 
   return (
     <div className="password_recovery">

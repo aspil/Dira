@@ -8,13 +8,7 @@ const Login = ({ setToken, client, setUserInfo, setIsLogged, navHandle }) => {
   const [password, setPassword] = useState('');
   const history = useHistory();
 
-  useEffect(() => {
-    navHandle(false);
-
-    return function cleanup() {
-      navHandle(true);
-    }
-  }, [])
+  useEffect(navHandle, [navHandle]);
 
   const onSubmit = (e) => {
     e.preventDefault();

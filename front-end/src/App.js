@@ -51,6 +51,14 @@ function App() {
     setIsLogged(false);
   }
 
+  const showHomeNavHook = () => {
+    setShowHomeNav(false);
+
+    return function cleanup() {
+      setShowHomeNav(true);
+    }
+  }
+
   const [isLogged, setIsLogged] = useState(false);
   const [showHomeNav, setShowHomeNav] = useState(true);
 
@@ -73,16 +81,16 @@ function App() {
                 client={userClient}
                 setUserInfo={setUserInfo}
                 setIsLogged={setIsLogged}
-                navHandle={setShowHomeNav} />
+                navHandle={showHomeNavHook} />
             }
           </Route>
           <Route path="/register">
             {token !== undefined && <Redirect to="/proj_main" />}
-            {token === undefined && <Register client={userClient} navHandle={setShowHomeNav} />}
+            {token === undefined && <Register client={userClient} navHandle={showHomeNavHook} />}
           </Route>
           <Route path="/recover">
             {token !== undefined && <Redirect to="/proj_main" />}
-            {token === undefined && <PasswordRecovery navHandle={setShowHomeNav} />}
+            {token === undefined && <PasswordRecovery navHandle={showHomeNavHook} />}
           </Route>
 
           <Route path="/pricing">
