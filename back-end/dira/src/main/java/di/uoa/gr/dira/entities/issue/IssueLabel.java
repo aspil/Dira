@@ -21,8 +21,4 @@ public class IssueLabel {
 
     @Column(nullable = false)
     private String name;
-
-    public IssueLabel(String name) {
-        this.name = name;
-    }
 }

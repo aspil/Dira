@@ -62,33 +62,32 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
 
     @Override
     public ProjectModel createProject(Long customerId, ProjectModel projectModel) {
-        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
-        Optional<Project> projectExists = repository.findByKey(projectModel.getKey());
-        if (projectExists.isPresent()) {
-            throw new ProjectAlreadyExistsException("projectId", projectExists.get().getId().toString());
-        }
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
+
+        repository.findByKey(projectModel.getKey())
+            .ifPresent(project -> {
+                throw new ProjectAlreadyExistsException("projectId", project.getId().toString());
+            });
+
         Project project = mapper.map(projectModel, entityType);
+
         if ((customer.getSubscriptionPlan().getPlan().equals(SubscriptionPlanEnum.STANDARD)) && (project.getVisibility().equals(ProjectVisibility.PRIVATE))) {
             throw new ActionNotPermittedException();
         }
-        // setting permissions when creating a project
-        project.setPermissions(new ArrayList<>());
 
         // adding customer who created the project
         project.setCustomers(new ArrayList<>());
         project.getCustomers().add(customer);
 
-        project.setIssues(new ArrayList<>());
+        project = repository.save(project);
 
         /* Create a new permission for this customer in the current project */
         Permission permission = new Permission();
         permission.setPermission(PermissionType.ADMIN.getPermission());
         permission.setUser(customer);
-
-        permission = permissionRepository.save(permission);
-
-        project.getPermissions().add(permission);
-        project = repository.save(project);
+        permission.setProject(project);
+        permissionRepository.save(permission);
 
         return mapper.map(project, ProjectModel.class);
     }
