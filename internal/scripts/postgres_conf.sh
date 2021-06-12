@@ -23,6 +23,17 @@ then
 
 fi
 
+# Switch to postgres user
+sudo su postgres -l
+
+# Initalize database
+initdb --locale $LANG -E UTF8 -D '/var/lib/postgres/data/'
+
+exit
+
+# Enable postgres service
+sudo systemctl enable --now postgresql.service
+
 # Edit postgresql configuration file in order to connect without password
 #TODO sudo vim /etc/postgresql/13/main/pg_hba.conf
 
@@ -33,5 +44,5 @@ fi
 
 CONN_USER="postgres"
 
-sudo -i -u ${CONN_USER} bash -c 'psql -c "CREATE DATABASE test"'
+sudo -i -u ${CONN_USER} bash -c 'psql -c "CREATE DATABASE dira"'
 
