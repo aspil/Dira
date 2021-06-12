@@ -88,7 +88,7 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         permission = permissionRepository.save(permission);
 
         project.getPermissions().add(permission);
-        project = repository.save(project); // TODO: maybe there is a way to avoid double save. This is a workaround due to circular dependency!
+        project = repository.save(project);
 
         return mapper.map(project, ProjectModel.class);
     }
