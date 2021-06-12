@@ -39,10 +39,10 @@ of software using the Scrum methodology.
 
 ### 1.3 Project Scope
 
-The purprose of the online issue tracking platform is to enable multiple teams to develop many
+The purpose of the online issue tracking platform is to enable multiple teams to develop many
 projects based on the Scrum methodology.\
 The platform will support the relative domain specific features such as Epics and Stories.\
-The platform will be provided as a service (SasS).
+The platform will be provided as a service (SaaS).
 
 ## 2. System Features
 
@@ -52,19 +52,19 @@ A **REGISTERED USER** will be able to do the following:
 - Login
 - Search for projects/users
 - Create projects
-- Invite other users to projects
-- Upgrade their subscription plan to premium
+- Add other users to projects (by default the added user will have READ permissions)
+- Upgrade its subscription plan to premium
 - Create a backlog for a project (ADMIN permissions required)
+- Browse to its profile and view its personal statistic reports (may be omitted)
 
 | Features                     | Free | Premium |
 | ---------------------------- | ---- | ------- |
 | Unlimited number of projects | ❌   | ✔️       |
 | Private project creation     | ❌   | ✔️       |
-| Scrum Statistic Reports      | ✔️    | ✔️       |
 
 
 An **UNREGISTERED USER** can only do the following:
-- create an account
+- Create an account
 
 ### 2.2 Project features
 
@@ -104,17 +104,16 @@ An issue will support/have the following:
   - Blocked: An issue that has been descoped and will be probably be prioritized in the future again
   - In Development: An issue that has been analysed and is currently being developed
   - To Test: An issue that has been developed and dev tested and is ready to be tested by a QA
-  - Resolved
+  - Done: It has been successfully developed and tested
 - Resolution
   - Unresolved: It has not been resolved yet
-  - Done: It has been successfully developed and tested
+  - Resolved
 - Labels: A custom field that can be filled by the user in order to give a special meaning to the ticket (e.g part of specific functionality features)
 - Description
 - Comments
 - Assignee
 - Reporter
 - Dates: Created, Updated, Due date
-- Time tracking: Estimated, Remaining, Logged
 - Fix version(s)
 - Issue Links: Depends on, Relates to
 - Epic link
@@ -130,18 +129,18 @@ A backlog will support the following:
 - Can only be created from someone with ADMIN permissions
 - Can only be modified (filters) from someone with ADMIN permissions
 - Can be modified from someone with WRITE permissions
-- Contain issues based on issue data filters (e.g Status)
+- Contain issues based on issue data filters (e.g. Status)
 
 ## 3. External Interface Requirements
 
 ### 3.1 User Interfaces
 
 - Front end software: HTML5, JavaScript
-- Back end software: Java, SQL
+- Back end software: Java, PostgreSQL
 
 ### 3.2 Hardware Interfaces
 
-- Any operating system that supports JVM and Postgre SQL
+- Any operating system that supports JVM and PostgreSQL
 - Any browser compatible with HTML5 and JavaScript ECS6
 
 ### 3.3 Software Interfaces
@@ -149,7 +148,7 @@ A backlog will support the following:
 |Software Used| Description|
 | --------------| -------- |
 |Java           |We have chosen Java that supports almost every commercial operating system due to JVM support|
-|Database       |To save the Epics, Stories, Bugs and Users we have chosen Postgre SQL|
+|Database       |To save the Epics, Stories, Bugs and Users we have chosen PostgreSQL|
 |React          |We have chosen React for the front end because it has the fastest rendering, good support for most browsers and SPAs are more dynamic|
 
 ### 3.4 Communication Interfaces
@@ -160,10 +159,10 @@ The project supports all types of web browsers and software platforms as it uses
 
 ### 4.1 General Characteristics
 
-- Our platform will support Greek and Enlgish languages
+- Our platform will support Greek and English languages
 - Anyone will be able to access the platform's website via a web browser
-- We will only support Euro as currency for service subsription
-- We will ensure the availability of information (ie users will have at their disposal at all times the data and resources necessary for the operation and use of our platform
+- We will only support Euro as currency for service subscription
+- We will ensure the availability of information (ie users will have at their disposal at all times the data and resources necessary for the operation and use of our platform)
 
 ### 4.2 Performance Requirements
 
@@ -174,7 +173,7 @@ The project supports all types of web browsers and software platforms as it uses
 ### 4.3 Security/Safety Requirements
 
 - We will not save the passwords as plain text (we will provide hashing using salts as well)
-- When the user tries to login they should not be able to do SQL injection
+- When the user tries to log in they should not be able to do SQL injection
 - Since we have more than one distinct role in our system (basic users, premium users, different project roles), it follows that permissible actions of each role must be clearly delimited. We will ensure that in no case any of the system roles will have access to possibilities of another
 - We will ensure the integrity of the information (ie we will protect any kind of data of our company from any modifications, additions or subtractions)
 - We will prevent, through various mechanisms, the access and use of the components of our system by unauthorized/unregistered users.
@@ -189,5 +188,5 @@ The project supports all types of web browsers and software platforms as it uses
 - The need for system portability will be met (ie it will be easy to transfer to another environment in the future)
 - Our system will be easily manageable (ie it will be easy to set up and maintain mode)
 - It will be easily maintainable as we will be able to easily adapt our platform to new user requirements and correct any errors
-- In addition it will be easily scalable, will have the ability to function properly and be efficient if we change its scope
-- The process of testing the functionality and performance level of the system, after each change, will be easy and fast (test driven developement)
+- In addition, it will be easily scalable, will have the ability to function properly and be efficient if we change its scope
+- The process of testing the functionality and performance level of the system, after each change, will be easy and fast (test driven development)
