@@ -137,8 +137,11 @@
 .projectmain #main_table td:hover {
   cursor: pointer;
 }
-.projectmain #main_table tr,#pencilIcon{
+.projectmain #main_table tr,#pencilIcon,#trashcanIcon{
   height: 42px;
+}
+.projectmain #trashcanIcon{
+  margin-left:42px;
 }
 .projectmain #main_table td{
   border: 1px solid #ddd;
@@ -155,11 +158,11 @@
   text-align: left;
 }
 
-.projectmain #pencilIcon{
+.projectmain #pencilIcon,#trashcanIcon{
   position: absolute;
   opacity: 40%;
 }
-.projectmain #pencilIcon:hover{
+.projectmain #pencilIcon:hover,#trashcanIcon:hover{
   cursor: pointer;
   opacity: 100%;
 }

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Link, useHistory } from 'react-router-dom';
 import edit_icon from "../Images/edit_icon.png"
 import x_icon from "../Images/x_icon.png"
+import trashcan_icon from "../Images/trashcan_icon.png"
 
 
 const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, footerStylesHandle }) => {
@@ -100,6 +101,7 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
                     <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.visibility}</td>
                     <td style={{position:"absolute",borderWidth:"0",padding:"0"}}>
                       <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditProject(project)}></img>
+                      <img id="trashcanIcon" src={trashcan_icon} alt="Trashcan"></img>
                     </td> 
                   </tr>
                 ))}
