@@ -19,7 +19,7 @@
 - POST          /register       (register a new user)
 
 - POST          /login          (perform a user login and produce a JWT token on successful login)
-- POST          /logout         (logout a user and delete all their JWT tokens)
+- POST          /logout         (logout a user)
 
 - POST          /keepalive      (refresh the user's JWT tokens)
 
