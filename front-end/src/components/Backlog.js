@@ -33,14 +33,7 @@ const Backlog = ({ token, footerHandle }) => {
 
     issueClient.create_issue({
       "description": "some description",
-      "id": 0,
       "type": "Epic",
-      "status": 4,
-      "labels": [
-        "bug",
-        "feature"
-      ],
-      "key": "some key",
       "priority": "Normal",
       "title": "some title"
     }).then(() => {

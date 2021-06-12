@@ -13,10 +13,7 @@ import di.uoa.gr.dira.shared.IssueTypeEnum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.Date;
 import java.util.List;
 
@@ -26,19 +23,16 @@ public class IssueRequestModel implements IModel<Long> {
     private Long id;
 
     @NotNull
-    @NotBlank
-    @NotEmpty
-    @Size(min = 1, max = 255)
-    private String key;
+    @Positive
+    private Long projectId;
+
+    private Long epicId;
 
     @NotNull
     @NotBlank
     @NotEmpty
     @Size(min = 1)
     private String title;
-
-//    private IssueRequestModel epic;
-//    private Long epicId;
 
     @NotNull
     private IssueTypeEnum type;

@@ -3,36 +3,36 @@ package di.uoa.gr.dira.services.issueService;
 import com.sun.istack.Nullable;
 import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.entities.issue.Issue;
-import di.uoa.gr.dira.entities.issue.IssueLabel;
 import di.uoa.gr.dira.entities.project.Permission;
 import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.exceptions.issue.IssueNotFoundException;
 import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
+import di.uoa.gr.dira.models.issue.IssueCreateModel;
 import di.uoa.gr.dira.models.issue.IssueRequestModel;
-import di.uoa.gr.dira.models.issue.IssueResponseModel;
+import di.uoa.gr.dira.models.issue.IssueCreateResponseModel;
 import di.uoa.gr.dira.models.project.ProjectIssuesModel;
 import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.repositories.IssueLabelRepository;
 import di.uoa.gr.dira.repositories.IssueRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
+import di.uoa.gr.dira.shared.IssueStatusEnum;
 import di.uoa.gr.dira.shared.PermissionType;
 import org.jboss.logging.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 
 @Service
 public class IssueService extends BaseService<IssueRequestModel, Issue, Long, IssueRepository> implements IIssueService {
-    ProjectRepository projectRepository;
-    CustomerRepository customerRepository;
-    IssueLabelRepository issueLabelRepository;
+    private final ProjectRepository projectRepository;
+    private final CustomerRepository customerRepository;
+    private final IssueLabelRepository issueLabelRepository;
     Logger logger = Logger.getLogger(IssueService.class);
 
     public IssueService(IssueRepository repository,
@@ -68,91 +68,93 @@ public class IssueService extends BaseService<IssueRequestModel, Issue, Long, Is
                 .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
     }
 
-    public IssueResponseModel createIssueWithProjectId(Long projectId, Long customerId, IssueRequestModel issueRequestModel) {
-        Customer reporter = customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
+    public IssueCreateResponseModel createIssueWithProjectId(Long projectId, Long customerId, IssueCreateModel issueModel) {
+        Customer reporter = customerRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
 
-        Permission permissionType = project.getPermissions()
-                .stream()
-                .filter(permission -> permission.getUser().getId().equals(customerId) && PermissionType.hasWritePermissions(permission.getPermission()))
-                .findFirst()
-                .orElseThrow(ActionNotPermittedException::new);
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
 
-        Issue newIssue = mapper.map(issueRequestModel, Issue.class);
+        checkProjectUserPermissions(customerId, project, PermissionType.WRITE);
+
+        Issue newIssue = mapper.map(issueModel, Issue.class);
+
         /* Start populating the new issue entity */
+        newIssue.setProject(project);
         newIssue.setReporter(reporter);
         newIssue.setCreated(new Date());
         newIssue.setUpdated(newIssue.getCreated());
-        newIssue.setLabels(new ArrayList<>());
+        newIssue.setStatus(IssueStatusEnum.New);
 
-        List<IssueLabel> issueLabelList = newIssue.getLabels();
-        if (issueLabelList != null) {
-            for (String label : issueRequestModel.getLabels()) {
-                IssueLabel issueLabel = issueLabelRepository.findByName(label).orElse(null);
-                if (issueLabel == null) {
-                    issueLabel = issueLabelRepository.save(new IssueLabel(label));
-                }
-                issueLabelList.add(issueLabel);
-            }
+        if (issueModel.getEpicId() != null) {
+            Issue epic = repository.findById(issueModel.getEpicId())
+                    .orElseThrow(() -> new IssueNotFoundException(String.format("Epic with id %s not found", issueModel.getEpicId())));
+
+            newIssue.setEpic(epic);
         }
-//        if (newIssue.getEpic() != null) {
-//            Long epicId = newIssue.getEpic().getId();
-//            Issue epicIssue = repository.findById(newIssue.getEpic().getId()).orElseThrow(() -> new IssueNotFoundException("issueId", epicId.toString()));
-//            epicIssue.getIssueLinks().add(mapper.map(epicIssue, IssueLink.class));
-//            repository.save(epicIssue);
+
+        if (issueModel.getAssigneeId() != null) {
+            Customer assignee = customerRepository.findById(issueModel.getAssigneeId())
+                    .orElseThrow(() -> new CustomerNotFoundException("id", issueModel.getAssigneeId().toString()));
+
+            newIssue.setAssignee(assignee);
+        }
+
+        newIssue.setKey(String.format("%s-%d", project.getKey(), project.getIssues().size()));
+
+//        List<IssueLabel> issueLabelList = newIssue.getLabels();
+//        if (issueLabelList != null) {
+//            for (String label : issueRequestModel.getLabels()) {
+//                IssueLabel issueLabel = issueLabelRepository.findByName(label).orElse(null);
+//                if (issueLabel == null) {
+//                    issueLabel = issueLabelRepository.save(new IssueLabel(label));
+//                }
+//                issueLabelList.add(issueLabel);
+//            }
 //        }
-        newIssue.setProject(project);
+
         newIssue = repository.save(newIssue);
-        addIssueToProject(project, newIssue);
-        return mapper.map(newIssue, IssueResponseModel.class);
+        return mapper.map(newIssue, IssueCreateResponseModel.class);
     }
 
     @Override
-    public IssueResponseModel findIssueWithProjectId(Long projectId, Long customerId, Long issueId) {
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
+    public IssueCreateResponseModel findIssueWithProjectId(Long projectId, Long customerId, Long issueId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
 
-        project.getPermissions()
-                .stream()
-                .filter(permission -> permission.getUser().getId().equals(customerId) && PermissionType.hasReadPermissions(permission.getPermission()))
-                .findFirst()
-                .orElseThrow(ActionNotPermittedException::new);
+        checkProjectUserPermissions(customerId, project, PermissionType.READ);
 
         Issue issue = project.getIssues()
                 .stream()
                 .filter(obj -> obj.getId().equals(issueId))
-                .findAny()
+                .findFirst()
                 .orElseThrow(() -> new IssueNotFoundException("issueId", issueId.toString()));
 
-        return mapper.map(issue, IssueResponseModel.class);
+        return mapper.map(issue, IssueCreateResponseModel.class);
     }
 
     @Override
-    public IssueResponseModel updateIssueWithProjectId(Long projectId, Long customerId, Long issueId, IssueRequestModel issueRequestModel) {
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
+    public IssueCreateResponseModel updateIssueWithProjectId(Long projectId, Long customerId, Long issueId, IssueRequestModel issueRequestModel) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
 
-        project.getPermissions()
-                .stream()
-                .filter(permission -> permission.getUser().getId().equals(customerId) && PermissionType.hasWritePermissions(permission.getPermission()))
-                .findFirst()
-                .orElseThrow(ActionNotPermittedException::new);
+        checkProjectUserPermissions(customerId, project, PermissionType.WRITE);
+
         Issue updatedIssue = mapper.map(issueRequestModel, Issue.class);
         updatedIssue.setUpdated(new Date());
         updatedIssue = repository.save(updatedIssue);
 
         addIssueToProject(project, updatedIssue);
 
-        return mapper.map(updatedIssue, IssueResponseModel.class);
+        return mapper.map(updatedIssue, IssueCreateResponseModel.class);
     }
 
     @Override
     public void deleteIssueWithProjectId(Long projectId, Long customerId, Long issueId) {
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
 
-        project.getPermissions()
-                .stream()
-                .filter(permission -> permission.getUser().getId().equals(customerId) && PermissionType.hasDeletePermissions(permission.getPermission()))
-                .findFirst()
-                .orElseThrow(ActionNotPermittedException::new);
+        checkProjectUserPermissions(customerId, project, PermissionType.DELETE);
 
         List<Issue> projectIssues = project.getIssues();
         Issue issue = projectIssues.stream()
@@ -164,4 +166,13 @@ public class IssueService extends BaseService<IssueRequestModel, Issue, Long, Is
 
         repository.delete(issue);
         projectRepository.save(project);
-    }}
+    }
+
+    private void checkProjectUserPermissions(long customerId, Project project, PermissionType requiredPermission) {
+        project.getPermissions()
+                .stream()
+                .filter(permission -> permission.getUser().getId().equals(customerId) && requiredPermission.hasPermission(permission.getPermission()))
+                .findFirst()
+                .orElseThrow(ActionNotPermittedException::new);
+    }
+}

@@ -41,7 +41,7 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
 
         project.getPermissions()
                 .stream()
-                .filter(permission -> permission.getUser().getId().equals(customerId) && PermissionType.hasAdminPermissions(permission.getPermission()))
+                .filter(permission -> permission.getUser().getId().equals(customerId) && PermissionType.ADMIN.hasPermission(permission.getPermission()))
                 .findFirst()
                 .orElseThrow(ActionNotPermittedException::new);
 
@@ -78,7 +78,7 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
 
         /* Create a new permission for this customer in the current project */
         Permission permission = new Permission();
-        permission.setPermission(PermissionType.ADMIN);
+        permission.setPermission(PermissionType.ADMIN.getPermission());
         permission.setUser(customer);
         permission.setProject(project);
         project.getPermissions().add(permission);
@@ -134,7 +134,7 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         Customer customer = customerRepository.findById(inviteeId).orElseThrow(() -> new CustomerNotFoundException("userId", inviteeId.toString()));
         Permission permission = new Permission();
         permission.setUser(customer);
-        permission.setPermission(PermissionType.READ);
+        permission.setPermission(PermissionType.READ.getPermission());
         permission = permissionRepository.save(permission);
         project.getPermissions().add(permission);
         project.getCustomers().add(customer);
