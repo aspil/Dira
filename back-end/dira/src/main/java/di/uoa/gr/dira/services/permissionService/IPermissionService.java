@@ -1,13 +1,26 @@
 package di.uoa.gr.dira.services.permissionService;
 
-import di.uoa.gr.dira.models.project.ProjectUserPermissionModel;
+import di.uoa.gr.dira.entities.customer.Customer;
+import di.uoa.gr.dira.entities.project.Project;
+import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
+import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
+import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
+import di.uoa.gr.dira.models.project.permission.ProjectUserPermissionModel;
 import di.uoa.gr.dira.services.IService;
+import di.uoa.gr.dira.shared.PermissionType;
 
 import java.util.List;
 
 public interface IPermissionService extends IService<ProjectUserPermissionModel, Long> {
     List<ProjectUserPermissionModel> getProjectPermissionsForUsers(Long projectId);
-    void createUserPermission(Long projectId, Long customerId, ProjectUserPermissionModel userPermissionModel);
-    ProjectUserPermissionModel updateUserPermission(Long projectId, Long permissionId, Long customerId, ProjectUserPermissionModel userPermissionModel);
-    void deleteUserPermission(Long projectId, Long customerId, Long permissionId);
+
+    ProjectUserPermissionModel createProjectUserPermission(Long creatorId, Long projectId, ProjectUserPermissionModel userPermissionModel);
+
+    ProjectUserPermissionModel createProjectUserPermission(Customer customer, Project project, PermissionType permission);
+
+    ProjectUserPermissionModel updateProjectUserPermission(Long customerId, Long projectId, Long permissionId, ProjectUserPermissionModel userPermissionModel);
+
+    void deleteProjectUserPermission(Long projectId, Long customerId, Long permissionId);
+
+    boolean checkProjectUserPermissions(Long customerId, Project project, PermissionType requiredPermission);
 }

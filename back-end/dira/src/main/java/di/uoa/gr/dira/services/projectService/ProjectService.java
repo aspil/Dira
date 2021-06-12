@@ -38,8 +38,11 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     }
 
     private Project checkPermissions(Long projectId, Long customerId) {
-        customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
-        Project project = repository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
+        customerRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
+
+        Project project = repository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
 
         project.getPermissions()
                 .stream()
@@ -70,11 +73,11 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
                 throw new ProjectAlreadyExistsException("projectId", project.getId().toString());
             });
 
-        Project project = mapper.map(projectModel, entityType);
-
-        if ((customer.getSubscriptionPlan().getPlan().equals(SubscriptionPlanEnum.STANDARD)) && (project.getVisibility().equals(ProjectVisibility.PRIVATE))) {
+        if ((customer.getSubscriptionPlan().getPlan().equals(SubscriptionPlanEnum.STANDARD)) && (projectModel.getVisibility().equals(ProjectVisibility.PRIVATE))) {
             throw new ActionNotPermittedException();
         }
+
+        Project project = mapper.map(projectModel, entityType);
 
         // adding customer who created the project
         project.setCustomers(new ArrayList<>());
@@ -92,17 +95,17 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         return mapper.map(project, ProjectModel.class);
     }
 
-
     @Override
     public ProjectModel getProject(Long projectId, SubscriptionPlanEnum subscriptionPlan) {
-        Project project = repository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
+        Project project = repository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
+
         if (project.getVisibility().equals(ProjectVisibility.PRIVATE) && subscriptionPlan.equals(SubscriptionPlanEnum.STANDARD)) {
             throw new ActionNotPermittedException();
         }
 
         return mapper.map(project, modelType);
     }
-
 
     @Override
     public ProjectModel updateProjectWithId(Long projectId, Long customerId, ProjectModel projectModel) {
@@ -113,11 +116,10 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     @Override
     public void deleteProjectWithId(Long projectId, Long customerId) {
         Project project = checkPermissions(projectId, customerId);
-        List<Customer> customers = project.getCustomers();
-        for (int i = 0; i != customers.size(); ++i) {
-            customers.get(i).getProjects().remove(project);
+        for (Customer customer: project.getCustomers()) {
+            customer.getProjects().remove(project);
         }
-        customerRepository.saveAll(customers);
+        customerRepository.saveAll(project.getCustomers());
         repository.deleteById(projectId);
     }
 
@@ -133,16 +135,17 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     @Override
     public void addUserToProjectWithId(Long projectId, Long inviterId, Long inviteeId) {
         Project project = checkPermissions(projectId, inviterId);
-        Customer customer = customerRepository.findById(inviteeId).orElseThrow(() -> new CustomerNotFoundException("userId", inviteeId.toString()));
+        Customer customer = customerRepository.findById(inviteeId)
+                .orElseThrow(() -> new CustomerNotFoundException("userId", inviteeId.toString()));
+
+        project.getCustomers().add(customer);
+        repository.save(project);
+
         Permission permission = new Permission();
         permission.setUser(customer);
         permission.setPermission(PermissionType.READ.getPermission());
-        permission = permissionRepository.save(permission);
-        project.getPermissions().add(permission);
-        project.getCustomers().add(customer);
-        repository.save(project);
+        permissionRepository.save(permission);
     }
-
 
     @Override
     public void deleteUserFromProjectWithId(Long id, Long projectOwnerId, Long userId) {

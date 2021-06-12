@@ -18,6 +18,10 @@ public class PermissionType {
 
     private final int permission;
 
+    public static PermissionType of(int permission) {
+        return new PermissionType(permission);
+    }
+
     public boolean hasPermission(int permission) {
         return (this.permission & permission) != 0;
     }

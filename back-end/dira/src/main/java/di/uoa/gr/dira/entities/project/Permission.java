@@ -19,7 +19,7 @@ public class Permission {
     @Column(name = "permission_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "project_id")
     private Project project;
 
