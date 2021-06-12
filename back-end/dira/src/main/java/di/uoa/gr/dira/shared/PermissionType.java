@@ -16,11 +16,10 @@ public class PermissionType {
     public static final PermissionType DELETE = new PermissionType(DELETE_PERMISSION);
     public static final PermissionType ADMIN = new PermissionType(ADMIN_PERMISSION);
 
-
     private final int permission;
 
     public boolean hasPermission(int permission) {
-        return (this.permission & permission) == permission;
+        return (this.permission & permission) != 0;
     }
 
     public boolean hasAdminPermissions() {
