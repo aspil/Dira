@@ -5,6 +5,7 @@ import di.uoa.gr.dira.entities.project.Permission;
 import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
+import di.uoa.gr.dira.exceptions.project.ProjectAlreadyExistsException;
 import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
 import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.models.project.ProjectUsersModel;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,6 +63,10 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     @Override
     public ProjectModel createProject(Long customerId, ProjectModel projectModel) {
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
+        Optional<Project> projectExists = repository.findByKey(projectModel.getKey());
+        if (projectExists.isPresent()) {
+            throw new ProjectAlreadyExistsException("projectId", projectExists.get().getId().toString());
+        }
         Project project = mapper.map(projectModel, entityType);
         if ((customer.getSubscriptionPlan().getPlan().equals(SubscriptionPlanEnum.STANDARD)) && (project.getVisibility().equals(ProjectVisibility.PRIVATE))) {
             throw new ActionNotPermittedException();
