@@ -9,7 +9,7 @@ public class PermissionType {
     private static final int READ_PERMISSION = 1;
     private static final int WRITE_PERMISSION = 1 << 1;
     private static final int DELETE_PERMISSION = 1 << 2;
-    private static final int ADMIN_PERMISSION = READ_PERMISSION | WRITE_PERMISSION | DELETE_PERMISSION;
+    private static final int ADMIN_PERMISSION = (READ_PERMISSION | WRITE_PERMISSION | DELETE_PERMISSION) | 1 << 3;
 
     public static final PermissionType READ = new PermissionType(READ_PERMISSION);
     public static final PermissionType WRITE = new PermissionType(WRITE_PERMISSION);

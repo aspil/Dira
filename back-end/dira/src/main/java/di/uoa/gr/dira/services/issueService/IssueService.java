@@ -1,9 +1,7 @@
 package di.uoa.gr.dira.services.issueService;
 
-import com.sun.istack.Nullable;
 import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.entities.issue.Issue;
-import di.uoa.gr.dira.entities.project.Permission;
 import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
@@ -27,7 +25,6 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 
-
 @Service
 public class IssueService extends BaseService<IssueRequestModel, Issue, Long, IssueRepository> implements IIssueService {
     private final ProjectRepository projectRepository;
@@ -46,7 +43,6 @@ public class IssueService extends BaseService<IssueRequestModel, Issue, Long, Is
         this.issueLabelRepository = issueLabelRepository;
     }
 
-    @Nullable
     private void addIssueToProject(Project project, Issue issue) {
         List<Issue> projectIssues = project.getIssues();
         if (projectIssues != null) {
