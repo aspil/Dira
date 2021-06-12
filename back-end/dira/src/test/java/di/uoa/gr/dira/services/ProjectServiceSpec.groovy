@@ -160,30 +160,4 @@ class ProjectServiceSpec extends Specification {
         createdModel != null
         createdModel == projectModel
     }
-
-//    def "a user with admin rights deletes a project with given id"() {
-//        given: "We have a public project"
-//        Project project = ObjectGenerator.generateObject(Project.class)
-//        project.setVisibility(ProjectVisibility.PUBLIC)
-//        projectRepository.findById(project.getId()) >> Optional.of(project)
-//
-//        and: "We have a customer with STANDARD plan"
-//        Customer customer = ObjectGenerator.generateObject(Customer.class)
-//        customer.setSubscriptionPlanFromEnum(SubscriptionPlanEnum.STANDARD)
-//        customerRepository.findById(customer.getId()) >> Optional.of(customer)
-//
-//        and: "admin permissions for that customer"
-//        Permission permission = ObjectGenerator.generateObject(Permission.class)
-//        permission.setPermission(PermissionType.ADMIN)
-//        permission.setUser(customer)
-//        project.getPermissions().add(permission)
-//        permissionRepository.findById(permission.getId()) >> Optional.of(permission)
-//
-//        when: "the customer with admin rights deletes the project"
-//        service.deleteProjectWithId(project.getId(), customer.getId())
-//        customerRepository.findById(customer.getId()) >> Optional.of(customer)
-//
-//        then: "the customer does not have the deleted project in his list"
-//        assert (customer.getProjects().contains(project.getId()))
-//    }
 }
