@@ -36,7 +36,6 @@
   flex-grow: 1;
   display: grid;
   grid-template-columns: repeat(100, 1fr);
-  grid-template-rows: 100;
   column-gap: 15px;
   max-height: 600px;
 }
@@ -204,7 +203,7 @@
   cursor: pointer;  
 }
 
-.backlog .createPopup #issueName{
+.backlog .createPopup #issueName,#sprintName{
   margin-top: 0;
   margin-bottom: 10px;
   border-width: thin;
@@ -214,7 +213,9 @@
   margin-left: 0;
   margin-right: 0;
 }
-
+.backlog .createPopup .markdowns select{
+  width: 100%;
+}
 .backlog .createPopup button{
   margin-top: 20px;
   border-radius: 3px;

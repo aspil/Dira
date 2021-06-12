@@ -12,8 +12,17 @@ const Backlog = ({ token, footerHandle }) => {
 
   const [backlogIssues, setBacklogIssues] = useState([])
   const [sprintIssues, setSprintIssues] = useState([
-    { title: 'Issue y', dateCreated: "10/5/2023", priority: "high", id: 2 },
+    { title: 'Issue y', dateCreated: "10/5/2023", priority: "high", key: 2 },
   ])
+
+  const members=[
+    {name:"takis", key: 1},
+    {name:"akis", key: 2}
+  ]
+  const epics=[
+    {name:"epic1", key: 1},
+    {name:"epic2", key: 2}
+  ]
 
   const [sprint, handleSprintPanel] = useState("hide");
 
@@ -90,7 +99,7 @@ const Backlog = ({ token, footerHandle }) => {
       <div className="center_content">
         <SideNav />
         <main>
-          <div classname="backlogHead" style={{ marginBottom: "15px", display: "flex" }}>
+          <div className="backlogHead" style={{ marginBottom: "15px", display: "flex" }}>
             <h1>{projectName}</h1>
           </div>
           <div className="flex_cont">
@@ -117,7 +126,7 @@ const Backlog = ({ token, footerHandle }) => {
                     <th>Priority</th>
                   </tr>
                   {backlogIssues.map(issue => (
-                    <tr key={issue.id} onClick={showIssuePanel}>
+                    <tr key={issue.key} onClick={showIssuePanel}>
                       <td>{issue.title}</td>
                       <td>{issue.dateCreated}</td>
                       <td>{issue.priority}</td>
@@ -225,9 +234,7 @@ const Backlog = ({ token, footerHandle }) => {
               <br />
               <form className="newIssueForm" style={{ textAlign: "left" }}>
                 <p>Title:</p>
-                <input type="text" id="issueName" placeholder="Sprint Title"></input>
-                {/* <p>Description:</p>
-                    <textarea type="range" placeholder="Issue Description"></textarea> */}
+                <input type="text" id="sprintName" placeholder="Sprint Title"></input>
                 <div className="priority">
                   <p>Duration:</p>
                   <select name="priority" id="priority">
@@ -245,7 +252,7 @@ const Backlog = ({ token, footerHandle }) => {
           }
           {/* create Issue Popup */}
           {create_issue_popup === "show" &&
-            <div className="createPopup">
+            <div className="createPopup" style={{fontWeight:"bold"}}>
               <div>
                 <h2>Create a new Issue</h2>
                 <img src={x_icon} alt="accountIcon" onClick={hideCreateIssuePopup}></img>
@@ -257,26 +264,40 @@ const Backlog = ({ token, footerHandle }) => {
                 <input type="text" id="issueName" placeholder="Issue Title"></input>
                 <p>Description:</p>
                 <textarea type="range" placeholder="Issue Description"></textarea>
-                <div className="priority">
-                  <p>Priority:</p>
-                  <select name="priority" id="priority">
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                  </select>
+                <div className="markdowns" style={{display:"flex", justifyContent:"space-between"}}>
+                  <div className="issuePriority">
+                    <p>Priority:</p>
+                    <select name="priority" id="priority">
+                      <option value="low">Low</option>
+                      <option value="medium">Medium</option>
+                      <option value="high">High</option>
+                      <option value="blocked">Blocked</option>
+                    </select>
+                  </div>
+                  <div className="issueAssignee">
+                    <p>Assignee:</p>
+                    <select name="assignee" id="assignee">
+                      {members.map(member => (
+                        <option value={member.name}>{member.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="epic">
+                    <p>Epic:</p>
+                    <select name="issueEpic" id="epic">
+                      {epics.map(epic => (
+                        <option value={epic.name}>{epic.name}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
-                <br></br>
+                {/* <br></br>
                 <p>Labels:</p>
                 <input type="checkbox" id="issueLabelOption" name="label1" value="label_value" />
                 <label for="vehicle1"> Label</label>
                 <input type="checkbox" id="issueLabelOption" name="label2" value="label_value" />
-                <label for="vehicle1"> Label</label>
-                <input type="checkbox" id="issueLabelOption" name="label3" value="label_value" />
-                <label for="vehicle1"> Label</label>
-                <input type="checkbox" id="issueLabelOption" name="label4" value="label_value" />
-                <label for="vehicle1"> Label</label>
-                <input type="checkbox" id="issueLabelOption" name="label5" value="label_value" />
-                <label for="vehicle1"> Label</label>
+                <label for="vehicle1"> Label</label> */}
+
 
                 <div style={{ textAlign: "center" }}>
                   <button onClick={handleCreateIssueButtonClick}>Create Issue</button>
