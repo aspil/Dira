@@ -1,10 +1,11 @@
 package di.uoa.gr.dira.controllers;
 
+import di.uoa.gr.dira.models.issue.IssueCreateModel;
 import di.uoa.gr.dira.models.issue.IssueRequestModel;
-import di.uoa.gr.dira.models.issue.IssueResponseModel;
+import di.uoa.gr.dira.models.issue.IssueCreateResponseModel;
 import di.uoa.gr.dira.models.project.ProjectIssuesModel;
 import di.uoa.gr.dira.security.JwtHelper;
-import di.uoa.gr.dira.services.issueService.IssueService;
+import di.uoa.gr.dira.services.issueService.IIssueService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,10 +18,10 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("projects/{projectId}/issues")
 public class IssueController {
-    private final IssueService service;
+    private final IIssueService service;
     private final JwtHelper jwtHelper;
 
-    public IssueController(IssueService service, JwtHelper jwtHelper) {
+    public IssueController(IIssueService service, JwtHelper jwtHelper) {
         this.service = service;
         this.jwtHelper = jwtHelper;
     }
@@ -40,13 +41,13 @@ public class IssueController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PostMapping
-    public @Valid IssueResponseModel createIssueWithProjectId(
+    public @Valid IssueCreateResponseModel createIssueWithProjectId(
             @PathVariable Long projectId,
-            @Valid @RequestBody IssueRequestModel issueRequestModel,
+            @Valid @RequestBody IssueCreateModel issueCreateModel,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
     ) {
         Long customerId = jwtHelper.getId(jwtToken);
-        return service.createIssueWithProjectId(projectId, customerId, issueRequestModel);
+        return service.createIssueWithProjectId(projectId, customerId, issueCreateModel);
     }
 
     @ApiOperation(
@@ -54,7 +55,7 @@ public class IssueController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @GetMapping("{issueId}")
-    public @Valid IssueResponseModel retrieveIssueWithProjectId(
+    public @Valid IssueCreateResponseModel retrieveIssueWithProjectId(
             @PathVariable Long projectId,
             @PathVariable Long issueId,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
@@ -68,7 +69,7 @@ public class IssueController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PutMapping("{issueId}")
-    public @Valid IssueResponseModel updateIssueWithProjectId(
+    public @Valid IssueCreateResponseModel updateIssueWithProjectId(
             @PathVariable Long projectId,
             @PathVariable Long issueId,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken,

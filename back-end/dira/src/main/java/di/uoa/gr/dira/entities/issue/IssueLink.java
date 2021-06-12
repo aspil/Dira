@@ -23,6 +23,7 @@ public class IssueLink {
     @JoinColumn(name = "issue_id")
     private Issue linkedIssue;
 
-    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     private IssueLinkTypeEnum linkType;
 }

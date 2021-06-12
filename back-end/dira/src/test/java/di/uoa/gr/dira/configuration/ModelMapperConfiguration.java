@@ -2,7 +2,7 @@ package di.uoa.gr.dira.configuration;
 
 import di.uoa.gr.dira.configuration.modelMapper.IMapConfiguration;
 import di.uoa.gr.dira.configuration.modelMapper.ModelMapperConfigurator;
-import di.uoa.gr.dira.configuration.modelMapper.entities.issue.IssueResponseModelMapConfiguration;
+import di.uoa.gr.dira.configuration.modelMapper.entities.issue.IssueCreateResponseModelMapConfiguration;
 import di.uoa.gr.dira.configuration.modelMapper.entities.project.ProjectIssuesModelMapConfiguration;
 import di.uoa.gr.dira.configuration.modelMapper.entities.project.ProjectUsersModelMapConfiguration;
 import di.uoa.gr.dira.configuration.modelMapper.models.customer.CustomerModelMapConfiguration;
@@ -20,7 +20,7 @@ import java.util.List;
 public class ModelMapperConfiguration {
     private final List<IMapConfiguration> configurations = new ArrayList<IMapConfiguration>() {{
             add(new CustomerModelMapConfiguration());
-            add(new IssueResponseModelMapConfiguration());
+            add(new IssueCreateResponseModelMapConfiguration());
             add(new ProjectIssuesModelMapConfiguration());
             add(new ProjectUsersModelMapConfiguration());
         }};

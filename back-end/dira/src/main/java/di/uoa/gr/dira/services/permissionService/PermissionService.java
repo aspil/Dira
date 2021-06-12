@@ -37,7 +37,7 @@ public class PermissionService extends BaseService<ProjectUserPermissionModel, P
 
         project.getPermissions()
                 .stream()
-                .filter(permission -> permission.getUser().getId().equals(customerId) && PermissionType.hasAdminPermissions(permission.getPermission()))
+                .filter(permission -> permission.getUser().getId().equals(customerId) && PermissionType.ADMIN.hasPermission(permission.getPermission()))
                 .findFirst()
                 .orElseThrow(ActionNotPermittedException::new);
 

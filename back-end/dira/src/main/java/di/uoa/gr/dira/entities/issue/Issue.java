@@ -37,8 +37,13 @@ public class Issue {
     @JoinColumn(name = "epic_id")
     private Issue epic;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     private IssueTypeEnum type;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
+    @ColumnDefault("0")
     private IssueStatusEnum status;
 
     @OneToMany(mappedBy = "linkedIssue")
@@ -69,6 +74,8 @@ public class Issue {
     )
     private List<IssueFixVersion> fixVersions;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     private IssuePriorityEnum priority;
 
     @Column(nullable = false)
