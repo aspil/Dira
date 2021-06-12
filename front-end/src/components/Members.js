@@ -57,7 +57,7 @@ const Members = ({ username, doLogout, footerHandle }) => {
                         {/* Main Panel */}
                         <div className="main_panel">
                             <h1 id="team_members">Team Members</h1>
-                            <button onClick={show_members_popup}>+ Add Members</button>
+                            <button onClick={show_members_popup}>+ Add Member</button>
                             <div className="table_wrapper">
                                 <table id="main_table">
                                     <tr>
@@ -80,14 +80,12 @@ const Members = ({ username, doLogout, footerHandle }) => {
                     {members_popup === "show" &&
                         <div className="add_members_popup">
                             <div>
-                                <h2>Add Members</h2>
+                                <h2>Add Member</h2>
                                 <img src={x_icon} alt="accountIcon" onClick={hide_members_popup}></img>
                             </div>
                             <form className="members_form">
                                 <input type="text" placeholder="Email Address"></input>
-                                <input type="text" placeholder="Email Address"></input>
-                                <input type="text" placeholder="Email Address"></input>
-                                <button onClick={handlePopupButtonClick}>Add</button>
+                                 <button onClick={handlePopupButtonClick}>Add</button>
                             </form>
                         </div>
                     }

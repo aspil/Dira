@@ -137,8 +137,10 @@
 .projectmain #main_table td:hover {
   cursor: pointer;
 }
-
-.projectmain #main_table td, #customers th {
+.projectmain #main_table tr,#pencilIcon{
+  height: 42px;
+}
+.projectmain #main_table td{
   border: 1px solid #ddd;
   padding: 1vh;
 }
@@ -153,3 +155,83 @@
   text-align: left;
 }
 
+.projectmain #pencilIcon{
+  position: absolute;
+  opacity: 40%;
+}
+.projectmain #pencilIcon:hover{
+  cursor: pointer;
+  opacity: 100%;
+}
+
+/* Create issue Popup */
+
+.projectmain .createPopup{
+  position: absolute;
+  top:20%;
+  left:50%;
+  width:20%;
+  margin-left:-12.5%;  
+  text-align: center;  
+  background-color: rgb(168, 208, 248);
+  border:2px solid lightgray;
+  border-radius: 5px;
+  padding: 30px;
+  box-shadow: 12px 12px 7px grey;
+}
+
+.projectmain .createPopup h2{
+  float:left;
+  color: white;
+  margin-bottom: 1vh;
+}
+
+.projectmain .createPopup img{
+  width: 2vw;
+  height: auto;
+  float:right;
+}
+
+.projectmain .createPopup img:hover{
+  cursor: pointer;  
+}
+
+.projectmain .createPopup #projectName,#projectKey{
+  margin-top: 0;
+  margin-bottom: 10px;
+  border-width: thin;
+  width:95%;
+  font-size: large;
+  padding: 1vh;
+  margin-left: 0;
+  margin-right: 0;
+}
+.projectmain .createPopup #projectKey{
+  width:40%;
+}
+.projectmain .createPopup button{
+  margin-top: 20px;
+  border-radius: 3px;
+  font-size: 25px;
+}
+
+.projectmain .createPopup textarea{
+
+  border-width: thin;
+  font-size: large;
+  width:97.5%;
+  height:100px;
+  padding: 5px;
+  margin-top: 0;
+  margin-bottom: 10px;
+  margin-left: 0;
+  margin-right: 0;
+  border-radius: 3px
+}
+.projectmain .createPopup label{
+  margin-right: 10px;
+}
+.projectmain .createPopup #issueLabelOption{
+  margin:0;
+  
+}

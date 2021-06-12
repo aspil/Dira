@@ -1,12 +1,33 @@
 import ProjectNav from './ProjectNav';
 import Footer from './Footer';
 import { useEffect, useState } from "react";
-import { useHistory } from 'react-router';
+import { Link, useHistory } from 'react-router-dom';
+import edit_icon from "../Images/edit_icon.png"
+import x_icon from "../Images/x_icon.png"
+
 
 const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, footerStylesHandle }) => {
   const [listState, setListState] = useState("showProjects");
   const history = useHistory()
   const [projects, setProjects] = useState([]);
+  const [current_project, handleCurrentProject] = useState([]);
+  const [visibility, setVisibility] = useState("PUBLIC");
+  const premium_user = "no"
+
+
+
+    // Edit project popup handlers
+    const [edit_project_popup, handleEditProject] = useState("hide");
+    const hideEditProject = () => {
+      handleEditProject("hide");
+    }
+    const showEditProject = (project) => {
+      handleCurrentProject(project);
+      handleEditProject("show");
+    }
+    const handleCreateProjectButtonClick = () => {
+      hideEditProject();
+    }
 
   const swapList = () => {
     if (listState === "showProjects") {
@@ -16,7 +37,6 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
       setListState("showProjects");
     }
   }
-
   useEffect(() => {
     userClient.get_user_projects(userInfo.id)
       .then((res) => {
@@ -43,7 +63,6 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
         {/* projectButtons */}
         <div className="projectButtons">
           <button onClick={() => { history.push("/create_project") }}> + New Project</button>
-          <button style={{ backgroundColor: "black" }}>Join a Project</button>
         </div>
         <div style={{ clear: "both" }}>
           {/* listButtons */}
@@ -69,18 +88,82 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
                   <th>Name</th>
                   <th>Description</th>
                   <th>Key</th>
+                  <th>Visibility</th>
                 </tr>
               </thead>
               <tbody>
                 {projects.map(project => (
-                  <tr onClick={() => { history.push(`/backlog/${project.id}`) }} key={project.id}>
-                    <td>{project.name}</td>
-                    <td>{project.description}</td>
-                    <td>{project.key}</td>
+                  <tr key={project.id}>
+                    <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.name}</td>
+                    <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.description}</td>
+                    <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.key}</td>
+                    <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.visibility}</td>
+                    <td style={{position:"absolute",borderWidth:"0",padding:"0"}}>
+                      <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditProject(project)}></img>
+                    </td> 
                   </tr>
                 ))}
               </tbody>
             </table>
+          }
+          {edit_project_popup === "show" &&
+            <div className="createPopup">
+              <div>
+                <h2>Edit Project</h2>
+                <img src={x_icon} alt="accountIcon" onClick={hideEditProject}></img>
+              </div>
+              <br />
+              <br />
+              <form className="editProjectForm" style={{ textAlign: "left", fontWeight:"bold" }}>
+                <p>Title:</p>
+                <input type="text" id="projectName" placeholder="Project Title" defaultValue={current_project.name || ''} ></input>
+                <p>Key:</p>
+                <input type="text" id="projectKey" placeholder="Project Key" defaultValue={current_project.key || ''} ></input>
+                <p>Description:</p>
+                  <textarea type="range" placeholder="Project Description" defaultValue={current_project.description || ''}></textarea>
+                  <p>Access:</p>
+                  {premium_user === "no" && 
+                    <div>
+                      <div style={{display:"flex", alignItems:"center"}}>
+                        <div className = "accessOptions">  
+                          <input className = "accessInput" type="radio" id="public"
+                            name="visibility" value="PUBLIC" defaultChecked 
+                          />
+                          <label htmlFor="public">Public</label>
+                        </div>
+                        <div className = "accessOptions">
+                          <input className = "accessInput" type="radio" id="private" 
+                            name="visibility" value="private" disabled
+                          />
+                          <label htmlFor="private" style={{opacity:"0.5"}}>Private</label>
+                        </div>
+                      </div> 
+                      <p style={{fontWeight:"normal"}}><Link to="/pricing" style={{color:"blue"}}>Upgrade to Premium</Link> to create private projects.</p>
+                    </div>
+                  }
+                  {premium_user === "yes" && 
+                    <div>
+                      <div style={{display:"flex", alignItems:"center"}}>
+                        <div className = "accessOptions">  
+                          <input className = "accessInput" type="radio" id="public" 
+                            name="visibility" value="PUBLIC" onClick={() => setVisibility("PUBLIC")} defaultChecked 
+                          />
+                          <label htmlFor="public">Public</label>
+                        </div>
+                        <div className = "accessOptions">
+                          <input className = "accessInput" type="radio" id="private" 
+                            name="visibility" value="PRIVATE" onClick={() => setVisibility("PRIVATE")}
+                          />
+                          <label htmlFor="private">Private</label>
+                        </div>
+                      </div> 
+                    </div>
+                  }
+                <div style={{ textAlign: "center" }}>
+                  <button >Save Changes</button>
+                </div>
+              </form>
+            </div>
           }
           {listState === "showIssues" &&
             <table id="main_table">
