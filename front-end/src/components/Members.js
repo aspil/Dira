@@ -35,6 +35,8 @@ const Members = ({ username, doLogout, footerHandle }) => {
     const handleEditMemberButtonClick = () => {
         hideEditMember();
     }
+    //
+    const isAdmin = "yes";
 
     const [members, setMembers] = useState([
         { name: 'Makis', dateJoined: '14/5/2021', role: 'developer', id: 1 },
@@ -103,7 +105,7 @@ const Members = ({ username, doLogout, footerHandle }) => {
                                 <h2>Add Member</h2>
                                 <img src={x_icon} alt="accountIcon" onClick={hide_members_popup}></img>
                             </div>
-                            <form className="members_form">
+                            <form className="add_member_form">
                                 <input id="memberEmail" type="text" placeholder="Email Address"></input>
                                  <button onClick={handleAddMemberButtonClick}>Add</button>
                             </form>
@@ -114,13 +116,15 @@ const Members = ({ username, doLogout, footerHandle }) => {
                     {edit_member_popup === "show" &&
                         <div className="members_popup">
                             <div style={{display:"flex",justifyContent:"space-between"}}>
-                                <h2>Permissions of {current_member.name}</h2>
+                                <h2>{current_member.name}</h2>
                                 <img src={x_icon} alt="accountIcon" onClick={hideEditMember}></img>
                             </div>
                             <br />
                             <div>
-                                <form className="members_form">
-                                    <div style={{textAlign:"left"}}>
+                                <form className="edit_member_form">
+                                    <h2>Permissions:</h2>
+                                    <br></br>
+                                    <br></br>
                                     <label>
                                         <input id="checkbox" type="checkbox"/>
                                         Read Issues
@@ -136,11 +140,14 @@ const Members = ({ username, doLogout, footerHandle }) => {
                                         Delete Issues
                                     </label>
                                     <br />
-                                    </div>
-
                                     <button onClick={handleEditMemberButtonClick}>Save changes</button>
                                 </form>
                             </div>
+                            {isAdmin === "yes" &&
+                                <div className="deleteMember">
+                                    <button id="removeUserButton"> Remove member</button>
+                                </div>
+                            }
                         </div>
                     }
                 </main>
