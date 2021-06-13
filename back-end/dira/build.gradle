@@ -60,6 +60,7 @@ dependencies {
 
     // EmailSender
     compile group: 'org.springframework', name: 'spring-context-support', version: '5.1.0.RELEASE'
+    implementation group: 'javax.mail', name: 'mail', version: '1.4.7'
 }
 
 test {

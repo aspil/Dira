@@ -7,7 +7,6 @@ import di.uoa.gr.dira.exceptions.security.PasswordResetTokenException;
 import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.models.customer.PasswordModel;
 import di.uoa.gr.dira.services.customerService.ICustomerService;
-import org.codehaus.groovy.tools.shell.util.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.context.SecurityContextHolder;
