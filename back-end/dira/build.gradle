@@ -26,6 +26,7 @@ dependencies {
     // Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.6.0'
+    implementation group: 'org.passay', name: 'passay', version: '1.0'
 
     // Model Mapper
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.0'
@@ -56,6 +57,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
     testCompileOnly 'org.projectlombok:lombok:1.18.20'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
+
+    // EmailSender
+    compile group: 'org.springframework', name: 'spring-context-support', version: '5.1.0.RELEASE'
 }
 
 test {

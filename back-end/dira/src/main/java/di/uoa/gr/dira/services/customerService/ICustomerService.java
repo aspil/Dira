@@ -1,6 +1,9 @@
 package di.uoa.gr.dira.services.customerService;
 
+import di.uoa.gr.dira.entities.customer.Customer;
+import di.uoa.gr.dira.entities.customer.PasswordResetToken;
 import di.uoa.gr.dira.models.customer.CustomerModel;
+import di.uoa.gr.dira.models.customer.PasswordModel;
 import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.services.IService;
 
@@ -32,4 +35,12 @@ public interface ICustomerService extends IService<CustomerModel, Long> {
      * @return A list of Projects for the given customer
      */
     List<ProjectModel> getCustomerProjects(Long customerId);
+
+    CustomerModel createPasswordResetTokenForUser(String customerEmail, String token);
+
+    String validatePasswordResetToken(String token);
+
+    void changeUserPassword(PasswordModel passwordModel);
+
+    boolean checkIfValidOldPassword(String oldPassword, String customerPassword);
 }

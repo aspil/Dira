@@ -1,6 +1,8 @@
 package di.uoa.gr.dira.exceptions;
 
 import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
+import di.uoa.gr.dira.exceptions.security.InvalidOldPasswordException;
+import di.uoa.gr.dira.exceptions.security.PasswordResetTokenException;
 import di.uoa.gr.dira.exceptions.customer.CustomerAlreadyExistsException;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.exceptions.issue.IssueNotFoundException;
@@ -24,6 +26,8 @@ public class RestExceptionHandler {
             ProjectNotFoundException.class,
             ProjectAlreadyExistsException.class,
             ActionNotPermittedException.class,
+            PasswordResetTokenException.class,
+            InvalidOldPasswordException.class,
             BadCredentialsException.class,
     })
     public final ResponseEntity<RestApiError> handleException(Exception ex, WebRequest request) {
@@ -54,12 +58,37 @@ public class RestExceptionHandler {
             HttpStatus status = HttpStatus.CONFLICT;
             return handleProjectAlreadyExistsException((ProjectAlreadyExistsException) ex, headers, status, request);
         }
+        else if (ex instanceof PasswordResetTokenException) {
+            HttpStatus status = HttpStatus.UNAUTHORIZED;
+            return handlePasswordResetTokenException((PasswordResetTokenException) ex, headers, status, request);
+        }
+        else if (ex instanceof InvalidOldPasswordException) {
+            HttpStatus status = HttpStatus.UNAUTHORIZED;
+            return handleInvalidOldPasswordException((InvalidOldPasswordException) ex, headers, status, request);
+        }
 
         return null;
     }
 
     private ResponseEntity<RestApiError> handleProjectNotFoundException(
             ProjectNotFoundException ex,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
+        return handleExceptionInternal(ex, new RestApiError(ex.getMessage()), headers, status, request);
+    }
+
+
+    private ResponseEntity<RestApiError> handlePasswordResetTokenException(
+            PasswordResetTokenException ex,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
+        return handleExceptionInternal(ex, new RestApiError(ex.getMessage()), headers, status, request);
+    }
+
+    private ResponseEntity<RestApiError> handleInvalidOldPasswordException(
+            InvalidOldPasswordException ex,
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {
