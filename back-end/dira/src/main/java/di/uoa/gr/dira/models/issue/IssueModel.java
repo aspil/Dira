@@ -4,6 +4,7 @@ import di.uoa.gr.dira.models.IModel;
 import di.uoa.gr.dira.shared.IssuePriorityEnum;
 import di.uoa.gr.dira.shared.IssueStatusEnum;
 import di.uoa.gr.dira.shared.IssueTypeEnum;
+import di.uoa.gr.dira.util.mapper.LongStringPair;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,10 +13,11 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class IssueCreateResponseModel implements IModel<Long> {
+public class IssueModel implements IModel<Long> {
     @NotNull
     @Positive
     private Long id;
@@ -30,13 +32,12 @@ public class IssueCreateResponseModel implements IModel<Long> {
     @NotBlank
     private String title;
 
+    private String description;
+
     @NotNull
     @NotBlank
     @NotEmpty
     private String projectName;
-
-//    private IssueResponseModel epic;
-//    private String epic;
 
     @NotNull
     private IssueTypeEnum type;
@@ -44,18 +45,15 @@ public class IssueCreateResponseModel implements IModel<Long> {
     @NotNull
     private IssueStatusEnum status;
 
+    private List<LongStringPair> labels;
+
+    private List<LongStringPair> comments;
+
+    private List<LongStringPair> fixVersions;
+
 //    private List<IssueLink> issueLinks;
 //    private List<String> issueLinks;
 
-//    private List<IssueLabel> labels;
-//    private List<String> labels;
-
-//    private List<IssueComment> comments;
-
-//    private CustomerModel assignee;
-//    private String assignee;
-
-//    private CustomerModel reporter;
     @NotNull
     @NotEmpty
     @NotBlank
@@ -63,12 +61,8 @@ public class IssueCreateResponseModel implements IModel<Long> {
 
     private String assignee;
 
-//    private List<IssueFixVersion> fixVersions;
-
     @NotNull
     private IssuePriorityEnum priority;
-
-    private String description;
 
     @NotNull
     private Date created;

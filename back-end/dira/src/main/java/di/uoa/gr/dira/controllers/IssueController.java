@@ -1,8 +1,7 @@
 package di.uoa.gr.dira.controllers;
 
 import di.uoa.gr.dira.models.issue.IssueCreateModel;
-import di.uoa.gr.dira.models.issue.IssueRequestModel;
-import di.uoa.gr.dira.models.issue.IssueCreateResponseModel;
+import di.uoa.gr.dira.models.issue.IssueModel;
 import di.uoa.gr.dira.models.project.ProjectIssuesModel;
 import di.uoa.gr.dira.security.JwtHelper;
 import di.uoa.gr.dira.services.issueService.IIssueService;
@@ -41,7 +40,7 @@ public class IssueController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PostMapping
-    public @Valid IssueCreateResponseModel createIssueWithProjectId(
+    public @Valid IssueModel createIssueWithProjectId(
             @PathVariable Long projectId,
             @Valid @RequestBody IssueCreateModel issueCreateModel,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
@@ -55,7 +54,7 @@ public class IssueController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @GetMapping("{issueId}")
-    public @Valid IssueCreateResponseModel retrieveIssueWithProjectId(
+    public @Valid IssueModel retrieveIssueWithProjectId(
             @PathVariable Long projectId,
             @PathVariable Long issueId,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
@@ -63,20 +62,20 @@ public class IssueController {
         return service.findIssueWithProjectId(projectId, customerId, issueId);
     }
 
-    @ApiOperation(
-            value = "Updates the issue with the given id",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    @PutMapping("{issueId}")
-    public @Valid IssueCreateResponseModel updateIssueWithProjectId(
-            @PathVariable Long projectId,
-            @PathVariable Long issueId,
-            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken,
-            @Valid @RequestBody IssueRequestModel issueRequestModel) {
-        Long customerId = jwtHelper.getId(jwtToken);
-        return service.updateIssueWithProjectId(projectId, customerId, issueId, issueRequestModel);
-    }
+//    @ApiOperation(
+//            value = "Updates the issue with the given id",
+//            consumes = MediaType.APPLICATION_JSON_VALUE,
+//            produces = MediaType.APPLICATION_JSON_VALUE
+//    )
+//    @PutMapping("{issueId}")
+//    public @Valid IssueModel updateIssueWithProjectId(
+//            @PathVariable Long projectId,
+//            @PathVariable Long issueId,
+//            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken,
+//            @Valid @RequestBody IssueRequestModel issueRequestModel) {
+//        Long customerId = jwtHelper.getId(jwtToken);
+//        return service.updateIssueWithProjectId(projectId, customerId, issueId, issueRequestModel);
+//    }
 
     @ApiOperation(
             value = "Deletes the issue with the given id",
