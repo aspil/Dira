@@ -1,10 +1,7 @@
 package di.uoa.gr.dira.configuration.modelMapper.entities.issue;
 
 import di.uoa.gr.dira.configuration.modelMapper.IMapConfiguration;
-import di.uoa.gr.dira.entities.issue.Issue;
-import di.uoa.gr.dira.entities.issue.IssueComment;
-import di.uoa.gr.dira.entities.issue.IssueFixVersion;
-import di.uoa.gr.dira.entities.issue.IssueLabel;
+import di.uoa.gr.dira.entities.issue.*;
 import di.uoa.gr.dira.models.issue.IssueModel;
 import di.uoa.gr.dira.util.mapper.ListConverter;
 import org.modelmapper.ModelMapper;
@@ -23,5 +20,8 @@ public class IssueModelMapConfiguration implements IMapConfiguration {
 
         typeMap.addMappings(m -> m.using(ListConverter.withMapper(mapper, IssueFixVersion.class))
             .map(Issue::getFixVersions, IssueModel::setFixVersions));
+
+        typeMap.addMappings(m -> m.using(ListConverter.withMapper(mapper, IssueLink.class))
+            .map(Issue::getIssueLinks, IssueModel::setIssueLinks));
     }
 }

@@ -4,7 +4,7 @@ import di.uoa.gr.dira.models.IModel;
 import di.uoa.gr.dira.shared.IssuePriorityEnum;
 import di.uoa.gr.dira.shared.IssueStatusEnum;
 import di.uoa.gr.dira.shared.IssueTypeEnum;
-import di.uoa.gr.dira.util.mapper.LongStringPair;
+import di.uoa.gr.dira.util.LongStringPair;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -51,8 +51,7 @@ public class IssueModel implements IModel<Long> {
 
     private List<LongStringPair> fixVersions;
 
-//    private List<IssueLink> issueLinks;
-//    private List<String> issueLinks;
+    private List<IssueLinkModel> issueLinks;
 
     @NotNull
     @NotEmpty

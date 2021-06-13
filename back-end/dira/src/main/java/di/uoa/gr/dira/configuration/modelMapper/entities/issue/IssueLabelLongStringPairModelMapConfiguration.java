@@ -2,7 +2,7 @@ package di.uoa.gr.dira.configuration.modelMapper.entities.issue;
 
 import di.uoa.gr.dira.configuration.modelMapper.IMapConfiguration;
 import di.uoa.gr.dira.entities.issue.IssueLabel;
-import di.uoa.gr.dira.util.mapper.LongStringPair;
+import di.uoa.gr.dira.util.LongStringPair;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 
