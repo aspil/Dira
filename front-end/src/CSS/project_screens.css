@@ -137,7 +137,7 @@
 .projectmain #main_table td:hover {
   cursor: pointer;
 }
-.projectmain #main_table tr,#pencilIcon,#trashcanIcon{
+.projectmain #main_table tr,.projectmain #pencilIcon,.projectmain #trashcanIcon{
   height: 42px;
 }
 .projectmain #trashcanIcon{

@@ -26,7 +26,7 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
       handleCurrentProject(project);
       handleEditProject("show");
     }
-    const handleCreateProjectButtonClick = () => {
+    const handleEditProjectButtonClick = () => {
       hideEditProject();
     }
 
@@ -108,6 +108,7 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
               </tbody>
             </table>
           }
+          {/* Edit Project Popop */}
           {edit_project_popup === "show" &&
             <div className="createPopup">
               <div>
@@ -162,7 +163,7 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
                     </div>
                   }
                 <div style={{ textAlign: "center" }}>
-                  <button >Save Changes</button>
+                  <button  onClick={() => handleEditProjectButtonClick()}>Save Changes</button>
                 </div>
               </form>
             </div>

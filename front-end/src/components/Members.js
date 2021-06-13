@@ -2,24 +2,39 @@ import SideNav from './SideNav';
 import { useEffect, useState } from "react";
 import x_icon from "../Images/x_icon.png"
 import { useParams } from 'react-router';
+import edit_icon from "../Images/edit_icon.png"
+import trashcan_icon from "../Images/trashcan_icon.png"
 
 
 const Members = ({ username, doLogout, footerHandle }) => {
-
-    const [members_popup, handleMembersPopup] = useState("hide");
-
+    // Add member popup handlers
+    const [add_members_popup, handleMembersPopup] = useState("hide");
+    
     const hide_members_popup = () => {
         handleMembersPopup("hide");
     }
-
     const show_members_popup = () => {
         handleMembersPopup("show");
     }
-
-    const handlePopupButtonClick = () => {
+    const handleAddMemberButtonClick = () => {
         hide_members_popup();
     }
+    
 
+    // Edit member popup handlers
+    const [edit_member_popup, handleEditMember] = useState("hide");
+    const [current_member, handleCurrentMember] = useState([]);
+
+    const hideEditMember = () => {
+      handleEditMember("hide");
+    }
+    const showEditMember = (member) => {
+      handleCurrentMember(member);
+      handleEditMember("show");
+    }
+    const handleEditMemberButtonClick = () => {
+        hideEditMember();
+    }
 
     const [members, setMembers] = useState([
         { name: 'Makis', dateJoined: '14/5/2021', role: 'developer', id: 1 },
@@ -64,29 +79,68 @@ const Members = ({ username, doLogout, footerHandle }) => {
                                         <th>Name</th>
                                         <th>Date Joined</th>
                                         <th>Role</th>
+                                        <th></th>
+
                                     </tr>
                                     {members.map(member => (
                                         <tr key={member.id}>
                                             <td>{member.name}</td>
                                             <td>{member.dateJoined}</td>
                                             <td>{member.role}</td>
-                                        </tr>
+                                            <td style={{width:"40px",padding:"0",textAlign:"center"}}>
+                                                <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditMember(member)}></img>
+                                            </td>
+                                        </tr>                                             
                                     ))}
                                 </table>
                             </div>
                         </div>
                     </div>
-                    {/* Popup */}
-                    {members_popup === "show" &&
-                        <div className="add_members_popup">
+                    {/*Add members Popup */}
+                    {add_members_popup === "show" &&
+                        <div className="members_popup">
                             <div>
                                 <h2>Add Member</h2>
                                 <img src={x_icon} alt="accountIcon" onClick={hide_members_popup}></img>
                             </div>
                             <form className="members_form">
-                                <input type="text" placeholder="Email Address"></input>
-                                 <button onClick={handlePopupButtonClick}>Add</button>
+                                <input id="memberEmail" type="text" placeholder="Email Address"></input>
+                                 <button onClick={handleAddMemberButtonClick}>Add</button>
                             </form>
+                        </div>
+                    }
+                    {/*Edit member Popup */}
+
+                    {edit_member_popup === "show" &&
+                        <div className="members_popup">
+                            <div style={{display:"flex",justifyContent:"space-between"}}>
+                                <h2>Permissions of {current_member.name}</h2>
+                                <img src={x_icon} alt="accountIcon" onClick={hideEditMember}></img>
+                            </div>
+                            <br />
+                            <div>
+                                <form className="members_form">
+                                    <div style={{textAlign:"left"}}>
+                                    <label>
+                                        <input id="checkbox" type="checkbox"/>
+                                        Read Issues
+                                    </label>
+                                    <br />
+                                    <label>
+                                        <input id="checkbox" type="checkbox"/>
+                                        Write Issues
+                                    </label>
+                                    <br />
+                                    <label>
+                                        <input id="checkbox" type="checkbox"/>
+                                        Delete Issues
+                                    </label>
+                                    <br />
+                                    </div>
+
+                                    <button onClick={handleEditMemberButtonClick}>Save changes</button>
+                                </form>
+                            </div>
                         </div>
                     }
                 </main>

@@ -65,8 +65,22 @@
   padding: 1vh;
   text-align: left;
 }
+.members #main_table tr,.members #pencilIcon,.members #trashcanIcon{
+  height: 30px;
+}
 
-.members .add_members_popup{
+.members #pencilIcon{
+  opacity: 40%;
+}
+.members #pencilIcon:hover{
+  cursor: pointer;
+  opacity: 100%;
+}
+
+
+
+
+.members .members_popup{
   position: absolute;
   top:30%;
   left:50%;
@@ -81,23 +95,23 @@
 
 }
 
-.members .add_members_popup h2{
+.members .members_popup h2{
   float:left;
   color: white;
   margin-bottom: 1vh;
 }
 
-.members .add_members_popup img{
-  width: 2vw;
+.members .members_popup img{
+  width: 40px;
   height: auto;
   float:right;
 }
 
-.members .add_members_popup img:hover{
+.members .members_popup img:hover{
   cursor: pointer;  
 }
 
-.members .add_members_popup input{
+.members .members_popup #memberEmail{
   margin-top: 1vh;
   margin-bottom: 1vh;
   border-width: thin;
@@ -107,8 +121,12 @@
   margin-left: 0;
   margin-right: 0;
 }
+.members .members_popup #checkbox{
+  margin: 0;
+  width: 10%;
+}
 
-.members .add_members_popup button{
+.members .members_popup button{
   border-radius: 3px;
   width: 10vw;
   font-size: 1.6em;

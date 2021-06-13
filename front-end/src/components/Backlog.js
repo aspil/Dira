@@ -10,7 +10,9 @@ import { DiraIssueClient } from "dira-clients";
 
 const Backlog = ({ token, footerHandle }) => {
 
-  const [backlogIssues, setBacklogIssues] = useState([])
+  const [backlogIssues, setBacklogIssues] = useState([
+    { title: 'Issue y', dateCreated: "10/5/2023", priority: "high", key: 2 },
+  ])
   const [sprintIssues, setSprintIssues] = useState([
     { title: 'Issue y', dateCreated: "10/5/2023", priority: "high", key: 2 },
   ])
