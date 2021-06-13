@@ -3,7 +3,7 @@
   max-width:50%;
   height:auto;
 }
-.register img:hover {
+.login img:hover {
   cursor: pointer;
 }
 .login_grad{

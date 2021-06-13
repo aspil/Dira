@@ -1,7 +1,14 @@
 import logo from "../Images/dira_icon.png"
+import { useHistory } from "react-router-dom";
 import { useEffect } from 'react';
 
+
 function Home({ footerHandle }) {
+  const history = useHistory();
+
+  const handleStartForFreeButtonClick = () => {
+    history.push('/sign_in')
+  }
   useEffect(footerHandle, [footerHandle]);
 
   return (
@@ -23,7 +30,7 @@ function Home({ footerHandle }) {
         <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
 
         <div style={{ textAlign: "center" }}>
-          <button>Start for free</button>
+          <button onClick={handleStartForFreeButtonClick}>Start for free</button>
         </div>
         <br /><br /><br /><br /><br /><br />
 

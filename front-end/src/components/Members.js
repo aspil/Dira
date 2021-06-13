@@ -81,7 +81,10 @@ const Members = ({ username, doLogout, footerHandle }) => {
                                         <th>Name</th>
                                         <th>Date Joined</th>
                                         <th>Role</th>
-                                        <th></th>
+                                        {isAdmin === "yes" &&
+                                            <th></th>
+                                        }
+
 
                                     </tr>
                                     {members.map(member => (
@@ -89,9 +92,11 @@ const Members = ({ username, doLogout, footerHandle }) => {
                                             <td>{member.name}</td>
                                             <td>{member.dateJoined}</td>
                                             <td>{member.role}</td>
-                                            <td style={{width:"40px",padding:"0",textAlign:"center"}}>
-                                                <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditMember(member)}></img>
-                                            </td>
+                                            {isAdmin === "yes" &&
+                                                <td style={{width:"40px",padding:"0",textAlign:"center"}}>
+                                                    <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditMember(member)}></img>
+                                                </td>
+                                            }
                                         </tr>                                             
                                     ))}
                                 </table>
@@ -143,11 +148,9 @@ const Members = ({ username, doLogout, footerHandle }) => {
                                     <button onClick={handleEditMemberButtonClick}>Save changes</button>
                                 </form>
                             </div>
-                            {isAdmin === "yes" &&
-                                <div className="deleteMember">
-                                    <button id="removeUserButton"> Remove member</button>
-                                </div>
-                            }
+                            <div className="deleteMember">
+                                <button id="removeUserButton"> Remove member</button>
+                            </div>
                         </div>
                     }
                 </main>

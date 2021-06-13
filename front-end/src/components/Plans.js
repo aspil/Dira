@@ -103,7 +103,7 @@ const Plan = () => {
     [
       'User limit (per project)',
       '7',
-      '100'
+      '50'
     ],
     [
       'Scrum statistic reports',
@@ -115,16 +115,16 @@ const Plan = () => {
       <Clear />,
       <CheckIcon />,
     ],
-    [
-      'Project roles',
-      <Clear />,
-      <CheckIcon />,
-    ],
-    [
-      'Support',
-      'Business Hours',
-      '24/7 Premium Support'
-    ],
+    // [
+    //   'Project roles',
+    //   <Clear />,
+    //   <CheckIcon />,
+    // ],
+    // [
+    //   'Support',
+    //   'Business Hours',
+    //   '24/7 Premium Support'
+    // ],
   ]
   return (
     <div>

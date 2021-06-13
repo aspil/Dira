@@ -31,7 +31,7 @@ const Login = ({ setToken, client, setUserInfo, setIsLogged, navHandle }) => {
       });
   }
   const redirectToMain = () => {
-    history.push('/proj_main')
+    history.push('/')
   }
   return (
     <div className="login" >

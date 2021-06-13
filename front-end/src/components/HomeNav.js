@@ -7,7 +7,6 @@ const HomeNav = () => {
       <div className="links">
         <Link to="#">Features</Link>
         <Link to="/pricing">Pricing</Link>
-        <Link to="#">Contact</Link>
         <Link to="/sign_in">Sign in</Link>
         <Link to="/register" id="boxxed_button">Sign up</Link>
       </div>

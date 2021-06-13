@@ -17,7 +17,7 @@ const ProjectNav = ({ username, doLogout }) => {
       <Link to="/proj_main" className="dira_link">Dira</Link>
       <div className="right_links">
         <Link to="/create_project">+ Create a Project</Link>
-        <Link to="/search_project">Join a Project</Link>
+        <Link to="/proj_main">My Projects</Link>
         <Link to="/pricing" className="boxxed_button">Go Premium</Link>
         <img src={accountIcon} alt="accountIcon" className="settingsPopupReference" onClick={openSettings}></img>
       </div>
