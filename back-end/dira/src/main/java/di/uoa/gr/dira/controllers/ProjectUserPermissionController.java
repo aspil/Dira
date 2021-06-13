@@ -30,8 +30,8 @@ public class ProjectUserPermissionController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @GetMapping
-    public List<@Valid ProjectUserPermissionModel> getProjectPermissionsForUsers(@PathVariable Long projectId) {
-        return service.getProjectPermissionsForUsers(projectId);
+    public List<@Valid ProjectUserPermissionModel> getAllProjectUserPermissions(@PathVariable Long projectId) {
+        return service.getAllProjectUserPermissions(projectId);
     }
 
     @ApiOperation(
@@ -40,9 +40,10 @@ public class ProjectUserPermissionController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PostMapping
-    public void createUserPermission(@PathVariable Long projectId,
-                                     @Valid @RequestBody ProjectUserPermissionModel userPermissionModel,
-                                     @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
+    public void createProjectUserPermission(
+            @PathVariable Long projectId,
+            @Valid @RequestBody ProjectUserPermissionModel userPermissionModel,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
         Long customerId = jwtHelper.getId(jwtToken);
         service.createProjectUserPermission(customerId, projectId, userPermissionModel);
     }
@@ -53,22 +54,24 @@ public class ProjectUserPermissionController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PutMapping("{permissionId}")
-    public @Valid ProjectUserPermissionModel updateUserPermission(@PathVariable Long projectId,
-                                                                  @PathVariable Long permissionId,
-                                                                  @Valid @RequestBody ProjectUserPermissionModel userPermissionModel,
-                                                                  @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
+    public @Valid ProjectUserPermissionModel updateProjectUserPermission(
+            @PathVariable Long projectId,
+            @PathVariable Long permissionId,
+            @Valid @RequestBody ProjectUserPermissionModel userPermissionModel,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
         Long customerId = jwtHelper.getId(jwtToken);
-        return service.updateProjectUserPermission(projectId, permissionId, customerId, userPermissionModel);
+        return service.updateProjectUserPermission(customerId, projectId, permissionId, userPermissionModel);
     }
 
     @ApiOperation(
             value = "Deletes the user's permission for the project with the given id"
     )
     @DeleteMapping("{permissionId}")
-    public void deleteUserPermission(@PathVariable Long projectId,
-                                     @PathVariable Long permissionId,
-                                     @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
+    public void deleteProjectUserPermission(
+            @PathVariable Long projectId,
+            @PathVariable Long permissionId,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
         Long customerId = jwtHelper.getId(jwtToken);
-        service.deleteProjectUserPermission(projectId, customerId, permissionId);
+        service.deleteProjectUserPermission(customerId, projectId, permissionId);
     }
 }

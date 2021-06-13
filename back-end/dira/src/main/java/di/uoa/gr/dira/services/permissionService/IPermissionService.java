@@ -12,7 +12,7 @@ import di.uoa.gr.dira.shared.PermissionType;
 import java.util.List;
 
 public interface IPermissionService extends IService<ProjectUserPermissionModel, Long> {
-    List<ProjectUserPermissionModel> getProjectPermissionsForUsers(Long projectId);
+    List<ProjectUserPermissionModel> getAllProjectUserPermissions(Long projectId);
 
     ProjectUserPermissionModel createProjectUserPermission(Long creatorId, Long projectId, ProjectUserPermissionModel userPermissionModel);
 
@@ -20,7 +20,7 @@ public interface IPermissionService extends IService<ProjectUserPermissionModel,
 
     ProjectUserPermissionModel updateProjectUserPermission(Long customerId, Long projectId, Long permissionId, ProjectUserPermissionModel userPermissionModel);
 
-    void deleteProjectUserPermission(Long projectId, Long customerId, Long permissionId);
+    void deleteProjectUserPermission(Long customerId, Long projectId, Long permissionId);
 
     boolean checkProjectUserPermissions(Long customerId, Project project, PermissionType requiredPermission);
 }

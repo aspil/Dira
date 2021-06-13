@@ -42,7 +42,7 @@ public class PermissionService extends BaseService<ProjectUserPermissionModel, P
     }
 
     @Override
-    public List<ProjectUserPermissionModel> getProjectPermissionsForUsers(Long projectId) {
+    public List<ProjectUserPermissionModel> getAllProjectUserPermissions(Long projectId) {
         return projectRepository.findById(projectId)
                 .map(project -> MapperHelper.<Permission, ProjectUserPermissionModel>mapList(mapper, project.getPermissions(), ProjectUserPermissionModel.class))
                 .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
@@ -135,6 +135,4 @@ public class PermissionService extends BaseService<ProjectUserPermissionModel, P
 
         repository.delete(permission);
     }
-
-
 }
