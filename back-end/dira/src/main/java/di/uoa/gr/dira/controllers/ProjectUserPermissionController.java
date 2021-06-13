@@ -1,7 +1,7 @@
 package di.uoa.gr.dira.controllers;
 
 
-import di.uoa.gr.dira.models.project.ProjectUserPermissionModel;
+import di.uoa.gr.dira.models.project.permission.ProjectUserPermissionModel;
 import di.uoa.gr.dira.security.JwtHelper;
 import di.uoa.gr.dira.services.permissionService.IPermissionService;
 import io.swagger.annotations.ApiOperation;
@@ -44,7 +44,7 @@ public class ProjectUserPermissionController {
                                      @Valid @RequestBody ProjectUserPermissionModel userPermissionModel,
                                      @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
         Long customerId = jwtHelper.getId(jwtToken);
-        service.createUserPermission(projectId, customerId, userPermissionModel);
+        service.createProjectUserPermission(customerId, projectId, userPermissionModel);
     }
 
     @ApiOperation(
@@ -58,7 +58,7 @@ public class ProjectUserPermissionController {
                                                                   @Valid @RequestBody ProjectUserPermissionModel userPermissionModel,
                                                                   @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
         Long customerId = jwtHelper.getId(jwtToken);
-        return service.updateUserPermission(projectId, permissionId, customerId, userPermissionModel);
+        return service.updateProjectUserPermission(projectId, permissionId, customerId, userPermissionModel);
     }
 
     @ApiOperation(
@@ -69,6 +69,6 @@ public class ProjectUserPermissionController {
                                      @PathVariable Long permissionId,
                                      @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
         Long customerId = jwtHelper.getId(jwtToken);
-        service.deleteUserPermission(projectId, customerId, permissionId);
+        service.deleteProjectUserPermission(projectId, customerId, permissionId);
     }
 }

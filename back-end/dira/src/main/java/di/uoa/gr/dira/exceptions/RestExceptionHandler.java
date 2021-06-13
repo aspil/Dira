@@ -21,10 +21,17 @@ import org.springframework.web.util.WebUtils;
 @ControllerAdvice
 public class RestExceptionHandler {
     @ExceptionHandler({
+            // Customer
             CustomerNotFoundException.class,
             CustomerAlreadyExistsException.class,
+            // Project
             ProjectNotFoundException.class,
             ProjectAlreadyExistsException.class,
+            // Project Permissions
+            PermissionNotFoundException.class,
+            // Issue
+            IssueNotFoundException.class,
+            // General
             ActionNotPermittedException.class,
             PasswordResetTokenException.class,
             InvalidOldPasswordException.class,
