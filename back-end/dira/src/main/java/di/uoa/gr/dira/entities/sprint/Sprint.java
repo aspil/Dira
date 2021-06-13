@@ -22,11 +22,7 @@ public class Sprint {
     @Column(name = "sprint_id")
     private Long id;
 
-    @ManyToMany
-    @JoinTable(name = "sprint_issue",
-            joinColumns = @JoinColumn(name = "sprint_id"),
-            inverseJoinColumns = @JoinColumn(name = "issue_id")
-    )
+    @OneToMany(mappedBy = "belongsToSprint")
     private List<Issue> issues;
 
     @Column(nullable = false)

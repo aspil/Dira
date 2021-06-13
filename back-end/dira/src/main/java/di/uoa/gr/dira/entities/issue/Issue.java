@@ -2,6 +2,7 @@ package di.uoa.gr.dira.entities.issue;
 
 import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.entities.project.Project;
+import di.uoa.gr.dira.entities.sprint.Sprint;
 import di.uoa.gr.dira.shared.IssuePriorityEnum;
 import di.uoa.gr.dira.shared.IssueStatusEnum;
 import di.uoa.gr.dira.shared.IssueTypeEnum;
@@ -34,6 +35,10 @@ public class Issue {
     private Project project;
 
     @ManyToOne
+    @JoinColumn(name = "sprint_id")
+    private Sprint belongsToSprint;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "epic_id")
     private Issue epic;
 
