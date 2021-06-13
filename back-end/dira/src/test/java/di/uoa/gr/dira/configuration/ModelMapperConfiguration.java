@@ -1,11 +1,6 @@
 package di.uoa.gr.dira.configuration;
 
-import di.uoa.gr.dira.configuration.modelMapper.IMapConfiguration;
-import di.uoa.gr.dira.configuration.modelMapper.ModelMapperConfigurator;
-import di.uoa.gr.dira.configuration.modelMapper.entities.issue.IssueCreateResponseMapConfiguration;
-import di.uoa.gr.dira.configuration.modelMapper.entities.project.ProjectIssuesModelMapConfiguration;
-import di.uoa.gr.dira.configuration.modelMapper.entities.project.ProjectUsersModelMapConfiguration;
-import di.uoa.gr.dira.configuration.modelMapper.models.customer.CustomerModelMapConfiguration;
+import di.uoa.gr.dira.configuration.modelMapper.*;
 import di.uoa.gr.dira.configuration.spring.SpringProfiles;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -19,10 +14,9 @@ import java.util.List;
 @Profile(SpringProfiles.TEST)
 public class ModelMapperConfiguration {
     private final List<IMapConfiguration> configurations = new ArrayList<IMapConfiguration>() {{
-            add(new CustomerModelMapConfiguration());
-            add(new IssueCreateResponseMapConfiguration());
-            add(new ProjectIssuesModelMapConfiguration());
-            add(new ProjectUsersModelMapConfiguration());
+            add(new CustomerMapperConfiguration());
+            add(new ProjectMapperConfiguration());
+            add(new IssueMapperConfiguration());
         }};
 
     private final ModelMapperConfigurator configurator = new ModelMapperConfigurator(configurations);

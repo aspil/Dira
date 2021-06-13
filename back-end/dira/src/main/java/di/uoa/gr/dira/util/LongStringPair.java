@@ -1,4 +1,4 @@
-package di.uoa.gr.dira.util.mapper;
+package di.uoa.gr.dira.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
