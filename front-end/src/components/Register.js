@@ -1,4 +1,4 @@
-import logo from "../Images/dira_icon.png"
+import logo from "../Images/dira_icon_cropped.png"
 import { Link, useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 
@@ -48,24 +48,27 @@ const Register = ({ client, navHandle }) => {
               type="text" placeholder="Username"
               value={username} onChange={(e) => { setUsername(e.target.value); }}
             />
+            {/* <input type="text" placeholder="Confirm Password" value={name}></input> */}
+            <div>
+              <input
+                style={{width:"125px"}}
+                type="text" placeholder="Name"
+                value={name} onChange={(e) => { setName(e.target.value); }}
+              />
+              <input
+                style={{width:"125px"}}
+                type="text" placeholder="Surname"
+                value={surname} onChange={(e) => { setSurname(e.target.value); }}
+              />
+            </div>
             <input
               type="password" placeholder="Password"
               value={password} onChange={(e) => { setPassword(e.target.value); }}
-            />
-            {/* <input type="text" placeholder="Confirm Password" value={name}></input> */}
-            <input
-              type="text" placeholder="Name"
-              value={name} onChange={(e) => { setName(e.target.value); }}
-            />
-            <input
-              type="text" placeholder="Surname"
-              value={surname} onChange={(e) => { setSurname(e.target.value); }}
             />
             <br></br>
             <button type="submit">Create Account</button>
           </form>
           <p style={{ margin: "15px" }}>Already a member? <Link to="/sign_in">Sign in</Link></p>
-          <Link to="/contact">Contact Us</Link>
         </div>
       </div>
 
