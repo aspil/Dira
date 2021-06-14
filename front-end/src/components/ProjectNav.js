@@ -1,8 +1,9 @@
 import accountIcon from "../Images/profile_icon.png"
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 
 const ProjectNav = ({ username, doLogout }) => {
+  const history = useHistory();
 
   const openSettings = () => {
     if (document.getElementById("myForm").style.display === "none") {
@@ -26,7 +27,8 @@ const ProjectNav = ({ username, doLogout }) => {
           <p style={{ textAlign: "center" }}><strong>{username}</strong></p>
           <button
             type="button"
-            className="btn">
+            className="btn"
+            onClick={() => { history.push('/pricing') }}>
             Upgrade
           </button>
           <button

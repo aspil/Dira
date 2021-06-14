@@ -3,7 +3,7 @@ import logo from "../Images/dira_icon.png"
 import { useEffect, useState } from "react";
 
 
-const Login = ({ setToken, client, setUserInfo, setIsLogged, navHandle }) => {
+const Login = ({ setToken, client, setUserInfo, setIsLogged, navHandle, setStayLogged, stayLogged }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const history = useHistory();
@@ -52,6 +52,10 @@ const Login = ({ setToken, client, setUserInfo, setIsLogged, navHandle }) => {
               value={password} />
             <button type="submit">Login</button>
           </form>
+          <label for='stay_logged'>
+            Stay Logged In?
+            <input type="checkbox" style={{ display: 'inline' }} id='stay_logged' onClick={() => { setStayLogged(!stayLogged) }} />
+          </label>
           <div style={{ textAlign: "right", marginRight: "1.8vw" }}>
             <Link to="/recover" >Forgot Password?</Link>
           </div>

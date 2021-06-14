@@ -18,34 +18,36 @@ import HomeNav from './components/HomeNav';
 import Footer from './components/Footer';
 
 function App() {
-  const [token, setToken] = useState(undefined);
-  const [userInfo, setUserInfo] = useState({
-    username: localStorage.username,
-    email: localStorage.email,
-    id: localStorage.id
+  const [token, setToken] = useState(localStorage.getItem('JWToken') || undefined);
+  const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('userInfo')) || {
+    username: undefined,
+    email: undefined,
+    id: undefined
   });
-  const [isLogged, setIsLogged] = useState(false);
+  const [isLogged, setIsLogged] = useState(localStorage.getItem('JWToken') ? true : false);
   const [showHomeNav, setShowHomeNav] = useState(true);
   const [showFooter, setShowFooter] = useState(false);
   const [showFooterStyles, setShowFooterStyles] = useState(false);
+  const [stayLogged, setStayLogged] = useState(false);
 
   const userClient = new DiraUserClient('https://localhost:8080/dira');
   const projectClient = new DiraProjectClient('https://localhost:8080/dira');
 
-  // upon entry check local storage for any tokens
   useEffect(() => {
-    localStorage.jwtoken = undefined;
-    localStorage.username = undefined;
-    localStorage.email = undefined;
-    localStorage.id = undefined;
+    const doBeforeUnload = () => {
+      localStorage.setItem('JWToken', token);
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
+    }
 
-  }, [])
-
-  // upon change of state save in local storage
-  useEffect(() => { localStorage.jwtoken = token; }, [token])
-  useEffect(() => { localStorage.username = userInfo.username; }, [userInfo.username])
-  useEffect(() => { localStorage.email = userInfo.email; }, [userInfo.email])
-  useEffect(() => { localStorage.id = userInfo.id; }, [userInfo.id])
+    if (stayLogged) {
+      window.addEventListener('beforeunload', doBeforeUnload);
+      return () => {
+        window.removeEventListener('beforeunload', doBeforeUnload);
+      }
+    } else {
+      window.removeEventListener('beforeunload', doBeforeUnload);
+    }
+  }, [stayLogged, token, userInfo])
 
   const doLogout = () => {
     setToken(undefined);
@@ -54,7 +56,9 @@ function App() {
       email: undefined,
       id: undefined
     });
+    localStorage.clear();
     setIsLogged(false);
+    setStayLogged(false);
   }
 
   const showHomeNavHook = () => {
@@ -100,6 +104,8 @@ function App() {
                 client={userClient}
                 setUserInfo={setUserInfo}
                 setIsLogged={setIsLogged}
+                setStayLogged={setStayLogged}
+                stayLogged={stayLogged}
                 navHandle={showHomeNavHook} />
             }
           </Route>
@@ -124,7 +130,8 @@ function App() {
               token={token}
               doLogout={doLogout}
               footerHandle={showFooterHook}
-              footerStylesHandle={footerStylesHook} />}
+              footerStylesHandle={footerStylesHook}
+              projectClient={projectClient} />}
           </Route>
           <Route path="/backlog/:projectId">
             {token === undefined && <Redirect to="/sign_in" />}
