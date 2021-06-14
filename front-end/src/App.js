@@ -39,7 +39,7 @@ function App() {
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
     }
 
-    if (stayLogged) {
+    if (stayLogged && isLogged) {
       window.addEventListener('beforeunload', doBeforeUnload);
       return () => {
         window.removeEventListener('beforeunload', doBeforeUnload);
@@ -47,7 +47,7 @@ function App() {
     } else {
       window.removeEventListener('beforeunload', doBeforeUnload);
     }
-  }, [stayLogged, token, userInfo])
+  }, [stayLogged, isLogged, token, userInfo])
 
   const doLogout = () => {
     setToken(undefined);
