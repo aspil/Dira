@@ -6,8 +6,8 @@ import { useEffect } from 'react';
 function Home({ footerHandle }) {
   const history = useHistory();
 
-  const handleStartForFreeButtonClick = () => {
-    history.push('/sign_in')
+  const handleStartForFreeButtonClick = (e) => {
+    history.push('/sign_in');
   }
   useEffect(footerHandle, [footerHandle]);
 
@@ -18,7 +18,7 @@ function Home({ footerHandle }) {
 
         <form>
           <input type="text" placeholder="Email Adress"></input>
-          <button>Start for free</button>
+          <button onClick={handleStartForFreeButtonClick}>Start for free</button>
         </form>
         <br /><br /><br />
       </div>
