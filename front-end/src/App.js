@@ -17,6 +17,9 @@ import CreateProject from './components/CreateProject';
 import HomeNav from './components/HomeNav';
 import Footer from './components/Footer';
 
+const userClient = new DiraUserClient('https://localhost:8080/dira');
+const projectClient = new DiraProjectClient('https://localhost:8080/dira');
+
 function App() {
   const [token, setToken] = useState(localStorage.getItem('JWToken') || undefined);
   const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('userInfo')) || {
@@ -30,8 +33,11 @@ function App() {
   const [showFooterStyles, setShowFooterStyles] = useState(false);
   const [stayLogged, setStayLogged] = useState(false);
 
-  const userClient = new DiraUserClient('https://localhost:8080/dira');
-  const projectClient = new DiraProjectClient('https://localhost:8080/dira');
+  useEffect(() => {
+    if (token) {
+      projectClient.set_authorization_token(token);
+    }
+  }, [token]);
 
   useEffect(() => {
     const doBeforeUnload = () => {

@@ -48,13 +48,27 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
       "key": current_project.description,
       "name": current_project.name,
       "visibility": current_project.visibility
-    }).then(console.log).catch(err => {
+    }).then(res => {
+      console.log(res);
+      setFetchProjects(!fetchProjects);
+    }).catch(err => {
       console.log('error during update');
       console.log(err);
     });
 
-    setFetchProjects(!fetchProjects);
     hideEditProject();
+  }
+
+  const handleDeleteProject = (id) => {
+    projectClient.delete_project_by_id(id)
+      .then((res) => {
+        console.log(res);
+        setFetchProjects(!fetchProjects);
+      })
+      .catch(err => {
+        console.log('error during deletion');
+        console.log(err);
+      });
   }
 
   const swapList = () => {
@@ -65,6 +79,7 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
       setListState("showProjects");
     }
   }
+
   useEffect(() => {
     userClient.get_user_projects(userInfo.id)
       .then((res) => {
@@ -129,7 +144,7 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
                     <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.visibility}</td>
                     <td style={{ position: "absolute", borderWidth: "0", padding: "0" }}>
                       <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditProject(project)}></img>
-                      <img id="trashcanIcon" src={trashcan_icon} alt="Trashcan"></img>
+                      <img id="trashcanIcon" src={trashcan_icon} alt="Trashcan" onClick={() => { handleDeleteProject(project.id); }}></img>
                     </td>
                   </tr>
                 ))}

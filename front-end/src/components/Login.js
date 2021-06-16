@@ -52,7 +52,7 @@ const Login = ({ setToken, client, setUserInfo, setIsLogged, navHandle, setStayL
               value={password} />
             <button type="submit">Login</button>
           </form>
-          <label for='stay_logged'>
+          <label htmlFor='stay_logged'>
             Stay Logged In?
             <input type="checkbox" style={{ display: 'inline' }} id='stay_logged' onClick={() => { setStayLogged(!stayLogged) }} />
           </label>
