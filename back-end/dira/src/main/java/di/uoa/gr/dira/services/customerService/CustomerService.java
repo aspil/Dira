@@ -69,7 +69,7 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
     }
 
     @Override
-    public CustomerModel createPasswordResetTokenForUser(String customerEmail, final String token) {
+    public CustomerModel createPasswordResetTokenForUser(String customerEmail, String token) {
         Customer customer = repository.findByEmail(customerEmail).orElseThrow(() -> new CustomerNotFoundException("email", customerEmail));
         PasswordResetToken myToken = new PasswordResetToken(token, customer);
         passwordResetTokenRepository.save(myToken);

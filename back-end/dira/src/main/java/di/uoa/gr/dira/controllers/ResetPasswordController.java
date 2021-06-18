@@ -77,21 +77,21 @@ public class ResetPasswordController {
     }
 
     private SimpleMailMessage constructEmail(String subject, String body, CustomerModel customerModel) {
-        final SimpleMailMessage email = new SimpleMailMessage();
+        SimpleMailMessage email = new SimpleMailMessage();
         email.setSubject(subject);
         email.setText(body);
         email.setTo(customerModel.getEmail());
-        email.setFrom(Objects.requireNonNull(env.getProperty("support.email")));
+        email.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
         return email;
     }
 
     private String getAppUrl(HttpServletRequest request) {
-        return "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+        return String.format("http://%s:%d%s", request.getServerName(), request.getServerPort(), request.getContextPath());
     }
 
     private SimpleMailMessage constructResetTokenEmail(String contextPath, String token, CustomerModel customerModel) {
-        final String url = contextPath + "/user/changePassword?token=" + token;
-        final String message = "message.resetPassword";
-        return constructEmail("Reset Password", message + " \r\n" + url, customerModel);
+        String url = String.format("%s/user/changePassword?token=%s", contextPath, token);
+        String message = String.format("Please reset your password by clicking the link below\n%s", url);
+        return constructEmail("Reset Password", message, customerModel);
     }
 }

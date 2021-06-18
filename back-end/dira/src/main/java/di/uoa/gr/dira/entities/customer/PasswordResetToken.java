@@ -24,7 +24,7 @@ public class PasswordResetToken {
 
     private String token;
 
-    @OneToOne(targetEntity = Customer.class, fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(nullable = false, name = "customer_id")
     private Customer customer;
 
