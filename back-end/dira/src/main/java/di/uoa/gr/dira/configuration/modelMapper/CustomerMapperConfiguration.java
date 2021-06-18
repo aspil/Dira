@@ -4,7 +4,9 @@ import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.models.customer.CustomerModel;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CustomerMapperConfiguration implements IMapConfiguration {
     @Override
     public void configure(ModelMapper mapper) {
