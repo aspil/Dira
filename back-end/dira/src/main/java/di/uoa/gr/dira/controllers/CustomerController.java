@@ -68,7 +68,7 @@ public class CustomerController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PutMapping("{id}/updatePlan")
-    public void updateCustomerIdPlan(@PathVariable Long id) {
+    public void updateCustomerPlanWithId(@PathVariable Long id) {
         service.updatePlan(id);
     }
 
