@@ -47,12 +47,18 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
     }
 
     @Override
+    public void deleteById(Long userId) {
+        projectService.deleteUserFromAllProjects(userId);
+        super.deleteById(userId);
+    }
+
+    @Override
     public void updatePlan(Long customerId) {
-        repository.findById(customerId)
-                .ifPresent(customer -> {
-                    customer.setSubscriptionPlanFromEnum(SubscriptionPlanEnum.PREMIUM);
-                    repository.save(customer);
-                });
+        Customer customer = repository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException("id", customerId.toString()));
+
+        customer.setSubscriptionPlanFromEnum(SubscriptionPlanEnum.PREMIUM);
+        repository.save(customer);
     }
 
     @Override
@@ -60,12 +66,6 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
         return repository.findById(customerId)
                 .map(customer -> MapperHelper.<Project, ProjectModel>mapList(mapper, customer.getProjects(), ProjectModel.class))
                 .orElse(null);
-    }
-
-    @Override
-    public void deleteById(Long userId) {
-        projectService.deleteUserFromAllProjects(userId);
-        super.deleteById(userId);
     }
 
     @Override
@@ -79,25 +79,19 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
 
     @Override
     public String validatePasswordResetToken(String token) {
-        final PasswordResetToken passToken = passwordResetTokenRepository.findByToken(token);
-
-        return !isTokenFound(passToken) ? "invalidToken"
-                : isTokenExpired(passToken) ? "expired"
-                : null;
-    }
-
-    private boolean isTokenFound(PasswordResetToken passToken) {
-        return passToken != null;
+        return passwordResetTokenRepository.findByToken(token)
+                .map(resetToken -> isTokenExpired(resetToken) ? "expired" : null)
+                .orElse("invalidToken");
     }
 
     private boolean isTokenExpired(PasswordResetToken passToken) {
-        final Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
         return passToken.getExpiryDate().before(cal.getTime());
     }
 
     @Override
     public void changeUserPassword(PasswordModel passwordModel) {
-        Optional<Customer> customer = Optional.ofNullable(passwordResetTokenRepository.findByToken(passwordModel.getToken()).getCustomer());
+        Optional<Customer> customer = passwordResetTokenRepository.findByToken(passwordModel.getToken()).map(PasswordResetToken::getCustomer);
         if (customer.isPresent()) {
             customer.get().setPassword(PasswordManager.encoder().encode(passwordModel.getNewPassword()));
             repository.save(customer.get());

@@ -67,7 +67,7 @@ public class CustomerController {
             value = "Updates the user's plan to PREMIUM by the given id",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @PutMapping("{id}/update")
+    @PutMapping("{id}/updatePlan")
     public void updateCustomerIdPlan(@PathVariable Long id) {
         service.updatePlan(id);
     }
