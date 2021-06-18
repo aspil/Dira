@@ -36,7 +36,7 @@ const Backlog = ({ token, footerHandle }) => {
   const [projectName, setProjectName] = useState('');
 
   const { projectId } = useParams();
-  const issueClient = new DiraIssueClient('https://localhost:8080/dira', projectId);
+  const issueClient = new DiraIssueClient(projectId);
 
   useEffect(() => {
     if (token) {

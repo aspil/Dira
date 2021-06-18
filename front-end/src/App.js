@@ -17,8 +17,8 @@ import CreateProject from './components/CreateProject';
 import HomeNav from './components/HomeNav';
 import Footer from './components/Footer';
 
-const userClient = new DiraUserClient('https://localhost:8080/dira');
-const projectClient = new DiraProjectClient('https://localhost:8080/dira');
+const userClient = new DiraUserClient();
+const projectClient = new DiraProjectClient();
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('JWToken') || undefined);

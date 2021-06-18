@@ -13,6 +13,8 @@ const Login = ({ setToken, client, setUserInfo, setIsLogged, navHandle, setStayL
   const onSubmit = (e) => {
     e.preventDefault();
 
+    console.log(client);
+
     client
       .login_user(username, password)
       .then((user) => {
