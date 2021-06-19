@@ -80,7 +80,7 @@ const Login = ({ setToken, client, setUserInfo, setIsLogged, navHandle, setStayL
               type="checkbox"
               style={{ display: 'inline' }}
               id='stay_logged'
-              checked={stayLogged}
+              defaultChecked={stayLogged}
               onClick={() => { setStayLogged(!stayLogged) }}
             />
           </label>
