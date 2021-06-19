@@ -25,6 +25,7 @@ function App() {
   const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('userInfo')) || {
     username: undefined,
     email: undefined,
+    plan: undefined,
     id: undefined
   });
   const [isLogged, setIsLogged] = useState(localStorage.getItem('JWToken') ? true : false);
@@ -32,6 +33,12 @@ function App() {
   const [showFooter, setShowFooter] = useState(false);
   const [showFooterStyles, setShowFooterStyles] = useState(false);
   const [stayLogged, setStayLogged] = useState(false);
+
+  const setPremiumPlan = () => {
+    const info = { ...userInfo };
+    info.plan = "PREMIUM";
+    setUserInfo(info);
+  }
 
   useEffect(() => {
     if (token) {
@@ -60,6 +67,7 @@ function App() {
     setUserInfo({
       username: undefined,
       email: undefined,
+      plan: undefined,
       id: undefined
     });
     localStorage.clear();
@@ -125,7 +133,13 @@ function App() {
           </Route>
 
           <Route path="/pricing">
-            <Plan />
+            <Plan
+              userClient={userClient}
+              userId={userInfo.id}
+              userPlan={userInfo.plan}
+              isLogged={isLogged}
+              setPremiumPlan={setPremiumPlan}
+            />
           </Route>
 
           <Route path="/proj_main">
@@ -137,6 +151,7 @@ function App() {
               doLogout={doLogout}
               footerHandle={showFooterHook}
               footerStylesHandle={footerStylesHook}
+              userPlan={userInfo.plan}
               projectClient={projectClient} />}
           </Route>
           <Route path="/backlog/:projectId">
@@ -173,7 +188,7 @@ function App() {
             {token === undefined && <Redirect to="/sign_in" />}
             {token !== undefined && <CreateProject
               projectClient={projectClient}
-              token={token}
+              userPlan={userInfo.plan}
             />}
           </Route>
         </Switch>

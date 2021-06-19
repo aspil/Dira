@@ -6,14 +6,13 @@ import { useState } from "react";
 
 
 
-const CreateProject = ({ projectClient, token }) => {
+const CreateProject = ({ projectClient, userPlan }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [key, setKey] = useState("");
   const [visibility, setVisibility] = useState("PUBLIC");
   const history = useHistory();
 
-  const premium_user = "no"
   function myFunction() {
     var popup = document.getElementById("myPopup");
     popup.classList.toggle("show");
@@ -63,43 +62,26 @@ const CreateProject = ({ projectClient, token }) => {
               </div>
               <br />
               <p>Access:</p>
-              {premium_user === "no" &&
-                <div>
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <div className="accessOptions">
-                      <input className="accessInput" type="radio" id="public"
-                        name="visibility" value="PUBLIC" defaultChecked
-                      />
-                      <label htmlFor="public">Public</label>
-                    </div>
-                    <div className="accessOptions">
-                      <input className="accessInput" type="radio" id="private"
-                        name="visibility" value="private" disabled
-                      />
-                      <label htmlFor="private" style={{ opacity: "0.5" }}>Private</label>
-                    </div>
+              <div>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <div className="accessOptions">
+                    <input className="accessInput" type="radio" id="public"
+                      name="visibility" value="PUBLIC" defaultChecked
+                      onClick={(e) => setVisibility(e.target.value)}
+                    />
+                    <label htmlFor="public">Public</label>
                   </div>
-                  <p style={{ fontWeight: "normal" }}><Link to="/pricing">Upgrade to Premium</Link> to create private projects.</p>
-                </div>
-              }
-              {premium_user === "yes" &&
-                <div>
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <div className="accessOptions">
-                      <input className="accessInput" type="radio" id="public"
-                        name="visibility" value="PUBLIC" onClick={() => setVisibility("PUBLIC")} defaultChecked
-                      />
-                      <label htmlFor="public">Public</label>
-                    </div>
-                    <div className="accessOptions">
-                      <input className="accessInput" type="radio" id="private"
-                        name="visibility" value="PRIVATE" onClick={() => setVisibility("PRIVATE")}
-                      />
-                      <label htmlFor="private">Private</label>
-                    </div>
+                  <div className="accessOptions">
+                    <input className="accessInput" type="radio" id="private"
+                      name="visibility" value="PRIVATE"
+                      onClick={(e) => setVisibility(e.target.value)}
+                      disabled={userPlan === "STANDARD"}
+                    />
+                    <label htmlFor="private" style={userPlan === "STANDARD" ? { opacity: "0.5" } : {}}>Private</label>
                   </div>
                 </div>
-              }
+                {userPlan === "STANDARD" && <p style={{ fontWeight: "normal" }}><Link to="/pricing" style={{ color: "blue" }}>Upgrade to Premium</Link> to create private projects.</p>}
+              </div>
             </div>
 
 

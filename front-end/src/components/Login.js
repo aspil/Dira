@@ -25,6 +25,7 @@ const Login = ({ setToken, client, setUserInfo, setIsLogged, navHandle, setStayL
         setUserInfo({
           username: user.username,
           email: user.email,
+          plan: user.subscriptionPlan,
           id: user.id
         });
         setToken(user.token);
