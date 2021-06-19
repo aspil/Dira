@@ -1,5 +1,5 @@
 import { Link, useHistory } from "react-router-dom";
-import logo from "../Images/dira_icon.png"
+import logo from "../Images/dira_icon_cropped.png"
 import { useEffect, useState } from "react";
 
 

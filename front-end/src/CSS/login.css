@@ -1,6 +1,5 @@
 .login img {
-  margin:-8%;
-  max-width:50%;
+  width:500px;
   height:auto;
 }
 .login img:hover {
@@ -9,23 +8,23 @@
 .login .login_grad{
   background-color: rgb(239, 240, 241);
   margin:0 auto;
-  width: 22%;
+  width: 400px;
   border-radius: 5px;
   border:2px solid lightgray;
 }
 
 .login input{
   border-width: thin;
-  width:80%;
+  width:300px;
   font-size: large;
   padding: 10px;
 }
 .login button{
-  width: 11vw;
-  height: 5vh;
   font-size: 23px;
   border-radius: 5px;
   margin-top: 15px; 
+  padding-right: 15px;
+  padding-left: 15px;
 }
 .login a{
   color: rgb(0, 132, 255);
