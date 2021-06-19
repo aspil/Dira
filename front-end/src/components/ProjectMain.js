@@ -41,7 +41,6 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
   }
   const handleEditProjectButtonClick = (e) => {
     e.preventDefault()
-    console.log(current_project);
 
     projectClient.update_project_with_id(current_project.id, {
       "description": current_project.description,
@@ -61,8 +60,7 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
 
   const handleDeleteProject = (id) => {
     projectClient.delete_project_by_id(id)
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         setFetchProjects(!fetchProjects);
       })
       .catch(err => {
@@ -83,6 +81,7 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
   useEffect(() => {
     userClient.get_user_projects(userInfo.id)
       .then((res) => {
+        console.log(res);
         setProjects(res);
       })
       .catch((err) => {
