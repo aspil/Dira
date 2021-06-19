@@ -10,7 +10,9 @@ import di.uoa.gr.dira.models.project.permission.ProjectUserPermissionModel;
 import di.uoa.gr.dira.util.mapper.ListConverter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ProjectMapperConfiguration implements IMapConfiguration {
     @Override
     public void configure(ModelMapper mapper) {

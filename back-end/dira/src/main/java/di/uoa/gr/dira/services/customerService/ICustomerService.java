@@ -27,10 +27,16 @@ public interface ICustomerService extends IService<CustomerModel, Long> {
      */
     Optional<CustomerModel> findByEmail(String email);
 
+    /**
+     * Updates the plan of a user to PREMIUM
+     *
+     * @param customerId The id of the customer whose plan is going to be updated
+     */
     void updatePlan(Long customerId);
 
     /**
      * Retrieves the Projects of the Customer with the given `customerId`
+     *
      * @param customerId The customerId to search for
      * @return A list of Projects for the given customer
      */

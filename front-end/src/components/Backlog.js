@@ -17,13 +17,13 @@ const Backlog = ({ token, footerHandle }) => {
     { title: 'Issue y', dateCreated: "10/5/2023", priority: "high", key: 2 },
   ])
 
-  const members=[
-    {name:"takis", key: 1},
-    {name:"akis", key: 2}
+  const members = [
+    { name: "takis", key: 1 },
+    { name: "akis", key: 2 }
   ]
-  const epics=[
-    {name:"epic1", key: 1},
-    {name:"epic2", key: 2}
+  const epics = [
+    { name: "epic1", key: 1 },
+    { name: "epic2", key: 2 }
   ]
 
   const [sprint, handleSprintPanel] = useState("hide");
@@ -36,12 +36,15 @@ const Backlog = ({ token, footerHandle }) => {
   const [projectName, setProjectName] = useState('');
 
   const { projectId } = useParams();
-  const issueClient = new DiraIssueClient('https://localhost:8080/dira', projectId);
-
+  const issueClient = new DiraIssueClient(projectId);
 
   useEffect(() => {
-    issueClient.set_authorization_token(token);
+    if (token) {
+      issueClient.set_authorization_token(token);
+    }
+  }, [token]);
 
+  useEffect(() => {
     issueClient.create_issue({
       "description": "some description",
       "type": "Epic",
@@ -254,7 +257,7 @@ const Backlog = ({ token, footerHandle }) => {
           }
           {/* create Issue Popup */}
           {create_issue_popup === "show" &&
-            <div className="createPopup" style={{fontWeight:"bold"}}>
+            <div className="createPopup" style={{ fontWeight: "bold" }}>
               <div>
                 <h2>Create a new Issue</h2>
                 <img src={x_icon} alt="accountIcon" onClick={hideCreateIssuePopup}></img>
@@ -266,7 +269,7 @@ const Backlog = ({ token, footerHandle }) => {
                 <input type="text" id="issueName" placeholder="Issue Title"></input>
                 <p>Description:</p>
                 <textarea type="range" placeholder="Issue Description"></textarea>
-                <div className="markdowns" style={{display:"flex", justifyContent:"space-between"}}>
+                <div className="markdowns" style={{ display: "flex", justifyContent: "space-between" }}>
                   <div className="issuePriority">
                     <p>Priority:</p>
                     <select name="priority" id="priority">

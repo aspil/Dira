@@ -8,7 +8,9 @@ import di.uoa.gr.dira.util.LongStringPair;
 import di.uoa.gr.dira.util.mapper.ListConverter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
+import org.springframework.stereotype.Component;
 
+@Component
 public class IssueMapperConfiguration implements IMapConfiguration {
     @Override
     public void configure(ModelMapper mapper) {

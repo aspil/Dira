@@ -17,21 +17,34 @@ import CreateProject from './components/CreateProject';
 import HomeNav from './components/HomeNav';
 import Footer from './components/Footer';
 
+const userClient = new DiraUserClient();
+const projectClient = new DiraProjectClient();
+
 function App() {
   const [token, setToken] = useState(localStorage.getItem('JWToken') || undefined);
   const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('userInfo')) || {
     username: undefined,
     email: undefined,
+    plan: undefined,
     id: undefined
   });
   const [isLogged, setIsLogged] = useState(localStorage.getItem('JWToken') ? true : false);
   const [showHomeNav, setShowHomeNav] = useState(true);
   const [showFooter, setShowFooter] = useState(false);
   const [showFooterStyles, setShowFooterStyles] = useState(false);
-  const [stayLogged, setStayLogged] = useState(false);
+  const [stayLogged, setStayLogged] = useState(true);
 
-  const userClient = new DiraUserClient('https://localhost:8080/dira');
-  const projectClient = new DiraProjectClient('https://localhost:8080/dira');
+  const setPremiumPlan = () => {
+    const info = { ...userInfo };
+    info.plan = "PREMIUM";
+    setUserInfo(info);
+  }
+
+  useEffect(() => {
+    if (token) {
+      projectClient.set_authorization_token(token);
+    }
+  }, [token]);
 
   useEffect(() => {
     const doBeforeUnload = () => {
@@ -54,11 +67,11 @@ function App() {
     setUserInfo({
       username: undefined,
       email: undefined,
+      plan: undefined,
       id: undefined
     });
     localStorage.clear();
     setIsLogged(false);
-    setStayLogged(false);
   }
 
   const showHomeNavHook = () => {
@@ -119,7 +132,13 @@ function App() {
           </Route>
 
           <Route path="/pricing">
-            <Plan />
+            <Plan
+              userClient={userClient}
+              userId={userInfo.id}
+              userPlan={userInfo.plan}
+              isLogged={isLogged}
+              setPremiumPlan={setPremiumPlan}
+            />
           </Route>
 
           <Route path="/proj_main">
@@ -131,6 +150,7 @@ function App() {
               doLogout={doLogout}
               footerHandle={showFooterHook}
               footerStylesHandle={footerStylesHook}
+              userPlan={userInfo.plan}
               projectClient={projectClient} />}
           </Route>
           <Route path="/backlog/:projectId">
@@ -167,7 +187,7 @@ function App() {
             {token === undefined && <Redirect to="/sign_in" />}
             {token !== undefined && <CreateProject
               projectClient={projectClient}
-              token={token}
+              userPlan={userInfo.plan}
             />}
           </Route>
         </Switch>

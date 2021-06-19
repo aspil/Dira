@@ -12,10 +12,11 @@
     "@oclif/config": "^1.17.0",
     "@oclif/plugin-help": "^3.2.2",
     "chalk": "^4.1.1",
-    "dira-clients": "^1.1.11",
+    "dira-clients": "^1.1.16",
+    "dotenv": "^10.0.0",
     "email-validator": "^2.0.4",
     "enquirer": "^2.3.6",
-    "inquirer": "^8.1.0",
+    "inquirer": "^8.1.1",
     "inquirer-confirm": "^2.0.7",
     "xmlhttprequest": "^1.8.0"
   },

@@ -1,4 +1,3 @@
-import HomeNav from './HomeNav';
 import { Card, CardContent, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core'
 import Table from '@material-ui/core/Table';
@@ -9,6 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import CheckIcon from '@material-ui/icons/Check';
 import { Clear } from '@material-ui/icons';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles({
   title: {
@@ -23,8 +23,26 @@ const useStyles = makeStyles({
     color: 'dimgray',
     margin: '5rem 0'
   },
-  card: {
-    width: '210px'
+  item: {
+    width: '210px',
+  },
+  std_card: {
+    border: ({ userPlan }) => {
+      if (userPlan === "STANDARD") {
+        return '5px solid dimgray';
+      } else {
+        return '0';
+      }
+    }
+  },
+  prm_card: {
+    border: ({ userPlan }) => {
+      if (userPlan === "PREMIUM") {
+        return '5px solid dimgray';
+      } else {
+        return '0';
+      }
+    }
   },
   cont2: {
     backgroundColor: 'rgb(0, 132, 255)'
@@ -90,8 +108,9 @@ const useStyles = makeStyles({
   }
 })
 
-const Plan = () => {
-  const classes = useStyles()
+const Plan = ({ userClient, userId, userPlan, isLogged, setPremiumPlan }) => {
+  const history = useHistory();
+  const classes = useStyles({ userPlan });
 
   const tableHead = [
     '',
@@ -126,6 +145,21 @@ const Plan = () => {
     //   '24/7 Premium Support'
     // ],
   ]
+
+  const handleIconClick = () => {
+    if (!isLogged) {
+      history.push('/sign_in');
+      return;
+    }
+    userClient.update_user_plan_by_id(userId).then((res) => {
+      console.log(res);
+      setPremiumPlan();
+      // history.push('/');
+    }).catch((err) => {
+      console.log(err);
+    })
+  }
+
   return (
     <div>
       <div className='home_grad1'>
@@ -133,8 +167,8 @@ const Plan = () => {
           Plans + Pricing
         </h1>
         <Grid container className={classes.grid} spacing={2}>
-          <Grid item className={classes.card}>
-            <Card >
+          <Grid item className={classes.item}>
+            <Card className={classes.std_card} >
               <CardContent>
                 <h1 className={classes.planTitle1}>Standard</h1>
                 <button className={classes.bttn1}>0&euro;</button>
@@ -145,11 +179,11 @@ const Plan = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item className={classes.card}>
-            <Card >
+          <Grid item className={classes.item}>
+            <Card className={classes.prm_card} >
               <CardContent className={classes.cont2}>
                 <h1 className={classes.planTitle2}>Premium</h1>
-                <button className={classes.bttn2}>
+                <button className={classes.bttn2} onClick={handleIconClick}>
                   12&euro;
                   <p style={{ fontSize: '1rem', color: 'inherit' }}>per user</p>
                 </button>

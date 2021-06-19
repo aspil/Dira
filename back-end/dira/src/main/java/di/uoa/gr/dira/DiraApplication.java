@@ -14,6 +14,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.Properties;
+
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class DiraApplication {
     @Autowired
@@ -30,14 +32,10 @@ public class DiraApplication {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("https://localhost:3000");
+                registry.addMapping("/**").allowedOrigins("https://localhost:3000").allowedMethods("*");
+                registry.addMapping("/**").allowedOrigins("http://localhost:3000").allowedMethods("*");
             }
         };
-    }
-
-    @Bean
-    public JavaMailSender mailSender() {
-        return new JavaMailSenderImpl();
     }
 
     public static void main(String[] args) {

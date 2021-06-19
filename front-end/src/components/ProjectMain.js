@@ -7,7 +7,7 @@ import x_icon from "../Images/x_icon.png"
 import trashcan_icon from "../Images/trashcan_icon.png"
 
 
-const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, footerStylesHandle, projectClient }) => {
+const ProjectMain = ({ userInfo, userClient, userPlan, doLogout, footerHandle, footerStylesHandle, projectClient }) => {
   const [listState, setListState] = useState("showProjects");
   const history = useHistory()
   const [projects, setProjects] = useState([]);
@@ -18,7 +18,6 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
     name: '',
     visibility: ''
   });
-  const premium_user = "no"
   const [fetchProjects, setFetchProjects] = useState(true);
 
 
@@ -41,20 +40,32 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
   }
   const handleEditProjectButtonClick = (e) => {
     e.preventDefault()
-    console.log(current_project);
 
     projectClient.update_project_with_id(current_project.id, {
       "description": current_project.description,
-      "key": current_project.description,
+      "key": current_project.key,
       "name": current_project.name,
       "visibility": current_project.visibility
-    }).then(console.log).catch(err => {
+    }).then(res => {
+      console.log(res);
+      setFetchProjects(!fetchProjects);
+    }).catch(err => {
       console.log('error during update');
       console.log(err);
     });
 
-    setFetchProjects(!fetchProjects);
     hideEditProject();
+  }
+
+  const handleDeleteProject = (id) => {
+    projectClient.delete_project_by_id(id)
+      .then(() => {
+        setFetchProjects(!fetchProjects);
+      })
+      .catch(err => {
+        console.log('error during deletion');
+        console.log(err);
+      });
   }
 
   const swapList = () => {
@@ -65,9 +76,11 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
       setListState("showProjects");
     }
   }
+
   useEffect(() => {
     userClient.get_user_projects(userInfo.id)
       .then((res) => {
+        console.log(res);
         setProjects(res);
       })
       .catch((err) => {
@@ -129,7 +142,7 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
                     <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.visibility}</td>
                     <td style={{ position: "absolute", borderWidth: "0", padding: "0" }}>
                       <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditProject(project)}></img>
-                      <img id="trashcanIcon" src={trashcan_icon} alt="Trashcan"></img>
+                      <img id="trashcanIcon" src={trashcan_icon} alt="Trashcan" onClick={() => { handleDeleteProject(project.id); }}></img>
                     </td>
                   </tr>
                 ))}
@@ -167,12 +180,12 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
                       <input className="accessInput" type="radio" id="private"
                         name="visibility" value="PRIVATE" defaultChecked={current_project.visibility === "PRIVATE"}
                         onClick={(e) => editCurrProjField('visibility', e)}
-                        disabled={premium_user === "no"}
+                        disabled={userPlan === "STANDARD"}
                       />
-                      <label htmlFor="private" style={{ opacity: "0.5" }}>Private</label>
+                      <label htmlFor="private" style={userPlan === "STANDARD" ? { opacity: "0.5" } : {}}>Private</label>
                     </div>
                   </div>
-                  <p style={{ fontWeight: "normal" }}><Link to="/pricing" style={{ color: "blue" }}>Upgrade to Premium</Link> to create private projects.</p>
+                  {userPlan === "STANDARD" && <p style={{ fontWeight: "normal" }}><Link to="/pricing" style={{ color: "blue" }}>Upgrade to Premium</Link> to create private projects.</p>}
                 </div>
                 <div style={{ textAlign: "center" }}>
                   <button >Save Changes</button>
