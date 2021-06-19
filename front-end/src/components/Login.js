@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 const Login = ({ setToken, client, setUserInfo, setIsLogged, navHandle, setStayLogged, stayLogged }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [usernameError, setUsernameError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [errMessage, setErrMessage] = useState('');
   const history = useHistory();
 
   useEffect(navHandle, [navHandle]);
@@ -26,10 +29,22 @@ const Login = ({ setToken, client, setUserInfo, setIsLogged, navHandle, setStayL
         });
         setToken(user.token);
         setIsLogged(true);
+        setUsernameError(false);
+        setPasswordError(false);
         history.push('/proj_main');
       })
       .catch((err) => {
         console.log(err);
+        if (err.errors) {
+          setPasswordError(true);
+          setUsernameError(false);
+          setErrMessage(err.errors[0].defaultMessage);
+        }
+        else {
+          setUsernameError(true);
+          setPasswordError(false);
+          setErrMessage(err.error.message);
+        }
       });
   }
   const redirectToMain = () => {
@@ -42,12 +57,16 @@ const Login = ({ setToken, client, setUserInfo, setIsLogged, navHandle, setStayL
         <div className="login_grad" style={{ textAlign: "center" }}>
           <h1 style={{ fontWeight: "normal", margin: "15px" }}>Login</h1>
           <form onSubmit={onSubmit} noValidate>
+            {usernameError && <label htmlFor="usernm" style={{ "color": "red" }}>{errMessage}</label>}
             <input
+              id="usernm"
               type="text"
               placeholder="Username"
               onChange={(e) => { setUsername(e.target.value) }}
               value={username} />
+            {passwordError && <label htmlFor="pass" style={{ "color": "red" }}>{errMessage}</label>}
             <input
+              id="pass"
               type="password"
               placeholder="Password"
               onChange={(e) => { setPassword(e.target.value) }}

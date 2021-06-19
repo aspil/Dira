@@ -44,7 +44,7 @@ const ProjectMain = ({ userInfo, userClient, token, doLogout, footerHandle, foot
 
     projectClient.update_project_with_id(current_project.id, {
       "description": current_project.description,
-      "key": current_project.description,
+      "key": current_project.key,
       "name": current_project.name,
       "visibility": current_project.visibility
     }).then(res => {
