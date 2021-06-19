@@ -9,6 +9,9 @@ const Register = ({ client, navHandle }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const history = useHistory();
+  const [error, setError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [errMessage, setErrMessage] = useState('');
 
   useEffect(navHandle, [navHandle]);
 
@@ -24,9 +27,21 @@ const Register = ({ client, navHandle }) => {
       "subscriptionPlan": "STANDARD"
     }).then(res => {
       console.log(res);
+      setError(false);
+      setPasswordError(false);
       history.push('/')
     }).catch((err) => {
       console.log(err);
+      if (err.errors) {
+        setPasswordError(true);
+        setError(false);
+        setErrMessage(err.errors[0].defaultMessage);
+      }
+      else {
+        setError(true);
+        setPasswordError(false);
+        setErrMessage(err.error.message);
+      }
     })
 
   }
@@ -39,30 +54,32 @@ const Register = ({ client, navHandle }) => {
         <img src={logo} alt="dira logo" id="dira logo" onClick={redirectToMain} />
         <div className="login_grad" style={{ textAlign: "center" }}>
           <h1 style={{ fontWeight: "normal", margin: "15px" }}>Register</h1>
-          <form noValidate onSubmit={onSubmit}>
+          <form onSubmit={onSubmit}>
+            {error && <p style={{ "color": "red" }}>{errMessage}</p>}
             <input
-              type="text" placeholder="Email"
+              type="email" placeholder="Email" required
               value={email} onChange={(e) => { setEmail(e.target.value); }}
             />
             <input
-              type="text" placeholder="Username"
+              type="text" placeholder="Username" required
               value={username} onChange={(e) => { setUsername(e.target.value); }}
             />
             {/* <input type="text" placeholder="Confirm Password" value={name}></input> */}
             <div>
               <input
-                style={{width:"125px"}}
-                type="text" placeholder="Name"
+                style={{ width: "125px" }}
+                type="text" placeholder="Name" required
                 value={name} onChange={(e) => { setName(e.target.value); }}
               />
               <input
-                style={{width:"125px"}}
-                type="text" placeholder="Surname"
+                style={{ width: "125px" }}
+                type="text" placeholder="Surname" required
                 value={surname} onChange={(e) => { setSurname(e.target.value); }}
               />
             </div>
+            {passwordError && <p style={{ "color": "red" }}>{errMessage}</p>}
             <input
-              type="password" placeholder="Password"
+              type="password" placeholder="Password" required
               value={password} onChange={(e) => { setPassword(e.target.value); }}
             />
             <br></br>

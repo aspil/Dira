@@ -56,21 +56,21 @@ const Login = ({ setToken, client, setUserInfo, setIsLogged, navHandle, setStayL
         <img src={logo} alt="dira logo" id="dira logo" onClick={redirectToMain} />
         <div className="login_grad" style={{ textAlign: "center" }}>
           <h1 style={{ fontWeight: "normal", margin: "15px" }}>Login</h1>
-          <form onSubmit={onSubmit} noValidate>
-            {usernameError && <label htmlFor="usernm" style={{ "color": "red" }}>{errMessage}</label>}
+          <form onSubmit={onSubmit}>
             <input
-              id="usernm"
               type="text"
               placeholder="Username"
               onChange={(e) => { setUsername(e.target.value) }}
+              required
               value={username} />
-            {passwordError && <label htmlFor="pass" style={{ "color": "red" }}>{errMessage}</label>}
+            {usernameError && <p style={{ "color": "red" }}>{errMessage}</p>}
             <input
-              id="pass"
               type="password"
               placeholder="Password"
               onChange={(e) => { setPassword(e.target.value) }}
+              required
               value={password} />
+            {passwordError && <p style={{ "color": "red" }}>{errMessage}</p>}
             <button type="submit">Login</button>
           </form>
           <label htmlFor='stay_logged'>
