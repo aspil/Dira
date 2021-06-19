@@ -32,7 +32,7 @@ function App() {
   const [showHomeNav, setShowHomeNav] = useState(true);
   const [showFooter, setShowFooter] = useState(false);
   const [showFooterStyles, setShowFooterStyles] = useState(false);
-  const [stayLogged, setStayLogged] = useState(false);
+  const [stayLogged, setStayLogged] = useState(true);
 
   const setPremiumPlan = () => {
     const info = { ...userInfo };
@@ -72,7 +72,6 @@ function App() {
     });
     localStorage.clear();
     setIsLogged(false);
-    setStayLogged(false);
   }
 
   const showHomeNavHook = () => {

@@ -76,7 +76,13 @@ const Login = ({ setToken, client, setUserInfo, setIsLogged, navHandle, setStayL
           </form>
           <label htmlFor='stay_logged'>
             Stay Logged In?
-            <input type="checkbox" style={{ display: 'inline' }} id='stay_logged' onClick={() => { setStayLogged(!stayLogged) }} />
+            <input
+              type="checkbox"
+              style={{ display: 'inline' }}
+              id='stay_logged'
+              checked={stayLogged}
+              onClick={() => { setStayLogged(!stayLogged) }}
+            />
           </label>
           <div style={{ textAlign: "right", marginRight: "1.8vw" }}>
             <Link to="/recover" >Forgot Password?</Link>
