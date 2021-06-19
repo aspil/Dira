@@ -1,6 +1,6 @@
 .createProject #dira_logo {
-  margin:-8%;
-  max-width:50%;
+  /* margin:-8%; */
+  max-width:500px;
   height:auto;
 }
 .createProject #dira_logo:hover {
@@ -9,7 +9,7 @@
 .createProject .login_grad{
   background-color: rgb(239, 240, 241);
   margin:0 auto;
-  width: 22%;
+  width: 400px;
   border-radius: 5px;
   border:2px solid lightgray;
   padding:15px;
@@ -20,7 +20,7 @@
 }
 .createProject .textInput{
   border-width: 1px;
-  width:90%;
+  width:380px;
   font-size: 20px;
   padding: 5px;
   margin: 0;
@@ -39,10 +39,11 @@
   
 }
 .createProject button{
-  padding: 5px;
   font-size: 23px;
   border-radius: 5px;
-  margin-top: 10px;
+  margin-top: 15px; 
+  padding-right: 15px;
+  padding-left: 15px;
 }
 .createProject a{
   color: rgb(0, 132, 255);
