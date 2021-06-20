@@ -74,22 +74,21 @@ const Login = ({ setToken, client, setUserInfo, setIsLogged, navHandle, setStayL
             {passwordError && <p style={{ "color": "red" }}>{errMessage}</p>}
             <button type="submit">Login</button>
           </form>
-          <label htmlFor='stay_logged'>
-            Stay Logged In?
-            <input
-              type="checkbox"
-              style={{ display: 'inline' }}
-              id='stay_logged'
-              defaultChecked={stayLogged}
-              onClick={() => { setStayLogged(!stayLogged) }}
-            />
-          </label>
-          <div style={{ textAlign: "right", marginRight: "1.8vw" }}>
+            <label htmlFor='stay_logged' style={{alignItems:"center"}}>
+              Stay Logged in 
+              <input
+                type="checkbox"
+                id='stay_logged'
+                defaultChecked={stayLogged}
+                onClick={() => { setStayLogged(!stayLogged) }}
+              />
+            </label>
+
+          <div style={{ textAlign: "right", marginRight: "10px" }}>
             <Link to="/recover" >Forgot Password?</Link>
           </div>
 
           <p style={{ margin: "15px" }}>Don't have an account? <Link to="/register">Register</Link></p>
-          <Link to="#">Contact Us</Link>
         </div>
       </div>
 

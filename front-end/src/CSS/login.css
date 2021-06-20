@@ -29,3 +29,9 @@
 .login a{
   color: rgb(0, 132, 255);
 }
+/* Stay logged in checkbox */
+.login #stay_logged{
+  width: 17px;
+  margin:0;
+}
+

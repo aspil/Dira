@@ -69,33 +69,47 @@
 }
 
 .projectnav .form-popup {
-  display: none;
   position:fixed;
-  top: 7.1%;
-  right: 0.1%; 
-  border: 1px solid #ddd;
-  z-index: 9;
+  top: 6.9%;
+  right: 0.3%; 
+  border: 1px solid grey;
+  box-shadow: 3px 3px 7px grey;
+
 }
 
 .projectnav .form-container {
   max-width: 200px;
-  padding: 10px;
-  background-color: white;
+  padding: 15px;
+  background-color: rgb(240, 240, 240);
 }
 
-.projectnav .form-container input[type=text]:focus, .form-container input[type=password]:focus {
-  background-color: #ddd;
-  outline: none;
+
+.projectnav .form-container #accountName {
+  text-align: center;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  font-size: 25px;
+  border-bottom: 1px solid grey;
 }
 
-.projectnav .form-container .btn {
-  color: white;
-  padding: 8px 10px;
+.projectnav .form-container .accountLink {
+  font-size: 22px;
+  font-weight: normal;
+  color: #333;
   cursor: pointer;
-  width: 100%;
-  margin-bottom:1px;
+  width: 100px;
 }
-
+.projectnav .form-container .accountLinkWrapper {
+  border-radius: 5px;
+  padding: 2px;
+}
+.projectnav .form-container .accountLink:hover {
+  text-decoration: none;
+}
+.projectnav .form-container .accountLinkWrapper:hover {
+  background-color: lightgray;
+  cursor: pointer;
+}
 
 /* Project_Main */
 .projectmain .leftPanel{

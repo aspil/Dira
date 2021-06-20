@@ -1,18 +1,31 @@
 import accountIcon from "../Images/profile_icon.png"
 import { Link, useHistory } from "react-router-dom";
+import { useState } from "react";
 
 
 const ProjectNav = ({ username, doLogout }) => {
   const history = useHistory();
 
-  const openSettings = () => {
-    if (document.getElementById("myForm").style.display === "none") {
-      document.getElementById("myForm").style.display = "block";
+  const [settingsState, setSettingsState] = useState("hide");
+
+  const handleAccountClick = () => {
+    if(settingsState == "hide"){
+      setSettingsState("show");
     }
-    else {
-      document.getElementById("myForm").style.display = "none";
+    else{
+      setSettingsState("hide");
     }
   }
+
+  const logout = () => {
+    setSettingsState("hide");
+    doLogout();
+  }
+  const goToPricing = () => {
+    setSettingsState("hide");
+    history.push('/pricing');
+  }
+
   return (
     <div className="projectnav">
       <Link to="/proj_main" className="dira_link">Dira</Link>
@@ -20,25 +33,30 @@ const ProjectNav = ({ username, doLogout }) => {
         <Link to="/create_project">+ Create a Project</Link>
         <Link to="/proj_main">My Projects</Link>
         <Link to="/pricing" className="boxxed_button">Go Premium</Link>
-        <img src={accountIcon} alt="accountIcon" className="settingsPopupReference" onClick={openSettings}></img>
+        <img src={accountIcon} alt="accountIcon" className="settingsPopupReference" onClick={handleAccountClick}></img>
       </div>
-      <div className="form-popup" id="myForm">
-        <form className="form-container">
-          <p style={{ textAlign: "center" }}><strong>{username}</strong></p>
-          <button
-            type="button"
-            className="btn"
-            onClick={() => { history.push('/pricing') }}>
-            Upgrade
-          </button>
-          <button
-            type="button"
-            className="btn"
-            onClick={doLogout}>
-            Logout
-          </button>
-        </form>
-      </div>
+
+      {settingsState === "show" &&
+        <div className="form-popup" id="myForm">
+          <form className="form-container">
+            <p id="accountName" ><strong>{username}</strong></p>
+            <div className="accountLinkWrapper" onClick={goToPricing}>
+              <a
+                type="button"
+                className="accountLink">
+                Upgrade
+              </a>
+            </div>
+            <div className="accountLinkWrapper" onClick={logout}>
+              <a
+                type="button"
+                className="accountLink">
+                Logout
+              </a>
+            </div>
+          </form>
+        </div>
+      }
 
 
     </div>
