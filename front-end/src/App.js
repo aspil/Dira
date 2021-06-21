@@ -160,6 +160,7 @@ function App() {
               token={token}
               doLogout={doLogout}
               footerHandle={showFooterHook}
+              projectClient={projectClient}
             />}
           </Route>
           <Route path="/members/:projectId">

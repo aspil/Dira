@@ -69,6 +69,7 @@
 }
 
 .projectnav .form-popup {
+  z-index: 1;
   position:fixed;
   top: 6.9%;
   right: 0.3%; 
