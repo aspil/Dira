@@ -28,11 +28,13 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
   const [newEpicLink, setNewEpicLink] = useState(null);
   const [newType, setNewType] = useState('Story');
 
+  const [focusedIssueId, setFocusedIssueId] = useState(null);
   const [sprint, handleSprintPanel] = useState("hide");
 
   const [issue_panel, handleIssuePanel] = useState("hide");
-  const showIssuePanel = () => {
-    handleIssuePanel("show")
+  const showIssuePanel = (issueId) => {
+    setFocusedIssueId(issueId);
+    handleIssuePanel("show");
   }
 
   const { projectId } = useParams();
@@ -56,7 +58,6 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
 
   const fetchMembers = () => {
     projectClient.get_all_users_in_project_by_id(projectId).then((res) => {
-      console.log(res);
       setMembers(res.users);
     }).catch((err) => {
       console.log(err);
@@ -108,7 +109,6 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
       "assigneeId": newAssignee,
       "epicId": newEpicLink
     }).then((res) => {
-      console.log(res);
       fetchAllIssues();
       hideCreateIssuePopup();
     }).catch((err) => {
@@ -164,14 +164,18 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
               <div className="tableWrapper">
                 <table id="backlogIssuesTable">
                   <tr>
+                    <th>Key</th>
                     <th>Title</th>
-                    <th>Date Created</th>
+                    <th>Description</th>
+                    <th>Type</th>
                     <th>Priority</th>
                   </tr>
                   {backlogIssues.map(issue => (
-                    <tr key={issue.key} onClick={showIssuePanel}>
+                    <tr key={issue.key} onClick={() => showIssuePanel(issue.id)}>
+                      <td>{issue.key}</td>
                       <td>{issue.title}</td>
-                      <td>{issue.dateCreated}</td>
+                      <td>{issue.description}</td>
+                      <td>{issue.type}</td>
                       <td>{issue.priority}</td>
                     </tr>
                   ))}
@@ -217,7 +221,7 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
                   <text className="label" id="dateCreated">Created on: </text>
                   <text className="answer" id="dateCreatedAnswer">10/3/2021</text>
                   <div style={{ textAlign: "center", marginTop: "20px" }}>
-                    <Link to={`/issue_preview/${projectId}`} id="editIssueLink">
+                    <Link to={`/project/${projectId}/issue_preview/${focusedIssueId}`} id="editIssueLink">
                       <img id="pencilIcon" src={edit_icon} alt="Pencil"></img>
                       Edit Issue
                     </Link>
@@ -253,7 +257,7 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
                       <th>Priority</th>
                     </tr>
                     {sprintIssues.map(issue => (
-                      <tr key={issue.id} onClick={showIssuePanel}>
+                      <tr key={issue.id} onClick={() => showIssuePanel(issue.id)}>
                         <td>{issue.title}</td>
                         <td>{issue.dateCreated}</td>
                         <td>{issue.priority}</td>
