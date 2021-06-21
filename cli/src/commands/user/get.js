@@ -2,6 +2,8 @@
 const { Command, flags } = require('@oclif/command');
 const { DiraUserClient } = require("dira-clients");
 const logging = require("../../logging");
+const common = require('../../common');
+const io_utils = require('../../io_utils');
 
 class GetUserCommand extends Command {
     async run() {
