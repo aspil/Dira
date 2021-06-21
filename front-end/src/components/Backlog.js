@@ -12,9 +12,7 @@ import edit_icon from "../Images/edit_icon.png"
 const Backlog = ({ token, footerHandle }) => {
   const history = useHistory();
 
-  const [backlogIssues, setBacklogIssues] = useState([
-    { title: 'Issue y', dateCreated: "10/5/2023", priority: "high", key: 2 },
-  ])
+  const [backlogIssues, setBacklogIssues] = useState([])
   const [sprintIssues, setSprintIssues] = useState([
     { title: 'Issue y', dateCreated: "10/5/2023", priority: "high", key: 2 },
   ])
@@ -49,27 +47,31 @@ const Backlog = ({ token, footerHandle }) => {
     }
   }, [token]);
 
+  const fetchAllIssues = () => {
+    issueClient.get_all_issues().then((res) => {
+      console.log(res);
+      setBacklogIssues(res.issues);
+      setProjectName(res.name);
+    }).catch((err) => {
+      console.log(err);
+      console.log('error during issues fetching');
+    });
+  }
+  useEffect(fetchAllIssues, []);
+
   useEffect(() => {
     issueClient.create_issue({
       "description": "some description",
       "type": "Epic",
       "priority": "Normal",
       "title": "some title"
-    }).then(() => {
-      issueClient.get_all_issues()
-        .then((res) => {
-          console.log(res);
-          setBacklogIssues(res.issues);
-          setProjectName(res.name);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    }).then((res) => {
+      console.log(res);
+      fetchAllIssues();
     }).catch((err) => {
       console.log('error during creation of issue');
       console.log(err);
     })
-
   }, []);
 
   useEffect(footerHandle, [footerHandle]);
