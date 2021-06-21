@@ -8,6 +8,7 @@ const Register = ({ client, navHandle }) => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const history = useHistory();
   const [error, setError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
@@ -18,31 +19,38 @@ const Register = ({ client, navHandle }) => {
   const onSubmit = (e) => {
     e.preventDefault()
 
-    client.register_user({
-      "username": username,
-      "name": name,
-      "surname": surname,
-      "email": email,
-      "password": password,
-      "subscriptionPlan": "STANDARD"
-    }).then(res => {
-      console.log(res);
-      setError(false);
-      setPasswordError(false);
-      history.push('/')
-    }).catch((err) => {
-      console.log(err);
-      if (err.errors) {
-        setPasswordError(true);
+    if(password == confirmPassword){
+      client.register_user({
+        "username": username,
+        "name": name,
+        "surname": surname,
+        "email": email,
+        "password": password,
+        "subscriptionPlan": "STANDARD"
+      }).then(res => {
+        console.log(res);
         setError(false);
-        setErrMessage(err.errors[0].defaultMessage);
-      }
-      else {
-        setError(true);
         setPasswordError(false);
-        setErrMessage(err.error.message);
-      }
-    })
+        history.push('/')
+      }).catch((err) => {
+        console.log(err);
+        if (err.errors) {
+          setError(false);
+          setPasswordError(true);
+          setErrMessage(err.errors[0].defaultMessage);
+        }
+        else {
+          setError(true);
+          setPasswordError(false);
+          setErrMessage(err.error.message);
+        }
+      })
+    }
+    else{
+      setError(false);
+      setPasswordError(true);
+      setErrMessage("Passwords don't match.");
+    }
 
   }
   const redirectToMain = () => {
@@ -81,6 +89,10 @@ const Register = ({ client, navHandle }) => {
             <input
               type="password" placeholder="Password" required
               value={password} onChange={(e) => { setPassword(e.target.value); }}
+            />
+            <input
+              type="password" placeholder="Confirm Password" required
+              value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); }}
             />
             <br></br>
             <button type="submit">Create Account</button>
