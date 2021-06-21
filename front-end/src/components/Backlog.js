@@ -79,9 +79,20 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
   const handleCreateSprintButtonClick = () => {
     hideCreateSprintPopup();
   }
+
+  const clearState = () => {
+    setNewTitle(null);
+    setNewDescription(null);
+    setNewPriority('Normal');
+    setNewAssignee(null);
+    setNewEpicLink(null);
+    setNewType('Story');
+  }
+
   // Create issue popup handlers
   const [create_issue_popup, handleCreateIssuePopup] = useState("hide");
   const hideCreateIssuePopup = () => {
+    clearState();
     handleCreateIssuePopup("hide");
   }
   const showCreateIssuePopup = () => {
@@ -99,12 +110,11 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
     }).then((res) => {
       console.log(res);
       fetchAllIssues();
+      hideCreateIssuePopup();
     }).catch((err) => {
       console.log('error during creation of issue');
       console.log(err);
     });
-
-    hideCreateIssuePopup();
   }
 
 
