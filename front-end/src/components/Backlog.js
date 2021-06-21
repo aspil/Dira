@@ -3,7 +3,7 @@ import x_icon from "../Images/x_icon.png"
 import ProjectNav from './ProjectNav'
 import Footer from './Footer'
 import SideNav from './SideNav'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useParams, useHistory } from 'react-router-dom'
 import { Search } from '@material-ui/icons'
 import { DiraIssueClient } from "dira-clients";
@@ -34,13 +34,9 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
   const showIssuePanel = () => {
     handleIssuePanel("show")
   }
-  // Edit Issue Button
-  const handleEditIssue = () => {
-    history.push('issue_preview');
-  }
 
   const { projectId } = useParams();
-  const issueClient = new DiraIssueClient(projectId);
+  const issueClient = useRef(new DiraIssueClient(projectId)).current;
 
   useEffect(() => {
     if (token) {
@@ -70,9 +66,6 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
   useEffect(fetchAllIssues, []);
   useEffect(fetchMembers, []);
 
-  useEffect(() => {
-  }, []);
-
   useEffect(footerHandle, [footerHandle]);
 
   // Create sprint popup handlers
@@ -96,7 +89,6 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
   }
   const handleCreateIssueButtonClick = (e) => {
     e.preventDefault();
-
     issueClient.create_issue({
       "description": newDescription,
       "type": newType,
@@ -109,9 +101,8 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
       fetchAllIssues();
     }).catch((err) => {
       console.log('error during creation of issue');
-      fetchAllIssues();
       console.log(err);
-    })
+    });
 
     hideCreateIssuePopup();
   }
@@ -216,7 +207,7 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
                   <text className="label" id="dateCreated">Created on: </text>
                   <text className="answer" id="dateCreatedAnswer">10/3/2021</text>
                   <div style={{ textAlign: "center", marginTop: "20px" }}>
-                    <Link to="/issue_preview" id="editIssueLink">
+                    <Link to={`/issue_preview/${projectId}`} id="editIssueLink">
                       <img id="pencilIcon" src={edit_icon} alt="Pencil"></img>
                       Edit Issue
                     </Link>
@@ -280,7 +271,7 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
               </div>
               <br />
               <br />
-              <form className="newIssueForm" style={{ textAlign: "left" }} onSubmit={handleCreateIssueButtonClick}>
+              <form className="newIssueForm" style={{ textAlign: "left" }} >
                 <p>Title:</p>
                 <input type="text" id="sprintName" placeholder="Sprint Title" required></input>
                 <div className="priority">
@@ -307,7 +298,7 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
               </div>
               <br />
               <br />
-              <form className="newIssueForm" style={{ textAlign: "left" }}>
+              <form className="newIssueForm" style={{ textAlign: "left" }} onSubmit={handleCreateIssueButtonClick}>
                 <p>Title:</p>
                 <input
                   type="text"
