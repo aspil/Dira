@@ -9,7 +9,7 @@ import { Search } from '@material-ui/icons'
 import { DiraIssueClient } from "dira-clients";
 import edit_icon from "../Images/edit_icon.png"
 
-const Backlog = ({ token, footerHandle }) => {
+const Backlog = ({ token, footerHandle, projectClient }) => {
   const history = useHistory();
 
   const [backlogIssues, setBacklogIssues] = useState([])
@@ -17,14 +17,16 @@ const Backlog = ({ token, footerHandle }) => {
     { title: 'Issue y', dateCreated: "10/5/2023", priority: "high", key: 2 },
   ])
 
-  const members = [
-    { name: "takis", key: 1 },
-    { name: "akis", key: 2 }
-  ]
-  const epics = [
-    { name: "epic1", key: 1 },
-    { name: "epic2", key: 2 }
-  ]
+  const [members, setMembers] = useState([]);
+
+  const [projectName, setProjectName] = useState('');
+
+  const [newTitle, setNewTitle] = useState(null);
+  const [newDescription, setNewDescription] = useState(null);
+  const [newPriority, setNewPriority] = useState('Normal');
+  const [newAssignee, setNewAssignee] = useState(null);
+  const [newEpicLink, setNewEpicLink] = useState(null);
+  const [newType, setNewType] = useState('Story');
 
   const [sprint, handleSprintPanel] = useState("hide");
 
@@ -32,11 +34,10 @@ const Backlog = ({ token, footerHandle }) => {
   const showIssuePanel = () => {
     handleIssuePanel("show")
   }
-// Edit Issue Button
-    const handleEditIssue = () => {
-        history.push('issue_preview');
-    }
-  const [projectName, setProjectName] = useState('');
+  // Edit Issue Button
+  const handleEditIssue = () => {
+    history.push('issue_preview');
+  }
 
   const { projectId } = useParams();
   const issueClient = new DiraIssueClient(projectId);
@@ -54,24 +55,22 @@ const Backlog = ({ token, footerHandle }) => {
       setProjectName(res.name);
     }).catch((err) => {
       console.log(err);
-      console.log('error during issues fetching');
     });
   }
+
+  const fetchMembers = () => {
+    projectClient.get_all_users_in_project_by_id(projectId).then((res) => {
+      console.log(res);
+      setMembers(res.users);
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+
   useEffect(fetchAllIssues, []);
+  useEffect(fetchMembers, []);
 
   useEffect(() => {
-    issueClient.create_issue({
-      "description": "some description",
-      "type": "Epic",
-      "priority": "Normal",
-      "title": "some title"
-    }).then((res) => {
-      console.log(res);
-      fetchAllIssues();
-    }).catch((err) => {
-      console.log('error during creation of issue');
-      console.log(err);
-    })
   }, []);
 
   useEffect(footerHandle, [footerHandle]);
@@ -95,7 +94,25 @@ const Backlog = ({ token, footerHandle }) => {
   const showCreateIssuePopup = () => {
     handleCreateIssuePopup("show");
   }
-  const handleCreateIssueButtonClick = () => {
+  const handleCreateIssueButtonClick = (e) => {
+    e.preventDefault();
+
+    issueClient.create_issue({
+      "description": newDescription,
+      "type": newType,
+      "priority": newPriority,
+      "title": newTitle,
+      "assigneeId": newAssignee,
+      "epicId": newEpicLink
+    }).then((res) => {
+      console.log(res);
+      fetchAllIssues();
+    }).catch((err) => {
+      console.log('error during creation of issue');
+      fetchAllIssues();
+      console.log(err);
+    })
+
     hideCreateIssuePopup();
   }
 
@@ -105,6 +122,19 @@ const Backlog = ({ token, footerHandle }) => {
 
     alert('click');
   }
+
+  const types = [
+    'Story',
+    'Epic',
+    'Defect'
+  ]
+
+  const priorities = [
+    'Normal',
+    'Low',
+    'Major',
+    'Blocked'
+  ]
 
   return (
     <div className="backlog proj_page">
@@ -120,7 +150,7 @@ const Backlog = ({ token, footerHandle }) => {
               <div className="head">
                 <div className="info">
                   <h2>Backlog</h2>
-                  <p className="issue_total">6 Issues</p>
+                  <p className="issue_total">{backlogIssues.length} Issues</p>
 
                 </div>
                 <form onSubmit={handleSubmit}>
@@ -185,11 +215,11 @@ const Backlog = ({ token, footerHandle }) => {
                   <br />
                   <text className="label" id="dateCreated">Created on: </text>
                   <text className="answer" id="dateCreatedAnswer">10/3/2021</text>
-                  <div style={{textAlign:"center", marginTop:"20px"}}>
-                    <Link to="/issue_preview" id = "editIssueLink">
+                  <div style={{ textAlign: "center", marginTop: "20px" }}>
+                    <Link to="/issue_preview" id="editIssueLink">
                       <img id="pencilIcon" src={edit_icon} alt="Pencil"></img>
                       Edit Issue
-                    </Link>               
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -250,9 +280,9 @@ const Backlog = ({ token, footerHandle }) => {
               </div>
               <br />
               <br />
-              <form className="newIssueForm" style={{ textAlign: "left" }}>
+              <form className="newIssueForm" style={{ textAlign: "left" }} onSubmit={handleCreateIssueButtonClick}>
                 <p>Title:</p>
-                <input type="text" id="sprintName" placeholder="Sprint Title"></input>
+                <input type="text" id="sprintName" placeholder="Sprint Title" required></input>
                 <div className="priority">
                   <p>Duration:</p>
                   <select name="priority" id="priority">
@@ -279,46 +309,85 @@ const Backlog = ({ token, footerHandle }) => {
               <br />
               <form className="newIssueForm" style={{ textAlign: "left" }}>
                 <p>Title:</p>
-                <input type="text" id="issueName" placeholder="Issue Title"></input>
+                <input
+                  type="text"
+                  id="issueName"
+                  placeholder="Issue Title"
+                  value={newTitle}
+                  required
+                  onChange={(e) => { setNewTitle(e.target.value); }}
+                />
                 <p>Description:</p>
-                <textarea type="range" placeholder="Issue Description"></textarea>
+                <textarea
+                  type="range"
+                  required
+                  placeholder="Issue Description"
+                  value={newDescription}
+                  onChange={(e) => { setNewDescription(e.target.value); }}
+                />
                 <div className="markdowns" style={{ display: "flex", justifyContent: "space-between" }}>
                   <div className="issuePriority">
                     <p>Priority:</p>
-                    <select name="priority" id="priority">
-                      <option value="low">Low</option>
-                      <option value="medium">Medium</option>
-                      <option value="high">High</option>
-                      <option value="blocked">Blocked</option>
+                    <select
+                      id="priority"
+                      onChange={(e) => { setNewPriority(e.target.value); }}
+                    >
+                      {priorities.map((priority) => (
+                        <option value={priority} >
+                          {priority}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="issueType">
+                    <p>Type:</p>
+                    <select
+                      id="type"
+                      onChange={(e) => { setNewType(e.target.value !== 'None' ? e.target.value : null); }}
+                    >
+                      {types.map((type) => (
+                        <option value={type} >
+                          {type}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="issueAssignee">
                     <p>Assignee:</p>
-                    <select name="assignee" id="assignee">
+                    <select
+                      id="assignee"
+                      onChange={(e) => { setNewAssignee(e.target.value !== 'None' ? e.target.value : null); }}
+                    >
+                      <option value='None'>
+                        None
+                      </option>
                       {members.map(member => (
-                        <option value={member.name}>{member.name}</option>
+                        <option value={member.id}>
+                          {member.name} {member.surname}
+                        </option>
                       ))}
                     </select>
                   </div>
                   <div className="epic">
                     <p>Epic:</p>
-                    <select name="issueEpic" id="epic">
-                      {epics.map(epic => (
-                        <option value={epic.name}>{epic.name}</option>
+                    <select
+                      id="epic"
+                      onChange={(e) => { setNewEpicLink(e.target.value); }}
+                    >
+                      <option value='None'>
+                        None
+                      </option>
+                      {backlogIssues.filter(issue => issue.type === 'Epic').map(epic => (
+                        <option value={epic.id} >
+                          {epic.key}, {epic.title}
+                        </option>
                       ))}
                     </select>
                   </div>
                 </div>
-                {/* <br></br>
-                <p>Labels:</p>
-                <input type="checkbox" id="issueLabelOption" name="label1" value="label_value" />
-                <label for="vehicle1"> Label</label>
-                <input type="checkbox" id="issueLabelOption" name="label2" value="label_value" />
-                <label for="vehicle1"> Label</label> */}
-
 
                 <div style={{ textAlign: "center" }}>
-                  <button onClick={handleCreateIssueButtonClick}>Create Issue</button>
+                  <button >Create Issue</button>
                 </div>
               </form>
             </div>

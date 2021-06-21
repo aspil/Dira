@@ -41,6 +41,7 @@ const ProjectMain = ({ userInfo, userClient, userPlan, doLogout, footerHandle, f
     e.preventDefault()
 
     projectClient.update_project_with_id(current_project.id, {
+      "id": current_project.id,
       "description": current_project.description,
       "key": current_project.key,
       "name": current_project.name,
