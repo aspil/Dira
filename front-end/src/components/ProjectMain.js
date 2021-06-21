@@ -18,7 +18,6 @@ const ProjectMain = ({ userInfo, userClient, userPlan, doLogout, footerHandle, f
     name: '',
     visibility: ''
   });
-  const [fetchProjects, setFetchProjects] = useState(true);
 
 
   const editCurrProjField = (field, e) => {
@@ -48,7 +47,7 @@ const ProjectMain = ({ userInfo, userClient, userPlan, doLogout, footerHandle, f
       "visibility": current_project.visibility
     }).then(res => {
       console.log(res);
-      setFetchProjects(!fetchProjects);
+      fetchAllProjects();
     }).catch(err => {
       console.log('error during update');
       console.log(err);
@@ -60,7 +59,7 @@ const ProjectMain = ({ userInfo, userClient, userPlan, doLogout, footerHandle, f
   const handleDeleteProject = (id) => {
     projectClient.delete_project_by_id(id)
       .then(() => {
-        setFetchProjects(!fetchProjects);
+        fetchAllProjects();
       })
       .catch(err => {
         console.log('error during deletion');
@@ -77,17 +76,17 @@ const ProjectMain = ({ userInfo, userClient, userPlan, doLogout, footerHandle, f
     }
   }
 
-  useEffect(() => {
-    userClient.get_user_projects(userInfo.id)
-      .then((res) => {
-        console.log(res);
-        setProjects(res);
-      })
-      .catch((err) => {
-        console.log('error while fetching all projects');
-        console.log(err);
-      });
-  }, [fetchProjects, userInfo.id, userClient]);
+  const fetchAllProjects = () => {
+    userClient.get_user_projects(userInfo.id).then((res) => {
+      console.log(res);
+      setProjects(res);
+    }).catch((err) => {
+      console.log('error while fetching all projects');
+      console.log(err);
+    });
+  }
+
+  useEffect(fetchAllProjects, [userInfo.id, userClient]);
 
   useEffect(footerHandle, [footerHandle]);
   useEffect(footerStylesHandle, [footerStylesHandle]);
