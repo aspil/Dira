@@ -41,18 +41,18 @@ const ProjectNav = ({ username, doLogout }) => {
           <form className="form-container">
             <p id="accountName" ><strong>{username}</strong></p>
             <div className="accountLinkWrapper" onClick={goToPricing}>
-              <a
+              <p
                 type="button"
                 className="accountLink">
                 Upgrade
-              </a>
+              </p>
             </div>
             <div className="accountLinkWrapper" onClick={logout}>
-              <a
+              <p
                 type="button"
                 className="accountLink">
                 Logout
-              </a>
+              </p>
             </div>
           </form>
         </div>

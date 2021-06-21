@@ -29,21 +29,20 @@ const Epics = ({ footerHandle }) => {
     hideCreateEpicPopup();
   }
   // Create Epic Colors
+  // const [epic_color, handleNewEpicColor] = useState("none");
 
-  const [epic_color, handleNewEpicColor] = useState("none");
+  // const selectNewEpicColor = (new_color) => {
+  //   if (epic_color !== "none") {
+  //     document.getElementById(epic_color).style.border = "none";
+  //     document.getElementById(epic_color).style.padding = "1px";
+  //     document.getElementById(epic_color).style.boxShadow = "none";
 
-  const selectNewEpicColor = (new_color) => {
-    if (epic_color !== "none") {
-      document.getElementById(epic_color).style.border = "none";
-      document.getElementById(epic_color).style.padding = "1px";
-      document.getElementById(epic_color).style.boxShadow = "none";
-
-    }
-    document.getElementById(new_color).style.border = "1px solid white";
-    document.getElementById(new_color).style.padding = "0px";
-    document.getElementById(new_color).style.boxShadow = "5px 5px 3px black";
-    handleNewEpicColor(new_color);
-  }
+  //   }
+  //   document.getElementById(new_color).style.border = "1px solid white";
+  //   document.getElementById(new_color).style.padding = "0px";
+  //   document.getElementById(new_color).style.boxShadow = "5px 5px 3px black";
+  //   handleNewEpicColor(new_color);
+  // }
   // Epics
   const [epics, setEpics] = useState([
     { name: 'Makis', dueDate: '14/5/2021', role: 'developer', id: 1 },
@@ -139,16 +138,17 @@ const Epics = ({ footerHandle }) => {
                 <img src={x_icon} id="xIcon" alt="accountIcon" onClick={hideCreateEpicPopup}></img>
               </div>
               <form className="create_epic_form">
-                <input type="text" placeholder="Title"></input>
-                <textarea type="range" placeholder="Description"></textarea>
+                <input type="text" placeholder="Epic Title"></input>
+                <textarea type="range" placeholder="Epic Description"></textarea>
                 <div style={{ display: "flex" }}>
-                  <text>Priority: </text>
+                  <text style={{fontWeight:"bold"}}>Priority: </text>
                   <select name="priority" id="priority" style={{ marginLeft: "10px" }}>
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
                     <option value="high">High</option>
                   </select>
                 </div>
+                {/* color stuff (unused)
                 <br />
                 <p style={{ textAlign: "left", fontWeight: "bold", marginBottom: "15px" }}>Select epic color:</p>
                 <div className="colors">
@@ -161,7 +161,7 @@ const Epics = ({ footerHandle }) => {
                   <div class="box" id="pink" onClick={() => selectNewEpicColor("pink")} />
                   <div class="box" id="purple" onClick={() => selectNewEpicColor("purple")} />
                   <div class="box" id="black" onClick={() => selectNewEpicColor("black")} />
-                </div>
+                </div> */}
                 <button onClick={handlePopupButtonClick}>Create</button>
               </form>
             </div>

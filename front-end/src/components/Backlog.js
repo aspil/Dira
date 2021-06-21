@@ -4,11 +4,13 @@ import ProjectNav from './ProjectNav'
 import Footer from './Footer'
 import SideNav from './SideNav'
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useHistory } from 'react-router-dom'
 import { Search } from '@material-ui/icons'
 import { DiraIssueClient } from "dira-clients";
+import edit_icon from "../Images/edit_icon.png"
 
 const Backlog = ({ token, footerHandle }) => {
+  const history = useHistory();
 
   const [backlogIssues, setBacklogIssues] = useState([
     { title: 'Issue y', dateCreated: "10/5/2023", priority: "high", key: 2 },
@@ -32,7 +34,10 @@ const Backlog = ({ token, footerHandle }) => {
   const showIssuePanel = () => {
     handleIssuePanel("show")
   }
-
+// Edit Issue Button
+    const handleEditIssue = () => {
+        history.push('issue_preview');
+    }
   const [projectName, setProjectName] = useState('');
 
   const { projectId } = useParams();
@@ -178,6 +183,12 @@ const Backlog = ({ token, footerHandle }) => {
                   <br />
                   <text className="label" id="dateCreated">Created on: </text>
                   <text className="answer" id="dateCreatedAnswer">10/3/2021</text>
+                  <div style={{textAlign:"center", marginTop:"20px"}}>
+                    <Link to="/issue_preview" id = "editIssueLink">
+                      <img id="pencilIcon" src={edit_icon} alt="Pencil"></img>
+                      Edit Issue
+                    </Link>               
+                  </div>
                 </div>
               </div>
             }

@@ -2,22 +2,18 @@ import SideNav from './SideNav';
 import ProjectNav from './ProjectNav';
 import Footer from './Footer';
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import search_icon from "../Images/search_icon.png"
 import edit_icon from "../Images/edit_icon.png"
 
 const ActiveSprint = ({ footerHandle }) => {
-    const history = useHistory();
 
     // Issue Panel
     const [issue_panel, handleIssuePanel] = useState("hide");
     const showIssuePanel = () => {
         handleIssuePanel("show")
     }
-    // Edit Issue Button
-    const handleEditIssue = () => {
-        history.push('issue_preview');
-    }
+
     const [inactiveIssues, setInactiveIssues] = useState([
         { title: 'Takis Papadakis', dueDate: '14/5/2021', briefDescription: 'Lorem ipsum dolor sit amet', id: 1 },
         { title: 'Lakis', dueDate: '14/5/2021', briefDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur adipiscing elit', id: 2 },
@@ -110,12 +106,12 @@ const ActiveSprint = ({ footerHandle }) => {
                         {issue_panel === "show" &&
                             <div className="issuePanel">
                                 <div>
-                                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                    <div style={{ display: "flex", justifyContent: "space-between",alignItems:"center" }}>
                                         <h1 id="issueName">Issue Name</h1>
-                                        <button id="editIssueButton" onClick={handleEditIssue}>
-                                            <img id="pencilIcon" src={edit_icon} alt="Pencil"></img>
-                                            Edit Issue
-                                        </button>
+                                        <Link to="/issue_preview" id = "editIssueLink">
+                                                <img id="pencilIcon" src={edit_icon} alt="Pencil"></img>
+                                                Edit Issue
+                                        </Link>
                                     </div>
                                     <br></br>
                                     <text id="issueEpic">Epic of this Issue</text>

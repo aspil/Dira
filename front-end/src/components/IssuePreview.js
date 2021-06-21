@@ -5,7 +5,6 @@ const IssuePreview = ({ footerHandle }) => {
   useEffect(footerHandle, [footerHandle]);
 
   return (
-    // Gia na doylepsei to sidebar
     <div className="issuePreview proj_page">
       <div className="center_content">
         <SideNav />
