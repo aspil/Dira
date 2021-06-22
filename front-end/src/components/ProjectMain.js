@@ -7,7 +7,7 @@ import x_icon from "../Images/x_icon.png"
 import trashcan_icon from "../Images/trashcan_icon.png"
 
 
-const ProjectMain = ({ userInfo, userClient, userPlan, doLogout, footerHandle, footerStylesHandle, projectClient }) => {
+const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle, footerStylesHandle, projectClientRef }) => {
   const [listState, setListState] = useState("showProjects");
   const history = useHistory()
   const [projects, setProjects] = useState([]);
@@ -40,7 +40,7 @@ const ProjectMain = ({ userInfo, userClient, userPlan, doLogout, footerHandle, f
   const handleEditProjectButtonClick = (e) => {
     e.preventDefault()
 
-    projectClient.update_project_with_id(current_project.id, {
+    projectClientRef.current.update_project_with_id(current_project.id, {
       "id": current_project.id,
       "description": current_project.description,
       "key": current_project.key,
@@ -58,7 +58,7 @@ const ProjectMain = ({ userInfo, userClient, userPlan, doLogout, footerHandle, f
   }
 
   const handleDeleteProject = (id) => {
-    projectClient.delete_project_by_id(id)
+    projectClientRef.current.delete_project_by_id(id)
       .then(() => {
         fetchAllProjects();
       })
@@ -78,7 +78,7 @@ const ProjectMain = ({ userInfo, userClient, userPlan, doLogout, footerHandle, f
   }
 
   const fetchAllProjects = () => {
-    userClient.get_user_projects(userInfo.id).then((res) => {
+    userClientRef.current.get_user_projects(userInfo.id).then((res) => {
       console.log(res);
       setProjects(res);
     }).catch((err) => {
@@ -87,7 +87,7 @@ const ProjectMain = ({ userInfo, userClient, userPlan, doLogout, footerHandle, f
     });
   }
 
-  useEffect(fetchAllProjects, [userInfo.id, userClient]);
+  useEffect(fetchAllProjects, [userInfo.id, userClientRef]);
 
   useEffect(footerHandle, [footerHandle]);
   useEffect(footerStylesHandle, [footerStylesHandle]);
