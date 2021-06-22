@@ -27,7 +27,7 @@ const SideNav = () => {
     <nav className="sidebar">
       <ul >
         {links.map((item) => (
-          <li><Link to={item.path} style={{ paddingLeft: "40px" }}>{item.name}</Link></li>
+          <li key={item.name}><Link to={item.path} style={{ paddingLeft: "40px" }}>{item.name}</Link></li>
         ))}
       </ul>
       <img src={arrows} alt="arrows" id="arrows" />

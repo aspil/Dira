@@ -3,10 +3,6 @@ import { useEffect, useState } from "react";
 import x_icon from "../Images/x_icon.png"
 import { useParams } from 'react-router';
 import edit_icon from "../Images/edit_icon.png"
-import trashcan_icon from "../Images/trashcan_icon.png"
-import { useRef } from 'react';
-import { CardMembershipRounded } from '@material-ui/icons';
-
 
 const Members = ({ footerHandle, projectClient, userId }) => {
     // Add member popup handlers
@@ -16,7 +12,7 @@ const Members = ({ footerHandle, projectClient, userId }) => {
     const [projectName, setProjectName] = useState('');
     // Edit member popup handlers
     const [edit_member_popup, handleEditMember] = useState("hide");
-    const [current_member, handleCurrentMember] = useState([]);
+    const [current_member, handleCurrentMember] = useState(null);
 
     const hide_members_popup = () => {
         handleMembersPopup("hide");
@@ -44,7 +40,7 @@ const Members = ({ footerHandle, projectClient, userId }) => {
     useEffect(() => {
         const userPerms = memberPermissions.find(perm => perm.id === userId);
         if (userPerms) {
-            setIsAdmin(Boolean(userPerms.permissions.find(p => p === 'ADMIN')));
+            setIsAdmin(userPerms.permissions.find(p => p === 'ADMIN') !== undefined);
         }
     }, [memberPermissions, userId]);
 
@@ -54,6 +50,7 @@ const Members = ({ footerHandle, projectClient, userId }) => {
         projectClient.get_all_users_in_project_by_id(projectId).then((res) => {
             console.log(res);
             setMembers(res.users);
+            fetchMemberPermissions();
         }).catch((err) => {
             console.log(err);
         });
@@ -105,7 +102,15 @@ const Members = ({ footerHandle, projectClient, userId }) => {
             console.log(err);
         })
     }
-    useEffect(fetchMemberPermissions, []);
+
+    const deleteMember = () => {
+        projectClient.delete_user_from_project_with_id(projectId, current_member.id).then((res) => {
+            console.log(res);
+            fetchMembers();
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
 
     useEffect(footerHandle, [footerHandle]);
 
@@ -123,28 +128,32 @@ const Members = ({ footerHandle, projectClient, userId }) => {
                             <button onClick={show_members_popup}>+ Add Member</button>
                             <div className="table_wrapper">
                                 <table id="main_table">
-                                    <tr>
-                                        <th>Username</th>
-                                        <th>Fullname</th>
-                                        <th>Permissions</th>
-                                        {isAdmin &&
-                                            <th></th>
-                                        }
-
-
-                                    </tr>
-                                    {members.map(member => (
-                                        <tr key={member.id}>
-                                            <td>{member.username}</td>
-                                            <td>{member.name} {member.surname}</td>
-                                            <td>{memberPermissions.length && memberPermissions.find(perms => perms.id === member.id).permissions.toString()}</td>
+                                    <thead>
+                                        <tr>
+                                            <th>Username</th>
+                                            <th>Fullname</th>
+                                            <th>Permissions</th>
                                             {isAdmin &&
-                                                <td style={{ width: "40px", padding: "0", textAlign: "center" }}>
-                                                    <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditMember(member)}></img>
-                                                </td>
+                                                <th></th>
                                             }
+
+
                                         </tr>
-                                    ))}
+                                    </thead>
+                                    <tbody>
+                                        {members.filter(member => !((member.id === userId) && isAdmin)).map(member => (
+                                            <tr key={member.id}>
+                                                <td>{member.username}</td>
+                                                <td>{member.name} {member.surname}</td>
+                                                <td>{(memberPermissions.find(perms => perms.id === member.id) !== undefined) && memberPermissions.find(perms => perms.id === member.id).permissions.toString()}</td>
+                                                {isAdmin &&
+                                                    <td style={{ width: "40px", padding: "0", textAlign: "center" }}>
+                                                        <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditMember(member)}></img>
+                                                    </td>
+                                                }
+                                            </tr>
+                                        ))}
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -194,9 +203,14 @@ const Members = ({ footerHandle, projectClient, userId }) => {
                                     <button onClick={handleEditMemberButtonClick}>Save changes</button>
                                 </form>
                             </div>
-                            <div className="deleteMember">
-                                <button id="removeUserButton"> Remove member</button>
-                            </div>
+                            {(current_member.id !== userId) &&
+                                <div className="deleteMember">
+                                    <button
+                                        id="removeUserButton"
+                                        onClick={deleteMember}
+                                    > Remove member</button>
+                                </div>
+                            }
                         </div>
                     }
                 </main>

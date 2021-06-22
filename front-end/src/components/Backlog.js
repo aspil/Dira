@@ -215,22 +215,26 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
               </div>
               <div className="tableWrapper">
                 <table id="backlogIssuesTable">
-                  <tr>
-                    <th>Key</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Type</th>
-                    <th>Priority</th>
-                  </tr>
-                  {searchFilteredIssues.map(issue => (
-                    <tr key={issue.key} onClick={() => showIssuePanel(issue.id)}>
-                      <td>{issue.key}</td>
-                      <td>{issue.title}</td>
-                      <td>{issue.description}</td>
-                      <td>{issue.type}</td>
-                      <td>{issue.priority}</td>
+                  <thead>
+                    <tr>
+                      <th>Key</th>
+                      <th>Title</th>
+                      <th>Description</th>
+                      <th>Type</th>
+                      <th>Priority</th>
                     </tr>
-                  ))}
+                  </thead>
+                  <tbody>
+                    {searchFilteredIssues.map(issue => (
+                      <tr key={issue.key} onClick={() => showIssuePanel(issue.id)}>
+                        <td>{issue.key}</td>
+                        <td>{issue.title}</td>
+                        <td>{issue.description}</td>
+                        <td>{issue.type}</td>
+                        <td>{issue.priority}</td>
+                      </tr>
+                    ))}
+                  </tbody>
                 </table>
               </div>
               <div style={{ textAlign: "center" }}>
