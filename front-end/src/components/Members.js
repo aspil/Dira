@@ -4,12 +4,20 @@ import x_icon from "../Images/x_icon.png"
 import { useParams } from 'react-router';
 import edit_icon from "../Images/edit_icon.png"
 import trashcan_icon from "../Images/trashcan_icon.png"
+import { useRef } from 'react';
+import { CardMembershipRounded } from '@material-ui/icons';
 
 
-const Members = ({ username, doLogout, footerHandle }) => {
+const Members = ({ footerHandle, projectClient, userId }) => {
     // Add member popup handlers
     const [add_members_popup, handleMembersPopup] = useState("hide");
-    
+    const [members, setMembers] = useState([]);
+    const [memberPermissions, setMemberPermissions] = useState([]);
+    const [projectName, setProjectName] = useState('');
+    // Edit member popup handlers
+    const [edit_member_popup, handleEditMember] = useState("hide");
+    const [current_member, handleCurrentMember] = useState([]);
+
     const hide_members_popup = () => {
         handleMembersPopup("hide");
     }
@@ -19,58 +27,96 @@ const Members = ({ username, doLogout, footerHandle }) => {
     const handleAddMemberButtonClick = () => {
         hide_members_popup();
     }
-    
 
-    // Edit member popup handlers
-    const [edit_member_popup, handleEditMember] = useState("hide");
-    const [current_member, handleCurrentMember] = useState([]);
 
     const hideEditMember = () => {
-      handleEditMember("hide");
+        handleEditMember("hide");
     }
     const showEditMember = (member) => {
-      handleCurrentMember(member);
-      handleEditMember("show");
+        handleCurrentMember(member);
+        handleEditMember("show");
     }
     const handleEditMemberButtonClick = () => {
         hideEditMember();
     }
-    //
-    const isAdmin = "yes";
 
-    const [members, setMembers] = useState([
-        { name: 'Makis', dateJoined: '14/5/2021', role: 'developer', id: 1 },
-        { name: 'Takis', dateJoined: '2/11/2019', role: 'admin', id: 2 },
-        { name: 'Lakis', dateJoined: '3/8/2018', role: 'developer', id: 3 },
-        { name: 'Akis', dateJoined: '16/5/2020', role: 'developer', id: 4 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-        { name: 'Papadakis', dateJoined: '25/3/2021', role: 'developer', id: 5 },
-    ])
+    const [isAdmin, setIsAdmin] = useState(false);
+    useEffect(() => {
+        const userPerms = memberPermissions.find(perm => perm.id === userId);
+        if (userPerms) {
+            setIsAdmin(Boolean(userPerms.permissions.find(p => p === 'ADMIN')));
+        }
+    }, [memberPermissions, userId]);
+
+    const { projectId } = useParams();
+
+    const fetchMembers = () => {
+        projectClient.get_all_users_in_project_by_id(projectId).then((res) => {
+            console.log(res);
+            setMembers(res.users);
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
+    useEffect(fetchMembers, []);
+
+    useEffect(() => {
+        projectClient.get_project_by_id(projectId).then(res => {
+            // console.log(res);
+            setProjectName(res.name);
+        }).catch(err => {
+            console.log(err);
+        })
+    }, []);
+
+    const fetchMemberPermissions = () => {
+        projectClient.get_project_permissions_for_all_users(projectId).then(res => {
+            setMemberPermissions(res.map(customer => {
+                const toSave = { id: customer.customerId };
+                toSave.permissions = [];
+
+                const p = [
+                    {
+                        bit: 0b0001,
+                        string: 'READ'
+                    },
+                    {
+                        bit: 0b0010,
+                        string: 'WRITE'
+                    },
+                    {
+                        bit: 0b0100,
+                        string: 'DELETE'
+                    },
+                    {
+                        bit: 0b1000,
+                        string: 'ADMIN'
+                    },
+                ];
+
+                p.forEach(perm => {
+                    const hasPerm = perm.bit & customer.permission;
+                    hasPerm && toSave.permissions.push(perm.string);
+                })
+
+                return toSave;
+            }));
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+    useEffect(fetchMemberPermissions, []);
 
     useEffect(footerHandle, [footerHandle]);
 
     return (
-        // Gia na doylepsei to sidebar
         <div className="members proj_page">
             <div className="center_content">
                 <SideNav />
                 <main>
                     {/* Content */}
                     <div className="content">
-                        <h1 id="project_name">KFC is coming to Greece</h1>
+                        <h1 id="project_name">{projectName}</h1>
                         {/* Main Panel */}
                         <div className="main_panel">
                             <h1 id="team_members">Team Members</h1>
@@ -78,10 +124,10 @@ const Members = ({ username, doLogout, footerHandle }) => {
                             <div className="table_wrapper">
                                 <table id="main_table">
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Date Joined</th>
-                                        <th>Role</th>
-                                        {isAdmin === "yes" &&
+                                        <th>Username</th>
+                                        <th>Fullname</th>
+                                        <th>Permissions</th>
+                                        {isAdmin &&
                                             <th></th>
                                         }
 
@@ -89,15 +135,15 @@ const Members = ({ username, doLogout, footerHandle }) => {
                                     </tr>
                                     {members.map(member => (
                                         <tr key={member.id}>
-                                            <td>{member.name}</td>
-                                            <td>{member.dateJoined}</td>
-                                            <td>{member.role}</td>
-                                            {isAdmin === "yes" &&
-                                                <td style={{width:"40px",padding:"0",textAlign:"center"}}>
+                                            <td>{member.username}</td>
+                                            <td>{member.name} {member.surname}</td>
+                                            <td>{memberPermissions.length && memberPermissions.find(perms => perms.id === member.id).permissions.toString()}</td>
+                                            {isAdmin &&
+                                                <td style={{ width: "40px", padding: "0", textAlign: "center" }}>
                                                     <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditMember(member)}></img>
                                                 </td>
                                             }
-                                        </tr>                                             
+                                        </tr>
                                     ))}
                                 </table>
                             </div>
@@ -112,7 +158,7 @@ const Members = ({ username, doLogout, footerHandle }) => {
                             </div>
                             <form className="add_member_form">
                                 <input id="memberEmail" type="text" placeholder="Email Address"></input>
-                                 <button onClick={handleAddMemberButtonClick}>Add</button>
+                                <button onClick={handleAddMemberButtonClick}>Add</button>
                             </form>
                         </div>
                     }
@@ -120,7 +166,7 @@ const Members = ({ username, doLogout, footerHandle }) => {
 
                     {edit_member_popup === "show" &&
                         <div className="members_popup">
-                            <div style={{display:"flex",justifyContent:"space-between"}}>
+                            <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <h2>{current_member.name}</h2>
                                 <img src={x_icon} alt="accountIcon" onClick={hideEditMember}></img>
                             </div>
@@ -131,17 +177,17 @@ const Members = ({ username, doLogout, footerHandle }) => {
                                     <br></br>
                                     <br></br>
                                     <label>
-                                        <input id="checkbox" type="checkbox"/>
+                                        <input id="checkbox" type="checkbox" />
                                         Read Issues
                                     </label>
                                     <br />
                                     <label>
-                                        <input id="checkbox" type="checkbox"/>
+                                        <input id="checkbox" type="checkbox" />
                                         Write Issues
                                     </label>
                                     <br />
                                     <label>
-                                        <input id="checkbox" type="checkbox"/>
+                                        <input id="checkbox" type="checkbox" />
                                         Delete Issues
                                     </label>
                                     <br />

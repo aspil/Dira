@@ -141,8 +141,7 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
 
   useEffect(() => {
     if (searchFilter) {
-      const currentIssues = backlogIssues;
-      setSearchFilteredIssues(currentIssues.filter((issue) => {
+      setSearchFilteredIssues(backlogIssues.filter((issue) => {
         const issueFields = Object.keys(issue);
         let isRelevant = false;
         issueFields.forEach(field => {

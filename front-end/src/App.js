@@ -133,10 +133,10 @@ function App() {
           </Route>
           <Route path="/change_password">
             {token === undefined && <Redirect to="/sign_in" />}
-            {token !== undefined && <ChangePassword 
-              navHandle={showHomeNavHook} 
-              />}
-              
+            {token !== undefined && <ChangePassword
+              navHandle={showHomeNavHook}
+            />}
+
           </Route>
 
           <Route path="/pricing">
@@ -177,6 +177,8 @@ function App() {
               <Members
                 username={userInfo.username}
                 doLogout={doLogout}
+                projectClient={projectClient}
+                userId={userInfo.id}
                 footerHandle={showFooterHook} />
             }
           </Route>
