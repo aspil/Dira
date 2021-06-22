@@ -50,7 +50,6 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
         projectClientRef.current.get_all_users_in_project_by_id(projectId).then((res) => {
             console.log(res);
             setMembers(res.users);
-            fetchMemberPermissions();
         }).catch((err) => {
             console.log(err);
         });
@@ -102,10 +101,12 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
             console.log(err);
         })
     }
+    useEffect(fetchMemberPermissions, []);
 
     const deleteMember = () => {
         projectClientRef.current.delete_user_from_project_with_id(projectId, current_member.id).then((res) => {
             console.log(res);
+            fetchMemberPermissions();
             fetchMembers();
         }).catch((err) => {
             console.log(err);
@@ -136,19 +137,24 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
                                             {isAdmin &&
                                                 <th></th>
                                             }
-
-
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {members.filter(member => !((member.id === userId) && isAdmin)).map(member => (
+                                        {members.map(member => (
                                             <tr key={member.id}>
                                                 <td>{member.username}</td>
                                                 <td>{member.name} {member.surname}</td>
                                                 <td>{(memberPermissions.find(perms => perms.id === member.id) !== undefined) && memberPermissions.find(perms => perms.id === member.id).permissions.toString()}</td>
                                                 {isAdmin &&
                                                     <td style={{ width: "40px", padding: "0", textAlign: "center" }}>
-                                                        <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditMember(member)}></img>
+                                                        {member.id !== userId &&
+                                                            <img
+                                                                id="pencilIcon"
+                                                                src={edit_icon}
+                                                                alt="Pencil"
+                                                                onClick={() => showEditMember(member)}
+                                                            />
+                                                        }
                                                     </td>
                                                 }
                                             </tr>
