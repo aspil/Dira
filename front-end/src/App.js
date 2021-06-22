@@ -186,10 +186,6 @@ function App() {
             {token === undefined && <Redirect to="/sign_in" />}
             {token !== undefined && <ActiveSprint username={userInfo.username} footerHandle={showFooterHook} />}
           </Route>
-          <Route path="/epics/:projectId">
-            {token === undefined && <Redirect to="/sign_in" />}
-            {token !== undefined && <Epics username={userInfo.username} footerHandle={showFooterHook} />}
-          </Route>
           <Route path="/project/:projectId/issue_preview/:issueId">
             {token === undefined && <Redirect to="/sign_in" />}
             {token !== undefined && <IssuePreview username={userInfo.username} footerHandle={showFooterHook} />}

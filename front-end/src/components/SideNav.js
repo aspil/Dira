@@ -14,10 +14,6 @@ const SideNav = () => {
       path: `/backlog/${projectId}`
     },
     {
-      name: "Epics",
-      path: `/epics/${projectId}`
-    },
-    {
       name: "Members",
       path: `/members/${projectId}`
     },
