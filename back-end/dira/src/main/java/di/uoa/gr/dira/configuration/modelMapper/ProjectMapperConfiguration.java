@@ -5,6 +5,7 @@ import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.models.issue.IssueModel;
 import di.uoa.gr.dira.models.project.ProjectIssuesModel;
+import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.models.project.ProjectUsersModel;
 import di.uoa.gr.dira.models.project.permission.ProjectUserPermissionModel;
 import di.uoa.gr.dira.util.mapper.ListConverter;
@@ -16,9 +17,20 @@ import org.springframework.stereotype.Component;
 public class ProjectMapperConfiguration implements IMapConfiguration {
     @Override
     public void configure(ModelMapper mapper) {
+        configureProjectModelToProjectEntity(mapper);
         configureProjectEntityToProjectUsersModel(mapper);
         configureProjectEntityToProjectIssuesModel(mapper);
         configurePermissionEntityToProjectUserPermissionModel(mapper);
+    }
+
+    /**
+     * Creates the model mapper configuration when mapping a ProjectModel to a Project entity
+     *
+     * @param mapper The mapper to configure
+     */
+    private void configureProjectModelToProjectEntity(ModelMapper mapper) {
+        TypeMap<ProjectModel, Project> typeMap = mapper.createTypeMap(ProjectModel.class, Project.class);
+        typeMap.addMappings(m -> m.skip(ProjectModel::getId, Project::setId));
     }
 
     /**

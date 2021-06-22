@@ -109,8 +109,10 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
 
     @Override
     public ProjectModel updateProjectWithId(Long projectId, Long customerId, ProjectModel projectModel) {
-        checkPermissions(projectId, customerId);
-        return super.save(projectModel);
+        Project project = checkPermissions(projectId, customerId);
+        mapper.map(projectModel, project);
+        project = repository.save(project);
+        return mapper.map(project, modelType);
     }
 
     @Override

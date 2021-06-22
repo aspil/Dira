@@ -168,6 +168,7 @@ function App() {
               token={token}
               doLogout={doLogout}
               footerHandle={showFooterHook}
+              projectClient={projectClient}
             />}
           </Route>
           <Route path="/members/:projectId">
@@ -187,7 +188,7 @@ function App() {
             {token === undefined && <Redirect to="/sign_in" />}
             {token !== undefined && <Epics username={userInfo.username} footerHandle={showFooterHook} />}
           </Route>
-          <Route path="/issue_preview">
+          <Route path="/project/:projectId/issue_preview/:issueId">
             {token === undefined && <Redirect to="/sign_in" />}
             {token !== undefined && <IssuePreview username={userInfo.username} footerHandle={showFooterHook} />}
           </Route>

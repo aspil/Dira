@@ -37,10 +37,10 @@ const create_project_questions = [
     }
 ];
 
-class CreateProjectCommand extends Command {
+class UpdateProjectCommand extends Command {
     async run() {
         const client = new DiraProjectClient();
-        const { flags } = this.parse(CreateProjectCommand);
+        const { flags } = this.parse(UpdateProjectCommand);
 
         var token = flags.login
             ? await common.prompt_login_and_get_token()
@@ -48,34 +48,45 @@ class CreateProjectCommand extends Command {
 
         client.set_authorization_token(token);
 
-        var data;
-        if (flags.data) {
-            try {
-                data = JSON.parse(flags.data);
+        var project;
+        if (flags.id) {
+            project = await client.get_project_by_id(flags.id).catch(err => {
+                logging.fatal(`No project with id '${flags.id}' was found`);
+            });
+
+            var data;
+            if (flags.data) {
+                try {
+                    data = JSON.parse(flags.data);
+                }
+                catch {
+                    logging.fatal("The project data that you provided are an invalid JSON");
+                }
+            } else {
+                for (var question of create_project_questions) {
+                    question.default = project[question.name];
+                }
+
+                data = await io_utils.get_answers_serialized(create_project_questions);
             }
-            catch {
-                logging.fatal("The project data that you provided are an invalid JSON");
-            }
-        } else {
-            data = await io_utils.get_answers_serialized(create_project_questions);
         }
 
-        client.create_project(data)
+        client.update_project_with_id(flags.id, data)
             .then(project => {
                 logging.log();
-                logging.info("New project was created succesfully");
+                logging.info("Project was updated succesfully");
                 logging.log();
                 console.table(project);
             }).catch(err => {
-                logging.error("Could not create new project");
+                logging.error("Could not update project");
                 logging.info(`Reason: ${err.error.message}`);
             });
     }
 }
 
-CreateProjectCommand.description = `Create a new Project
+UpdateProjectCommand.description = `Update a Project's information
 
-Required information for creating a new project:
+Available information when updating a project:
 - key         (string)
 - name        (string)
 - description (string)
@@ -86,10 +97,11 @@ then the user will be automatically prompted
 to enter this kind of infromation.
 `;
 
-CreateProjectCommand.flags = {
+UpdateProjectCommand.flags = {
     "auth-token": flags.string({ char: 't', description: 'The authentication token to use for user' }),
     login: flags.boolean({ char: 'l', description: 'Force login of user before sending the request' }),
-    data: flags.string({ char: 'd', description: 'The data of the project to create in JSON format' })
+    data: flags.string({ char: 'd', description: 'The data of the project to update in JSON format' }),
+    id: flags.integer({ description: 'The id of the project to update'}),
 };
 
-module.exports = CreateProjectCommand;
+module.exports = UpdateProjectCommand;
