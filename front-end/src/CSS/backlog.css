@@ -106,7 +106,7 @@
   overflow-y: auto;
 }
 
-.backlog .issuePanel #issueEpic{
+.backlog .issuePanel .colored_text{
   font-size: 25px;
   font-weight: bold;
   color: white;

@@ -178,6 +178,13 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
     'Blocked'
   ]
 
+  const priorityToColorMapper = {
+    Normal: 'green',
+    Low: 'teal',
+    Major: 'crimson',
+    Blocked: 'purple'
+  }
+
   return (
     <div className="backlog proj_page">
       <div className="center_content">
@@ -245,7 +252,7 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
                   {focusedIssue.epicId &&
                     <>
                       <text
-                        id="issueEpic"
+                        class="colored_text"
                         onClick={() => showIssuePanel(focusedIssue.epicId)}
                       >
                         {backlogIssues.find(issue => issue.id === focusedIssue.epicId).key}
@@ -261,7 +268,18 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
                   <text className="answer" id="statusAnswer">{focusedIssue.status}</text>
                   <br />
                   <text className="label" id="priority">Priority: </text>
-                  <text className="answer" id="priorityAnswer">{focusedIssue.priority}</text>
+                  <text
+                    className="answer"
+                    class="colored_text"
+                    style={{
+                      display: 'inline-block',
+                      fontSize: '1em',
+                      marginTop: '0.2em',
+                      backgroundColor: priorityToColorMapper[focusedIssue.priority]
+                    }}
+                  >
+                    {focusedIssue.priority}
+                  </text>
                   <br />
                   <br />
                   <text className="label" id="resolution">Resolution: </text>
@@ -451,7 +469,7 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
                   </div>
                 </div>
                 {issueCreationError &&
-                  <p style={{ color: 'crimson' }}>
+                  <p style={{ color: 'crimson', marginTop: '1em', textAlign: 'center' }}>
                     {errorMsg}
                   </p>
                 }
