@@ -118,6 +118,9 @@
   padding-top: 3px;
   padding-bottom: 3px;
 }
+.backlog .issuePanel #issueEpic:hover{
+  cursor: pointer;
+}
 
 .backlog .issuePanel .label{
   font-weight: bold;
