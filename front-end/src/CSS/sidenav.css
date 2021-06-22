@@ -2,7 +2,7 @@
   flex-grow: 0;
   flex-basis: 30%;
   max-width: 280px;
-  min-width: 180px;
+  min-width: 280px;
   background-color: rgb(129, 185, 238);
   position: relative;
 }

@@ -229,9 +229,11 @@ const Backlog = ({ token, footerHandle, projectClientRef }) => {
                       <tr key={issue.key} onClick={() => showIssuePanel(issue.id)}>
                         <td>{issue.key}</td>
                         <td>{issue.title}</td>
-                        <td>{issue.description}</td>
-                        <td>{issue.type}</td>
-                        <td>{issue.priority}</td>
+                      <td className="largeCell">{issue.description}</td>
+                      <td>{issue.type}</td>
+                      <td style={{textAlign:"center"}}> 
+                        <text class="colored_text" style={{backgroundColor:priorityToColorMapper[issue.priority],fontSize:"12px"}}>{issue.priority}</text>
+                      </td>                      
                       </tr>
                     ))}
                   </tbody>
