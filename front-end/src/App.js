@@ -2,14 +2,13 @@ import Home from './components/Home';
 import Register from './components/Register';
 import Login from './components/Login';
 import Plan from './components/Plans'
-import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import ProjectMain from './components/ProjectMain';
 import ProjectNav from './components/ProjectNav';
 import PasswordRecovery from './components/PasswordRecovery';
 import ChangePassword from './components/ChangePassword';
 import ActiveSprint from './components/ActiveSprint';
 import Members from './components/Members';
-import Epics from './components/Epics';
 import Backlog from './components/Backlog';
 import IssuePreview from './components/IssuePreview';
 import { useEffect, useRef, useState } from 'react';
@@ -34,6 +33,8 @@ function App() {
   const [showFooter, setShowFooter] = useState(false);
   const [showFooterStyles, setShowFooterStyles] = useState(false);
   const [stayLogged, setStayLogged] = useState(true);
+
+  const history = useHistory();
 
   const setPremiumPlan = () => {
     const info = { ...userInfo };
@@ -76,6 +77,7 @@ function App() {
     });
     localStorage.clear();
     setIsLogged(false);
+    history.push('/');
   }
 
   const showHomeNavHook = () => {
@@ -103,112 +105,112 @@ function App() {
   }
 
   return (
-    <Router>
-      <div className="App">
-        {isLogged && <ProjectNav username={userInfo.username} doLogout={doLogout} />}
-        {!isLogged && showHomeNav && <HomeNav />}
+    <div className="App">
+      {isLogged && <ProjectNav username={userInfo.username} doLogout={doLogout} />}
+      {!isLogged && showHomeNav && <HomeNav />}
 
-        <Switch>
-          <Route exact path="/">
-            {token !== undefined && <Redirect to="/proj_main" />}
-            {token === undefined && <Home footerHandle={showFooterHook} />}
-          </Route>
-          <Route path="/sign_in">
-            {token !== undefined && <Redirect to="/proj_main" />}
-            {token === undefined &&
-              <Login
-                setToken={setToken}
-                userClientRef={userClientRef}
-                setUserInfo={setUserInfo}
-                setIsLogged={setIsLogged}
-                setStayLogged={setStayLogged}
-                stayLogged={stayLogged}
-                navHandle={showHomeNavHook} />
-            }
-          </Route>
-          <Route path="/register">
-            {token !== undefined && <Redirect to="/proj_main" />}
-            {token === undefined && <Register userClientRef={userClientRef} navHandle={showHomeNavHook} />}
-          </Route>
-          <Route path="/recover">
-            {token !== undefined && <Redirect to="/proj_main" />}
-            {token === undefined && <PasswordRecovery navHandle={showHomeNavHook} />}
-          </Route>
-          <Route path="/change_password">
-            {token === undefined && <Redirect to="/sign_in" />}
-            {token !== undefined && <ChangePassword
-              navHandle={showHomeNavHook}
-            />}
-
-          </Route>
-
-          <Route path="/pricing">
-            <Plan
+      <Switch>
+        <Route exact path="/">
+          {token !== undefined && <Redirect to="/proj_main" />}
+          {token === undefined && <Home footerHandle={showFooterHook} />}
+        </Route>
+        <Route path="/sign_in">
+          {token !== undefined && <Redirect to="/proj_main" />}
+          {token === undefined &&
+            <Login
+              setToken={setToken}
               userClientRef={userClientRef}
-              userId={userInfo.id}
-              userPlan={userInfo.plan}
-              isLogged={isLogged}
-              setPremiumPlan={setPremiumPlan}
-            />
-          </Route>
+              setUserInfo={setUserInfo}
+              setIsLogged={setIsLogged}
+              setStayLogged={setStayLogged}
+              stayLogged={stayLogged}
+              navHandle={showHomeNavHook} />
+          }
+        </Route>
+        <Route path="/register">
+          {token !== undefined && <Redirect to="/proj_main" />}
+          {token === undefined && <Register userClientRef={userClientRef} navHandle={showHomeNavHook} />}
+        </Route>
+        <Route path="/recover">
+          {token !== undefined && <Redirect to="/proj_main" />}
+          {token === undefined && <PasswordRecovery navHandle={showHomeNavHook} />}
+        </Route>
+        <Route path="/change_password">
+          {token === undefined && <Redirect to="/sign_in" />}
+          {token !== undefined && <ChangePassword
+            navHandle={showHomeNavHook}
+            userId={userInfo.userId}
+            userClientRef={userClientRef}
+          />}
 
-          <Route path="/proj_main">
-            {token === undefined && <Redirect to="/sign_in" />}
-            {token !== undefined && <ProjectMain
-              userInfo={userInfo}
-              userClientRef={userClientRef}
-              token={token}
-              doLogout={doLogout}
-              footerHandle={showFooterHook}
-              footerStylesHandle={footerStylesHook}
-              userPlan={userInfo.plan}
-              projectClientRef={projectClientRef} />}
-          </Route>
-          <Route path="/backlog/:projectId">
-            {token === undefined && <Redirect to="/sign_in" />}
-            {token !== undefined && <Backlog
+        </Route>
+
+        <Route path="/pricing">
+          <Plan
+            userClientRef={userClientRef}
+            userId={userInfo.id}
+            userPlan={userInfo.plan}
+            isLogged={isLogged}
+            setPremiumPlan={setPremiumPlan}
+          />
+        </Route>
+
+        <Route path="/proj_main">
+          {token === undefined && <Redirect to="/sign_in" />}
+          {token !== undefined && <ProjectMain
+            userInfo={userInfo}
+            userClientRef={userClientRef}
+            token={token}
+            doLogout={doLogout}
+            footerHandle={showFooterHook}
+            footerStylesHandle={footerStylesHook}
+            userPlan={userInfo.plan}
+            projectClientRef={projectClientRef} />}
+        </Route>
+        <Route path="/backlog/:projectId">
+          {token === undefined && <Redirect to="/sign_in" />}
+          {token !== undefined && <Backlog
+            username={userInfo.username}
+            token={token}
+            doLogout={doLogout}
+            footerHandle={showFooterHook}
+            projectClientRef={projectClientRef}
+          />}
+        </Route>
+        <Route path="/members/:projectId">
+          {token === undefined && <Redirect to="/sign_in" />}
+          {token !== undefined &&
+            <Members
               username={userInfo.username}
-              token={token}
               doLogout={doLogout}
-              footerHandle={showFooterHook}
               projectClientRef={projectClientRef}
-            />}
-          </Route>
-          <Route path="/members/:projectId">
-            {token === undefined && <Redirect to="/sign_in" />}
-            {token !== undefined &&
-              <Members
-                username={userInfo.username}
-                doLogout={doLogout}
-                projectClientRef={projectClientRef}
-                userId={userInfo.id}
-                footerHandle={showFooterHook} />
-            }
-          </Route>
-          <Route path="/active_sprint/:projectId">
-            {token === undefined && <Redirect to="/sign_in" />}
-            {token !== undefined && <ActiveSprint username={userInfo.username} footerHandle={showFooterHook} />}
-          </Route>
-          <Route path="/project/:projectId/issue_preview/:issueId">
-            {token === undefined && <Redirect to="/sign_in" />}
-            {token !== undefined && <IssuePreview username={userInfo.username} footerHandle={showFooterHook} />}
-          </Route>
-          <Route path="/create_project">
-            {token === undefined && <Redirect to="/sign_in" />}
-            {token !== undefined && <CreateProject
-              projectClientRef={projectClientRef}
-              userPlan={userInfo.plan}
-            />}
-          </Route>
-        </Switch>
+              userId={userInfo.id}
+              footerHandle={showFooterHook} />
+          }
+        </Route>
+        <Route path="/active_sprint/:projectId">
+          {token === undefined && <Redirect to="/sign_in" />}
+          {token !== undefined && <ActiveSprint username={userInfo.username} footerHandle={showFooterHook} />}
+        </Route>
+        <Route path="/project/:projectId/issue_preview/:issueId">
+          {token === undefined && <Redirect to="/sign_in" />}
+          {token !== undefined && <IssuePreview username={userInfo.username} footerHandle={showFooterHook} />}
+        </Route>
+        <Route path="/create_project">
+          {token === undefined && <Redirect to="/sign_in" />}
+          {token !== undefined && <CreateProject
+            projectClientRef={projectClientRef}
+            userPlan={userInfo.plan}
+          />}
+        </Route>
+      </Switch>
 
-        {showFooter &&
-          <div style={showFooterStyles ? { clear: "both", position: "absolute", bottom: "0", width: "100%" } : {}}>
-            <Footer />
-          </div>
-        }
-      </div>
-    </Router>
+      {showFooter &&
+        <div style={showFooterStyles ? { clear: "both", position: "absolute", bottom: "0", width: "100%" } : {}}>
+          <Footer />
+        </div>
+      }
+    </div>
   );
 }
 
