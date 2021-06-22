@@ -146,6 +146,11 @@ const Plan = ({ userClientRef, userId, userPlan, isLogged, setPremiumPlan }) => 
     // ],
   ]
 
+  const handleStandPlanClick = () => {
+    if (!isLogged) {
+      history.push('/sign_in');
+    }
+  }
   const handleIconClick = () => {
     if (!isLogged) {
       history.push('/sign_in');
@@ -171,7 +176,12 @@ const Plan = ({ userClientRef, userId, userPlan, isLogged, setPremiumPlan }) => 
             <Card className={classes.std_card} >
               <CardContent>
                 <h1 className={classes.planTitle1}>Standard</h1>
-                <button className={classes.bttn1}>0&euro;</button>
+                <button
+                  className={classes.bttn1}
+                  onClick={handleStandPlanClick}
+                >
+                  0&euro;
+                </button>
                 <p className={classes.planDesc1}>
                   For small teams looking for an easy
                   tool to organize and track their work
@@ -183,7 +193,10 @@ const Plan = ({ userClientRef, userId, userPlan, isLogged, setPremiumPlan }) => 
             <Card className={classes.prm_card} >
               <CardContent className={classes.cont2}>
                 <h1 className={classes.planTitle2}>Premium</h1>
-                <button className={classes.bttn2} onClick={handleIconClick}>
+                <button
+                  className={classes.bttn2}
+                  onClick={handleIconClick}
+                >
                   12&euro;
                   <p style={{ fontSize: '1rem', color: 'inherit' }}>per user</p>
                 </button>

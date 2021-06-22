@@ -127,7 +127,7 @@ function App() {
               navHandle={showHomeNavHook} />
           }
         </Route>
-        <Route path="/register">
+        <Route exact path={["/register", "/register/:userEmail"]}>
           {token !== undefined && <Redirect to="/proj_main" />}
           {token === undefined && <Register userClientRef={userClientRef} navHandle={showHomeNavHook} />}
         </Route>

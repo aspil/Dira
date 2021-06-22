@@ -1,13 +1,21 @@
 import logo from "../Images/dira_icon.png"
 import { useHistory } from "react-router-dom";
 import { useEffect } from 'react';
+import { useState } from "react";
 
 
 function Home({ footerHandle }) {
   const history = useHistory();
+  const [email, setEmail] = useState('');
 
   const handleStartForFreeButtonClick = (e) => {
-    history.push('/sign_in');
+    e.preventDefault();
+    if (email) {
+      history.push(`/register/${email}`);
+    }
+    else {
+      history.push(`/register`);
+    }
   }
   useEffect(footerHandle, [footerHandle]);
 
@@ -16,9 +24,14 @@ function Home({ footerHandle }) {
       <div className="home_grad1">
         <img src={logo} alt="dira logo" id="dira logo" />
 
-        <form>
-          <input type="text" placeholder="Email Adress"></input>
-          <button onClick={handleStartForFreeButtonClick}>Start for free</button>
+        <form onSubmit={handleStartForFreeButtonClick}>
+          <input
+            type="email"
+            placeholder="Email Adress"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+          />
+          <button>Start for free</button>
         </form>
         <br /><br /><br />
       </div>

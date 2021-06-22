@@ -1,12 +1,13 @@
 import logo from "../Images/dira_icon_cropped.png"
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-const Register = ({ userClientRef, navHandle }) => {
+const Register = ({ userClientRef, navHandle, enteredEmail }) => {
+  const { userEmail } = useParams();
   const [name, setName] = useState('')
   const [surname, setSurname] = useState('')
   const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState(userEmail || '')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const history = useHistory();
