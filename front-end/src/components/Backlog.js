@@ -12,7 +12,9 @@ import edit_icon from "../Images/edit_icon.png"
 const Backlog = ({ token, footerHandle, projectClient }) => {
   const history = useHistory();
 
-  const [backlogIssues, setBacklogIssues] = useState([])
+  const [backlogIssues, setBacklogIssues] = useState([]);
+  const [searchFilteredIssues, setSearchFilteredIssues] = useState([]);
+  const [searchFilter, setSearchFilter] = useState('');
   const [sprintIssues, setSprintIssues] = useState([
     { title: 'Issue y', dateCreated: "10/5/2023", priority: "high", key: 2 },
   ])
@@ -118,11 +120,36 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
   }
 
 
-  const handleSubmit = (e) => {
+  const handleClearSearch = (e) => {
     e.preventDefault();
-
-    alert('click');
+    setSearchFilter('');
   }
+
+  useEffect(() => {
+    if (searchFilter) {
+      const currentIssues = backlogIssues;
+      setSearchFilteredIssues(currentIssues.filter((issue) => {
+        const issueFields = Object.keys(issue);
+        let isRelevant = false;
+        issueFields.forEach(field => {
+          if (typeof issue[field] === 'string') {
+            isRelevant |= issue[field].includes(searchFilter);
+          }
+          else if (Array.isArray(issue[field])) {
+            issue[field].forEach(subField => {
+              if (typeof issue[field][subField] === 'string') {
+                isRelevant |= issue[field][subField].includes(searchFilter);
+              }
+            })
+          }
+        })
+        return isRelevant;
+      }))
+
+    } else {
+      setSearchFilteredIssues(backlogIssues);
+    }
+  }, [searchFilter, backlogIssues])
 
   const types = [
     'Story',
@@ -151,13 +178,18 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
               <div className="head">
                 <div className="info">
                   <h2>Backlog</h2>
-                  <p className="issue_total">{backlogIssues.length} Issues</p>
+                  <p className="issue_total">{searchFilteredIssues.length} Issues</p>
 
                 </div>
-                <form onSubmit={handleSubmit}>
-                  <input type="search" placeholder="Search for and issue" />
-                  <button type="submit">
-                    <Search fontSize="small" />
+                <form onSubmit={handleClearSearch} noValidate>
+                  <input
+                    type="text"
+                    placeholder="Search for and issue"
+                    value={searchFilter}
+                    onChange={(e) => { setSearchFilter(e.target.value); }}
+                  />
+                  <button type="submit" style={{ backgroundColor: 'crimson' }}>
+                    Clear Search
                   </button>
                 </form>
               </div>
@@ -170,7 +202,7 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
                     <th>Type</th>
                     <th>Priority</th>
                   </tr>
-                  {backlogIssues.map(issue => (
+                  {searchFilteredIssues.map(issue => (
                     <tr key={issue.key} onClick={() => showIssuePanel(issue.id)}>
                       <td>{issue.key}</td>
                       <td>{issue.title}</td>
@@ -242,7 +274,7 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
                     <text style={{ fontWeight: "bold" }}>Time Remaining: </text>
                     <text className="timeRemaining:">8 days</text>
                   </div>
-                  <form onSubmit={handleSubmit}>
+                  <form>
                     <input type="search" placeholder="Search for and issue" />
                     <button type="submit">
                       <Search fontSize="small" />
