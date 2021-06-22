@@ -147,12 +147,12 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
         let isRelevant = false;
         issueFields.forEach(field => {
           if (typeof issue[field] === 'string') {
-            isRelevant |= issue[field].includes(searchFilter);
+            isRelevant |= issue[field].toLowerCase().includes(searchFilter.toLowerCase());
           }
           else if (Array.isArray(issue[field])) {
             issue[field].forEach(subField => {
               if (typeof issue[field][subField] === 'string') {
-                isRelevant |= issue[field][subField].includes(searchFilter);
+                isRelevant |= issue[field][subField].toLowerCase().includes(searchFilter.toLowerCase());
               }
             })
           }
