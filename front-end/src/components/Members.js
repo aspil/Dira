@@ -4,7 +4,7 @@ import x_icon from "../Images/x_icon.png"
 import { useParams } from 'react-router';
 import edit_icon from "../Images/edit_icon.png"
 
-const Members = ({ footerHandle, projectClient, userId }) => {
+const Members = ({ footerHandle, projectClientRef, userId }) => {
     // Add member popup handlers
     const [add_members_popup, handleMembersPopup] = useState("hide");
     const [members, setMembers] = useState([]);
@@ -47,7 +47,7 @@ const Members = ({ footerHandle, projectClient, userId }) => {
     const { projectId } = useParams();
 
     const fetchMembers = () => {
-        projectClient.get_all_users_in_project_by_id(projectId).then((res) => {
+        projectClientRef.current.get_all_users_in_project_by_id(projectId).then((res) => {
             console.log(res);
             setMembers(res.users);
             fetchMemberPermissions();
@@ -58,7 +58,7 @@ const Members = ({ footerHandle, projectClient, userId }) => {
     useEffect(fetchMembers, []);
 
     useEffect(() => {
-        projectClient.get_project_by_id(projectId).then(res => {
+        projectClientRef.current.get_project_by_id(projectId).then(res => {
             // console.log(res);
             setProjectName(res.name);
         }).catch(err => {
@@ -67,7 +67,7 @@ const Members = ({ footerHandle, projectClient, userId }) => {
     }, []);
 
     const fetchMemberPermissions = () => {
-        projectClient.get_project_permissions_for_all_users(projectId).then(res => {
+        projectClientRef.current.get_project_permissions_for_all_users(projectId).then(res => {
             setMemberPermissions(res.map(customer => {
                 const toSave = { id: customer.customerId };
                 toSave.permissions = [];
@@ -104,7 +104,7 @@ const Members = ({ footerHandle, projectClient, userId }) => {
     }
 
     const deleteMember = () => {
-        projectClient.delete_user_from_project_with_id(projectId, current_member.id).then((res) => {
+        projectClientRef.current.delete_user_from_project_with_id(projectId, current_member.id).then((res) => {
             console.log(res);
             fetchMembers();
         }).catch((err) => {

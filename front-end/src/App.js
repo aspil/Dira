@@ -12,14 +12,14 @@ import Members from './components/Members';
 import Epics from './components/Epics';
 import Backlog from './components/Backlog';
 import IssuePreview from './components/IssuePreview';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { DiraProjectClient, DiraUserClient } from "dira-clients";
 import CreateProject from './components/CreateProject';
 import HomeNav from './components/HomeNav';
 import Footer from './components/Footer';
 
-const userClient = new DiraUserClient();
-const projectClient = new DiraProjectClient();
+// const userClient = new DiraUserClient();
+// const projectClient = new DiraProjectClient();
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('JWToken') || undefined);
@@ -41,11 +41,14 @@ function App() {
     setUserInfo(info);
   }
 
+  const userClientRef = useRef(new DiraUserClient());
+  const projectClientRef = useRef(new DiraProjectClient());
+
   useEffect(() => {
     if (token) {
-      projectClient.set_authorization_token(token);
+      projectClientRef.current.set_authorization_token(token);
     }
-  }, [token]);
+  }, [token, projectClientRef]);
 
   useEffect(() => {
     const doBeforeUnload = () => {
@@ -115,7 +118,7 @@ function App() {
             {token === undefined &&
               <Login
                 setToken={setToken}
-                client={userClient}
+                userClientRef={userClientRef}
                 setUserInfo={setUserInfo}
                 setIsLogged={setIsLogged}
                 setStayLogged={setStayLogged}
@@ -125,7 +128,7 @@ function App() {
           </Route>
           <Route path="/register">
             {token !== undefined && <Redirect to="/proj_main" />}
-            {token === undefined && <Register client={userClient} navHandle={showHomeNavHook} />}
+            {token === undefined && <Register userClientRef={userClientRef} navHandle={showHomeNavHook} />}
           </Route>
           <Route path="/recover">
             {token !== undefined && <Redirect to="/proj_main" />}
@@ -141,7 +144,7 @@ function App() {
 
           <Route path="/pricing">
             <Plan
-              userClient={userClient}
+              userClientRef={userClientRef}
               userId={userInfo.id}
               userPlan={userInfo.plan}
               isLogged={isLogged}
@@ -153,13 +156,13 @@ function App() {
             {token === undefined && <Redirect to="/sign_in" />}
             {token !== undefined && <ProjectMain
               userInfo={userInfo}
-              userClient={userClient}
+              userClientRef={userClientRef}
               token={token}
               doLogout={doLogout}
               footerHandle={showFooterHook}
               footerStylesHandle={footerStylesHook}
               userPlan={userInfo.plan}
-              projectClient={projectClient} />}
+              projectClientRef={projectClientRef} />}
           </Route>
           <Route path="/backlog/:projectId">
             {token === undefined && <Redirect to="/sign_in" />}
@@ -168,7 +171,7 @@ function App() {
               token={token}
               doLogout={doLogout}
               footerHandle={showFooterHook}
-              projectClient={projectClient}
+              projectClientRef={projectClientRef}
             />}
           </Route>
           <Route path="/members/:projectId">
@@ -177,7 +180,7 @@ function App() {
               <Members
                 username={userInfo.username}
                 doLogout={doLogout}
-                projectClient={projectClient}
+                projectClientRef={projectClientRef}
                 userId={userInfo.id}
                 footerHandle={showFooterHook} />
             }
@@ -193,7 +196,7 @@ function App() {
           <Route path="/create_project">
             {token === undefined && <Redirect to="/sign_in" />}
             {token !== undefined && <CreateProject
-              projectClient={projectClient}
+              projectClientRef={projectClientRef}
               userPlan={userInfo.plan}
             />}
           </Route>

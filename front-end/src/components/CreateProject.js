@@ -4,7 +4,7 @@ import questionmark from "../Images/questionmark_icon.png"
 import { useState } from "react";
 
 
-const CreateProject = ({ projectClient, userPlan }) => {
+const CreateProject = ({ projectClientRef, userPlan }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [key, setKey] = useState("");
@@ -22,7 +22,7 @@ const CreateProject = ({ projectClient, userPlan }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    projectClient.create_project({
+    projectClientRef.current.create_project({
       "description": description,
       "key": key,
       "name": name,

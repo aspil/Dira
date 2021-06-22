@@ -2,7 +2,7 @@ import logo from "../Images/dira_icon_cropped.png"
 import { Link, useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-const Register = ({ client, navHandle }) => {
+const Register = ({ userClientRef, navHandle }) => {
   const [name, setName] = useState('')
   const [surname, setSurname] = useState('')
   const [username, setUsername] = useState('')
@@ -19,41 +19,41 @@ const Register = ({ client, navHandle }) => {
   const onSubmit = (e) => {
     e.preventDefault()
 
-    if(password == confirmPassword){
-      client.register_user({
-        "username": username,
-        "name": name,
-        "surname": surname,
-        "email": email,
-        "password": password,
-        "subscriptionPlan": "STANDARD"
-      }).then(res => {
-        console.log(res);
-        setError(false);
-        setPasswordError(false);
-        history.push('/')
-      }).catch((err) => {
-        console.log(err);
-        if (err.errors) {
-          setError(false);
-          setPasswordError(true);
-          setErrMessage(err.errors[0].defaultMessage);
-        }
-        else {
-          setError(true);
-          setPasswordError(false);
-          setErrMessage(err.error.message);
-        }
-      })
-    }
-    // passwords don't match
-    else{
+    if (password === confirmPassword) {
       setError(false);
       setPasswordError(true);
       setErrMessage("Passwords don't match.");
+      return;
     }
+    setPasswordError(false);
 
+    userClientRef.register_user({
+      "username": username,
+      "name": name,
+      "surname": surname,
+      "email": email,
+      "password": password,
+      "subscriptionPlan": "STANDARD"
+    }).then(res => {
+      console.log(res);
+      setError(false);
+      setPasswordError(false);
+      history.push('/');
+    }).catch((err) => {
+      console.log(err);
+      if (err.errors) {
+        setError(false);
+        setPasswordError(true);
+        setErrMessage(err.errors[0].defaultMessage);
+      }
+      else {
+        setError(true);
+        setPasswordError(false);
+        setErrMessage(err.error.message);
+      }
+    });
   }
+
   const redirectToMain = () => {
     history.push('/')
   }
@@ -65,48 +65,48 @@ const Register = ({ client, navHandle }) => {
           <h1 style={{ fontWeight: "normal", margin: "15px" }}>Register</h1>
           <form onSubmit={onSubmit}>
             {error && <p style={{ "color": "red" }}>{errMessage}</p>}
-            <div style={{textAlign:"left"}}>
-            <p className="inputHead">Email Adress:</p>
-            <input
-              type="email" placeholder="Email" required
-              value={email} onChange={(e) => { setEmail(e.target.value); }}
-            />
-            <p className="inputHead">Username:</p>
-            <input
-              type="text" placeholder="Username" required
-              value={username} onChange={(e) => { setUsername(e.target.value); }}
-            />
-            {/* <input type="text" placeholder="Confirm Password" value={name}></input> */}
-            <div>
-              <div style={{float:"left"}}>
-              <p className="inputHead">Name:</p>
+            <div style={{ textAlign: "left" }}>
+              <p className="inputHead">Email Adress:</p>
               <input
-                style={{ width: "144px" }}
-                type="text" placeholder="Name" required
-                value={name} onChange={(e) => { setName(e.target.value); }}
+                type="email" placeholder="Email" required
+                value={email} onChange={(e) => { setEmail(e.target.value); }}
               />
-              </div>
-              <div >
-              <p className="inputHead" style={{marginLeft:"210px"}}>Surname:</p>
+              <p className="inputHead">Username:</p>
               <input
-                style={{ width: "144px" }}
-                type="text" placeholder="Surname" required
-                value={surname} onChange={(e) => { setSurname(e.target.value); }}
+                type="text" placeholder="Username" required
+                value={username} onChange={(e) => { setUsername(e.target.value); }}
               />
+              {/* <input type="text" placeholder="Confirm Password" value={name}></input> */}
+              <div>
+                <div style={{ float: "left" }}>
+                  <p className="inputHead">Name:</p>
+                  <input
+                    style={{ width: "144px" }}
+                    type="text" placeholder="Name" required
+                    value={name} onChange={(e) => { setName(e.target.value); }}
+                  />
+                </div>
+                <div >
+                  <p className="inputHead" style={{ marginLeft: "210px" }}>Surname:</p>
+                  <input
+                    style={{ width: "144px" }}
+                    type="text" placeholder="Surname" required
+                    value={surname} onChange={(e) => { setSurname(e.target.value); }}
+                  />
+                </div>
               </div>
-            </div>
-            
-            {passwordError && <p style={{ "color": "red" }}>{errMessage}</p>}
-            <p className="inputHead">Password:</p>
-            <input
-              type="password" placeholder="Password" required
-              value={password} onChange={(e) => { setPassword(e.target.value); }}
-            />
-            <p className="inputHead">Confirm Password:</p>
-            <input
-              type="password" placeholder="Confirm Password" required
-              value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); }}
-            />
+
+              {passwordError && <p style={{ "color": "red" }}>{errMessage}</p>}
+              <p className="inputHead">Password:</p>
+              <input
+                type="password" placeholder="Password" required
+                value={password} onChange={(e) => { setPassword(e.target.value); }}
+              />
+              <p className="inputHead">Confirm Password:</p>
+              <input
+                type="password" placeholder="Confirm Password" required
+                value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); }}
+              />
             </div>
             <br></br>
             <button type="submit">Create Account</button>

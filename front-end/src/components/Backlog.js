@@ -7,7 +7,7 @@ import { Search } from '@material-ui/icons'
 import { DiraIssueClient } from "dira-clients";
 import edit_icon from "../Images/edit_icon.png"
 
-const Backlog = ({ token, footerHandle, projectClient }) => {
+const Backlog = ({ token, footerHandle, projectClientRef }) => {
   const [backlogIssues, setBacklogIssues] = useState([]);
   const [searchFilteredIssues, setSearchFilteredIssues] = useState([]);
   const [searchFilter, setSearchFilter] = useState('');
@@ -39,16 +39,16 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
   }
 
   const { projectId } = useParams();
-  const issueClient = useRef(new DiraIssueClient(projectId)).current;
+  const issueClientRef = useRef(new DiraIssueClient(projectId));
 
   useEffect(() => {
     if (token) {
-      issueClient.set_authorization_token(token);
+      issueClientRef.current.set_authorization_token(token);
     }
-  }, [token]);
+  }, [token, issueClientRef]);
 
   const fetchAllIssues = () => {
-    issueClient.get_all_issues().then((res) => {
+    issueClientRef.current.get_all_issues().then((res) => {
       console.log(res);
       setBacklogIssues(res.issues);
       setProjectName(res.name);
@@ -58,7 +58,7 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
   }
 
   const fetchMembers = () => {
-    projectClient.get_all_users_in_project_by_id(projectId).then((res) => {
+    projectClientRef.current.get_all_users_in_project_by_id(projectId).then((res) => {
       setMembers(res.users);
     }).catch((err) => {
       console.log(err);
@@ -116,7 +116,7 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
     }
     setIssueCreationError(false);
 
-    issueClient.create_issue({
+    issueClientRef.current.create_issue({
       "description": newDescription,
       "type": newType,
       "priority": newPriority,
@@ -448,7 +448,10 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
                         None
                       </option>
                       {members.map(member => (
-                        <option value={member.id}>
+                        <option
+                          key={member.id}
+                          value={member.id}
+                        >
                           {member.name} {member.surname}
                         </option>
                       ))}
@@ -464,7 +467,10 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
                         None
                       </option>
                       {backlogIssues.filter(issue => issue.type === 'Epic').map(epic => (
-                        <option value={epic.id} >
+                        <option
+                          key={epic.id}
+                          value={epic.id}
+                        >
                           {epic.key}, {epic.title}
                         </option>
                       ))}

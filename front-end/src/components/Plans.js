@@ -108,7 +108,7 @@ const useStyles = makeStyles({
   }
 })
 
-const Plan = ({ userClient, userId, userPlan, isLogged, setPremiumPlan }) => {
+const Plan = ({ userClientRef, userId, userPlan, isLogged, setPremiumPlan }) => {
   const history = useHistory();
   const classes = useStyles({ userPlan });
 
@@ -151,7 +151,7 @@ const Plan = ({ userClient, userId, userPlan, isLogged, setPremiumPlan }) => {
       history.push('/sign_in');
       return;
     }
-    userClient.update_user_plan_by_id(userId).then((res) => {
+    userClientRef.current.update_user_plan_by_id(userId).then((res) => {
       console.log(res);
       setPremiumPlan();
       // history.push('/');
