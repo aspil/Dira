@@ -1,17 +1,13 @@
 import x_icon from "../Images/x_icon.png"
 
-import ProjectNav from './ProjectNav'
-import Footer from './Footer'
 import SideNav from './SideNav'
 import { useEffect, useRef, useState } from 'react'
-import { Link, useParams, useHistory } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Search } from '@material-ui/icons'
 import { DiraIssueClient } from "dira-clients";
 import edit_icon from "../Images/edit_icon.png"
 
 const Backlog = ({ token, footerHandle, projectClient }) => {
-  const history = useHistory();
-
   const [backlogIssues, setBacklogIssues] = useState([]);
   const [searchFilteredIssues, setSearchFilteredIssues] = useState([]);
   const [searchFilter, setSearchFilter] = useState('');
@@ -23,13 +19,14 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
 
   const [projectName, setProjectName] = useState('');
 
-  const [newTitle, setNewTitle] = useState(null);
-  const [newDescription, setNewDescription] = useState(null);
+  const [newTitle, setNewTitle] = useState('');
+  const [newDescription, setNewDescription] = useState('');
   const [newPriority, setNewPriority] = useState('Normal');
   const [newAssignee, setNewAssignee] = useState(null);
   const [newEpicLink, setNewEpicLink] = useState(null);
   const [newType, setNewType] = useState('Story');
-
+  const [issueCreationError, setIssueCreationError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [focusedIssueId, setFocusedIssueId] = useState(null);
   const [focusedIssue, setFocusedIssue] = useState(null);
   const [sprint, handleSprintPanel] = useState("hide");
@@ -86,12 +83,13 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
   }
 
   const clearState = () => {
-    setNewTitle(null);
-    setNewDescription(null);
+    setNewTitle('');
+    setNewDescription('');
     setNewPriority('Normal');
     setNewAssignee(null);
     setNewEpicLink(null);
     setNewType('Story');
+    setIssueCreationError(false);
   }
 
   // Create issue popup handlers
@@ -105,6 +103,19 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
   }
   const handleCreateIssueButtonClick = (e) => {
     e.preventDefault();
+
+    if (!(newTitle && newDescription)) {
+      setIssueCreationError(true);
+      setErrorMsg('Please fill in both title and description fields');
+      return;
+    }
+    else if (newType === 'Epic' && newEpicLink) {
+      setIssueCreationError(true);
+      setErrorMsg('An Epic can\'t link to another Epic');
+      return;
+    }
+    setIssueCreationError(false);
+
     issueClient.create_issue({
       "description": newDescription,
       "type": newType,
@@ -116,7 +127,8 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
       fetchAllIssues();
       hideCreateIssuePopup();
     }).catch((err) => {
-      console.log('error during creation of issue');
+      setIssueCreationError(true);
+      setErrorMsg('Couldn\'t create issue');
       console.log(err);
     });
   }
@@ -357,20 +369,23 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
               </div>
               <br />
               <br />
-              <form className="newIssueForm" style={{ textAlign: "left" }} onSubmit={handleCreateIssueButtonClick}>
+              <form
+                className="newIssueForm"
+                style={{ textAlign: "left" }}
+                onSubmit={handleCreateIssueButtonClick}
+                noValidate
+              >
                 <p>Title:</p>
                 <input
                   type="text"
                   id="issueName"
                   placeholder="Issue Title"
                   value={newTitle}
-                  required
                   onChange={(e) => { setNewTitle(e.target.value); }}
                 />
                 <p>Description:</p>
                 <textarea
                   type="range"
-                  required
                   placeholder="Issue Description"
                   value={newDescription}
                   onChange={(e) => { setNewDescription(e.target.value); }}
@@ -435,6 +450,11 @@ const Backlog = ({ token, footerHandle, projectClient }) => {
                     </select>
                   </div>
                 </div>
+                {issueCreationError &&
+                  <p style={{ color: 'crimson' }}>
+                    {errorMsg}
+                  </p>
+                }
 
                 <div style={{ textAlign: "center" }}>
                   <button >Create Issue</button>
