@@ -11,11 +11,19 @@
   width: 400px;
   border-radius: 5px;
   border:2px solid lightgray;
+  padding:10px;
+}
+
+.login .inputHead{
+  margin:0 auto;
+  margin-left: 15px;
+  font-weight: bold;
 }
 
 .login input{
+  margin-top: 0;
   border-width: thin;
-  width:300px;
+  width:340px;
   font-size: large;
   padding: 10px;
 }

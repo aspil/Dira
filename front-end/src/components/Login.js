@@ -58,30 +58,34 @@ const Login = ({ setToken, client, setUserInfo, setIsLogged, navHandle, setStayL
         <div className="login_grad" style={{ textAlign: "center" }}>
           <h1 style={{ fontWeight: "normal", margin: "15px" }}>Login</h1>
           <form onSubmit={onSubmit}>
-            <input
-              type="text"
-              placeholder="Username"
-              onChange={(e) => { setUsername(e.target.value) }}
-              required
-              value={username} />
-            {usernameError && <p style={{ "color": "red" }}>{errMessage}</p>}
-            <input
-              type="password"
-              placeholder="Password"
-              onChange={(e) => { setPassword(e.target.value) }}
-              required
-              value={password} />
+            <div style={{textAlign:"left"}}>
+              <p className="inputHead">Username:</p>
+              <input
+                type="text"
+                placeholder="Username"
+                onChange={(e) => { setUsername(e.target.value) }}
+                required
+                value={username} />
+              {usernameError && <p style={{ "color": "red" }}>{errMessage}</p>}
+              <p className="inputHead">Password:</p>
+              <input
+                type="password"
+                placeholder="Password"
+                onChange={(e) => { setPassword(e.target.value) }}
+                required
+                value={password} />
+              </div>
             {passwordError && <p style={{ "color": "red" }}>{errMessage}</p>}
             <button type="submit">Login</button>
           </form>
             <label htmlFor='stay_logged' style={{alignItems:"center"}}>
-              Stay Logged in 
               <input
                 type="checkbox"
                 id='stay_logged'
                 defaultChecked={stayLogged}
                 onClick={() => { setStayLogged(!stayLogged) }}
               />
+              Stay Logged in 
             </label>
 
           <div style={{ textAlign: "right", marginRight: "10px" }}>

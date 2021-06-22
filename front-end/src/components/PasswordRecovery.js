@@ -1,57 +1,60 @@
-import logo from "../Images/dira_icon.png"
+import logo from "../Images/dira_icon_cropped.png"
 import arrows from "../Images/arrows.png"
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 
 
 const PasswordRecovery = ({ navHandle }) => {
 
   const [step, setStep] = useState(1);
+  const history = useHistory();
 
   const sendEmail = () => {
     setStep(2);
   }
-  const checkCode = () => {
+  // const checkCode = () => {
+  //   setStep(2);
+  // }
+  const resetPassword = () => {
     setStep(3);
   }
-  const resetPassword = () => {
-    setStep(4);
-  }
 
+  const redirectToMain = () => {
+    history.push('/')
+  }
   useEffect(navHandle, [navHandle]);
 
   return (
-    <div className="password_recovery">
+    <div className="login">
       <div style={{ textAlign: "center" }}>
-        <img src={logo} alt="dira logo" id="dira_logo" style={{ margin: "-15vh" }} />
+      <img src={logo} alt="dira logo" id="dira logo" onClick={redirectToMain} />
         <div className="login_grad" style={{ textAlign: "center" }}>
-          <img src={arrows} alt="arrows" style={{ width: "6vw", marginTop: "1vh" }} />
-          <h1 style={{ fontWeight: "normal", margin: "15px" }}>Password Recovery</h1>
-          <p style={{ textAlign: 'left', marginLeft: "1.8vw", marginBottom: "-1vh" }}>Enter your new password:</p>
-
+          <img src={arrows} alt="arrows" style={{ width: "90px"}} />
+          <h1 style={{ fontWeight: "normal", marginBottom: "40px" }}>Password Recovery</h1>
           {step === 1 &&
             <div>
+              <p className="inputHead" style={{ textAlign: 'left'}}>Enter e-mail address:</p>
               <input type="text" placeholder="E-mail"></input>
               <p><button onClick={sendEmail}>Continue</button></p>
             </div>
           }
-          {step === 2 &&
+          {/* {step === 2 &&
             <div>
+              <p className="inputHead" style={{ textAlign: 'left'}}>Enter e-mail address:</p>
               <input type="text" placeholder="Code"></input>
               <p><button onClick={checkCode}>Continue</button></p>
             </div>
-          }
-          {step === 3 &&
+          } */}
+          {step === 2 &&
             <div>
+              <p className="inputHead" style={{ textAlign: 'left'}}>New password:</p>
               <input type="text" placeholder="Password"></input>
-              <p style={{ textAlign: 'left', marginLeft: "1.8vw", marginBottom: "-1vh" }}>Confirm your password:</p>
+              <p className="inputHead" style={{ textAlign: 'left'}}>Confirm password:</p>
               <input type="text" placeholder="Confirm Password"></input>
-              <p><button onClick={resetPassword} style={{ fontSize: "1vw" }}>Update Password</button></p>
+              <p><button onClick={resetPassword} >Update Password</button></p>
             </div>
           }
-          <Link to="#">Contact Us</Link>
-
         </div>
       </div>
     </div>

@@ -46,6 +46,7 @@ const Register = ({ client, navHandle }) => {
         }
       })
     }
+    // passwords don't match
     else{
       setError(false);
       setPasswordError(true);
@@ -57,43 +58,56 @@ const Register = ({ client, navHandle }) => {
     history.push('/')
   }
   return (
-    <div className="register">
+    <div className="login">
       <div style={{ textAlign: "center" }}>
         <img src={logo} alt="dira logo" id="dira logo" onClick={redirectToMain} />
         <div className="login_grad" style={{ textAlign: "center" }}>
           <h1 style={{ fontWeight: "normal", margin: "15px" }}>Register</h1>
           <form onSubmit={onSubmit}>
             {error && <p style={{ "color": "red" }}>{errMessage}</p>}
+            <div style={{textAlign:"left"}}>
+            <p className="inputHead">Email Adress:</p>
             <input
               type="email" placeholder="Email" required
               value={email} onChange={(e) => { setEmail(e.target.value); }}
             />
+            <p className="inputHead">Username:</p>
             <input
               type="text" placeholder="Username" required
               value={username} onChange={(e) => { setUsername(e.target.value); }}
             />
             {/* <input type="text" placeholder="Confirm Password" value={name}></input> */}
             <div>
+              <div style={{float:"left"}}>
+              <p className="inputHead">Name:</p>
               <input
-                style={{ width: "125px" }}
+                style={{ width: "144px" }}
                 type="text" placeholder="Name" required
                 value={name} onChange={(e) => { setName(e.target.value); }}
               />
+              </div>
+              <div >
+              <p className="inputHead" style={{marginLeft:"210px"}}>Surname:</p>
               <input
-                style={{ width: "125px" }}
+                style={{ width: "144px" }}
                 type="text" placeholder="Surname" required
                 value={surname} onChange={(e) => { setSurname(e.target.value); }}
               />
+              </div>
             </div>
+            
             {passwordError && <p style={{ "color": "red" }}>{errMessage}</p>}
+            <p className="inputHead">Password:</p>
             <input
               type="password" placeholder="Password" required
               value={password} onChange={(e) => { setPassword(e.target.value); }}
             />
+            <p className="inputHead">Confirm Password:</p>
             <input
               type="password" placeholder="Confirm Password" required
               value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); }}
             />
+            </div>
             <br></br>
             <button type="submit">Create Account</button>
           </form>

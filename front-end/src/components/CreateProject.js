@@ -1,9 +1,7 @@
 import { Link, useHistory } from "react-router-dom";
 import logo from "../Images/dira_icon_cropped.png"
 import questionmark from "../Images/questionmark_icon.png"
-
 import { useState } from "react";
-
 
 
 const CreateProject = ({ projectClient, userPlan }) => {

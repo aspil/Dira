@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-d
 import ProjectMain from './components/ProjectMain';
 import ProjectNav from './components/ProjectNav';
 import PasswordRecovery from './components/PasswordRecovery';
+import ChangePassword from './components/ChangePassword';
 import ActiveSprint from './components/ActiveSprint';
 import Members from './components/Members';
 import Epics from './components/Epics';
@@ -129,6 +130,13 @@ function App() {
           <Route path="/recover">
             {token !== undefined && <Redirect to="/proj_main" />}
             {token === undefined && <PasswordRecovery navHandle={showHomeNavHook} />}
+          </Route>
+          <Route path="/change_password">
+            {token === undefined && <Redirect to="/sign_in" />}
+            {token !== undefined && <ChangePassword 
+              navHandle={showHomeNavHook} 
+              />}
+              
           </Route>
 
           <Route path="/pricing">

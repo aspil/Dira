@@ -25,6 +25,10 @@ const ProjectNav = ({ username, doLogout }) => {
     setSettingsState("hide");
     history.push('/pricing');
   }
+  const gotoChangePassword = () => {
+    setSettingsState("hide");
+    history.push('/change_password');
+  }
 
   return (
     <div className="projectnav">
@@ -40,6 +44,13 @@ const ProjectNav = ({ username, doLogout }) => {
         <div className="form-popup" id="myForm">
           <form className="form-container">
             <p id="accountName" ><strong>{username}</strong></p>
+            <div className="accountLinkWrapper" onClick={gotoChangePassword}>
+              <p
+                type="button"
+                className="accountLink">
+                Change Password
+              </p>
+            </div>
             <div className="accountLinkWrapper" onClick={goToPricing}>
               <p
                 type="button"
