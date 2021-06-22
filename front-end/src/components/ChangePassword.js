@@ -23,9 +23,8 @@ const ChangePassword = ({ navHandle }) => {
   const onSubmit = (e) => {
     e.preventDefault()
   
-    if(newPassword == confirmPassword){
+    if(newPassword === confirmPassword){
       setConfirmPasswordError(false);
-
     }
     else{
       setConfirmPasswordError(true);

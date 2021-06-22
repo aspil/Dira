@@ -9,7 +9,7 @@ const ProjectNav = ({ username, doLogout }) => {
   const [settingsState, setSettingsState] = useState("hide");
 
   const handleAccountClick = () => {
-    if(settingsState == "hide"){
+    if(settingsState === "hide"){
       setSettingsState("show");
     }
     else{

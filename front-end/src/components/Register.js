@@ -19,7 +19,7 @@ const Register = ({ client, navHandle }) => {
   const onSubmit = (e) => {
     e.preventDefault()
 
-    if(password == confirmPassword){
+    if(password === confirmPassword){
       client.register_user({
         "username": username,
         "name": name,
