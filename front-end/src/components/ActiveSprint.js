@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import search_icon from "../Images/search_icon.png"
 import edit_icon from "../Images/edit_icon.png"
+import x_icon from "../Images/x_icon.png"
 
 const ActiveSprint = ({ footerHandle }) => {
 
@@ -12,6 +13,9 @@ const ActiveSprint = ({ footerHandle }) => {
     const [issue_panel, handleIssuePanel] = useState("hide");
     const showIssuePanel = () => {
         handleIssuePanel("show")
+    }
+    const hideIssuePanel = () => {
+        handleIssuePanel("hide")
     }
 
     const [inactiveIssues, setInactiveIssues] = useState([
@@ -112,6 +116,8 @@ const ActiveSprint = ({ footerHandle }) => {
                                                 <img id="pencilIcon" src={edit_icon} alt="Pencil"></img>
                                                 Edit Issue
                                         </Link>
+                                        <img src={x_icon} id = "xIcon" alt="x_icon" onClick={hideIssuePanel}></img>
+
                                     </div>
                                     <br></br>
                                     <text id="issueEpic">Epic of this Issue</text>

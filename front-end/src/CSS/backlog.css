@@ -203,6 +203,7 @@
   top:20%;
   left:50%;
   width:20%;
+  min-width: 300px;
   margin-left:-12.5%;  
   text-align: center;  
   background-color: rgb(168, 208, 248);
@@ -217,17 +218,6 @@
   color: white;
   margin-bottom: 1vh;
 }
-
-.backlog .createPopup img{
-  width: 2vw;
-  height: auto;
-  float:right;
-}
-
-.backlog .createPopup img:hover{
-  cursor: pointer;  
-}
-
 .backlog .createPopup #issueName,#sprintName{
   margin-top: 0;
   margin-bottom: 10px;
@@ -237,6 +227,13 @@
   padding: 1vh;
   margin-left: 0;
   margin-right: 0;
+}
+.backlog .markdowns{
+  display: flex;
+  justify-content: space-between;
+}
+.backlog .issueMarkdown{
+  margin: 5px;
 }
 .backlog .createPopup .markdowns select{
   width: 100%;

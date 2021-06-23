@@ -3,6 +3,7 @@
 
 .active_sprint #content{
   display: grid;
+  min-width: 1000px;
   grid-template-columns: repeat(9, 1fr);
   grid-template-rows: 8;
   grid-gap: 20px; 

@@ -6,6 +6,16 @@
   font-family: 'Open Sans';
   color: #333;
 }
+
+#xIcon{
+  width: 2vw;
+  height: auto;
+  float:right;
+}
+#xIcon:hover{
+  cursor: pointer;  
+}
+
 /* Scrollbar */
 
 ::-webkit-scrollbar {
