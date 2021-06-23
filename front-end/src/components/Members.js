@@ -68,33 +68,10 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
     const fetchMemberPermissions = () => {
         projectClientRef.current.get_project_permissions_for_all_users(projectId).then(res => {
             setMemberPermissions(res.map(customer => {
-                const toSave = { id: customer.customerId };
-                toSave.permissions = [];
-
-                const p = [
-                    {
-                        bit: 0b0001,
-                        string: 'READ'
-                    },
-                    {
-                        bit: 0b0010,
-                        string: 'WRITE'
-                    },
-                    {
-                        bit: 0b0100,
-                        string: 'DELETE'
-                    },
-                    {
-                        bit: 0b1000,
-                        string: 'ADMIN'
-                    },
-                ];
-
-                p.forEach(perm => {
-                    const hasPerm = perm.bit & customer.permission;
-                    hasPerm && toSave.permissions.push(perm.string);
-                })
-
+                const toSave = {
+                    id: customer.customerId,
+                    permissions: customer.permissions
+                };
                 return toSave;
             }));
         }).catch(err => {
@@ -151,7 +128,16 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
                                                     {member.username}
                                                 </td>
                                                 <td>{member.name} {member.surname}</td>
-                                                <td>{(memberPermissions.find(perms => perms.id === member.id) !== undefined) && memberPermissions.find(perms => perms.id === member.id).permissions.toString()}</td>
+                                                <td>
+                                                    {
+                                                        (memberPermissions.length > 0)
+                                                        &&
+                                                        memberPermissions
+                                                            .find(perms => perms.id === member.id)
+                                                            .permissions
+                                                            .toString()
+                                                    }
+                                                </td>
                                                 {isAdmin &&
                                                     <td style={{ width: "40px", padding: "0", textAlign: "center" }}>
                                                         {member.id !== userId &&

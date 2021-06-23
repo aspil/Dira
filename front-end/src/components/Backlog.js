@@ -186,8 +186,18 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
       return;
     }
 
-    setHasRead((0b0001 & userPermissions.permission) ? true : false);
-    setHasWrite((0b0010 & userPermissions.permission) ? true : false);
+    if (userPermissions.permissions.find(perm => perm === 'ADMIN')) {
+      setHasRead(true);
+      setHasWrite(true);
+      return;
+    }
+
+    if (userPermissions.permissions.find(perm => perm === 'READ')) {
+      setHasRead(true);
+    }
+    if (userPermissions.permissions.find(perm => perm === 'WRITE')) {
+      setHasWrite(true);
+    }
   }
   useEffect(decodePermissions, [userPermissions]);
 
@@ -309,7 +319,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                   <img src={x_icon} id="xIcon" alt="x_icon" onClick={hideIssuePanel}></img>
                   {focusedIssue.type}
                 </h2>
-                <h1 id="issueName" style={{alignItems:"center"}}>
+                <h1 id="issueName" style={{ alignItems: "center" }}>
                   {focusedIssue.title}
                 </h1>
                 <div className="issuePanelMain">
@@ -363,15 +373,15 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                   <br></br>
                   <br></br>
                   <p className="label">Labels: </p>
-                    {Labels.map(label => (
-                      <div className="issueLabelsWrapper">
-                        <button className="issueLabelX">X</button>
-                        <text className="issueLabel"> {label.name} </text>
-                      </div>
-                    ))}
-                      <input type="text" name="newLabel" id="newLabel" placeholder="+ Add label" style={{marginLeft:"10px",marginRight:"0px",border:"1px solid grey",borderRadius:"0"}}/>
-                      <button style={{backgroundColor:"grey"}}>+</button>
-                  
+                  {Labels.map(label => (
+                    <div className="issueLabelsWrapper">
+                      <button className="issueLabelX">X</button>
+                      <text className="issueLabel"> {label.name} </text>
+                    </div>
+                  ))}
+                  <input type="text" name="newLabel" id="newLabel" placeholder="+ Add label" style={{ marginLeft: "10px", marginRight: "0px", border: "1px solid grey", borderRadius: "0" }} />
+                  <button style={{ backgroundColor: "grey" }}>+</button>
+
                   <p className="label">Comments: </p>
                   {Comments.map(comment => (
                     <div className="issueCommentsWrapper">
@@ -379,18 +389,18 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                       <text className="issueComment"> {comment.body} </text>
                     </div>
                   ))}
-                    <input type="text" name="newComment" id="newComment" placeholder="+ Add comment" style={{marginLeft:"10px",marginRight:"0px",border:"1px solid grey",borderRadius:"0"}}/>
-                    <button style={{backgroundColor:"grey"}}>+</button>
-                  </div>
+                  <input type="text" name="newComment" id="newComment" placeholder="+ Add comment" style={{ marginLeft: "10px", marginRight: "0px", border: "1px solid grey", borderRadius: "0" }} />
+                  <button style={{ backgroundColor: "grey" }}>+</button>
+                </div>
 
-                  {hasWrite &&
-                    <div style={{ textAlign: "center", marginTop: "20px" }}>
-                      <Link to={`/project/${projectId}/issue_preview/${focusedIssueId}`} id="editIssueLink">
-                        <img id="pencilIcon" src={edit_icon} alt="Pencil" ></img>
-                        Edit Issue
-                      </Link>
-                    </div>
-                  }
+                {hasWrite &&
+                  <div style={{ textAlign: "center", marginTop: "20px" }}>
+                    <Link to={`/project/${projectId}/issue_preview/${focusedIssueId}`} id="editIssueLink">
+                      <img id="pencilIcon" src={edit_icon} alt="Pencil" ></img>
+                      Edit Issue
+                    </Link>
+                  </div>
+                }
               </div>
             }
             {sprint === "show"
