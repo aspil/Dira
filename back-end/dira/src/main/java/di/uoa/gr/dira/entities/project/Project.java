@@ -2,6 +2,7 @@ package di.uoa.gr.dira.entities.project;
 
 import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.entities.issue.Issue;
+import di.uoa.gr.dira.entities.sprint.Sprint;
 import di.uoa.gr.dira.shared.ProjectVisibility;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,6 +38,9 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "customer_id")
     )
     private List<Customer> customers;
+
+    @OneToMany(mappedBy="project", cascade = CascadeType.REMOVE)
+    private List<Sprint> sprints;
 
     @OneToMany(mappedBy="project", cascade = CascadeType.REMOVE)
     private List<Issue> issues;

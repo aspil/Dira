@@ -31,8 +31,11 @@ public class SprintController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @GetMapping
-    public @Valid List<SprintModel> getAllSprintsWithProjectId(@PathVariable Long projectId) {
-        return service.findAllSprintsByProjectId(projectId);
+    public @Valid List<SprintModel> getAllSprintsWithProjectId(
+            @PathVariable Long projectId,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
+        Long customerId = jwtHelper.getId(jwtToken);
+        return service.findAllSprintsByProjectId(projectId, customerId);
     }
 
     @ApiOperation(

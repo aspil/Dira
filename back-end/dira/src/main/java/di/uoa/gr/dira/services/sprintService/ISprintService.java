@@ -6,7 +6,7 @@ import di.uoa.gr.dira.services.IService;
 import java.util.List;
 
 public interface ISprintService extends IService<SprintModel, Long> {
-    List<SprintModel> findAllSprintsByProjectId(Long projectId);
+    List<SprintModel> findAllSprintsByProjectId(Long projectId, Long customerId);
 
     SprintModel createSprintWithProjectId(Long projectId, Long customerId, SprintModel sprintModel);
 

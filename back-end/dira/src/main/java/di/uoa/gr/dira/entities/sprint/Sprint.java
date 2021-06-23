@@ -1,6 +1,7 @@
 package di.uoa.gr.dira.entities.sprint;
 
 import di.uoa.gr.dira.entities.issue.Issue;
+import di.uoa.gr.dira.entities.project.Project;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,10 @@ public class Sprint {
     @Column(name = "sprint_id")
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
+
     @OneToMany(mappedBy = "belongsToSprint")
     private List<Issue> issues;
 
@@ -30,5 +35,8 @@ public class Sprint {
 
     @Column(nullable = false)
     private Date dueDate;
+
+    @Column(nullable = false)
+    private boolean isActive;
 
 }

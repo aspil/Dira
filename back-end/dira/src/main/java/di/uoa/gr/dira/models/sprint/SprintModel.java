@@ -3,6 +3,7 @@ package di.uoa.gr.dira.models.sprint;
 import di.uoa.gr.dira.models.IModel;
 
 import di.uoa.gr.dira.models.issue.IssueModel;
+import di.uoa.gr.dira.models.project.ProjectModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +21,9 @@ public class SprintModel implements IModel<Long> {
     @Positive
     private Long id;
 
+    @NotNull
+    private ProjectModel projectModel;
+
     private List<IssueModel> issueModels;
 
     @NotNull
@@ -27,5 +31,8 @@ public class SprintModel implements IModel<Long> {
 
     @NotNull
     private Date dueDate;
+
+    @NotNull
+    private boolean isActive;
 
 }

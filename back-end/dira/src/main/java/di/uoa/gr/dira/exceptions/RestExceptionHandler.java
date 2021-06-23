@@ -1,6 +1,7 @@
 package di.uoa.gr.dira.exceptions;
 
 import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
+import di.uoa.gr.dira.exceptions.commonExceptions.CustomMessageException;
 import di.uoa.gr.dira.exceptions.security.InvalidOldPasswordException;
 import di.uoa.gr.dira.exceptions.security.PasswordResetTokenException;
 import di.uoa.gr.dira.exceptions.customer.CustomerAlreadyExistsException;
@@ -33,6 +34,7 @@ public class RestExceptionHandler {
             // Issue
             IssueNotFoundException.class,
             // General
+            CustomMessageException.class,
             ActionNotPermittedException.class,
             PasswordResetTokenException.class,
             InvalidOldPasswordException.class,
@@ -79,6 +81,10 @@ public class RestExceptionHandler {
             HttpStatus status = HttpStatus.BAD_REQUEST;
             return handleJwtException((JwtException) ex, headers, status, request);
         }
+        else if (ex instanceof CustomMessageException) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            return handleCustomMessageException((CustomMessageException) ex, headers, status, request);
+        }
 
         return null;
     }
@@ -91,6 +97,13 @@ public class RestExceptionHandler {
         return handleExceptionInternal(ex, new RestApiError(ex.getMessage()), headers, status, request);
     }
 
+    private ResponseEntity<RestApiError> handleCustomMessageException(
+            CustomMessageException ex,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
+        return handleExceptionInternal(ex, new RestApiError(ex.getMessage()), headers, status, request);
+    }
 
     private ResponseEntity<RestApiError> handlePasswordResetTokenException(
             PasswordResetTokenException ex,
