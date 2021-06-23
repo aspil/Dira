@@ -50,9 +50,7 @@ class UpdateProjectCommand extends Command {
 
         var project;
         if (flags.id) {
-            project = await client.get_project_by_id(flags.id).catch(err => {
-                logging.fatal(`No project with id '${flags.id}' was found`);
-            });
+            project = await client.get_project_by_id(flags.id).catch(() => logging.fatal(`Could not retrieve project with id '${flags.id}'`));
 
             var data;
             if (flags.data) {

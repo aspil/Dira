@@ -4,33 +4,6 @@ const { DiraProjectClient } = require("dira-clients");
 const logging = require("../../../logging");
 const common = require("../../../common");
 
-const READ = 1;
-const WRITE = 1 << 1;
-const DELETE = 1 << 2;
-const ADMIN = (READ | WRITE | DELETE) | 1 << 3;
-
-function decode_permissions(permission) {
-    var permissions = [];
-
-    if (permissions & ADMIN) {
-        permissions.push("ADMIN");
-    } else {
-        if (permission & READ) {
-            permissions.push("READ");
-        }
-    
-        if (permission & WRITE) {
-            permissions.push("WRITE");
-        }
-    
-        if (permissions & DELETE) {
-            permissions.push("DELETE");
-        }
-    }
-    
-    return permissions.join(", ");
-}
-
 class GetProjectUserPermissionsCommand extends Command {
     async run() {
         const client = new DiraProjectClient();
@@ -50,17 +23,7 @@ class GetProjectUserPermissionsCommand extends Command {
 
         if (flags.all) {
             client.get_project_permissions_for_all_users(projectId)
-                .then(permissions => {
-                    const data = permissions.map(perm => {
-                        return {
-                            id: perm.id,
-                            customerId: perm.customerId,
-                            permissions: decode_permissions(perm.permission)
-                        };
-                    });
-
-                    console.table(data);
-                }).catch(err => {
+                .then(console.table).catch(err => {
                     logging.error("Could not retrieve project user permissions");
                     logging.info(`Reason: ${err.error.message}`);
                 });
