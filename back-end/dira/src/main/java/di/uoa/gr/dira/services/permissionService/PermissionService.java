@@ -49,16 +49,6 @@ public class PermissionService extends BaseService<ProjectUserPermissionModel, P
     }
 
     @Override
-    public ProjectUserPermissionModel createProjectUserPermission(Customer customer, Project project, PermissionType permission) {
-        Permission perm = new Permission();
-        perm.setUser(customer);
-        perm.setProject(project);
-        perm.setPermission(permission.getPermission());
-        perm = repository.save(perm);
-        return mapper.map(perm, modelType);
-    }
-
-    @Override
     public ProjectUserPermissionModel createProjectUserPermission(
             Long creatorId,
             Long projectId,
@@ -76,7 +66,11 @@ public class PermissionService extends BaseService<ProjectUserPermissionModel, P
         Customer customer = customerRepository.findById(userPermissionModel.getCustomerId())
                 .orElseThrow(() -> new CustomerNotFoundException("id", userPermissionModel.getCustomerId().toString()));
 
-        return createProjectUserPermission(customer, project, PermissionType.of(userPermissionModel.getPermission()));
+        Permission perm = mapper.map(userPermissionModel, entityType);
+        perm.setUser(customer);
+        perm.setProject(project);
+        perm = repository.save(perm);
+        return mapper.map(perm, modelType);
     }
 
     @Override
@@ -106,8 +100,9 @@ public class PermissionService extends BaseService<ProjectUserPermissionModel, P
         }
 
         ProjectUserPermissionModel res = userPermissionModel;
-        if (permission.getPermission() != userPermissionModel.getPermission()) {
-            permission.setPermission(userPermissionModel.getPermission());
+        PermissionType permissionType = PermissionType.fromPermissionSet(userPermissionModel.getPermissions());
+        if (permission.getPermission() != permissionType.getPermission()) {
+            permission.setPermission(permissionType.getPermission());
             permission = repository.save(permission);
             res = mapper.map(permission, modelType);
         }

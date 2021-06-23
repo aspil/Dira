@@ -3,6 +3,9 @@ package di.uoa.gr.dira.shared;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
 public class PermissionType {
@@ -20,6 +23,29 @@ public class PermissionType {
 
     public static PermissionType of(int permission) {
         return new PermissionType(permission);
+    }
+
+    public static PermissionType fromPermissionSet(Set<PermissionTypeEnum> permissions) {
+        int permission = 0;
+        for (PermissionTypeEnum perm: permissions) {
+            permission |= PermissionType.fromPermissionTypeEnum(perm).getPermission();
+        }
+        return PermissionType.of(permission);
+    }
+
+    public static PermissionType fromPermissionTypeEnum(PermissionTypeEnum permissionTypeEnum) {
+        switch (permissionTypeEnum) {
+            case READ:
+                return PermissionType.of(READ_PERMISSION);
+            case WRITE:
+                return PermissionType.of(WRITE_PERMISSION);
+            case DELETE:
+                return PermissionType.of(DELETE_PERMISSION);
+            case ADMIN:
+                return PermissionType.of(ADMIN_PERMISSION);
+            default:
+                return null; // should never happen
+        }
     }
 
     public boolean hasPermission(int permission) {

@@ -21,6 +21,7 @@ public class ProjectMapperConfiguration implements IMapConfiguration {
         configureProjectEntityToProjectUsersModel(mapper);
         configureProjectEntityToProjectIssuesModel(mapper);
         configurePermissionEntityToProjectUserPermissionModel(mapper);
+        configureProjectUserPermissionModelToPermissionEntity(mapper);
     }
 
     /**
@@ -64,6 +65,12 @@ public class ProjectMapperConfiguration implements IMapConfiguration {
      */
     private void configurePermissionEntityToProjectUserPermissionModel(ModelMapper mapper) {
         TypeMap<Permission, ProjectUserPermissionModel> typeMap = mapper.createTypeMap(Permission.class, ProjectUserPermissionModel.class);
+        typeMap.addMappings(m -> m.map(Permission::getPermission, ProjectUserPermissionModel::setPermissionsFromInteger));
         typeMap.addMappings(m -> m.map(s -> s.getUser().getId(), ProjectUserPermissionModel::setCustomerId));
+    }
+
+    private void configureProjectUserPermissionModelToPermissionEntity(ModelMapper mapper) {
+        TypeMap<ProjectUserPermissionModel, Permission> typeMap = mapper.createTypeMap(ProjectUserPermissionModel.class, Permission.class);
+        typeMap.addMappings(m -> m.map(ProjectUserPermissionModel::getPermissions, Permission::setPermissionFromPermissionSet));
     }
 }
