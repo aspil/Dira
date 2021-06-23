@@ -126,7 +126,10 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
                         {/* Main Panel */}
                         <div className="main_panel">
                             <h1 id="team_members">Team Members</h1>
-                            <button onClick={show_members_popup}>+ Add Member</button>
+                            <button
+                                onClick={show_members_popup}
+                                style={isAdmin ? {} : { display: 'none' }}
+                            >+ Add Member</button>
                             <div className="table_wrapper">
                                 <table id="main_table">
                                     <thead>
@@ -142,7 +145,11 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
                                     <tbody>
                                         {members.map(member => (
                                             <tr key={member.id}>
-                                                <td>{member.username}</td>
+                                                <td>
+                                                    {member.id === userId && <span style={{ color: 'green' }}>(ME)</span>}
+                                                    &nbsp;
+                                                    {member.username}
+                                                </td>
                                                 <td>{member.name} {member.surname}</td>
                                                 <td>{(memberPermissions.find(perms => perms.id === member.id) !== undefined) && memberPermissions.find(perms => perms.id === member.id).permissions.toString()}</td>
                                                 {isAdmin &&

@@ -9,6 +9,7 @@ const CreateProject = ({ projectClientRef, userPlan }) => {
   const [description, setDescription] = useState("");
   const [key, setKey] = useState("");
   const [visibility, setVisibility] = useState("PUBLIC");
+  const [errorMsg, setErrorMsg] = useState('');
   const history = useHistory();
 
   function myFunction() {
@@ -21,6 +22,11 @@ const CreateProject = ({ projectClientRef, userPlan }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!(name && description && key)) {
+      setErrorMsg('Please fill in all fields');
+      return;
+    }
+    setErrorMsg('');
 
     projectClientRef.current.create_project({
       "description": description,
@@ -32,7 +38,10 @@ const CreateProject = ({ projectClientRef, userPlan }) => {
         console.log(res);
         history.push('proj_main');
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err)
+        setErrorMsg('Couldn\'t create the project');
+      });
   }
 
   return (
@@ -41,7 +50,7 @@ const CreateProject = ({ projectClientRef, userPlan }) => {
         <img src={logo} alt="dira logo" id="dira_logo" onClick={redirectToMain} />
         <div className="login_grad">
           <h1 style={{ fontWeight: "normal", margin: "15px" }}>Create New Project</h1>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} noValidate>
             <div style={{ textAlign: "left" }}>
               <p>Name:</p>
               <input className="textInput" type="text" placeholder="Project Name"
@@ -82,7 +91,7 @@ const CreateProject = ({ projectClientRef, userPlan }) => {
               </div>
             </div>
 
-
+            {Boolean(errorMsg) && <p style={{ color: 'crimson' }}>{errorMsg}</p>}
             <button type="submit">Create Project</button>
           </form>
         </div>
