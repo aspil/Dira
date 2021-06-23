@@ -18,6 +18,7 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
     name: '',
     visibility: ''
   });
+  const [editError, setEditError] = useState('');
 
 
   const editCurrProjField = (field, e) => {
@@ -35,10 +36,16 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
   }
   const showEditProject = (project) => {
     handleCurrentProject(project);
+    setEditError('');
     handleEditProject("show");
   }
   const handleEditProjectButtonClick = (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    setEditError('');
+    if (!(current_project.description && current_project.key && current_project.name)) {
+      setEditError('Please fill in all fields');
+      return;
+    }
 
     projectClientRef.current.update_project_with_id(current_project.id, {
       "id": current_project.id,
@@ -49,12 +56,13 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
     }).then(res => {
       console.log(res);
       fetchAllProjects();
+      hideEditProject();
     }).catch(err => {
       console.log('error during update');
+      setEditError('Couldn\'t update project');
       console.log(err);
     });
 
-    hideEditProject();
   }
 
   const handleDeleteProject = (id) => {
@@ -159,7 +167,7 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
               <br />
               <br />
               <form className="editProjectForm" style={{ textAlign: "left", fontWeight: "bold" }}
-                onSubmit={handleEditProjectButtonClick}>
+                onSubmit={handleEditProjectButtonClick} noValidate>
                 <p>Name:</p>
                 <input type="text" id="projectName" placeholder="Project Title" value={current_project.name} onChange={(e) => { editCurrProjField('name', e) }} ></input>
                 <p>Key:</p>
@@ -187,6 +195,11 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
                   </div>
                   {userPlan === "STANDARD" && <p style={{ fontWeight: "normal" }}><Link to="/pricing" style={{ color: "blue" }}>Upgrade to Premium</Link> to create private projects.</p>}
                 </div>
+                <p
+                  style={Boolean(editError) ? { color: 'crimson', textAlign: 'center' } : { display: 'none' }}
+                >
+                  {editError}
+                </p>
                 <div style={{ textAlign: "center" }}>
                   <button >Save Changes</button>
                 </div>

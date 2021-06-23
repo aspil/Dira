@@ -16,7 +16,8 @@ const Login = ({ setToken, userClientRef, setUserInfo, setIsLogged, navHandle, s
   const onSubmit = (e) => {
     e.preventDefault();
 
-    console.log(userClientRef.current);
+    setUsernameError(false);
+    setPasswordError(false);
 
     userClientRef.current
       .login_user(username, password)
@@ -30,20 +31,19 @@ const Login = ({ setToken, userClientRef, setUserInfo, setIsLogged, navHandle, s
         });
         setToken(user.token);
         setIsLogged(true);
-        setUsernameError(false);
-        setPasswordError(false);
         history.push('/proj_main');
       })
       .catch((err) => {
         console.log(err);
+        if (err === undefined) {
+          return;
+        }
         if (err.errors) {
           setPasswordError(true);
-          setUsernameError(false);
           setErrMessage(err.errors[0].defaultMessage);
         }
         else {
           setUsernameError(true);
-          setPasswordError(false);
           setErrMessage(err.error.message);
         }
       });

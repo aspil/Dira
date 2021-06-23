@@ -41,14 +41,15 @@ const Register = ({ userClientRef, navHandle, enteredEmail }) => {
       history.push('/');
     }).catch((err) => {
       console.log(err);
+      if (err === undefined) {
+        return;
+      }
       if (err.errors) {
-        setError(false);
         setPasswordError(true);
         setErrMessage(err.errors[0].defaultMessage);
       }
       else {
         setError(true);
-        setPasswordError(false);
         setErrMessage(err.error.message);
       }
     });
