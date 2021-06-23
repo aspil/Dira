@@ -225,10 +225,21 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
               <div className="head">
                 <div className="info">
                   <h2>Backlog</h2>
-                  <p className="issue_total">{searchFilteredIssues.length} Issues</p>
-
+                  <p
+                    className="issue_total"
+                    style={!hasRead ? { display: 'none' } : {}}
+                  >
+                    {searchFilteredIssues.length} Issues
+                  </p>
+                  {!hasRead &&
+                    <p style={{ color: 'crimson' }}>You don't have permission to view this Backlog</p>
+                  }
                 </div>
-                <form onSubmit={handleClearSearch} noValidate>
+                <form
+                  onSubmit={handleClearSearch}
+                  noValidate
+                  style={!hasRead ? { display: 'none' } : {}}
+                >
                   <input
                     type="text"
                     placeholder="Search for and issue"
