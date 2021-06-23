@@ -18,6 +18,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PermissionService extends BaseService<ProjectUserPermissionModel, Permission, Long, PermissionRepository> implements IPermissionService {
@@ -130,4 +131,24 @@ public class PermissionService extends BaseService<ProjectUserPermissionModel, P
 
         repository.delete(permission);
     }
+
+    @Override
+    public Optional<ProjectUserPermissionModel> getProjectUserPermissionById(Long customerId, Long projectId, Long permissionId) {
+        customerRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException("id", customerId.toString()));
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException("id", projectId.toString()));
+
+        if (!checkProjectUserPermissions(customerId, project, PermissionType.READ)) {
+            throw new ActionNotPermittedException("You need READ permissions in order to view a project user permission");
+        }
+
+        return project.getPermissions()
+                .stream()
+                .filter(obj -> obj.getId().equals(permissionId))
+                .findAny()
+                .map(permission -> mapper.map(permission, modelType));
+    }
+
 }
