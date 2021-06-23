@@ -1,12 +1,15 @@
 package di.uoa.gr.dira.entities.project;
 
 import di.uoa.gr.dira.entities.customer.Customer;
+import di.uoa.gr.dira.shared.PermissionType;
+import di.uoa.gr.dira.shared.PermissionTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
@@ -28,4 +31,8 @@ public class Permission {
     private Customer user;
 
     private int permission;
+
+    public void setPermissionFromPermissionSet(Set<PermissionTypeEnum> permissions) {
+        permission = PermissionType.fromPermissionSet(permissions).getPermission();
+    }
 }

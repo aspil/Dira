@@ -40,12 +40,12 @@ public class ProjectUserPermissionController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PostMapping
-    public void createProjectUserPermission(
+    public ProjectUserPermissionModel createProjectUserPermission(
             @PathVariable Long projectId,
             @Valid @RequestBody ProjectUserPermissionModel userPermissionModel,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
         Long customerId = jwtHelper.getId(jwtToken);
-        service.createProjectUserPermission(customerId, projectId, userPermissionModel);
+        return service.createProjectUserPermission(customerId, projectId, userPermissionModel);
     }
 
     @ApiOperation(
