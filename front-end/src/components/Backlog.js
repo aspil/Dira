@@ -305,15 +305,14 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
             {/* Issue Panel */}
             {issue_panel === "show" &&
               <div className="issuePanel">
-
-                <div>
-                  <h2 style={{ color: "gray" }}>
-                    <img src={x_icon} id="xIcon" alt="x_icon" onClick={hideIssuePanel}></img>
-                    {focusedIssue.type}
-                  </h2>
-                  <h1 id="issueName">
-                    {focusedIssue.title}
-                  </h1>
+                <h2 style={{ color: "gray" }}>
+                  <img src={x_icon} id="xIcon" alt="x_icon" onClick={hideIssuePanel}></img>
+                  {focusedIssue.type}
+                </h2>
+                <h1 id="issueName" style={{alignItems:"center"}}>
+                  {focusedIssue.title}
+                </h1>
+                <div className="issuePanelMain">
                   <br />
                   {focusedIssue.epicId &&
                     <>
@@ -382,6 +381,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                   ))}
                     <input type="text" name="newComment" id="newComment" placeholder="+ Add comment" style={{marginLeft:"10px",marginRight:"0px",border:"1px solid grey",borderRadius:"0"}}/>
                     <button style={{backgroundColor:"grey"}}>+</button>
+                  </div>
 
                   {hasWrite &&
                     <div style={{ textAlign: "center", marginTop: "20px" }}>
@@ -391,7 +391,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                       </Link>
                     </div>
                   }
-                </div>
               </div>
             }
             {sprint === "show"

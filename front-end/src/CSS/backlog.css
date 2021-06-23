@@ -42,27 +42,27 @@
 
 .backlog .center_content main .flex_cont .backlogPanel{
   grid-column-start: 1;
-  grid-column-end: 40;
+  grid-column-end:38;
   grid-row-start: 1;
   grid-row-end: 100;
 }
 .backlog .center_content main .flex_cont .sprint {
   background-color: lightblue;
-  grid-column-start: 60;
+  grid-column-start: 62;
   grid-column-end: 100;
   grid-row-start: 1;
   grid-row-end: 100;
 }
 .backlog .center_content main .flex_cont .issuePanel {
-  grid-column-start: 40;
-  grid-column-end: 60;
+  grid-column-start:38;
+  grid-column-end: 62;
   grid-row-start: 10;
   grid-row-end: 100;
 }
 .backlog .center_content main .flex_cont .createSprint {
   text-align: center;
-  grid-column-start: 40;
-  grid-column-end: 60;
+  grid-column-start:38;
+  grid-column-end: 62;
   grid-row-start: 1;
   grid-row-end: 10;
 }
@@ -103,7 +103,12 @@
 /* Issue Panel */
 .backlog .issuePanel{
   background-color: rgb(239, 240, 241);
+}
+.backlog .issuePanelMain{
   overflow-y: auto;
+  border: 1px solid lightgray;
+  padding: 2px;
+
 }
 
 .backlog .colored_text{
@@ -111,7 +116,6 @@
   font-weight: bold;
   color: white;
   border: 1px solid gray;
-  background-color: orange;
   border-radius: 10px;
   padding-right: 8px;
   padding-left: 8px;
@@ -150,7 +154,7 @@
 /* Tables */
 .backlog table {
   border-collapse: collapse;
-  width: 500px;
+  width: 490px;
 }
 .backlog table .largeCell{
   max-width: 150px;  
