@@ -45,14 +45,14 @@ const CreateProject = ({ projectClientRef, userPlan }) => {
             <div style={{ textAlign: "left" }}>
               <p>Name:</p>
               <input className="textInput" type="text" placeholder="Project Name"
-                value={name} onChange={(e) => setName(e.target.value)} />
+                value={name} onChange={(e) => setName(e.target.value)} required />
               <p>Description:</p>
               <input className="textInput" type="text" placeholder="Project Description"
-                value={description} onChange={(e) => setDescription(e.target.value)} />
+                value={description} onChange={(e) => setDescription(e.target.value)} required />
               <p>Key:</p>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <input className="textInput" id="projectKey" placeholder="Project Key"
-                  value={key} onChange={(e) => setKey(e.target.value)} />
+                  value={key} onChange={(e) => setKey(e.target.value)} required />
                 <img src={questionmark} alt="questionmark" id="questionmark" onClick={myFunction} />
                 <div className="questionmark_popup" >
                   <span className="popuptext" id="myPopup">The keyword for your Project, e.g. 'PM' for 'Project Mars'.</span>

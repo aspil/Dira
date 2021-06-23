@@ -20,15 +20,16 @@ const Register = ({ userClientRef, navHandle, enteredEmail }) => {
   const onSubmit = (e) => {
     e.preventDefault()
 
-    if (password === confirmPassword) {
+    if (password !== confirmPassword) {
       setError(false);
       setPasswordError(true);
       setErrMessage("Passwords don't match.");
       return;
     }
+    setError(false);
     setPasswordError(false);
 
-    userClientRef.register_user({
+    userClientRef.current.register_user({
       "username": username,
       "name": name,
       "surname": surname,
@@ -37,8 +38,6 @@ const Register = ({ userClientRef, navHandle, enteredEmail }) => {
       "subscriptionPlan": "STANDARD"
     }).then(res => {
       console.log(res);
-      setError(false);
-      setPasswordError(false);
       history.push('/');
     }).catch((err) => {
       console.log(err);

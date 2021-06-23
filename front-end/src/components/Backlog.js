@@ -7,7 +7,7 @@ import { Search } from '@material-ui/icons'
 import { DiraIssueClient } from "dira-clients";
 import edit_icon from "../Images/edit_icon.png"
 
-const Backlog = ({ token, footerHandle, projectClientRef }) => {
+const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
   const [backlogIssues, setBacklogIssues] = useState([]);
   const [searchFilteredIssues, setSearchFilteredIssues] = useState([]);
   const [searchFilter, setSearchFilter] = useState('');
@@ -30,8 +30,9 @@ const Backlog = ({ token, footerHandle, projectClientRef }) => {
   const [focusedIssueId, setFocusedIssueId] = useState(null);
   const [focusedIssue, setFocusedIssue] = useState(null);
   const [sprint, handleSprintPanel] = useState("hide");
-
-
+  const [userPermissions, setUserPermissions] = useState(undefined);
+  const [hasRead, setHasRead] = useState(false);
+  const [hasWrite, setHasWrite] = useState(false);
 
   const { projectId } = useParams();
   const issueClientRef = useRef(new DiraIssueClient(projectId));
@@ -65,16 +66,16 @@ const Backlog = ({ token, footerHandle, projectClientRef }) => {
 
   useEffect(footerHandle, [footerHandle]);
 
-    //issue panel handlers
-    const [issue_panel, handleIssuePanel] = useState("hide");
-    const showIssuePanel = (issueId) => {
-      setFocusedIssueId(issueId);
-      setFocusedIssue(backlogIssues.find(issue => issue.id === issueId));
-      handleIssuePanel("show");
-    }
-    const hideIssuePanel = () => {
-      handleIssuePanel("hide");
-    }
+  //issue panel handlers
+  const [issue_panel, handleIssuePanel] = useState("hide");
+  const showIssuePanel = (issueId) => {
+    setFocusedIssueId(issueId);
+    setFocusedIssue(backlogIssues.find(issue => issue.id === issueId));
+    handleIssuePanel("show");
+  }
+  const hideIssuePanel = () => {
+    handleIssuePanel("hide");
+  }
 
   // Create sprint popup handlers
   const [create_sprint_popup, handleCreateSprintPopup] = useState("hide");
@@ -168,7 +169,27 @@ const Backlog = ({ token, footerHandle, projectClientRef }) => {
     } else {
       setSearchFilteredIssues(backlogIssues);
     }
-  }, [searchFilter, backlogIssues])
+  }, [searchFilter, backlogIssues]);
+
+  const fetchUserPermissions = () => {
+    projectClientRef.current.get_project_permissions_for_all_users(projectId).then(res => {
+      console.log(res);
+      setUserPermissions(res.find(customer => customer.customerId === userId));
+    }).catch(err => {
+      console.log(err);
+    });
+  };
+  useEffect(fetchUserPermissions, []);
+
+  const decodePermissions = () => {
+    if (!userPermissions) {
+      return;
+    }
+
+    setHasRead((0b0001 & userPermissions.permission) ? true : false);
+    setHasWrite((0b0010 & userPermissions.permission) ? true : false);
+  }
+  useEffect(decodePermissions, [userPermissions]);
 
   const types = [
     'Story',
@@ -213,9 +234,9 @@ const Backlog = ({ token, footerHandle, projectClientRef }) => {
                     placeholder="Search for and issue"
                     value={searchFilter}
                     onChange={(e) => { setSearchFilter(e.target.value); }}
-                    style={{marginRight:"0"}}
+                    style={{ marginRight: "0" }}
                   />
-                  <button type="submit" style={{ backgroundColor: 'grey', border:"2px solid grey"}}>
+                  <button type="submit" style={{ backgroundColor: 'grey', border: "2px solid grey" }}>
                     X
                   </button>
                 </form>
@@ -232,31 +253,33 @@ const Backlog = ({ token, footerHandle, projectClientRef }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {searchFilteredIssues.map(issue => (
+                    {hasRead && searchFilteredIssues.map(issue => (
                       <tr key={issue.key} onClick={() => showIssuePanel(issue.id)}>
                         <td>{issue.key}</td>
                         <td>{issue.title}</td>
-                      <td className="largeCell">{issue.description}</td>
-                      <td>{issue.type}</td>
-                      <td style={{textAlign:"center"}}> 
-                        <text class="colored_text" style={{backgroundColor:priorityToColorMapper[issue.priority],fontSize:"12px"}}>{issue.priority}</text>
-                      </td>                      
+                        <td className="largeCell">{issue.description}</td>
+                        <td>{issue.type}</td>
+                        <td style={{ textAlign: "center" }}>
+                          <text className="colored_text" style={{ backgroundColor: priorityToColorMapper[issue.priority], fontSize: "12px" }}>{issue.priority}</text>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <div style={{ textAlign: "center" }}>
-                <button id="createIssueButton" onClick={showCreateIssuePopup}> + Create New Issue</button>
-              </div>
+              {hasWrite &&
+                <div style={{ textAlign: "center" }}>
+                  <button id="createIssueButton" onClick={showCreateIssuePopup}> + Create New Issue</button>
+                </div>
+              }
             </div>
             {/* Issue Panel */}
             {issue_panel === "show" &&
               <div className="issuePanel">
 
                 <div>
-                  <h2 style={{color:"gray"}}>
-                    <img src={x_icon} id = "xIcon" alt="x_icon" onClick={hideIssuePanel}></img>
+                  <h2 style={{ color: "gray" }}>
+                    <img src={x_icon} id="xIcon" alt="x_icon" onClick={hideIssuePanel}></img>
                     {focusedIssue.type}
                   </h2>
                   <h1 id="issueName">
@@ -309,12 +332,14 @@ const Backlog = ({ token, footerHandle, projectClientRef }) => {
                   <br />
                   <text className="label" id="dateCreated">Created on: </text>
                   <text className="answer" id="dateCreatedAnswer">{new Date(focusedIssue.created).toLocaleString()}</text>
-                  <div style={{ textAlign: "center", marginTop: "20px" }}>
-                    <Link to={`/project/${projectId}/issue_preview/${focusedIssueId}`} id="editIssueLink">
-                      <img id="pencilIcon" src={edit_icon} alt="Pencil"></img>
-                      Edit Issue
-                    </Link>
-                  </div>
+                  {hasWrite &&
+                    <div style={{ textAlign: "center", marginTop: "20px" }}>
+                      <Link to={`/project/${projectId}/issue_preview/${focusedIssueId}`} id="editIssueLink">
+                        <img id="pencilIcon" src={edit_icon} alt="Pencil"></img>
+                        Edit Issue
+                      </Link>
+                    </div>
+                  }
                 </div>
               </div>
             }
@@ -370,7 +395,7 @@ const Backlog = ({ token, footerHandle, projectClientRef }) => {
             <div className="createPopup">
               <div>
                 <h2>Create a new Sprint</h2>
-                <img src={x_icon} id = "xIcon" alt="x_icon" onClick={hideCreateSprintPopup}></img>
+                <img src={x_icon} id="xIcon" alt="x_icon" onClick={hideCreateSprintPopup}></img>
               </div>
               <br />
               <br />
@@ -397,7 +422,7 @@ const Backlog = ({ token, footerHandle, projectClientRef }) => {
             <div className="createPopup" style={{ fontWeight: "bold" }}>
               <div>
                 <h2>Create a new Issue</h2>
-                <img src={x_icon} id = "xIcon" alt="x_icon" onClick={hideCreateIssuePopup}></img>
+                <img src={x_icon} id="xIcon" alt="x_icon" onClick={hideCreateIssuePopup}></img>
 
               </div>
               <br />
@@ -431,7 +456,7 @@ const Backlog = ({ token, footerHandle, projectClientRef }) => {
                       onChange={(e) => { setNewPriority(e.target.value); }}
                     >
                       {priorities.map((priority) => (
-                        <option value={priority} >
+                        <option key={priority} value={priority} >
                           {priority}
                         </option>
                       ))}
@@ -444,7 +469,7 @@ const Backlog = ({ token, footerHandle, projectClientRef }) => {
                       onChange={(e) => { setNewType(e.target.value !== 'None' ? e.target.value : null); }}
                     >
                       {types.map((type) => (
-                        <option value={type} >
+                        <option key={type} value={type} >
                           {type}
                         </option>
                       ))}

@@ -170,6 +170,7 @@ function App() {
         <Route path="/backlog/:projectId">
           {token === undefined && <Redirect to="/sign_in" />}
           {token !== undefined && <Backlog
+            userId={userInfo.id}
             username={userInfo.username}
             token={token}
             doLogout={doLogout}
