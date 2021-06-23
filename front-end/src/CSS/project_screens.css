@@ -111,7 +111,59 @@
   background-color: lightgray;
   cursor: pointer;
 }
+/* Issue Labels */
+.issueLabelsWrapper{
+  display: inline-flex;
+  align-items: center;
+  margin: 5px;
+  border-radius: 5px;
+  font-weight: bold;
+  background-color: rgb(84, 212, 68);
+  border-width: thin;
+  cursor: pointer;
+  padding-right: 5px;
+  padding-left: 5px;
+}
 
+.issueLabelX{
+  border:0;
+  color: black;
+  background-color: none;
+}
+.issueLabelsWrapper:hover{
+  cursor: initial;
+}
+
+.issueLabel{
+  color: white;
+  
+}
+/* Issue Comments */
+.issueCommentsWrapper{
+  display: block;
+  margin: 5px;
+  border-radius: 5px;
+  font-weight: bold;
+  background-color: orange;
+  border-width: thin;
+  cursor: pointer;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.issueCommentX{
+  border:0;
+  color: black;
+  background-color: orange;
+}
+.issueCommentsWrapper:hover{
+  cursor: initial;
+}
+
+.issueComment{
+  color: white;
+  
+}
 /* Project_Main */
 .projectmain .leftPanel{
   margin: 0 auto;
