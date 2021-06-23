@@ -211,6 +211,24 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
     Blocked: 'purple'
   }
 
+  const [Labels, setLabels] = useState([
+    { name: 'err', id: 1 },
+    { name: 'bug', id: 2 },
+    { name: 'lab3', id: 3 },
+    { name: '4', id: 4 },
+    { name: 'Label5', id: 5 },
+    { name: 'Label6', id: 6 },
+  ])
+  const [Comments, setComments] = useState([
+    { body: 'f  oafnjao ww aaowfw aw oiawa nlaw wlaw la wkn', id: 1 },
+    { body: 'lawkd nawldkn aal dwkadkalkwdnalw', id: 2 },
+    { body: 'sgd a awdaw law k aw', id: 3 },
+    { body: '4', id: 4 },
+    { body: 'a fwaf', id: 5 },
+    { body: '6', id: 6 },
+  ])
+
+
   return (
     <div className="backlog proj_page">
       <div className="center_content">
@@ -343,10 +361,32 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                   <br />
                   <text className="label" id="dateCreated">Created on: </text>
                   <text className="answer" id="dateCreatedAnswer">{new Date(focusedIssue.created).toLocaleString()}</text>
+                  <br></br>
+                  <br></br>
+                  <p className="label">Labels: </p>
+                    {Labels.map(label => (
+                      <div className="issueLabelsWrapper">
+                        <button className="issueLabelX">X</button>
+                        <text className="issueLabel"> {label.name} </text>
+                      </div>
+                    ))}
+                      <input type="text" name="newLabel" id="newLabel" placeholder="+ Add label" style={{marginLeft:"10px",marginRight:"0px",border:"1px solid grey",borderRadius:"0"}}/>
+                      <button style={{backgroundColor:"grey"}}>+</button>
+                  
+                  <p className="label">Comments: </p>
+                  {Comments.map(comment => (
+                    <div className="issueCommentsWrapper">
+                      <button className="issueCommentX">X</button>
+                      <text className="issueComment"> {comment.body} </text>
+                    </div>
+                  ))}
+                    <input type="text" name="newComment" id="newComment" placeholder="+ Add comment" style={{marginLeft:"10px",marginRight:"0px",border:"1px solid grey",borderRadius:"0"}}/>
+                    <button style={{backgroundColor:"grey"}}>+</button>
+
                   {hasWrite &&
                     <div style={{ textAlign: "center", marginTop: "20px" }}>
                       <Link to={`/project/${projectId}/issue_preview/${focusedIssueId}`} id="editIssueLink">
-                        <img id="pencilIcon" src={edit_icon} alt="Pencil"></img>
+                        <img id="pencilIcon" src={edit_icon} alt="Pencil" ></img>
                         Edit Issue
                       </Link>
                     </div>
