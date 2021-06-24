@@ -53,8 +53,8 @@ const ActiveSprint = ({ footerHandle }) => {
                         </div>
                         {/* time remaining */}
                         <div className="timeRemaining">
-                            <text>Time remaining: </text>
-                            <text>X Days</text>
+                            <span>Time remaining: </span>
+                            <span>X Days</span>
 
                         </div>
                         {/* issue tables */}
@@ -66,7 +66,7 @@ const ActiveSprint = ({ footerHandle }) => {
                                         <p>{issue.briefDescription}</p>
                                         <div className="issueShortInfo">
                                             <p>{issue.title}</p>
-                                            <text id="issueEpic">My Epic</text>
+                                            <span id="issueEpic">My Epic</span>
                                             <div id="spacer" style={{ height: "13px" }} />
                                             <p id="dueDate">{issue.dueDate}</p>
                                         </div>
@@ -82,7 +82,7 @@ const ActiveSprint = ({ footerHandle }) => {
                                         <p>{issue.briefDescription}</p>
                                         <div className="issueShortInfo">
                                             <p>{issue.title}</p>
-                                            <text id="issueEpic">My Epic</text>
+                                            <span id="issueEpic">My Epic</span>
                                             <div id="spacer" style={{ height: "13px" }} />
                                             <p id="dueDate">{issue.dueDate}</p>
                                         </div>
@@ -98,7 +98,7 @@ const ActiveSprint = ({ footerHandle }) => {
                                         <p>{issue.briefDescription}</p>
                                         <div className="issueShortInfo">
                                             <p>{issue.title}</p>
-                                            <text id="issueEpic">My Epic</text>
+                                            <span id="issueEpic">My Epic</span>
                                             <div id="spacer" style={{ height: "13px" }} />
                                             <p id="dueDate">{issue.dueDate}</p>
                                         </div>
@@ -120,7 +120,7 @@ const ActiveSprint = ({ footerHandle }) => {
 
                                     </div>
                                     <br></br>
-                                    <text id="issueEpic">Epic of this Issue</text>
+                                    <span id="issueEpic">Epic of this Issue</span>
                                     <br></br>
                                     <br></br>
                                     <h3>Description</h3>
@@ -133,24 +133,24 @@ const ActiveSprint = ({ footerHandle }) => {
                                         Lorem ipsum dolor sit amet, consectetur adipiscing elit
                                     </p>
                                     <br />
-                                    <text className="label" id="status">Status: </text>
-                                    <text className="answer" id="statusAnswer">Open</text>
-                                    <text className="answer" id="priorityAnswer">Major </text>
-                                    <text className="label" id="priority">Priority: </text>
+                                    <span className="label" id="status">Status: </span>
+                                    <span className="answer" id="statusAnswer">Open</span>
+                                    <span className="answer" id="priorityAnswer">Major </span>
+                                    <span className="label" id="priority">Priority: </span>
                                     <br />
-                                    <text className="label" id="resolution">Resolution: </text>
-                                    <text className="answer" id="resolutionAnswer">Unresolved</text>
-                                    <br />
-                                    <br />
-                                    <text className="label" id="assignee">Assignee: </text>
-                                    <text className="answer" id="assigneeAnswer">Makis</text>
-                                    <br />
-                                    <text className="label" id="reporter">Reporter: </text>
-                                    <text id="reporterAnswer">Takis</text>
+                                    <span className="label" id="resolution">Resolution: </span>
+                                    <span className="answer" id="resolutionAnswer">Unresolved</span>
                                     <br />
                                     <br />
-                                    <text className="label" id="dateCreated">Created on: </text>
-                                    <text className="answer" id="dateCreatedAnswer">10/3/2021</text>
+                                    <span className="label" id="assignee">Assignee: </span>
+                                    <span className="answer" id="assigneeAnswer">Makis</span>
+                                    <br />
+                                    <span className="label" id="reporter">Reporter: </span>
+                                    <span id="reporterAnswer">Takis</span>
+                                    <br />
+                                    <br />
+                                    <span className="label" id="dateCreated">Created on: </span>
+                                    <span className="answer" id="dateCreatedAnswer">10/3/2021</span>
 
                                 </div>
                             </div>

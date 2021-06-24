@@ -74,22 +74,22 @@ const IssuePreview = ({ footerHandle, token }) => {
           {issue && <div id="content">
             <div className="issuePreviewWrapper">
               <div className="headWrapper">
-                {/* <text id="issueEpic">Epic of this issue</text> */}
+                {/* <span id="issueEpic">Epic of this issue</span> */}
                 <h1 id="issueName">{issue.title}</h1>
                 <div>
-                  <text className="label" id="issueType">Type:</text>
-                  <text className="answer" id="issueType">{issue.type}</text>
+                  <span className="label" id="issueType">Type:</span>
+                  <span className="answer" id="issueType">{issue.type}</span>
                 </div>
               </div>
               <div style={{ margin: "auto", marginBottom: "15px", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  <text className="label" id="reporter">Reporter: </text>
-                  <text className="answer" id="reporter">{issue.reporter}</text>
+                  <span className="label" id="reporter">Reporter: </span>
+                  <span className="answer" id="reporter">{issue.reporter}</span>
                   <br></br>
-                  <text className="label" id="assignee">Assignee: </text>
-                  <text className="answer" id="assignee">
+                  <span className="label" id="assignee">Assignee: </span>
+                  <span className="answer" id="assignee">
                     {issue.assignee ? issue.assignee : '-'}
-                  </text>
+                  </span>
                 </div>
               </div>
               <div className="issueInfoWrapper">
@@ -98,7 +98,7 @@ const IssuePreview = ({ footerHandle, token }) => {
                   <div style={{ margin: "auto", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
                     {/* Priority */}
                     <div>
-                      <text>Priority: </text>
+                      <span>Priority: </span>
                       <select
                         name="priority"
                         id="priority"
@@ -113,7 +113,7 @@ const IssuePreview = ({ footerHandle, token }) => {
                     </div>
                     {/* Status */}
                     <div>
-                      <text>Status: </text>
+                      <span>Status: </span>
                       <select
                         name="status"
                         id="status"
@@ -129,7 +129,7 @@ const IssuePreview = ({ footerHandle, token }) => {
                     </div>
                     <div>
                       {/* Resolution */}
-                      <text>Resolution: </text>
+                      <span>Resolution: </span>
                       <select
                         name="resolution"
                         id="resolution"
@@ -144,7 +144,7 @@ const IssuePreview = ({ footerHandle, token }) => {
                   <br />
                   <div style={{ margin: "auto", alignItems: "center", display: "flex" }}>
                     <div>
-                      <text>Description:</text>
+                      <span>Description:</span>
                       <textarea
                         type="range"
                         placeholder="Issue Description"

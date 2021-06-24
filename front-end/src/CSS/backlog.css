@@ -41,6 +41,7 @@
 }
 
 .backlog .center_content main .flex_cont .backlogPanel{
+  background-color: rgb(129, 185, 238);
   grid-column-start: 1;
   grid-column-end:38;
   grid-row-start: 1;
@@ -60,11 +61,15 @@
   grid-row-end: 100;
 }
 .backlog .center_content main .flex_cont .createSprint {
+  border: 2px inset lightgray;
+  background-image: repeating-linear-gradient(to top, rgb(230, 233, 235) , rgb(250, 250, 250));
+  box-shadow: none;
   text-align: center;
-  grid-column-start:38;
-  grid-column-end: 62;
+  grid-column-start: 62;
+  grid-column-end: 100;
   grid-row-start: 1;
-  grid-row-end: 10;
+  grid-row-end: 100;
+  display: table;
 }
 
 .backlog .center_content main .flex_cont .backlogPanel .head{
@@ -76,9 +81,8 @@
   justify-content: space-between;
 }
 /* Backlog and Sprint */
-.backlog .center_content main .flex_cont .backlogPanel,.sprint,.issuePanel {
+.backlog .center_content main .flex_cont .backlogPanel,.sprint,.issuePanel,.createSprint {
   padding: 20px;
-  background-color: rgb(129, 185, 238);
   border-radius: 5px;
   display: flex;
   flex-direction: column;
@@ -94,6 +98,7 @@
 .backlog .center_content main .flex_cont .backlogPanel .info {
   margin-bottom: 20px;
 }
+
 /* Backlog Create issue Button */
 .backlog .center_content main .flex_cont .backlogPanel #createIssueButton {
   margin-top: 20px;
@@ -182,6 +187,14 @@
   overflow-y: auto;
   margin-left: auto;
   margin-right: auto;
+}
+.backlog #createSprintContent{
+  
+  display: table-cell;
+vertical-align: middle;
+}
+.backlog #createSprintText{
+  font-size: 30px;
 }
 /* Create Sprint Button */
 .backlog #createSprintButton{
