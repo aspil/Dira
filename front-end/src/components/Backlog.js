@@ -56,8 +56,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       setProjectName(res.name);
       if (focusedIssueId) {
         setFocusedIssue(res.issues.find(issue => issue.id === focusedIssueId));
-        setNewComment('');
-        setNewLabel('');
       }
     }).catch((err) => {
       console.log(err);
@@ -258,20 +256,26 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       setNewCommentError('Please fill in field');
       return;
     }
-    setNewLabelError('');
-    setNewCommentError('');
 
     const newIssue = JSON.parse(JSON.stringify(focusedIssue));
     if (field === 'label') {
       newIssue.labels.push({ 'value': newLabel });
+      setNewLabelError('');
     }
     else if (field === 'comment') {
       newIssue.comments.push({ 'value': `${username},${newComment}` });
+      setNewCommentError('');
     }
     issueClientRef.current.update_issue(focusedIssueId, newIssue)
       .then(res => {
         console.log(res);
         fetchAllIssues();
+        if (field === 'label') {
+          setNewLabel('');
+        }
+        else if (field === 'comment') {
+          setNewComment('');
+        }
       })
       .catch(err => {
         console.log(err);
@@ -285,15 +289,14 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
 
   }
   const deleteValueFromField = (field, toDelete) => {
-    setDeleteLabelError('');
-    setDeleteCommentError('');
-
     const issue = JSON.parse(JSON.stringify(focusedIssue));
     if (field === 'label') {
       issue.labels = issue.labels.filter(labelObj => labelObj.value !== toDelete.value);
+      setDeleteLabelError('');
     }
     else if (field === 'comment') {
       issue.comments = issue.comments.filter(commentObj => commentObj.value !== toDelete.value);
+      setDeleteCommentError('');
     }
     issueClientRef.current.update_issue(focusedIssueId, issue)
       .then(res => {
