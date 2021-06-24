@@ -1,5 +1,6 @@
 package di.uoa.gr.dira.controllers;
 
+import di.uoa.gr.dira.exceptions.issue.IssueNotFoundException;
 import di.uoa.gr.dira.models.issue.IssueCreateModel;
 import di.uoa.gr.dira.models.issue.IssueModel;
 import di.uoa.gr.dira.models.project.ProjectIssuesModel;
@@ -59,23 +60,24 @@ public class IssueController {
             @PathVariable Long issueId,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
         Long customerId = jwtHelper.getId(jwtToken);
-        return service.findIssueWithProjectId(projectId, customerId, issueId);
+        return service.findIssueWithProjectId(projectId, customerId, issueId)
+                .orElseThrow(() -> new IssueNotFoundException("issueId", issueId.toString()));
     }
 
-//    @ApiOperation(
-//            value = "Updates the issue with the given id",
-//            consumes = MediaType.APPLICATION_JSON_VALUE,
-//            produces = MediaType.APPLICATION_JSON_VALUE
-//    )
-//    @PutMapping("{issueId}")
-//    public @Valid IssueModel updateIssueWithProjectId(
-//            @PathVariable Long projectId,
-//            @PathVariable Long issueId,
-//            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken,
-//            @Valid @RequestBody IssueRequestModel issueRequestModel) {
-//        Long customerId = jwtHelper.getId(jwtToken);
-//        return service.updateIssueWithProjectId(projectId, customerId, issueId, issueRequestModel);
-//    }
+    @ApiOperation(
+            value = "Updates the issue with the given id",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @PutMapping("{issueId}")
+    public @Valid IssueModel updateIssueWithProjectId(
+            @PathVariable Long projectId,
+            @PathVariable Long issueId,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken,
+            @Valid @RequestBody IssueModel issueModel) {
+        Long customerId = jwtHelper.getId(jwtToken);
+        return service.updateIssueWithProjectId(projectId, customerId, issueId, issueModel);
+    }
 
     @ApiOperation(
             value = "Deletes the issue with the given id",

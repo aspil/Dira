@@ -15,6 +15,7 @@ public class IssueMapperConfiguration implements IMapConfiguration {
     @Override
     public void configure(ModelMapper mapper) {
         configureIssueEntityToIssueModel(mapper);
+        configureIssueModelToIssueEntity(mapper);
         configureIssueCreateModelToIssueEntity(mapper);
         configureIssueLinkEntityToIssueLinkModel(mapper);
         configureIssueLabelEntityToLongStringPair(mapper);
@@ -44,6 +45,16 @@ public class IssueMapperConfiguration implements IMapConfiguration {
 
         typeMap.addMappings(m -> m.using(ListConverter.withMapper(mapper, IssueLink.class))
                 .map(Issue::getIssueLinks, IssueModel::setIssueLinks));
+    }
+
+    /**
+     * Creates a model mapper configuration when mapping an IssueModel to an IssueEntity
+     *
+     * @param mapper The mapper to configure
+     */
+    private void configureIssueModelToIssueEntity(ModelMapper mapper) {
+        TypeMap<IssueModel, Issue> typeMap = mapper.createTypeMap(IssueModel.class, Issue.class);
+        typeMap.addMappings(m -> m.skip(Issue::setId));
     }
 
     /**

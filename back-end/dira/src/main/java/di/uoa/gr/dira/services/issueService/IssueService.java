@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepository> implements IIssueService {
@@ -42,24 +43,10 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
         this.issueLabelRepository = issueLabelRepository;
     }
 
-    private void addIssueToProject(Project project, Issue issue) {
-        List<Issue> projectIssues = project.getIssues();
-        if (projectIssues != null) {
-            int issueIdx = projectIssues.indexOf(issue);
-            if (issueIdx != -1) {
-                projectIssues.set(issueIdx, issue);   /* If issue exists, set instead of re adding to list */
-            } else {
-                projectIssues.add(issue);
-            }
-            projectRepository.save(project);
-        }
-    }
-
     @Override
     public ProjectIssuesModel findAllIssuesByProjectId(Long projectId) { // TODO filter by issue status(probably)
         return projectRepository.findById(projectId)
                 .map(project -> mapper.map(project, ProjectIssuesModel.class))
-//                .filter()
                 .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
     }
 
@@ -113,36 +100,34 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
     }
 
     @Override
-    public IssueModel findIssueWithProjectId(Long projectId, Long customerId, Long issueId) {
+    public Optional<IssueModel> findIssueWithProjectId(Long projectId, Long customerId, Long issueId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
 
         checkProjectUserPermissions(customerId, project, PermissionType.READ);
 
-        Issue issue = project.getIssues()
+        return project.getIssues()
                 .stream()
                 .filter(obj -> obj.getId().equals(issueId))
                 .findFirst()
+                .map(issue -> mapper.map(issue, modelType));
+    }
+
+    @Override
+    public IssueModel updateIssueWithProjectId(Long projectId, Long customerId, Long issueId, IssueModel issueModel) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
+
+        checkProjectUserPermissions(customerId, project, PermissionType.WRITE);
+
+        Issue issue = repository.findById(issueId)
                 .orElseThrow(() -> new IssueNotFoundException("issueId", issueId.toString()));
+
+        issue.setUpdated(new Date());
+        issue = repository.save(issue);
 
         return mapper.map(issue, IssueModel.class);
     }
-
-//    @Override
-//    public IssueModel updateIssueWithProjectId(Long projectId, Long customerId, Long issueId, IssueRequestModel issueRequestModel) {
-//        Project project = projectRepository.findById(projectId)
-//                .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
-//
-//        checkProjectUserPermissions(customerId, project, PermissionType.WRITE);
-//
-//        Issue updatedIssue = mapper.map(issueRequestModel, Issue.class);
-//        updatedIssue.setUpdated(new Date());
-//        updatedIssue = repository.save(updatedIssue);
-//
-//        addIssueToProject(project, updatedIssue);
-//
-//        return mapper.map(updatedIssue, IssueModel.class);
-//    }
 
     @Override
     public void deleteIssueWithProjectId(Long projectId, Long customerId, Long issueId) {

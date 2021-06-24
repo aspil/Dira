@@ -146,6 +146,7 @@ class ProjectServiceSpec extends Specification {
         and: "a project model"
         ProjectModel projectModel = ObjectGenerator.generateObject(ProjectModel.class)
         projectModel.setVisibility(ProjectVisibility.PUBLIC)
+        projectModel.setId(null)
         projectModel.setKey("blabla")
         projectRepository.findByKey(projectModel.getKey()) >> Optional.empty()
         projectRepository.save(_ as Project) >> {Project project -> project}
