@@ -121,6 +121,7 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
         Issue issue = repository.findById(issueId)
                 .orElseThrow(() -> new IssueNotFoundException("issueId", issueId.toString()));
 
+        mapper.map(issue, issueModel);
         issue.setUpdated(new Date());
         issue = repository.save(issue);
 
