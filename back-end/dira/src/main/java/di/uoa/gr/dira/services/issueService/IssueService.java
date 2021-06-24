@@ -1,5 +1,7 @@
 package di.uoa.gr.dira.services.issueService;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.entities.issue.Issue;
 import di.uoa.gr.dira.entities.project.Project;
