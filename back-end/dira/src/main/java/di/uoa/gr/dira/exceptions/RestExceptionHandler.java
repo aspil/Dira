@@ -9,6 +9,7 @@ import di.uoa.gr.dira.exceptions.issue.IssueNotFoundException;
 import di.uoa.gr.dira.exceptions.project.ProjectAlreadyExistsException;
 import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
 import di.uoa.gr.dira.exceptions.project.permission.PermissionNotFoundException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,7 @@ public class RestExceptionHandler {
             PasswordResetTokenException.class,
             InvalidOldPasswordException.class,
             BadCredentialsException.class,
+            JwtException.class,
     })
     public final ResponseEntity<RestApiError> handleException(Exception ex, WebRequest request) {
         HttpHeaders headers = new HttpHeaders();
@@ -72,6 +74,10 @@ public class RestExceptionHandler {
         else if (ex instanceof InvalidOldPasswordException) {
             HttpStatus status = HttpStatus.UNAUTHORIZED;
             return handleInvalidOldPasswordException((InvalidOldPasswordException) ex, headers, status, request);
+        }
+        else if (ex instanceof JwtException) {
+            HttpStatus status = HttpStatus.BAD_REQUEST;
+            return handleJwtException((JwtException) ex, headers, status, request);
         }
 
         return null;
@@ -152,6 +158,14 @@ public class RestExceptionHandler {
 
     private ResponseEntity<RestApiError> handleBadCredentialsException(
             BadCredentialsException ex,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
+        return handleExceptionInternal(ex, new RestApiError(ex.getMessage()), headers, status, request);
+    }
+
+    private ResponseEntity<RestApiError> handleJwtException(
+            JwtException ex,
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {

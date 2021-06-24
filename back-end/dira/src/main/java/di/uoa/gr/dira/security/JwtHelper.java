@@ -13,7 +13,7 @@ public class JwtHelper {
         return Jwts.builder()
                 .setSubject(customer.createJwtSubject())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + JwtConstants.EXPIRATION_TIME_MS))
+                .setExpiration(makeExpirationDate(JwtConstants.EXPIRATION_TIME_MS))
                 .signWith(SignatureAlgorithm.HS512, JwtConstants.SECRET)
                 .compact();
     }
@@ -30,12 +30,16 @@ public class JwtHelper {
         return JwtSubject.fromToken(token).getUsername();
     }
 
-    public Date getExpirationDate(String token) {
+    public Date makeExpirationDate(String token) {
         return getTokenClaims(token).getExpiration();
     }
 
     public SubscriptionPlanEnum getSubscriptionPlan(String token) {
         return JwtSubject.fromToken(token).getSubscriptionPlan();
+    }
+
+    public void refreshExpirationTime(String token) {
+        getTokenClaims(token).setExpiration(makeExpirationDate(JwtConstants.EXPIRATION_TIME_MS));
     }
 
     public boolean validateJwtToken(String token) {
@@ -56,5 +60,9 @@ public class JwtHelper {
                 .setSigningKey(JwtConstants.SECRET)
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    private Date makeExpirationDate(long expirationMs) {
+        return new Date(System.currentTimeMillis() + expirationMs);
     }
 }
