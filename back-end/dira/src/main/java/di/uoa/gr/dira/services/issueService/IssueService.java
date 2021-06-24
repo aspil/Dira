@@ -11,20 +11,15 @@ import di.uoa.gr.dira.models.issue.IssueCreateModel;
 import di.uoa.gr.dira.models.issue.IssueModel;
 import di.uoa.gr.dira.models.project.ProjectIssuesModel;
 import di.uoa.gr.dira.repositories.CustomerRepository;
-import di.uoa.gr.dira.repositories.IssueLabelRepository;
 import di.uoa.gr.dira.repositories.IssueRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
 import di.uoa.gr.dira.services.permissionService.IPermissionService;
 import di.uoa.gr.dira.shared.IssueStatusEnum;
 import di.uoa.gr.dira.shared.PermissionType;
-import org.hibernate.secure.spi.PermissionCheckEntityInformation;
-import org.jboss.logging.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import javax.swing.*;
-import java.text.AttributedCharacterIterator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -121,7 +116,7 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
         Issue issue = repository.findById(issueId)
                 .orElseThrow(() -> new IssueNotFoundException("issueId", issueId.toString()));
 
-        mapper.map(issue, issueModel);
+        mapper.map(issueModel, issue);
         issue.setUpdated(new Date());
         issue = repository.save(issue);
 
