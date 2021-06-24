@@ -15,12 +15,16 @@ import di.uoa.gr.dira.repositories.IssueLabelRepository;
 import di.uoa.gr.dira.repositories.IssueRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
+import di.uoa.gr.dira.services.permissionService.IPermissionService;
 import di.uoa.gr.dira.shared.IssueStatusEnum;
 import di.uoa.gr.dira.shared.PermissionType;
+import org.hibernate.secure.spi.PermissionCheckEntityInformation;
 import org.jboss.logging.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import javax.swing.*;
+import java.text.AttributedCharacterIterator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -29,18 +33,17 @@ import java.util.Optional;
 public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepository> implements IIssueService {
     private final ProjectRepository projectRepository;
     private final CustomerRepository customerRepository;
-    private final IssueLabelRepository issueLabelRepository;
-    Logger logger = Logger.getLogger(IssueService.class);
+    private final IPermissionService permissionService;
 
     public IssueService(IssueRepository repository,
                  ProjectRepository projectRepository,
                  CustomerRepository customerRepository,
-                 IssueLabelRepository issueLabelRepository,
+                 IPermissionService permissionService,
                  ModelMapper mapper) {
         super(repository, mapper);
         this.projectRepository = projectRepository;
         this.customerRepository = customerRepository;
-        this.issueLabelRepository = issueLabelRepository;
+        this.permissionService = permissionService;
     }
 
     @Override
@@ -57,7 +60,9 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
 
-        checkProjectUserPermissions(customerId, project, PermissionType.WRITE);
+        if (!permissionService.checkProjectUserPermissions(customerId, project, PermissionType.WRITE)) {
+            throw new ActionNotPermittedException("You need WRITE permissions in order to create an issue");
+        }
 
         Issue newIssue = mapper.map(issueModel, Issue.class);
 
@@ -84,17 +89,6 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
 
         newIssue.setKey(String.format("%s-%d", project.getKey(), project.getIssues().size()));
 
-//        List<IssueLabel> issueLabelList = newIssue.getLabels();
-//        if (issueLabelList != null) {
-//            for (String label : issueRequestModel.getLabels()) {
-//                IssueLabel issueLabel = issueLabelRepository.findByName(label).orElse(null);
-//                if (issueLabel == null) {
-//                    issueLabel = issueLabelRepository.save(new IssueLabel(label));
-//                }
-//                issueLabelList.add(issueLabel);
-//            }
-//        }
-
         newIssue = repository.save(newIssue);
         return mapper.map(newIssue, IssueModel.class);
     }
@@ -104,7 +98,9 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
 
-        checkProjectUserPermissions(customerId, project, PermissionType.READ);
+        if (!permissionService.checkProjectUserPermissions(customerId, project, PermissionType.READ)) {
+            throw new ActionNotPermittedException("You need READ permissions in order to view an issue");
+        }
 
         return project.getIssues()
                 .stream()
@@ -118,7 +114,9 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
 
-        checkProjectUserPermissions(customerId, project, PermissionType.WRITE);
+        if (!permissionService.checkProjectUserPermissions(customerId, project, PermissionType.WRITE)) {
+            throw new ActionNotPermittedException("You need WRITE permissions in order to update an issue");
+        }
 
         Issue issue = repository.findById(issueId)
                 .orElseThrow(() -> new IssueNotFoundException("issueId", issueId.toString()));
@@ -134,7 +132,9 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
 
-        checkProjectUserPermissions(customerId, project, PermissionType.DELETE);
+        if (!permissionService.checkProjectUserPermissions(customerId, project, PermissionType.DELETE)) {
+            throw new ActionNotPermittedException("You need DELETE permissions in order to delete an issue");
+        }
 
         List<Issue> projectIssues = project.getIssues();
         Issue issue = projectIssues.stream()
@@ -146,13 +146,5 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
 
         repository.delete(issue);
         projectRepository.save(project);
-    }
-
-    private void checkProjectUserPermissions(long customerId, Project project, PermissionType requiredPermission) {
-        project.getPermissions()
-                .stream()
-                .filter(permission -> permission.getUser().getId().equals(customerId) && requiredPermission.hasPermission(permission.getPermission()))
-                .findFirst()
-                .orElseThrow(ActionNotPermittedException::new);
     }
 }
