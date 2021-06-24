@@ -7,7 +7,7 @@ import { Search } from '@material-ui/icons'
 import { DiraIssueClient } from "dira-clients";
 import edit_icon from "../Images/edit_icon.png"
 
-const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
+const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) => {
   const [backlogIssues, setBacklogIssues] = useState([]);
   const [searchFilteredIssues, setSearchFilteredIssues] = useState([]);
   const [searchFilter, setSearchFilter] = useState('');
@@ -55,7 +55,9 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
       setBacklogIssues(res.issues);
       setProjectName(res.name);
       if (focusedIssueId) {
-        setFocusedIssue(searchFilteredIssues.find(issue => issue.id === focusedIssueId));
+        setFocusedIssue(res.issues.find(issue => issue.id === focusedIssueId));
+        setNewComment('');
+        setNewLabel('');
       }
     }).catch((err) => {
       console.log(err);
@@ -261,10 +263,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
 
     const newIssue = { ...focusedIssue };
     if (field === 'label') {
-      newIssue.labels.push(newLabel);
+      newIssue.labels.push({ 'value': newLabel });
     }
     else if (field === 'comment') {
-      newIssue.comments.push(newComment);
+      newIssue.comments.push({ 'value': `${username},${newComment}` });
     }
     issueClientRef.current.update_issue(focusedIssueId, newIssue)
       .then(res => {
@@ -288,10 +290,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
 
     const issue = { ...focusedIssue };
     if (field === 'label') {
-      issue.labels = issue.labels.filter(label => label !== toDelete);
+      issue.labels = issue.labels.filter(labelObj => labelObj.value !== toDelete.value);
     }
     else if (field === 'comment') {
-      issue.comments = issue.comments.filter(comment => comment !== toDelete);
+      issue.comments = issue.comments.filter(commentObj => commentObj.value !== toDelete.value);
     }
     issueClientRef.current.update_issue(focusedIssueId, issue)
       .then(res => {
@@ -447,10 +449,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                   <br /><br />
                   {/* Labels */}
                   <p className="label">Labels: </p>
-                  {focusedIssue.labels.map(label => (
+                  {focusedIssue.labels.map(({ value: label }) => (
                     <div
                       className="issueLabelsWrapper"
-                      key={focusedIssue.labels.indexof(label)}
+                      key={focusedIssue.labels.indexOf(label)}
                     >
                       <button
                         className="issueLabelX"
@@ -480,10 +482,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
 
                   {/* Comments */}
                   <p className="label">Comments: </p>
-                  {focusedIssue.comments.map(comment => (
+                  {focusedIssue.comments.map(({ value: comment }) => (
                     <div
                       className="issueCommentsWrapper"
-                      key={focusedIssue.comments.indexof(comment)}
+                      key={focusedIssue.comments.indexOf(comment)}
                     >
                       <button
                         className="issueCommentX"
@@ -491,7 +493,9 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                       >
                         X
                       </button>
-                      <text className="issueComment"> {comment} </text>
+                      <text className="issueComment">
+                        {comment.slice(0, comment.indexOf(','))} wrote: {comment.slice(comment.indexOf(',') + 1)}
+                      </text>
                     </div>
                   ))}
                   <input

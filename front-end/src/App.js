@@ -175,6 +175,7 @@ function App() {
             token={token}
             doLogout={doLogout}
             footerHandle={showFooterHook}
+            username={userInfo.username}
             projectClientRef={projectClientRef}
           />}
         </Route>
