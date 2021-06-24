@@ -161,18 +161,7 @@
   float:right;
 }
 
-.active_sprint .issuePanel #editIssueLink {
-  text-decoration: none;
-  border: 1px solid black;
-  border-radius: 5px;
-  font-size: 25px;
-  padding-right: 10px;
-  padding-left: 10px;
-}
-.active_sprint .issuePanel #editIssueLink:hover {
-  background-color: lightblue;
-  color: white;
-}
+
 .active_sprint .issuePanel #pencilIcon {
   width: 20px;
   margin-right: 5px;

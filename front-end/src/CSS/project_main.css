@@ -1,0 +1,143 @@
+/* Project_Main */
+.projectmain .leftPanel{
+  margin: 0 auto;
+}
+
+.projectmain .projectButtons{
+  padding-top: 2vh;
+  padding-bottom: 1vh;
+  float: right;
+}
+
+.projectmain .projectButtons button{
+  padding:1vh;
+  margin-left: 1vh;
+  border-radius: 5px;
+}
+
+.projectmain .listButtons button{
+  width: 50%;
+  padding: 1vh;
+}
+
+.projectmain .listButtons .pressedButton{
+  background-color: rgb(0, 132, 255);
+  color: #f2f2f2;
+  border: 1px solid rgb(0, 132, 255);
+}
+
+.projectmain .listButtons .unpressedButton{
+  background-color: #f2f2f2;
+  color: rgb(0, 132, 255);
+  border: 1px solid #ddd;
+}
+
+.projectmain #main_table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.projectmain #main_table td:hover {
+  cursor: pointer;
+}
+.projectmain #main_table tr,.projectmain #pencilIcon,.projectmain #trashcanIcon{
+  height: 42px;
+}
+.projectmain #trashcanIcon{
+  margin-left:42px;
+}
+.projectmain #main_table td{
+  border: 1px solid #ddd;
+  padding: 1vh;
+}
+
+.projectmain #main_table tr:nth-child(even){background-color: #f2f2f2;}
+
+.projectmain #main_table tr:hover {background-color: #ddd;}
+
+.projectmain #main_table th {
+  border: 1px solid #ddd;
+  padding: 1vh;
+  text-align: left;
+}
+
+.projectmain #pencilIcon,#trashcanIcon{
+  position: absolute;
+  opacity: 40%;
+}
+.projectmain #pencilIcon:hover,#trashcanIcon:hover{
+  cursor: pointer;
+  opacity: 100%;
+}
+
+/* Create issue Popup */
+
+.projectmain .createPopup{
+  position: absolute;
+  top:20%;
+  left:50%;
+  width:20%;
+  margin-left:-12.5%;  
+  text-align: center;  
+  background-color: rgb(168, 208, 248);
+  border:2px solid lightgray;
+  border-radius: 5px;
+  padding: 30px;
+  box-shadow: 12px 12px 7px grey;
+}
+
+.projectmain .createPopup h2{
+  float:left;
+  color: white;
+  margin-bottom: 1vh;
+}
+
+.projectmain .createPopup img{
+  width: 2vw;
+  height: auto;
+  float:right;
+}
+
+.projectmain .createPopup img:hover{
+  cursor: pointer;  
+}
+
+.projectmain .createPopup #projectName,#projectKey{
+  margin-top: 0;
+  margin-bottom: 10px;
+  border-width: thin;
+  width:95%;
+  font-size: large;
+  padding: 1vh;
+  margin-left: 0;
+  margin-right: 0;
+}
+.projectmain .createPopup #projectKey{
+  width:40%;
+}
+.projectmain .createPopup button{
+  margin-top: 20px;
+  border-radius: 3px;
+  font-size: 25px;
+}
+
+.projectmain .createPopup textarea{
+  border-width: thin;
+  font-size: large;
+  width:97.5%;
+  height:100px;
+  padding: 5px;
+  margin-top: 0;
+  margin-bottom: 10px;
+  margin-left: 0;
+  margin-right: 0;
+  border-radius: 3px
+}
+.projectmain .createPopup label{
+  margin-right: 10px;
+}
+.projectmain .createPopup #issueLabelOption{
+  margin:0;
+  
+}
+

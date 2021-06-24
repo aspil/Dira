@@ -229,6 +229,14 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
     { name: 'Label5', id: 5 },
     { name: 'Label6', id: 6 },
   ])
+  const [Links, setLinks] = useState([
+    { name: 'err', id: 1 },
+    { name: 'bug', id: 2 },
+    { name: 'lab3', id: 3 },
+    { name: '4', id: 4 },
+    { name: 'Label5', id: 5 },
+    { name: 'Label6', id: 6 },
+  ])
   const [Comments, setComments] = useState([
     { body: 'f  oafnjao ww aaowfw aw oiawa nlaw wlaw la wkn', id: 1 },
     { body: 'lawkd nawldkn aal dwkadkalkwdnalw', id: 2 },
@@ -372,6 +380,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                   <text className="answer" id="dateCreatedAnswer">{new Date(focusedIssue.created).toLocaleString()}</text>
                   <br></br>
                   <br></br>
+                  {/* Labels */}
                   <p className="label">Labels: </p>
                   {Labels.map(label => (
                     <div className="issueLabelsWrapper">
@@ -379,9 +388,19 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                       <text className="issueLabel"> {label.name} </text>
                     </div>
                   ))}
+                  {/* Links */}
                   <input type="text" name="newLabel" id="newLabel" placeholder="+ Add label" style={{ marginLeft: "10px", marginRight: "0px", border: "1px solid grey", borderRadius: "0" }} />
                   <button style={{ backgroundColor: "grey" }}>+</button>
-
+                  <p className="label">Links: </p>
+                  {Links.map(link => (
+                    <div className="issueLinksWrapper">
+                      <button className="issueLinkX">X</button>
+                      <text className="issueLink"> {link.name} </text>
+                    </div>
+                  ))}
+                  <input type="text" name="newLink" id="newLink" placeholder="+ Add link" style={{ marginLeft: "10px", marginRight: "0px", border: "1px solid grey", borderRadius: "0" }} />
+                  <button style={{ backgroundColor: "grey" }}>+</button>
+                  {/* Comments */}
                   <p className="label">Comments: </p>
                   {Comments.map(comment => (
                     <div className="issueCommentsWrapper">
@@ -392,7 +411,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                   <input type="text" name="newComment" id="newComment" placeholder="+ Add comment" style={{ marginLeft: "10px", marginRight: "0px", border: "1px solid grey", borderRadius: "0" }} />
                   <button style={{ backgroundColor: "grey" }}>+</button>
                 </div>
-
+                {/* Edit Issue */}
                 {hasWrite &&
                   <div style={{ textAlign: "center", marginTop: "20px" }}>
                     <Link to={`/project/${projectId}/issue_preview/${focusedIssueId}`} id="editIssueLink">

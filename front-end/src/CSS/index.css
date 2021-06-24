@@ -101,7 +101,6 @@ button{
 }
 button:hover{
   opacity: 1;
-  text-decoration: underline;
 }
 .home form {
   margin-left: 60%;
