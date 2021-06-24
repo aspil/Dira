@@ -38,7 +38,7 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
 
     const [isAdmin, setIsAdmin] = useState(false);
     useEffect(() => {
-        const userPerms = memberPermissions.find(perm => perm.id === userId);
+        const userPerms = memberPermissions.find(memberPermission => memberPermission.memberId === userId);
         if (userPerms) {
             setIsAdmin(userPerms.permissions.find(p => p === 'ADMIN') !== undefined);
         }
@@ -67,10 +67,11 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
 
     const fetchMemberPermissions = () => {
         projectClientRef.current.get_project_permissions_for_all_users(projectId).then(res => {
-            setMemberPermissions(res.map(customer => {
+            setMemberPermissions(res.map(permission => {
                 const toSave = {
-                    id: customer.customerId,
-                    permissions: customer.permissions
+                    memberId: permission.customerId,
+                    permissions: permission.permissions,
+                    permissionId: permission.id
                 };
                 return toSave;
             }));
@@ -133,7 +134,7 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
                                                         (memberPermissions.length > 0)
                                                         &&
                                                         memberPermissions
-                                                            .find(perms => perms.id === member.id)
+                                                            .find(memberPermission => memberPermission.memberId === member.id)
                                                             .permissions
                                                             .toString()
                                                     }

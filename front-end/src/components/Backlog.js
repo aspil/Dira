@@ -33,6 +33,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
   const [userPermissions, setUserPermissions] = useState(undefined);
   const [hasRead, setHasRead] = useState(false);
   const [hasWrite, setHasWrite] = useState(false);
+  const [newComment, setNewComment] = useState('');
+  const [newLabel, setNewLabel] = useState('');
+  const [newCommentError, setNewCommentError] = useState('');
+  const [newLabelError, setNewLabelError] = useState('');
 
   const { projectId } = useParams();
   const issueClientRef = useRef(new DiraIssueClient(projectId));
@@ -48,6 +52,9 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
       console.log(res);
       setBacklogIssues(res.issues);
       setProjectName(res.name);
+      if (focusedIssueId) {
+        setFocusedIssue(searchFilteredIssues.find(issue => issue.id === focusedIssueId));
+      }
     }).catch((err) => {
       console.log(err);
     });
@@ -70,10 +77,16 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
   const [issue_panel, handleIssuePanel] = useState("hide");
   const showIssuePanel = (issueId) => {
     setFocusedIssueId(issueId);
-    setFocusedIssue(backlogIssues.find(issue => issue.id === issueId));
+    setFocusedIssue(searchFilteredIssues.find(issue => issue.id === issueId));
     handleIssuePanel("show");
   }
   const hideIssuePanel = () => {
+    setFocusedIssueId(null);
+    setFocusedIssue(null);
+    setNewComment('');
+    setNewLabel('');
+    setNewCommentError('');
+    setNewLabelError('');
     handleIssuePanel("hide");
   }
 
@@ -221,14 +234,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
     Blocked: 'purple'
   }
 
-  const [Labels, setLabels] = useState([
-    { name: 'err', id: 1 },
-    { name: 'bug', id: 2 },
-    { name: 'lab3', id: 3 },
-    { name: '4', id: 4 },
-    { name: 'Label5', id: 5 },
-    { name: 'Label6', id: 6 },
-  ])
   const [Links, setLinks] = useState([
     { name: 'err', id: 1 },
     { name: 'bug', id: 2 },
@@ -237,15 +242,42 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
     { name: 'Label5', id: 5 },
     { name: 'Label6', id: 6 },
   ])
-  const [Comments, setComments] = useState([
-    { body: 'f  oafnjao ww aaowfw aw oiawa nlaw wlaw la wkn', id: 1 },
-    { body: 'lawkd nawldkn aal dwkadkalkwdnalw', id: 2 },
-    { body: 'sgd a awdaw law k aw', id: 3 },
-    { body: '4', id: 4 },
-    { body: 'a fwaf', id: 5 },
-    { body: '6', id: 6 },
-  ])
 
+  const addNewValueToField = (field) => {
+    if (field === 'label' && !newLabel) {
+      setNewLabelError('Please fill in field');
+      return;
+    }
+    else if (field === 'comment' && !newComment) {
+      setNewCommentError('Please fill in field');
+      return;
+    }
+    setNewLabelError('');
+    setNewCommentError('');
+
+    const newIssue = { ...focusedIssue };
+    if (field === 'label') {
+      newIssue.labels.push(newLabel);
+    }
+    else if (field === 'comment') {
+      newIssue.comments.push(newComment);
+    }
+    issueClientRef.current.update_issue(focusedIssueId, newIssue)
+      .then(res => {
+        console.log(res);
+        fetchAllIssues();
+      })
+      .catch(err => {
+        console.log(err);
+        if (field === 'label') {
+          setNewLabelError('Couldn\'t add label');
+        }
+        else if (field === 'comment') {
+          setNewCommentError('Couldn\'t add comment');
+        }
+      })
+
+  }
 
   return (
     <div className="backlog proj_page">
@@ -382,15 +414,61 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                   <br></br>
                   {/* Labels */}
                   <p className="label">Labels: </p>
-                  {Labels.map(label => (
-                    <div className="issueLabelsWrapper">
+                  {focusedIssue.labels.map(label => (
+                    <div
+                      className="issueLabelsWrapper"
+                      key={focusedIssue.labels.indexof(label)}
+                    >
                       <button className="issueLabelX">X</button>
-                      <text className="issueLabel"> {label.name} </text>
+                      <text className="issueLabel"> {label} </text>
                     </div>
                   ))}
+                  <input
+                    type="text"
+                    name="newLabel"
+                    id="newLabel"
+                    placeholder="+ Add label"
+                    style={{ marginLeft: "10px", marginRight: "0px", border: "1px solid grey", borderRadius: "0" }}
+                    value={newLabel}
+                    onChange={(e) => (setNewLabel(e.target.value))}
+                  />
+                  <button
+                    style={{ backgroundColor: "grey" }}
+                    onClick={() => addNewValueToField('label')}
+                  >
+                    +
+                  </button>
+                  {Boolean(newLabelError) && <p style={{ color: 'crimson', marginTop: '-1em', fontSize: '0.8em' }}>{newLabelError}</p>}
+
+                  {/* Comments */}
+                  <p className="label">Comments: </p>
+                  {focusedIssue.comments.map(comment => (
+                    <div
+                      className="issueCommentsWrapper"
+                      key={focusedIssue.comments.indexof(comment)}
+                    >
+                      <button className="issueCommentX">X</button>
+                      <text className="issueComment"> {comment} </text>
+                    </div>
+                  ))}
+                  <input
+                    type="text"
+                    name="newComment"
+                    id="newComment"
+                    placeholder="+ Add comment"
+                    style={{ marginLeft: "10px", marginRight: "0px", border: "1px solid grey", borderRadius: "0" }}
+                    value={newComment}
+                    onChange={(e) => (setNewComment(e.target.value))}
+                  />
+                  <button
+                    style={{ backgroundColor: "grey" }}
+                    onClick={() => addNewValueToField('comment')}
+                  >
+                    +
+                  </button>
+                  {Boolean(newCommentError) && <p style={{ color: 'crimson', marginTop: '-1em', fontSize: '0.8em' }}>{newCommentError}</p>}
+
                   {/* Links */}
-                  <input type="text" name="newLabel" id="newLabel" placeholder="+ Add label" style={{ marginLeft: "10px", marginRight: "0px", border: "1px solid grey", borderRadius: "0" }} />
-                  <button style={{ backgroundColor: "grey" }}>+</button>
                   <p className="label">Links: </p>
                   {Links.map(link => (
                     <div className="issueLinksWrapper">
@@ -399,16 +477,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                     </div>
                   ))}
                   <input type="text" name="newLink" id="newLink" placeholder="+ Add link" style={{ marginLeft: "10px", marginRight: "0px", border: "1px solid grey", borderRadius: "0" }} />
-                  <button style={{ backgroundColor: "grey" }}>+</button>
-                  {/* Comments */}
-                  <p className="label">Comments: </p>
-                  {Comments.map(comment => (
-                    <div className="issueCommentsWrapper">
-                      <button className="issueCommentX">X</button>
-                      <text className="issueComment"> {comment.body} </text>
-                    </div>
-                  ))}
-                  <input type="text" name="newComment" id="newComment" placeholder="+ Add comment" style={{ marginLeft: "10px", marginRight: "0px", border: "1px solid grey", borderRadius: "0" }} />
                   <button style={{ backgroundColor: "grey" }}>+</button>
                 </div>
                 {/* Edit Issue */}
