@@ -37,6 +37,8 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
   const [newLabel, setNewLabel] = useState('');
   const [newCommentError, setNewCommentError] = useState('');
   const [newLabelError, setNewLabelError] = useState('');
+  const [deleteCommentError, setDeleteCommentError] = useState('');
+  const [deleteLabelError, setDeleteLabelError] = useState('');
 
   const { projectId } = useParams();
   const issueClientRef = useRef(new DiraIssueClient(projectId));
@@ -87,6 +89,8 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
     setNewLabel('');
     setNewCommentError('');
     setNewLabelError('');
+    setDeleteLabelError('');
+    setDeleteCommentError('');
     handleIssuePanel("hide");
   }
 
@@ -278,6 +282,33 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
       })
 
   }
+  const deleteValueFromField = (field, toDelete) => {
+    setDeleteLabelError('');
+    setDeleteCommentError('');
+
+    const issue = { ...focusedIssue };
+    if (field === 'label') {
+      issue.labels = issue.labels.filter(label => label !== toDelete);
+    }
+    else if (field === 'comment') {
+      issue.comments = issue.comments.filter(comment => comment !== toDelete);
+    }
+    issueClientRef.current.update_issue(focusedIssueId, issue)
+      .then(res => {
+        console.log(res);
+        fetchAllIssues();
+      })
+      .catch(err => {
+        console.log(err);
+        if (field === 'label') {
+          setDeleteLabelError('Couldn\'t delete label');
+        }
+        else if (field === 'comment') {
+          setDeleteCommentError('Couldn\'t delete comment');
+        }
+      })
+
+  }
 
   return (
     <div className="backlog proj_page">
@@ -419,7 +450,12 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                       className="issueLabelsWrapper"
                       key={focusedIssue.labels.indexof(label)}
                     >
-                      <button className="issueLabelX">X</button>
+                      <button
+                        className="issueLabelX"
+                        onClick={() => deleteValueFromField('label', label)}
+                      >
+                        X
+                      </button>
                       <text className="issueLabel"> {label} </text>
                     </div>
                   ))}
@@ -447,7 +483,12 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                       className="issueCommentsWrapper"
                       key={focusedIssue.comments.indexof(comment)}
                     >
-                      <button className="issueCommentX">X</button>
+                      <button
+                        className="issueCommentX"
+                        onClick={() => deleteValueFromField('comment', comment)}
+                      >
+                        X
+                      </button>
                       <text className="issueComment"> {comment} </text>
                     </div>
                   ))}
