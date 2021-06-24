@@ -1,8 +1,69 @@
 import SideNav from './SideNav';
 import { useEffect } from "react";
+import { useHistory, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useRef } from 'react';
+import { DiraIssueClient } from 'dira-clients';
 
-const IssuePreview = ({ footerHandle }) => {
+const IssuePreview = ({ footerHandle, token }) => {
+  const { projectId, issueId } = useParams();
+  const [issue, setIssue] = useState(null);
+  const [errorMsg, setErrorMsg] = useState('');
+  const history = useHistory();
   useEffect(footerHandle, [footerHandle]);
+
+  const issueClientRef = useRef(new DiraIssueClient(projectId));
+  useEffect(() => {
+    if (token) {
+      issueClientRef.current.set_authorization_token(token);
+    }
+  }, [token, issueClientRef]);
+
+  const fetchIssue = () => {
+    issueClientRef.current.get_issue(issueId)
+      .then(res => {
+        console.log(res);
+        setIssue(res);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+  useEffect(fetchIssue, [issueClientRef, issueId]);
+
+  const editIssueField = (field, e) => {
+    const newIssue = { ...issue };
+    let newValue = e.target.value;
+    if (field === 'resolved' && e.target.value === 'false') {
+      newValue = false;
+    }
+    else if (field === 'resolved' && e.target.value === 'true') {
+      newValue = true;
+    }
+    newIssue[field] = newValue;
+
+    setIssue(newIssue);
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!(issue.description)) {
+      setErrorMsg('Please fill in all fields');
+      return;
+    }
+    setErrorMsg('');
+
+    issueClientRef.current.update_issue(issueId, issue)
+      .then(res => {
+        console.log(res);
+        history.push(`/backlog/${projectId}`);
+      })
+      .catch(err => {
+        console.log(err);
+        setErrorMsg('Couldn\'t update issue');
+      });
+
+  }
 
   return (
     <div className="issuePreview proj_page">
@@ -10,56 +71,73 @@ const IssuePreview = ({ footerHandle }) => {
         <SideNav />
         <main>
           {/* Content */}
-          <div id="content">
+          {issue && <div id="content">
             <div className="issuePreviewWrapper">
               <div className="headWrapper">
-                <text id="issueEpic">Epic of this issue</text>
-                <h1 id="issueName">Issue X</h1>
+                {/* <text id="issueEpic">Epic of this issue</text> */}
+                <h1 id="issueName">{issue.title}</h1>
                 <div>
                   <text className="label" id="issueType">Type:</text>
-                  <text className="answer" id="issueType">"issuetype"</text>
+                  <text className="answer" id="issueType">{issue.type}</text>
                 </div>
               </div>
               <div style={{ margin: "auto", marginBottom: "15px", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  <text className="label" id="reporter">Reporter:</text>
-                  <text className="answer" id="reporter">"reporter"</text>
+                  <text className="label" id="reporter">Reporter: </text>
+                  <text className="answer" id="reporter">{issue.reporter}</text>
                   <br></br>
-                  <text className="label" id="assignee">Assignee:</text>
-                  <text className="answer" id="assignee">"assignee"</text>
+                  <text className="label" id="assignee">Assignee: </text>
+                  <text className="answer" id="assignee">
+                    {issue.assignee ? issue.assignee : '-'}
+                  </text>
                 </div>
               </div>
               <div className="issueInfoWrapper">
                 {/* Form */}
-                <form className="issuePreviewForm">
+                <form className="issuePreviewForm" noValidate onSubmit={handleSubmit}>
                   <div style={{ margin: "auto", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
                     {/* Priority */}
                     <div>
                       <text>Priority: </text>
-                      <select name="priority" id="priority" value="EDW IPARXON VALUE">
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
+                      <select
+                        name="priority"
+                        id="priority"
+                        onChange={(e) => editIssueField('priority', e)}
+                        value={issue.priority}
+                      >
+                        <option value="Low">Low</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Major">Major</option>
+                        <option value="Blocked">Blocked</option>
                       </select>
                     </div>
                     {/* Status */}
                     <div>
                       <text>Status: </text>
-                      <select name="status" id="status" value="EDW IPARXON VALUE">
-                        <option value="new">New</option>
-                        <option value="open">Medium</option>
-                        <option value="blocked">Blocked</option>
-                        <option value="active">Active</option>
-                        <option value="toTest">To Test</option>
-                        <option value="resolved">Resolved</option>
+                      <select
+                        name="status"
+                        id="status"
+                        onChange={(e) => editIssueField('status', e)}
+                        value={issue.status}
+                      >
+                        <option value="Open">Open</option>
+                        <option value="Blocked">Blocked</option>
+                        <option value="ToTest">To Test</option>
+                        <option value="InDevelopment">In Development</option>
+                        <option value="New">New</option>
                       </select>
                     </div>
                     <div>
                       {/* Resolution */}
                       <text>Resolution: </text>
-                      <select name="resolution" id="resolution" value="EDW IPARXON VALUE">
-                        <option value="unresolved">Unresolved</option>
-                        <option value="resolved">Resolved</option>
+                      <select
+                        name="resolution"
+                        id="resolution"
+                        onChange={(e) => editIssueField('resolved', e)}
+                        value={issue.resolved}
+                      >
+                        <option value={true}>Resolved</option>
+                        <option value={false}>Unresolved</option>
                       </select>
                     </div>
                   </div>
@@ -67,42 +145,15 @@ const IssuePreview = ({ footerHandle }) => {
                   <div style={{ margin: "auto", alignItems: "center", display: "flex" }}>
                     <div>
                       <text>Description:</text>
-                      <textarea type="range" placeholder="Issue Description" value="EDW IPARXON VALUE"></textarea>
-                    </div>
-                    <div style={{ margin: "auto" }}>
-                      <text style={{ marginLeft: "15px" }}>Labels:</text>
-                      <br></br>
-                      <div className="checkboxAndLabel">
-                        <input className="labelInput" id="Analysis" type="checkbox" />
-                        <label for="Analysis">Analysis</label>
-                      </div>
-                      <div className="checkboxAndLabel">
-                        <input className="labelInput" id="Documentation" type="checkbox" />
-                        <label for="Documentation">Documentation</label>
-                      </div>
-                      <div className="checkboxAndLabel">
-                        <input className="labelInput" id="UI" type="checkbox" />
-                        <label for="UI">UI</label>
-                      </div>
-                      <div className="checkboxAndLabel">
-                        <input className="labelInput" id="Backend" type="checkbox" />
-                        <label for="Backend">Backend</label>
-                      </div>
-                      <div className="checkboxAndLabel">
-                        <input className="labelInput" id="Database" type="checkbox" />
-                        <label for="Database">Database</label>
-                      </div>
-                      <div className="checkboxAndLabel">
-                        <input className="labelInput" id="Bug" type="checkbox" />
-                        <label for="Bug">Bug</label>
-                      </div>
-                      <div className="checkboxAndLabel">
-                        <input className="labelInput" id="Testing" type="checkbox" />
-                        <label for="Testing">Testing</label>
-                      </div>
-
+                      <textarea
+                        type="range"
+                        placeholder="Issue Description"
+                        value={issue.description}
+                        onChange={(e) => editIssueField('description', e)}
+                      />
                     </div>
                   </div>
+                  {Boolean(errorMsg) && <p style={{ marginTop: '1em', color: 'crimson', textAlign: 'center' }}>{errorMsg}</p>}
                   <div style={{ textAlign: "center" }}>
                     <button>Save Changes</button>
                   </div>
@@ -111,7 +162,7 @@ const IssuePreview = ({ footerHandle }) => {
               {/* button */}
 
             </div>
-          </div>
+          </div>}
         </main>
       </div>
     </div>

@@ -195,7 +195,7 @@ function App() {
         </Route>
         <Route path="/project/:projectId/issue_preview/:issueId">
           {token === undefined && <Redirect to="/sign_in" />}
-          {token !== undefined && <IssuePreview username={userInfo.username} footerHandle={showFooterHook} />}
+          {token !== undefined && <IssuePreview username={userInfo.username} footerHandle={showFooterHook} token={token} />}
         </Route>
         <Route path="/create_project">
           {token === undefined && <Redirect to="/sign_in" />}

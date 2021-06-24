@@ -306,7 +306,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
         else if (field === 'comment') {
           setDeleteCommentError('Couldn\'t delete comment');
         }
-      })
+      });
 
   }
 
@@ -441,8 +441,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                   <br />
                   <text className="label" id="dateCreated">Created on: </text>
                   <text className="answer" id="dateCreatedAnswer">{new Date(focusedIssue.created).toLocaleString()}</text>
-                  <br></br>
-                  <br></br>
+                  <br />
+                  <text className="label" id="dateCreated">Last Updated: </text>
+                  <text className="answer" id="dateCreatedAnswer">{new Date(focusedIssue.updated).toLocaleString()}</text>
+                  <br /><br />
                   {/* Labels */}
                   <p className="label">Labels: </p>
                   {focusedIssue.labels.map(label => (
@@ -512,7 +514,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                   {/* Links */}
                   <p className="label">Links: </p>
                   {Links.map(link => (
-                    <div className="issueLinksWrapper">
+                    <div
+                      key={link.id}
+                      className="issueLinksWrapper"
+                    >
                       <button className="issueLinkX">X</button>
                       <text className="issueLink"> {link.name} </text>
                     </div>
@@ -642,6 +647,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                     <select
                       id="priority"
                       onChange={(e) => { setNewPriority(e.target.value); }}
+                      value={newPriority}
                     >
                       {priorities.map((priority) => (
                         <option key={priority} value={priority} >
@@ -655,6 +661,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId }) => {
                     <select
                       id="type"
                       onChange={(e) => { setNewType(e.target.value !== 'None' ? e.target.value : null); }}
+                      value={newType}
                     >
                       {types.map((type) => (
                         <option key={type} value={type} >
