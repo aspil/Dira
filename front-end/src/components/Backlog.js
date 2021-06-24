@@ -375,7 +375,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                         <td className="largeCell">{issue.description}</td>
                         <td>{issue.type}</td>
                         <td style={{ textAlign: "center" }}>
-                          <text className="colored_text" style={{ backgroundColor: priorityToColorMapper[issue.priority], fontSize: "12px" }}>{issue.priority}</text>
+                          <span className="colored_text" style={{ backgroundColor: priorityToColorMapper[issue.priority], fontSize: "12px" }}>{issue.priority}</span>
                         </td>
                       </tr>
                     ))}
@@ -402,12 +402,12 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   <br />
                   {focusedIssue.epicId &&
                     <>
-                      <text
+                      <span
                         class="colored_text"
                         onClick={() => showIssuePanel(focusedIssue.epicId)}
                       >
                         {backlogIssues.find(issue => issue.id === focusedIssue.epicId).key}
-                      </text>
+                      </span>
                       <br />
                       <br />
                     </>
@@ -415,11 +415,11 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   <h3>Description</h3>
                   <p>{focusedIssue.description}</p>
                   <br />
-                  <text className="label" id="status">Status: </text>
-                  <text className="answer" id="statusAnswer">{focusedIssue.status}</text>
+                  <span className="label" id="status">Status: </span>
+                  <span className="answer" id="statusAnswer">{focusedIssue.status}</span>
                   <br />
-                  <text className="label" id="priority">Priority: </text>
-                  <text
+                  <span className="label" id="priority">Priority: </span>
+                  <span
                     className="answer"
                     class="colored_text"
                     style={{
@@ -430,25 +430,25 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                     }}
                   >
                     {focusedIssue.priority}
-                  </text>
+                  </span>
                   <br />
                   <br />
-                  <text className="label" id="resolution">Resolution: </text>
-                  <text className="answer" id="resolutionAnswer">{focusedIssue.resolved ? "Resolved" : "Unresolved"}</text>
+                  <span className="label" id="resolution">Resolution: </span>
+                  <span className="answer" id="resolutionAnswer">{focusedIssue.resolved ? "Resolved" : "Unresolved"}</span>
                   <br />
                   <br />
-                  <text className="label" id="assignee">Assignee: </text>
-                  <text className="answer" id="assigneeAnswer">{focusedIssue.assignee ? focusedIssue.assignee : "-"}</text>
+                  <span className="label" id="assignee">Assignee: </span>
+                  <span className="answer" id="assigneeAnswer">{focusedIssue.assignee ? focusedIssue.assignee : "-"}</span>
                   <br />
-                  <text className="label" id="reporter">Reporter: </text>
-                  <text id="reporterAnswer">{focusedIssue.reporter}</text>
+                  <span className="label" id="reporter">Reporter: </span>
+                  <span id="reporterAnswer">{focusedIssue.reporter}</span>
                   <br />
                   <br />
-                  <text className="label" id="dateCreated">Created on: </text>
-                  <text className="answer" id="dateCreatedAnswer">{new Date(focusedIssue.created).toLocaleString()}</text>
+                  <span className="label" id="dateCreated">Created on: </span>
+                  <span className="answer" id="dateCreatedAnswer">{new Date(focusedIssue.created).toLocaleString()}</span>
                   <br />
-                  <text className="label" id="dateCreated">Last Updated: </text>
-                  <text className="answer" id="dateCreatedAnswer">{new Date(focusedIssue.updated).toLocaleString()}</text>
+                  <span className="label" id="dateCreated">Last Updated: </span>
+                  <span className="answer" id="dateCreatedAnswer">{new Date(focusedIssue.updated).toLocaleString()}</span>
                   <br /><br />
                   {/* Labels */}
                   <p className="label">Labels: </p>
@@ -463,7 +463,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                       >
                         X
                       </button>
-                      <text className="issueLabel"> {label} </text>
+                      <span className="issueLabel"> {label} </span>
                     </div>
                   ))}
                   <input
@@ -496,9 +496,9 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                       >
                         X
                       </button>
-                      <text className="issueComment">
+                      <span className="issueComment">
                         {comment.slice(0, comment.indexOf(','))} wrote: {comment.slice(comment.indexOf(',') + 1)}
-                      </text>
+                      </span>
                     </div>
                   ))}
                   <input
@@ -526,7 +526,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                       className="issueLinksWrapper"
                     >
                       <button className="issueLinkX">X</button>
-                      <text className="issueLink"> {link.name} </text>
+                      <span className="issueLink"> {link.name} </span>
                     </div>
                   ))}
                   <input type="text" name="newLink" id="newLink" placeholder="+ Add link" style={{ marginLeft: "10px", marginRight: "0px", border: "1px solid grey", borderRadius: "0" }} />
@@ -550,11 +550,11 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                 <div className="head">
                   <div className="info">
                     <h2>Active Sprint</h2>
-                    <text style={{ fontWeight: "bold" }}>Due date: </text>
-                    <text className="dueDate:">12/5/2022</text>
+                    <span style={{ fontWeight: "bold" }}>Due date: </span>
+                    <span className="dueDate:">12/5/2022</span>
                     <br />
-                    <text style={{ fontWeight: "bold" }}>Time Remaining: </text>
-                    <text className="timeRemaining:">8 days</text>
+                    <span style={{ fontWeight: "bold" }}>Time Remaining: </span>
+                    <span className="timeRemaining:">8 days</span>
                   </div>
                   <form>
                     <input type="search" placeholder="Search for and issue" />
@@ -583,7 +583,9 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
               // create sprint button (if there is no sprint)
               :
               <div className="createSprint">
-                <div>
+                <div id="createSprintContent"> 
+                  <span id="createSprintText">No active sprint</span>
+                  <br></br>
                   <button id="createSprintButton" onClick={showCreateSprintPopup}>+ Create Sprint</button>
                 </div>
               </div>

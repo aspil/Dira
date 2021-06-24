@@ -1,13 +1,17 @@
 package di.uoa.gr.dira.services.issueService;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.entities.issue.Issue;
+import di.uoa.gr.dira.entities.issue.IssueLink;
 import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.exceptions.issue.IssueNotFoundException;
 import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
 import di.uoa.gr.dira.models.issue.IssueCreateModel;
+import di.uoa.gr.dira.models.issue.IssueLinkModel;
 import di.uoa.gr.dira.models.issue.IssueModel;
 import di.uoa.gr.dira.models.project.ProjectIssuesModel;
 import di.uoa.gr.dira.repositories.CustomerRepository;
@@ -15,6 +19,7 @@ import di.uoa.gr.dira.repositories.IssueRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
 import di.uoa.gr.dira.services.permissionService.IPermissionService;
+import di.uoa.gr.dira.shared.IssueLinkTypeEnum;
 import di.uoa.gr.dira.shared.IssueStatusEnum;
 import di.uoa.gr.dira.shared.PermissionType;
 import org.modelmapper.ModelMapper;
@@ -118,9 +123,40 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
 
         mapper.map(issueModel, issue);
         issue.setUpdated(new Date());
+
+        updateIssueLinks(issue, issueModel);
+
         issue = repository.save(issue);
 
         return mapper.map(issue, IssueModel.class);
+    }
+
+    private IssueLinkTypeEnum issueLinkTypeEnumFromString(String linkType) {
+        if (linkType.equals("Depends on")) {
+            return IssueLinkTypeEnum.DEPENDS_ON;
+        } else if (linkType.equals("Relates to")) {
+            return IssueLinkTypeEnum.RELATES_TO;
+        }
+
+        return null;
+    }
+
+    private void updateIssueLinks(Issue issue, IssueModel issueModel) {
+        List<IssueLink> issueLinks = issue.getIssueLinks();
+        for (IssueLinkModel link : issueModel.getIssueLinks()) {
+            issueLinks.stream()
+                    .filter(issueLink -> issueLink.getId().equals(link.getId()))
+                    .findFirst()
+                    .ifPresent(issueLink -> {
+                        String linkedIssueKey = link.getLinkedIssue().getKey();
+                        Issue linkedIssue = repository.findByKey(linkedIssueKey)
+                                .orElseThrow(() -> new IssueNotFoundException(
+                                        String.format("Linked issue with key %s was not found", linkedIssueKey))
+                                );
+                        issueLink.setLinkedIssue(linkedIssue);
+                        issueLink.setLinkType(issueLinkTypeEnumFromString(link.getLinkType()));
+                    });
+        }
     }
 
     @Override

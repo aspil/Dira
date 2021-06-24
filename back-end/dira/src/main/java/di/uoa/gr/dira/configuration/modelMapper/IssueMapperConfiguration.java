@@ -21,6 +21,9 @@ public class IssueMapperConfiguration implements IMapConfiguration {
         configureIssueLabelEntityToLongStringPair(mapper);
         configureIssueFixVersionEntityToLongStringPair(mapper);
         configureIssueCommentEntityToLongStringPair(mapper);
+        configureLongStringPairToIssueCommentEntity(mapper);
+        configureLongStringPairToIssueFixVersionEntity(mapper);
+        configureLongStringPairToIssueLabelEntity(mapper);
     }
 
     /**
@@ -54,7 +57,25 @@ public class IssueMapperConfiguration implements IMapConfiguration {
      */
     private void configureIssueModelToIssueEntity(ModelMapper mapper) {
         TypeMap<IssueModel, Issue> typeMap = mapper.createTypeMap(IssueModel.class, Issue.class);
+
         typeMap.addMappings(m -> m.skip(Issue::setId));
+        typeMap.addMappings(m -> m.skip(Issue::setIssueLinks));
+
+        typeMap.addMappings(m -> m.using(ListConverter.withMapper(mapper, IssueLabel.class))
+            .map(IssueModel::getLabels, Issue::setLabels)
+        );
+
+        typeMap.addMappings(m -> m.using(ListConverter.withMapper(mapper, IssueFixVersion.class))
+            .map(IssueModel::getFixVersions, Issue::setFixVersions)
+        );
+
+        typeMap.addMappings(m -> m.using(ListConverter.withMapper(mapper, IssueComment.class))
+            .map(IssueModel::getComments, Issue::setComments)
+        );
+
+        typeMap.addMappings(m -> m.using(ListConverter.withMapper(mapper, IssueLink.class))
+            .map(IssueModel::getIssueLinks, Issue::setIssueLinks)
+        );
     }
 
     /**
@@ -123,5 +144,38 @@ public class IssueMapperConfiguration implements IMapConfiguration {
         TypeMap<IssueComment, LongStringPair> typeMap = mapper.createTypeMap(IssueComment.class, LongStringPair.class);
         typeMap.addMappings(m -> m.map(IssueComment::getId, LongStringPair::setKey));
         typeMap.addMappings(m -> m.map(IssueComment::getComment, LongStringPair::setValue));
+    }
+
+    /**
+     * Creates a model mapper configuration when mapping a LongStringPair to an IssueLabel entity
+     *
+     * @param mapper The mapper to configure
+     */
+    private void configureLongStringPairToIssueLabelEntity(ModelMapper mapper) {
+        TypeMap<LongStringPair, IssueLabel> typeMap = mapper.createTypeMap(LongStringPair.class, IssueLabel.class);
+        typeMap.addMappings(m -> m.skip(IssueLabel::setId));
+        typeMap.addMappings(m -> m.map(LongStringPair::getValue, IssueLabel::setName));
+    }
+
+    /**
+     * Creates a model mapper configuration when mapping a LongStringPair to an IssueFixVersion entity
+     *
+     * @param mapper The mapper to configure
+     */
+    private void configureLongStringPairToIssueFixVersionEntity(ModelMapper mapper) {
+        TypeMap<LongStringPair, IssueFixVersion> typeMap = mapper.createTypeMap(LongStringPair.class, IssueFixVersion.class);
+        typeMap.addMappings(m -> m.skip(IssueFixVersion::setId));
+        typeMap.addMappings(m -> m.map(LongStringPair::getValue, IssueFixVersion::setFixVersion));
+    }
+
+    /**
+     * Creates a model mapper configuration when mapping a LongStringPair to an IssueComment entity
+     *
+     * @param mapper The mapper to configure
+     */
+    private void configureLongStringPairToIssueCommentEntity(ModelMapper mapper) {
+        TypeMap<LongStringPair, IssueComment> typeMap = mapper.createTypeMap(LongStringPair.class, IssueComment.class);
+        typeMap.addMappings(m -> m.skip(IssueComment::setId));
+        typeMap.addMappings(m -> m.map(LongStringPair::getValue, IssueComment::setComment));
     }
 }

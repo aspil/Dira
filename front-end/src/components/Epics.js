@@ -87,7 +87,7 @@ const Epics = ({ footerHandle }) => {
             </div>
             {epic_panel === "show" &&
               <div className="epicPanel">
-                <text id="epicName">Epic Name</text>
+                <span id="epicName">Epic Name</span>
                 <br></br>
                 <br></br>
                 <h3>Description</h3>
@@ -111,22 +111,22 @@ const Epics = ({ footerHandle }) => {
 
                 </p>
                 <br />
-                <text className="label" id="status">Status: </text>
-                <text className="answer" id="statusAnswer">Open</text>
+                <span className="label" id="status">Status: </span>
+                <span className="answer" id="statusAnswer">Open</span>
                 <br />
                 <br />
-                <text className="label" id="creator">Created by: </text>
-                <text className="answer" id="assigneeAnswer">Makis</text>
+                <span className="label" id="creator">Created by: </span>
+                <span className="answer" id="assigneeAnswer">Makis</span>
                 <br />
                 <br />
-                <text className="label" id="dateCreated">Created on: </text>
-                <text className="answer" id="dateCreatedAnswer">10/3/2021</text>
+                <span className="label" id="dateCreated">Created on: </span>
+                <span className="answer" id="dateCreatedAnswer">10/3/2021</span>
                 <br />
-                <text className="label" id="DueDate">Due date: </text>
-                <text className="answer" id="DueDateAnswer">2/5/2021</text>
+                <span className="label" id="DueDate">Due date: </span>
+                <span className="answer" id="DueDateAnswer">2/5/2021</span>
                 <br />
-                <text className="label" id="timeLeft">Time Remaining: </text>
-                <text className="answer" id="timeLeftAnswer">5 days</text>
+                <span className="label" id="timeLeft">Time Remaining: </span>
+                <span className="answer" id="timeLeftAnswer">5 days</span>
               </div>
             }
           </div>
@@ -141,7 +141,7 @@ const Epics = ({ footerHandle }) => {
                 <input type="text" placeholder="Epic Title"></input>
                 <textarea type="range" placeholder="Epic Description"></textarea>
                 <div style={{ display: "flex" }}>
-                  <text style={{fontWeight:"bold"}}>Priority: </text>
+                  <span style={{fontWeight:"bold"}}>Priority: </span>
                   <select name="priority" id="priority" style={{ marginLeft: "10px" }}>
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
