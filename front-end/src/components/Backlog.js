@@ -261,7 +261,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     setNewLabelError('');
     setNewCommentError('');
 
-    const newIssue = { ...focusedIssue };
+    const newIssue = JSON.parse(JSON.stringify(focusedIssue));
     if (field === 'label') {
       newIssue.labels.push({ 'value': newLabel });
     }
@@ -288,7 +288,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     setDeleteLabelError('');
     setDeleteCommentError('');
 
-    const issue = { ...focusedIssue };
+    const issue = JSON.parse(JSON.stringify(focusedIssue));
     if (field === 'label') {
       issue.labels = issue.labels.filter(labelObj => labelObj.value !== toDelete.value);
     }
