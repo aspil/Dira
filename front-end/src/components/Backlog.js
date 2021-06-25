@@ -39,6 +39,9 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   const [newLabelError, setNewLabelError] = useState('');
   const [deleteCommentError, setDeleteCommentError] = useState('');
   const [deleteLabelError, setDeleteLabelError] = useState('');
+  const [deleteIssueLinkError, setDeleteIssueLinkError] = useState('');
+  const [newIssueLink, setNewIssueLink] = useState({ key: '', name: '' });
+  const [newIssueLinkError, setNewIssueLinkError] = useState('');
 
   const { projectId } = useParams();
   const issueClientRef = useRef(new DiraIssueClient(projectId));
@@ -80,17 +83,22 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   const showIssuePanel = (issueId) => {
     setFocusedIssueId(issueId);
     setFocusedIssue(searchFilteredIssues.find(issue => issue.id === issueId));
-    handleIssuePanel("show");
-  }
-  const hideIssuePanel = () => {
-    setFocusedIssueId(null);
-    setFocusedIssue(null);
+
     setNewComment('');
     setNewLabel('');
     setNewCommentError('');
     setNewLabelError('');
     setDeleteLabelError('');
     setDeleteCommentError('');
+    setNewIssueLink({ key: '', name: '' });
+    setNewIssueLinkError('');
+    setDeleteIssueLinkError('');
+
+    handleIssuePanel("show");
+  }
+  const hideIssuePanel = () => {
+    setFocusedIssueId(null);
+    setFocusedIssue(null);
     handleIssuePanel("hide");
   }
 
@@ -238,15 +246,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     Blocked: 'purple'
   }
 
-  const [Links, setLinks] = useState([
-    { name: 'err', id: 1 },
-    { name: 'bug', id: 2 },
-    { name: 'lab3', id: 3 },
-    { name: '4', id: 4 },
-    { name: 'Label5', id: 5 },
-    { name: 'Label6', id: 6 },
-  ])
-
   const addNewValueToField = (field) => {
     if (field === 'label' && !newLabel) {
       setNewLabelError('Please fill in field');
@@ -254,6 +253,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     }
     else if (field === 'comment' && !newComment) {
       setNewCommentError('Please fill in field');
+      return;
+    }
+    else if (field === 'link' && !newIssueLink.key) {
+      setNewIssueLinkError('Please pick an issue');
       return;
     }
 
@@ -266,6 +269,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       newIssue.comments.push({ 'value': `${username},${newComment}` });
       setNewCommentError('');
     }
+    else if (field === 'link') {
+      newIssue.issueLinks.push({ 'linkType': '', 'linkedIssue': newIssueLink })
+      setNewIssueLinkError('');
+    }
     issueClientRef.current.update_issue(focusedIssueId, newIssue)
       .then(res => {
         console.log(res);
@@ -276,6 +283,9 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
         else if (field === 'comment') {
           setNewComment('');
         }
+        else if (field === 'link') {
+          setNewIssueLink({ key: '', name: '' });
+        }
       })
       .catch(err => {
         console.log(err);
@@ -284,6 +294,9 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
         }
         else if (field === 'comment') {
           setNewCommentError('Couldn\'t add comment');
+        }
+        else if (field === 'link') {
+          setNewIssueLinkError('Couldn\'t add link');
         }
       })
 
@@ -403,7 +416,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   {focusedIssue.epicId &&
                     <>
                       <span
-                        class="colored_text"
+                        className="colored_text"
                         onClick={() => showIssuePanel(focusedIssue.epicId)}
                       >
                         {backlogIssues.find(issue => issue.id === focusedIssue.epicId).key}
@@ -420,8 +433,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   <br />
                   <span className="label" id="priority">Priority: </span>
                   <span
-                    className="answer"
-                    class="colored_text"
+                    className="colored_text answer"
                     style={{
                       display: 'inline-block',
                       fontSize: '1em',
@@ -452,6 +464,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   <br /><br />
                   {/* Labels */}
                   <p className="label">Labels: </p>
+                  {Boolean(deleteLabelError) && <p style={{ color: 'crimson' }}>{deleteLabelError}</p>}
                   {focusedIssue.labels.map(({ value: label }) => (
                     <div
                       className="issueLabelsWrapper"
@@ -485,6 +498,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
 
                   {/* Comments */}
                   <p className="label">Comments: </p>
+                  {Boolean(deleteCommentError) && <p style={{ color: 'crimson' }}>{deleteCommentError}</p>}
                   {focusedIssue.comments.map(({ value: comment }) => (
                     <div
                       className="issueCommentsWrapper"
@@ -519,18 +533,63 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   {Boolean(newCommentError) && <p style={{ color: 'crimson', marginTop: '-1em', fontSize: '0.8em' }}>{newCommentError}</p>}
 
                   {/* Links */}
-                  <p className="label">Links: </p>
-                  {Links.map(link => (
-                    <div
-                      key={link.id}
-                      className="issueLinksWrapper"
-                    >
-                      <button className="issueLinkX">X</button>
-                      <span className="issueLink"> {link.name} </span>
-                    </div>
-                  ))}
-                  <input type="text" name="newLink" id="newLink" placeholder="+ Add link" style={{ marginLeft: "10px", marginRight: "0px", border: "1px solid grey", borderRadius: "0" }} />
-                  <button style={{ backgroundColor: "grey" }}>+</button>
+                  {focusedIssue.type !== 'Epic' &&
+                    <>
+                      <p className="label">Links: </p>
+                      {focusedIssue.issueLinks.map(linkObject => (
+                        <div
+                          key={linkObject.id}
+                          className="issueLinksWrapper"
+                        >
+                          <button className="issueLinkX">X</button>
+                          <span
+                            className="issueLink"
+                            onClick={() => showIssuePanel(linkObject.linkedIssue.id)}
+                          >
+                            {linkObject.linkedIssue.key}, &nbsp;{linkObject.linkedIssue.name}
+                          </span>
+                        </div>
+                      ))}
+                      <select
+                        style={{ marginLeft: '20px' }}
+                        value={newIssueLink.key}
+                        name="newLink"
+                        onChange={(e) => {
+                          if (e.target.value === '') {
+                            setNewIssueLink({ key: '', name: '' });
+                            return;
+                          }
+                          const { key, title: name } = backlogIssues.find(issue => issue.key === e.target.value);
+                          setNewIssueLink({ key, name });
+                        }}
+                      >
+                        <option value=''>
+                          None
+                        </option>
+                        {backlogIssues.filter(issue =>
+                          (issue.id !== focusedIssueId)
+                          &&
+                          (issue.type !== 'Epic')
+                          &&
+                          (focusedIssue.issueLinks.find(linkObj => linkObj.linkedIssue.id === issue.id) === undefined)
+                        ).map(issue => (
+                          <option
+                            key={issue.id}
+                            value={issue.key}
+                          >
+                            {issue.key}, {issue.title}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        style={{ backgroundColor: "grey" }}
+                        onClick={() => addNewValueToField('link')}
+                      >
+                        +
+                      </button>
+                      {Boolean(newIssueLinkError) && <p style={{ color: 'crimson', fontSize: '0.8em' }}>{newIssueLinkError}</p>}
+                    </>
+                  }
                 </div>
                 {/* Edit Issue */}
                 {hasWrite &&
@@ -583,7 +642,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
               // create sprint button (if there is no sprint)
               :
               <div className="createSprint">
-                <div id="createSprintContent"> 
+                <div id="createSprintContent">
                   <span id="createSprintText">No active sprint</span>
                   <br></br>
                   <button id="createSprintButton" onClick={showCreateSprintPopup}>+ Create Sprint</button>

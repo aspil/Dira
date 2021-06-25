@@ -115,6 +115,9 @@
   padding: 2px;
 
 }
+.backlog .issuePanel .issueLink:hover{
+  cursor: pointer;
+}
 
 .backlog .colored_text{
   font-size: 25px;
