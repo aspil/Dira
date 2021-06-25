@@ -728,7 +728,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                     <p>Type:</p>
                     <select
                       id="type"
-                      onChange={(e) => { setNewType(e.target.value !== 'None' ? e.target.value : null); }}
+                      onChange={(e) => { setNewType(e.target.value); }}
                       value={newType}
                     >
                       {types.map((type) => (
@@ -761,7 +761,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                     <p>Epic:</p>
                     <select
                       id="epic"
-                      onChange={(e) => { setNewEpicLink(e.target.value); }}
+                      onChange={(e) => { setNewEpicLink(e.target.value !== 'None' ? e.target.value : null); }}
                     >
                       <option value='None'>
                         None
