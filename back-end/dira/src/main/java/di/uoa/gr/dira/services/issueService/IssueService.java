@@ -1,10 +1,7 @@
 package di.uoa.gr.dira.services.issueService;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import di.uoa.gr.dira.entities.customer.Customer;
-import di.uoa.gr.dira.entities.issue.Issue;
-import di.uoa.gr.dira.entities.issue.IssueLink;
+import di.uoa.gr.dira.entities.issue.*;
 import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
@@ -14,9 +11,7 @@ import di.uoa.gr.dira.models.issue.IssueCreateModel;
 import di.uoa.gr.dira.models.issue.IssueLinkModel;
 import di.uoa.gr.dira.models.issue.IssueModel;
 import di.uoa.gr.dira.models.project.ProjectIssuesModel;
-import di.uoa.gr.dira.repositories.CustomerRepository;
-import di.uoa.gr.dira.repositories.IssueRepository;
-import di.uoa.gr.dira.repositories.ProjectRepository;
+import di.uoa.gr.dira.repositories.*;
 import di.uoa.gr.dira.services.BaseService;
 import di.uoa.gr.dira.services.permissionService.IPermissionService;
 import di.uoa.gr.dira.shared.IssueLinkTypeEnum;
@@ -28,21 +23,31 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepository> implements IIssueService {
     private final ProjectRepository projectRepository;
     private final CustomerRepository customerRepository;
+    private final IssueFixVersionRepository fixVersionRepository;
+    private final IssueLabelRepository labelRepository;
+    private final IssueCommentRepository commentRepository;
     private final IPermissionService permissionService;
 
     public IssueService(IssueRepository repository,
                  ProjectRepository projectRepository,
                  CustomerRepository customerRepository,
+                 IssueFixVersionRepository fixVersionRepository,
+                 IssueLabelRepository labelRepository,
+                 IssueCommentRepository commentRepository,
                  IPermissionService permissionService,
                  ModelMapper mapper) {
         super(repository, mapper);
         this.projectRepository = projectRepository;
         this.customerRepository = customerRepository;
+        this.fixVersionRepository = fixVersionRepository;
+        this.labelRepository = labelRepository;
+        this.commentRepository = commentRepository;
         this.permissionService = permissionService;
     }
 
@@ -126,9 +131,51 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
 
         updateIssueLinks(issue, issueModel);
 
-        issue = repository.save(issue);
+        updateIssueLabels(issueModel, issue);
 
-        return mapper.map(issue, IssueModel.class);
+        updateIssueComments(issueModel, issue);
+
+        updateIssueFixVersions(issueModel, issue);
+
+        return mapper.map(repository.save(issue), IssueModel.class);
+    }
+
+    private void updateIssueFixVersions(IssueModel issueModel, Issue issue) {
+        List<IssueFixVersion> newFixVersions = issueModel.getFixVersions()
+                .stream()
+                .filter(fixVersion -> fixVersion.getKey() == null)
+                .map(fixVersion -> mapper.map(fixVersion, IssueFixVersion.class))
+                .collect(Collectors.toList());
+
+        issue.getFixVersions().removeIf(fixVersion -> fixVersion.getId() == null);
+
+        issue.getFixVersions().addAll(fixVersionRepository.saveAll(newFixVersions));
+    }
+
+    private void updateIssueComments(IssueModel issueModel, Issue issue) {
+        List<IssueComment> newComments = issueModel.getComments()
+                .stream()
+                .filter(comment -> comment.getKey() == null)
+                .map(comment -> mapper.map(comment, IssueComment.class))
+                .collect(Collectors.toList());
+
+        issue.getComments().removeIf(comment -> comment.getId() == null);
+
+        newComments.forEach(comment -> comment.setIssue(issue));
+
+        commentRepository.saveAll(newComments);
+    }
+
+    private void updateIssueLabels(IssueModel issueModel, Issue issue) {
+        List<IssueLabel> newLabels = issueModel.getLabels()
+                .stream()
+                .filter(label -> label.getKey() == null)
+                .map(label -> mapper.map(label, IssueLabel.class))
+                .collect(Collectors.toList());
+
+        issue.getLabels().removeIf(label -> label.getId() == null);
+
+        issue.getLabels().addAll(labelRepository.saveAll(newLabels));
     }
 
     private IssueLinkTypeEnum issueLinkTypeEnumFromString(String linkType) {
