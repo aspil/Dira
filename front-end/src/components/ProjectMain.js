@@ -1,5 +1,3 @@
-import ProjectNav from './ProjectNav';
-import Footer from './Footer';
 import { useEffect, useState } from "react";
 import { Link, useHistory } from 'react-router-dom';
 import edit_icon from "../Images/edit_icon.png"

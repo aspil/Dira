@@ -1,7 +1,6 @@
 import logo from "../Images/dira_icon_cropped.png"
-import arrows from "../Images/arrows.png"
 import { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 
 

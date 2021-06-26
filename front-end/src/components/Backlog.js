@@ -16,9 +16,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   ])
 
   const [members, setMembers] = useState([]);
-
   const [projectName, setProjectName] = useState('');
-
   const [newTitle, setNewTitle] = useState('');
   const [newDescription, setNewDescription] = useState('');
   const [newPriority, setNewPriority] = useState('Normal');
@@ -27,21 +25,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   const [newType, setNewType] = useState('Story');
   const [issueCreationError, setIssueCreationError] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const [focusedIssueId, setFocusedIssueId] = useState(null);
-  const [focusedIssue, setFocusedIssue] = useState(null);
   const [sprint, handleSprintPanel] = useState("hide");
   const [userPermissions, setUserPermissions] = useState(undefined);
   const [hasRead, setHasRead] = useState(false);
   const [hasWrite, setHasWrite] = useState(false);
-  const [newComment, setNewComment] = useState('');
-  const [newLabel, setNewLabel] = useState('');
-  const [newCommentError, setNewCommentError] = useState('');
-  const [newLabelError, setNewLabelError] = useState('');
-  const [deleteCommentError, setDeleteCommentError] = useState('');
-  const [deleteLabelError, setDeleteLabelError] = useState('');
-  const [deleteIssueLinkError, setDeleteIssueLinkError] = useState('');
-  const [newIssueLink, setNewIssueLink] = useState({ key: '', name: '' });
-  const [newIssueLinkError, setNewIssueLinkError] = useState('');
 
   const { projectId } = useParams();
   const issueClientRef = useRef(new DiraIssueClient(projectId));
@@ -101,6 +88,100 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     setFocusedIssue(null);
     handleIssuePanel("hide");
   }
+  const [focusedIssueId, setFocusedIssueId] = useState(null);
+  const [focusedIssue, setFocusedIssue] = useState(null);
+  const [newComment, setNewComment] = useState('');
+  const [newLabel, setNewLabel] = useState('');
+  const [newCommentError, setNewCommentError] = useState('');
+  const [newLabelError, setNewLabelError] = useState('');
+  const [deleteCommentError, setDeleteCommentError] = useState('');
+  const [deleteLabelError, setDeleteLabelError] = useState('');
+  const [deleteIssueLinkError, setDeleteIssueLinkError] = useState('');
+  const [newIssueLink, setNewIssueLink] = useState({ key: '', name: '' });
+  const [newIssueLinkError, setNewIssueLinkError] = useState('');
+
+  const addNewValueToField = (field) => {
+    if (field === 'label' && !newLabel) {
+      setNewLabelError('Please fill in field');
+      return;
+    }
+    else if (field === 'comment' && !newComment) {
+      setNewCommentError('Please fill in field');
+      return;
+    }
+    else if (field === 'link' && !newIssueLink.key) {
+      setNewIssueLinkError('Please pick an issue');
+      return;
+    }
+
+    const newIssue = JSON.parse(JSON.stringify(focusedIssue));
+    if (field === 'label') {
+      newIssue.labels.push({ 'value': newLabel });
+      setNewLabelError('');
+    }
+    else if (field === 'comment') {
+      newIssue.comments.push({ 'value': `${username},${newComment}` });
+      setNewCommentError('');
+    }
+    else if (field === 'link') {
+      newIssue.issueLinks.push({ 'linkType': '', 'linkedIssue': newIssueLink })
+      setNewIssueLinkError('');
+    }
+    issueClientRef.current.update_issue(focusedIssueId, newIssue)
+      .then(res => {
+        console.log(res);
+        fetchAllIssues();
+        if (field === 'label') {
+          setNewLabel('');
+        }
+        else if (field === 'comment') {
+          setNewComment('');
+        }
+        else if (field === 'link') {
+          setNewIssueLink({ key: '', name: '' });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        if (field === 'label') {
+          setNewLabelError('Couldn\'t add label');
+        }
+        else if (field === 'comment') {
+          setNewCommentError('Couldn\'t add comment');
+        }
+        else if (field === 'link') {
+          setNewIssueLinkError('Couldn\'t add link');
+        }
+      })
+
+  }
+  const deleteValueFromField = (field, toDelete) => {
+    const issue = JSON.parse(JSON.stringify(focusedIssue));
+    if (field === 'label') {
+      issue.labels = issue.labels.filter(labelObj => labelObj.value !== toDelete.value);
+      setDeleteLabelError('');
+    }
+    else if (field === 'comment') {
+      issue.comments = issue.comments.filter(commentObj => commentObj.value !== toDelete.value);
+      setDeleteCommentError('');
+    }
+    issueClientRef.current.update_issue(focusedIssueId, issue)
+      .then(res => {
+        console.log(res);
+        fetchAllIssues();
+      })
+      .catch(err => {
+        console.log(err);
+        if (field === 'label') {
+          setDeleteLabelError('Couldn\'t delete label');
+        }
+        else if (field === 'comment') {
+          setDeleteCommentError('Couldn\'t delete comment');
+        }
+      });
+
+  }
+
 
   // Create sprint popup handlers
   const [create_sprint_popup, handleCreateSprintPopup] = useState("hide");
@@ -114,6 +195,11 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     hideCreateSprintPopup();
   }
 
+
+
+  // Create issue popup handlers
+  const [create_issue_popup, handleCreateIssuePopup] = useState("hide");
+
   const clearState = () => {
     setNewTitle('');
     setNewDescription('');
@@ -124,8 +210,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     setIssueCreationError(false);
   }
 
-  // Create issue popup handlers
-  const [create_issue_popup, handleCreateIssuePopup] = useState("hide");
   const hideCreateIssuePopup = () => {
     clearState();
     handleCreateIssuePopup("hide");
@@ -246,87 +330,8 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     Blocked: 'purple'
   }
 
-  const addNewValueToField = (field) => {
-    if (field === 'label' && !newLabel) {
-      setNewLabelError('Please fill in field');
-      return;
-    }
-    else if (field === 'comment' && !newComment) {
-      setNewCommentError('Please fill in field');
-      return;
-    }
-    else if (field === 'link' && !newIssueLink.key) {
-      setNewIssueLinkError('Please pick an issue');
-      return;
-    }
+  
 
-    const newIssue = JSON.parse(JSON.stringify(focusedIssue));
-    if (field === 'label') {
-      newIssue.labels.push({ 'value': newLabel });
-      setNewLabelError('');
-    }
-    else if (field === 'comment') {
-      newIssue.comments.push({ 'value': `${username},${newComment}` });
-      setNewCommentError('');
-    }
-    else if (field === 'link') {
-      newIssue.issueLinks.push({ 'linkType': '', 'linkedIssue': newIssueLink })
-      setNewIssueLinkError('');
-    }
-    issueClientRef.current.update_issue(focusedIssueId, newIssue)
-      .then(res => {
-        console.log(res);
-        fetchAllIssues();
-        if (field === 'label') {
-          setNewLabel('');
-        }
-        else if (field === 'comment') {
-          setNewComment('');
-        }
-        else if (field === 'link') {
-          setNewIssueLink({ key: '', name: '' });
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        if (field === 'label') {
-          setNewLabelError('Couldn\'t add label');
-        }
-        else if (field === 'comment') {
-          setNewCommentError('Couldn\'t add comment');
-        }
-        else if (field === 'link') {
-          setNewIssueLinkError('Couldn\'t add link');
-        }
-      })
-
-  }
-  const deleteValueFromField = (field, toDelete) => {
-    const issue = JSON.parse(JSON.stringify(focusedIssue));
-    if (field === 'label') {
-      issue.labels = issue.labels.filter(labelObj => labelObj.value !== toDelete.value);
-      setDeleteLabelError('');
-    }
-    else if (field === 'comment') {
-      issue.comments = issue.comments.filter(commentObj => commentObj.value !== toDelete.value);
-      setDeleteCommentError('');
-    }
-    issueClientRef.current.update_issue(focusedIssueId, issue)
-      .then(res => {
-        console.log(res);
-        fetchAllIssues();
-      })
-      .catch(err => {
-        console.log(err);
-        if (field === 'label') {
-          setDeleteLabelError('Couldn\'t delete label');
-        }
-        else if (field === 'comment') {
-          setDeleteCommentError('Couldn\'t delete comment');
-        }
-      });
-
-  }
 
   return (
     <div className="backlog proj_page">

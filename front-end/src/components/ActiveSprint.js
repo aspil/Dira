@@ -1,6 +1,4 @@
 import SideNav from './SideNav';
-import ProjectNav from './ProjectNav';
-import Footer from './Footer';
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import search_icon from "../Images/search_icon.png"
