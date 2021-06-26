@@ -185,13 +185,12 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
           else if (Array.isArray(issue[field])) {
             issue[field].forEach(arrayItem => {
               if (field !== 'issueLinks') {
-                isRelevant |= issue[field][arrayItem].value.toLowerCase().includes(searchFilter.toLowerCase());
+                isRelevant |= arrayItem.value.toLowerCase().includes(searchFilter.toLowerCase());
               }
               else {
-                const object = issue[field][arrayItem];
-                isRelevant |= object.linkType.toLowerCase().includes(searchFilter.toLowerCase());
-                isRelevant |= object.linkedIssue.key.toLowerCase().includes(searchFilter.toLowerCase());
-                isRelevant |= object.linkedIssue.name.toLowerCase().includes(searchFilter.toLowerCase());
+                isRelevant |= arrayItem.linkType.toLowerCase().includes(searchFilter.toLowerCase());
+                isRelevant |= arrayItem.linkedIssue.key.toLowerCase().includes(searchFilter.toLowerCase());
+                isRelevant |= arrayItem.linkedIssue.name.toLowerCase().includes(searchFilter.toLowerCase());
               }
             })
           }
