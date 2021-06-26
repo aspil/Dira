@@ -313,11 +313,11 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   const deleteValueFromField = (field, toDelete) => {
     const issue = JSON.parse(JSON.stringify(focusedIssue));
     if (field === 'label') {
-      issue.labels = issue.labels.filter(labelObj => labelObj.value !== toDelete.value);
+      issue.labels = issue.labels.filter(labelObj => labelObj.value !== toDelete);
       setDeleteLabelError('');
     }
     else if (field === 'comment') {
-      issue.comments = issue.comments.filter(commentObj => commentObj.value !== toDelete.value);
+      issue.comments = issue.comments.filter(commentObj => commentObj.value !== toDelete);
       setDeleteCommentError('');
     }
     issueClientRef.current.update_issue(focusedIssueId, issue)
@@ -474,10 +474,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   {/* Labels */}
                   <p className="label">Labels: </p>
                   {Boolean(deleteLabelError) && <p style={{ color: 'crimson' }}>{deleteLabelError}</p>}
-                  {focusedIssue.labels.map(({ value: label }) => (
+                  {focusedIssue.labels.map(({ key, value: label }) => (
                     <div
                       className="issueLabelsWrapper"
-                      key={focusedIssue.labels.indexOf(label)}
+                      key={key}
                     >
                       <button
                         className="issueLabelX"
@@ -508,10 +508,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   {/* Comments */}
                   <p className="label">Comments: </p>
                   {Boolean(deleteCommentError) && <p style={{ color: 'crimson' }}>{deleteCommentError}</p>}
-                  {focusedIssue.comments.map(({ value: comment }) => (
+                  {focusedIssue.comments.map(({ key, value: comment }) => (
                     <div
                       className="issueCommentsWrapper"
-                      key={focusedIssue.comments.indexOf(comment)}
+                      key={key}
                     >
                       <button
                         className="issueCommentX"
