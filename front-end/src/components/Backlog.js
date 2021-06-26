@@ -30,6 +30,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   const [hasRead, setHasRead] = useState(false);
   const [hasWrite, setHasWrite] = useState(false);
 
+
   const { projectId } = useParams();
   const issueClientRef = useRef(new DiraIssueClient(projectId));
 
@@ -80,6 +81,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     setNewIssueLink({ key: '', name: '' });
     setNewIssueLinkError('');
     setDeleteIssueLinkError('');
+    setNewIssueLinkType('DEPENDS_ON');
 
     handleIssuePanel("show");
   }
@@ -90,6 +92,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   }
   const [focusedIssueId, setFocusedIssueId] = useState(null);
   const [focusedIssue, setFocusedIssue] = useState(null);
+
   const [newComment, setNewComment] = useState('');
   const [newLabel, setNewLabel] = useState('');
   const [newCommentError, setNewCommentError] = useState('');
@@ -99,6 +102,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   const [deleteIssueLinkError, setDeleteIssueLinkError] = useState('');
   const [newIssueLink, setNewIssueLink] = useState({ key: '', name: '' });
   const [newIssueLinkError, setNewIssueLinkError] = useState('');
+  const [newIssueLinkType, setNewIssueLinkType] = useState('DEPENDS_ON');
 
   const addNewValueToField = (field) => {
     if (field === 'label' && !newLabel) {
@@ -124,7 +128,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       setNewCommentError('');
     }
     else if (field === 'link') {
-      newIssue.issueLinks.push({ 'linkType': '', 'linkedIssue': newIssueLink })
+      newIssue.issueLinks.push({ 'linkType': newIssueLinkType, 'linkedIssue': newIssueLink })
       setNewIssueLinkError('');
     }
     issueClientRef.current.update_issue(focusedIssueId, newIssue)
@@ -139,6 +143,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
         }
         else if (field === 'link') {
           setNewIssueLink({ key: '', name: '' });
+          setNewIssueLinkType('DEPENDS_ON');
         }
       })
       .catch(err => {
@@ -158,11 +163,11 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   const deleteValueFromField = (field, toDelete) => {
     const issue = JSON.parse(JSON.stringify(focusedIssue));
     if (field === 'label') {
-      issue.labels = issue.labels.filter(labelObj => labelObj.value !== toDelete.value);
+      issue.labels = issue.labels.filter(labelObj => labelObj.value !== toDelete);
       setDeleteLabelError('');
     }
     else if (field === 'comment') {
-      issue.comments = issue.comments.filter(commentObj => commentObj.value !== toDelete.value);
+      issue.comments = issue.comments.filter(commentObj => commentObj.value !== toDelete);
       setDeleteCommentError('');
     }
     issueClientRef.current.update_issue(focusedIssueId, issue)
@@ -179,7 +184,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
           setDeleteCommentError('Couldn\'t delete comment');
         }
       });
-
   }
 
 
@@ -265,9 +269,14 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
             isRelevant |= issue[field].toLowerCase().includes(searchFilter.toLowerCase());
           }
           else if (Array.isArray(issue[field])) {
-            issue[field].forEach(subField => {
-              if (typeof issue[field][subField] === 'string') {
-                isRelevant |= issue[field][subField].toLowerCase().includes(searchFilter.toLowerCase());
+            issue[field].forEach(arrayItem => {
+              if (field !== 'issueLinks') {
+                isRelevant |= arrayItem.value.toLowerCase().includes(searchFilter.toLowerCase());
+              }
+              else {
+                isRelevant |= arrayItem.linkType.toLowerCase().includes(searchFilter.toLowerCase());
+                isRelevant |= arrayItem.linkedIssue.key.toLowerCase().includes(searchFilter.toLowerCase());
+                isRelevant |= arrayItem.linkedIssue.name.toLowerCase().includes(searchFilter.toLowerCase());
               }
             })
           }
@@ -332,6 +341,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
 
   
 
+    
 
   return (
     <div className="backlog proj_page">
@@ -470,10 +480,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   {/* Labels */}
                   <p className="label">Labels: </p>
                   {Boolean(deleteLabelError) && <p style={{ color: 'crimson' }}>{deleteLabelError}</p>}
-                  {focusedIssue.labels.map(({ value: label }) => (
+                  {focusedIssue.labels.map(({ key, value: label }) => (
                     <div
                       className="issueLabelsWrapper"
-                      key={focusedIssue.labels.indexOf(label)}
+                      key={key}
                     >
                       <button
                         className="issueLabelX"
@@ -504,10 +514,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   {/* Comments */}
                   <p className="label">Comments: </p>
                   {Boolean(deleteCommentError) && <p style={{ color: 'crimson' }}>{deleteCommentError}</p>}
-                  {focusedIssue.comments.map(({ value: comment }) => (
+                  {focusedIssue.comments.map(({ key, value: comment }) => (
                     <div
                       className="issueCommentsWrapper"
-                      key={focusedIssue.comments.indexOf(comment)}
+                      key={key}
                     >
                       <button
                         className="issueCommentX"
@@ -551,7 +561,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                             className="issueLink"
                             onClick={() => showIssuePanel(linkObject.linkedIssue.id)}
                           >
-                            {linkObject.linkedIssue.key}, &nbsp;{linkObject.linkedIssue.name}
+                            {linkObject.linkType}:&nbsp;{linkObject.linkedIssue.key},&nbsp;{linkObject.linkedIssue.name}
                           </span>
                         </div>
                       ))}
@@ -585,6 +595,18 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                             {issue.key}, {issue.title}
                           </option>
                         ))}
+                      </select>
+                      <select
+                        style={{ marginLeft: '20px' }}
+                        value={newIssueLinkType}
+                        onChange={(e) => setNewIssueLinkType(e.target.value)}
+                      >
+                        <option value='DEPENDS_ON'>
+                          Depends on
+                        </option>
+                        <option value='RELATES_TO'>
+                          Relates to
+                        </option>
                       </select>
                       <button
                         style={{ backgroundColor: "grey" }}
