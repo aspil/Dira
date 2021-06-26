@@ -304,11 +304,11 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   const deleteValueFromField = (field, toDelete) => {
     const issue = JSON.parse(JSON.stringify(focusedIssue));
     if (field === 'label') {
-      issue.labels = issue.labels.filter(labelObj => labelObj.value !== toDelete.value);
+      issue.labels = issue.labels.filter(labelObj => labelObj.value !== toDelete);
       setDeleteLabelError('');
     }
     else if (field === 'comment') {
-      issue.comments = issue.comments.filter(commentObj => commentObj.value !== toDelete.value);
+      issue.comments = issue.comments.filter(commentObj => commentObj.value !== toDelete);
       setDeleteCommentError('');
     }
     issueClientRef.current.update_issue(focusedIssueId, issue)
