@@ -42,6 +42,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   const [deleteIssueLinkError, setDeleteIssueLinkError] = useState('');
   const [newIssueLink, setNewIssueLink] = useState({ key: '', name: '' });
   const [newIssueLinkError, setNewIssueLinkError] = useState('');
+  const [newIssueLinkType, setNewIssueLinkType] = useState('DEPENDS_ON');
 
   const { projectId } = useParams();
   const issueClientRef = useRef(new DiraIssueClient(projectId));
@@ -93,6 +94,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     setNewIssueLink({ key: '', name: '' });
     setNewIssueLinkError('');
     setDeleteIssueLinkError('');
+    setNewIssueLinkType('DEPENDS_ON');
 
     handleIssuePanel("show");
   }
@@ -181,9 +183,15 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
             isRelevant |= issue[field].toLowerCase().includes(searchFilter.toLowerCase());
           }
           else if (Array.isArray(issue[field])) {
-            issue[field].forEach(subField => {
-              if (typeof issue[field][subField] === 'string') {
-                isRelevant |= issue[field][subField].toLowerCase().includes(searchFilter.toLowerCase());
+            issue[field].forEach(arrayItem => {
+              if (field !== 'issueLinks') {
+                isRelevant |= issue[field][arrayItem].value.toLowerCase().includes(searchFilter.toLowerCase());
+              }
+              else {
+                const object = issue[field][arrayItem];
+                isRelevant |= object.linkType.toLowerCase().includes(searchFilter.toLowerCase());
+                isRelevant |= object.linkedIssue.key.toLowerCase().includes(searchFilter.toLowerCase());
+                isRelevant |= object.linkedIssue.name.toLowerCase().includes(searchFilter.toLowerCase());
               }
             })
           }
@@ -270,7 +278,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       setNewCommentError('');
     }
     else if (field === 'link') {
-      newIssue.issueLinks.push({ 'linkType': '', 'linkedIssue': newIssueLink })
+      newIssue.issueLinks.push({ 'linkType': newIssueLinkType, 'linkedIssue': newIssueLink })
       setNewIssueLinkError('');
     }
     issueClientRef.current.update_issue(focusedIssueId, newIssue)
@@ -285,6 +293,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
         }
         else if (field === 'link') {
           setNewIssueLink({ key: '', name: '' });
+          setNewIssueLinkType('DEPENDS_ON');
         }
       })
       .catch(err => {
@@ -546,7 +555,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                             className="issueLink"
                             onClick={() => showIssuePanel(linkObject.linkedIssue.id)}
                           >
-                            {linkObject.linkedIssue.key}, &nbsp;{linkObject.linkedIssue.name}
+                            {linkObject.linkType}:&nbsp;{linkObject.linkedIssue.key},&nbsp;{linkObject.linkedIssue.name}
                           </span>
                         </div>
                       ))}
@@ -580,6 +589,18 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                             {issue.key}, {issue.title}
                           </option>
                         ))}
+                      </select>
+                      <select
+                        style={{ marginLeft: '20px' }}
+                        value={newIssueLinkType}
+                        onChange={(e) => setNewIssueLinkType(e.target.value)}
+                      >
+                        <option value='DEPENDS_ON'>
+                          Depends on
+                        </option>
+                        <option value='RELATES_TO'>
+                          Relates to
+                        </option>
                       </select>
                       <button
                         style={{ backgroundColor: "grey" }}
