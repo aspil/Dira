@@ -4,6 +4,7 @@ import di.uoa.gr.dira.entities.issue.*;
 import di.uoa.gr.dira.models.issue.IssueCreateModel;
 import di.uoa.gr.dira.models.issue.IssueLinkModel;
 import di.uoa.gr.dira.models.issue.IssueModel;
+import di.uoa.gr.dira.shared.IssueLinkTypeEnum;
 import di.uoa.gr.dira.util.LongStringPair;
 import di.uoa.gr.dira.util.mapper.ListConverter;
 import org.modelmapper.ModelMapper;
@@ -19,6 +20,7 @@ public class IssueMapperConfiguration implements IMapConfiguration {
         configureIssueCreateModelToIssueEntity(mapper);
         configureIssueLinkEntityToIssueLinkModel(mapper);
         configureIssueLabelEntityToLongStringPair(mapper);
+        configureIssueLinkModelToIssueLinkEntity(mapper);
         configureIssueFixVersionEntityToLongStringPair(mapper);
         configureIssueCommentEntityToLongStringPair(mapper);
         configureLongStringPairToIssueCommentEntity(mapper);
@@ -69,10 +71,6 @@ public class IssueMapperConfiguration implements IMapConfiguration {
         typeMap.addMappings(m -> m.using(ListConverter.withMapper(mapper, IssueFixVersion.class))
             .map(IssueModel::getFixVersions, Issue::setFixVersions)
         );
-
-        typeMap.addMappings(m -> m.using(ListConverter.withMapper(mapper, IssueLink.class))
-            .map(IssueModel::getIssueLinks, Issue::setIssueLinks)
-        );
     }
 
     /**
@@ -96,8 +94,8 @@ public class IssueMapperConfiguration implements IMapConfiguration {
     private void configureIssueLinkEntityToIssueLinkModel(ModelMapper mapper) {
         TypeMap<IssueLink, IssueLinkModel> typeMap = mapper.createTypeMap(IssueLink.class, IssueLinkModel.class);
         typeMap.addMappings(m -> m.using(ctx -> {
-            IssueLink link = (IssueLink) ctx.getSource();
-            switch (link.getLinkType()) {
+            IssueLinkTypeEnum linkType = (IssueLinkTypeEnum) ctx.getSource();
+            switch (linkType) {
                 case DEPENDS_ON:
                     return "Depends on";
                 case RELATES_TO:
@@ -108,6 +106,11 @@ public class IssueMapperConfiguration implements IMapConfiguration {
         }).map(IssueLink::getLinkType, IssueLinkModel::setLinkType));
 
         typeMap.addMappings(m -> m.map(IssueLink::getLinkedIssue, IssueLinkModel::setLinkedIssue));
+    }
+
+    private void configureIssueLinkModelToIssueLinkEntity(ModelMapper mapper) {
+        TypeMap<IssueLinkModel, IssueLink> typeMap = mapper.createTypeMap(IssueLinkModel.class, IssueLink.class);
+        typeMap.addMappings(m -> m.skip(IssueLink::setLinkedIssue));
     }
 
     /**

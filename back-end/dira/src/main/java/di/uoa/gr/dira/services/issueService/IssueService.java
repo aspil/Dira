@@ -33,6 +33,7 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
     private final IssueFixVersionRepository fixVersionRepository;
     private final IssueLabelRepository labelRepository;
     private final IssueCommentRepository commentRepository;
+    private final IssueLinkRepository linkRepository;
     private final IPermissionService permissionService;
 
     public IssueService(IssueRepository repository,
@@ -41,6 +42,7 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
                  IssueFixVersionRepository fixVersionRepository,
                  IssueLabelRepository labelRepository,
                  IssueCommentRepository commentRepository,
+                 IssueLinkRepository linkRepository,
                  IPermissionService permissionService,
                  ModelMapper mapper) {
         super(repository, mapper);
@@ -49,6 +51,7 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
         this.fixVersionRepository = fixVersionRepository;
         this.labelRepository = labelRepository;
         this.commentRepository = commentRepository;
+        this.linkRepository = linkRepository;
         this.permissionService = permissionService;
     }
 
@@ -192,32 +195,22 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
         issue.getLabels().addAll(labelRepository.saveAll(newLabels));
     }
 
-    private IssueLinkTypeEnum issueLinkTypeEnumFromString(String linkType) {
-        if (linkType.equals("Depends on")) {
-            return IssueLinkTypeEnum.DEPENDS_ON;
-        } else if (linkType.equals("Relates to")) {
-            return IssueLinkTypeEnum.RELATES_TO;
-        }
-
-        return null;
-    }
-
     private void updateIssueLinks(Issue issue, IssueModel issueModel) {
-        List<IssueLink> issueLinks = issue.getIssueLinks();
-        for (IssueLinkModel link : issueModel.getIssueLinks()) {
-            issueLinks.stream()
-                    .filter(issueLink -> issueLink.getId() != null && issueLink.getId().equals(link.getId()))
-                    .findFirst()
-                    .ifPresent(issueLink -> {
-                        String linkedIssueKey = link.getLinkedIssue().getKey();
-                        Issue linkedIssue = repository.findByKey(linkedIssueKey)
-                                .orElseThrow(() -> new IssueNotFoundException(
-                                        String.format("Linked issue with key %s was not found", linkedIssueKey))
-                                );
-                        issueLink.setLinkedIssue(linkedIssue);
-                        issueLink.setLinkType(issueLinkTypeEnumFromString(link.getLinkType()));
-                    });
-        }
+        List<IssueLink> newLinks = issueModel.getIssueLinks()
+                .stream()
+                .filter(issueLinkModel -> issueLinkModel.getId() == null)
+                .map(issueLinkModel -> {
+                    IssueLink issueLink = mapper.map(issueLinkModel, IssueLink.class);
+                    Issue linkedIssue = repository.findByKey(issueLinkModel.getLinkedIssue().getKey())
+                            .orElseThrow(() -> new IssueNotFoundException("key", issueLinkModel.getLinkedIssue().getKey()));
+                    issueLink.setLinkedIssue(linkedIssue);
+                    return issueLink;
+                })
+                .collect(Collectors.toList());
+
+        issue.getIssueLinks().removeIf(issueLink -> issueLink.getId() == null);
+
+        linkRepository.saveAll(newLinks);
     }
 
     @Override

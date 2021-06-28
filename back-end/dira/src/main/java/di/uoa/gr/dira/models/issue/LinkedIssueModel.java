@@ -26,5 +26,5 @@ public class LinkedIssueModel implements IModel<Long> {
     @NotNull
     @NotEmpty
     @NotBlank
-    private String name;
+    private String title;
 }
