@@ -585,8 +585,8 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                             setNewIssueLink({ key: '', title: '' });
                             return;
                           }
-                          const { key, title } = backlogIssues.find(issue => issue.key === e.target.value);
-                          setNewIssueLink({ key, title });
+                          const { id, key, title } = backlogIssues.find(issue => issue.key === e.target.value);
+                          setNewIssueLink({ id, key, title });
                         }}
                       >
                         <option value=''>
