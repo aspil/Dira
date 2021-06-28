@@ -29,6 +29,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   const [userPermissions, setUserPermissions] = useState(undefined);
   const [hasRead, setHasRead] = useState(false);
   const [hasWrite, setHasWrite] = useState(false);
+  const [hasDelete, setHasDelete] = useState(false);
   const [focusedIssueId, setFocusedIssueId] = useState(null);
   const [focusedIssue, setFocusedIssue] = useState(null);
   const [newComment, setNewComment] = useState('');
@@ -312,6 +313,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     if (userPermissions.permissions.find(perm => perm === 'ADMIN')) {
       setHasRead(true);
       setHasWrite(true);
+      setHasDelete(true);
       return;
     }
 
@@ -320,6 +322,9 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     }
     if (userPermissions.permissions.find(perm => perm === 'WRITE')) {
       setHasWrite(true);
+    }
+    if (userPermissions.permissions.find(perm => perm === 'DELETE')) {
+      setHasDelete(true);
     }
   }
   useEffect(decodePermissions, [userPermissions]);
@@ -490,30 +495,40 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                       className="issueLabelsWrapper"
                       key={key}
                     >
-                      <button
-                        className="issueLabelX"
-                        onClick={() => deleteValueFromField('label', key)}
-                      >
-                        X
-                      </button>
+                      {
+                        hasDelete
+                        &&
+                        <button
+                          className="issueLabelX"
+                          onClick={() => deleteValueFromField('label', key)}
+                        >
+                          X
+                        </button>
+                      }
                       <span className="issueLabel"> {label} </span>
                     </div>
                   ))}
-                  <input
-                    type="text"
-                    name="newLabel"
-                    id="newLabel"
-                    placeholder="+ Add label"
-                    style={{ marginLeft: "10px", marginRight: "0px", border: "1px solid grey", borderRadius: "0" }}
-                    value={newLabel}
-                    onChange={(e) => (setNewLabel(e.target.value))}
-                  />
-                  <button
-                    style={{ backgroundColor: "grey" }}
-                    onClick={() => addNewValueToField('label')}
-                  >
-                    +
-                  </button>
+                  {
+                    hasWrite
+                    &&
+                    <>
+                      <input
+                        type="text"
+                        name="newLabel"
+                        id="newLabel"
+                        placeholder="+ Add label"
+                        style={{ marginLeft: "10px", marginRight: "0px", border: "1px solid grey", borderRadius: "0" }}
+                        value={newLabel}
+                        onChange={(e) => (setNewLabel(e.target.value))}
+                      />
+                      <button
+                        style={{ backgroundColor: "grey" }}
+                        onClick={() => addNewValueToField('label')}
+                      >
+                        +
+                      </button>
+                    </>
+                  }
                   {Boolean(newLabelError) && <p style={{ color: 'crimson', marginTop: '-1em', fontSize: '0.8em' }}>{newLabelError}</p>}
 
                   {/* Comments */}
@@ -524,32 +539,42 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                       className="issueCommentsWrapper"
                       key={key}
                     >
-                      <button
-                        className="issueCommentX"
-                        onClick={() => deleteValueFromField('comment', key)}
-                      >
-                        X
-                      </button>
+                      {
+                        hasDelete
+                        &&
+                        <button
+                          className="issueCommentX"
+                          onClick={() => deleteValueFromField('comment', key)}
+                        >
+                          X
+                        </button>
+                      }
                       <span className="issueComment">
                         {comment.slice(0, comment.indexOf(','))} wrote: {comment.slice(comment.indexOf(',') + 1)}
                       </span>
                     </div>
                   ))}
-                  <input
-                    type="text"
-                    name="newComment"
-                    id="newComment"
-                    placeholder="+ Add comment"
-                    style={{ marginLeft: "10px", marginRight: "0px", border: "1px solid grey", borderRadius: "0" }}
-                    value={newComment}
-                    onChange={(e) => (setNewComment(e.target.value))}
-                  />
-                  <button
-                    style={{ backgroundColor: "grey" }}
-                    onClick={() => addNewValueToField('comment')}
-                  >
-                    +
-                  </button>
+                  {
+                    hasWrite
+                    &&
+                    <>
+                      <input
+                        type="text"
+                        name="newComment"
+                        id="newComment"
+                        placeholder="+ Add comment"
+                        style={{ marginLeft: "10px", marginRight: "0px", border: "1px solid grey", borderRadius: "0" }}
+                        value={newComment}
+                        onChange={(e) => (setNewComment(e.target.value))}
+                      />
+                      <button
+                        style={{ backgroundColor: "grey" }}
+                        onClick={() => addNewValueToField('comment')}
+                      >
+                        +
+                      </button>
+                    </>
+                  }
                   {Boolean(newCommentError) && <p style={{ color: 'crimson', marginTop: '-1em', fontSize: '0.8em' }}>{newCommentError}</p>}
 
                   {/* Links */}
@@ -562,12 +587,16 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                           key={linkObject.id}
                           className="issueLinksWrapper"
                         >
-                          <button
-                            className="issueLinkX"
-                            onClick={() => deleteValueFromField('link', linkObject.id)}
-                          >
-                            X
-                          </button>
+                          {
+                            hasDelete
+                            &&
+                            <button
+                              className="issueLinkX"
+                              onClick={() => deleteValueFromField('link', linkObject.id)}
+                            >
+                              X
+                            </button>
+                          }
                           <span
                             className="issueLink"
                             onClick={() => showIssuePanel(linkObject.linkedIssue.id)}
@@ -576,55 +605,61 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                           </span>
                         </div>
                       ))}
-                      <select
-                        style={{ marginLeft: '20px' }}
-                        value={newIssueLink.key}
-                        name="newLink"
-                        onChange={(e) => {
-                          if (e.target.value === '') {
-                            setNewIssueLink({ key: '', title: '' });
-                            return;
-                          }
-                          const { id, key, title } = backlogIssues.find(issue => issue.key === e.target.value);
-                          setNewIssueLink({ id, key, title });
-                        }}
-                      >
-                        <option value=''>
-                          None
-                        </option>
-                        {backlogIssues.filter(issue =>
-                          (issue.id !== focusedIssueId)
-                          &&
-                          (issue.type !== 'Epic')
-                          &&
-                          (focusedIssue.issueLinks.find(linkObj => linkObj.linkedIssue.id === issue.id) === undefined)
-                        ).map(issue => (
-                          <option
-                            key={issue.id}
-                            value={issue.key}
+                      {
+                        hasWrite
+                        &&
+                        <>
+                          <select
+                            style={{ marginLeft: '20px' }}
+                            value={newIssueLink.key}
+                            name="newLink"
+                            onChange={(e) => {
+                              if (e.target.value === '') {
+                                setNewIssueLink({ key: '', title: '' });
+                                return;
+                              }
+                              const { id, key, title } = backlogIssues.find(issue => issue.key === e.target.value);
+                              setNewIssueLink({ id, key, title });
+                            }}
                           >
-                            {issue.key}, {issue.title}
-                          </option>
-                        ))}
-                      </select>
-                      <select
-                        style={{ marginLeft: '20px' }}
-                        value={newIssueLinkType}
-                        onChange={(e) => setNewIssueLinkType(e.target.value)}
-                      >
-                        <option value='DEPENDS_ON'>
-                          Depends on
-                        </option>
-                        <option value='RELATES_TO'>
-                          Relates to
-                        </option>
-                      </select>
-                      <button
-                        style={{ backgroundColor: "grey" }}
-                        onClick={() => addNewValueToField('link')}
-                      >
-                        +
-                      </button>
+                            <option value=''>
+                              None
+                            </option>
+                            {backlogIssues.filter(issue =>
+                              (issue.id !== focusedIssueId)
+                              &&
+                              (issue.type !== 'Epic')
+                              &&
+                              (focusedIssue.issueLinks.find(linkObj => linkObj.linkedIssue.id === issue.id) === undefined)
+                            ).map(issue => (
+                              <option
+                                key={issue.id}
+                                value={issue.key}
+                              >
+                                {issue.key}, {issue.title}
+                              </option>
+                            ))}
+                          </select>
+                          <select
+                            style={{ marginLeft: '20px' }}
+                            value={newIssueLinkType}
+                            onChange={(e) => setNewIssueLinkType(e.target.value)}
+                          >
+                            <option value='DEPENDS_ON'>
+                              Depends on
+                            </option>
+                            <option value='RELATES_TO'>
+                              Relates to
+                            </option>
+                          </select>
+                          <button
+                            style={{ backgroundColor: "grey" }}
+                            onClick={() => addNewValueToField('link')}
+                          >
+                            +
+                          </button>
+                        </>
+                      }
                       {Boolean(newIssueLinkError) && <p style={{ color: 'crimson', fontSize: '0.8em' }}>{newIssueLinkError}</p>}
                     </>
                   }
