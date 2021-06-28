@@ -168,6 +168,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       issue.comments = issue.comments.filter(commentObj => commentObj.key !== toDeleteId);
       setDeleteCommentError('');
     }
+    else if (field === 'link') {
+      issue.issueLinks = issue.issueLinks.filter(commentObj => commentObj.id !== toDeleteId);
+      setDeleteIssueLinkError('');
+    }
     issueClientRef.current.update_issue(focusedIssueId, issue)
       .then(res => {
         console.log(res);
@@ -180,6 +184,9 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
         }
         else if (field === 'comment') {
           setDeleteCommentError('Couldn\'t delete comment');
+        }
+        else if (field === 'link') {
+          setDeleteIssueLinkError('Couldn\'t delete link');
         }
       });
   }
@@ -549,12 +556,18 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   {focusedIssue.type !== 'Epic' &&
                     <>
                       <p className="label">Links: </p>
+                      {Boolean(deleteIssueLinkError) && <p style={{ color: 'crimson' }}>{deleteIssueLinkError}</p>}
                       {focusedIssue.issueLinks.map(linkObject => (
                         <div
                           key={linkObject.id}
                           className="issueLinksWrapper"
                         >
-                          <button className="issueLinkX">X</button>
+                          <button
+                            className="issueLinkX"
+                            onClick={() => deleteValueFromField('link', linkObject.id)}
+                          >
+                            X
+                          </button>
                           <span
                             className="issueLink"
                             onClick={() => showIssuePanel(linkObject.linkedIssue.id)}
