@@ -158,14 +158,14 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       })
 
   }
-  const deleteValueFromField = (field, toDelete) => {
+  const deleteValueFromField = (field, toDeleteId) => {
     const issue = JSON.parse(JSON.stringify(focusedIssue));
     if (field === 'label') {
-      issue.labels = issue.labels.filter(labelObj => labelObj.value !== toDelete);
+      issue.labels = issue.labels.filter(labelObj => labelObj.key !== toDeleteId);
       setDeleteLabelError('');
     }
     else if (field === 'comment') {
-      issue.comments = issue.comments.filter(commentObj => commentObj.value !== toDelete);
+      issue.comments = issue.comments.filter(commentObj => commentObj.key !== toDeleteId);
       setDeleteCommentError('');
     }
     issueClientRef.current.update_issue(focusedIssueId, issue)
@@ -485,7 +485,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                     >
                       <button
                         className="issueLabelX"
-                        onClick={() => deleteValueFromField('label', label)}
+                        onClick={() => deleteValueFromField('label', key)}
                       >
                         X
                       </button>
@@ -519,7 +519,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                     >
                       <button
                         className="issueCommentX"
-                        onClick={() => deleteValueFromField('comment', comment)}
+                        onClick={() => deleteValueFromField('comment', key)}
                       >
                         X
                       </button>
