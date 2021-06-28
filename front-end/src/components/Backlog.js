@@ -29,7 +29,18 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   const [userPermissions, setUserPermissions] = useState(undefined);
   const [hasRead, setHasRead] = useState(false);
   const [hasWrite, setHasWrite] = useState(false);
-
+  const [focusedIssueId, setFocusedIssueId] = useState(null);
+  const [focusedIssue, setFocusedIssue] = useState(null);
+  const [newComment, setNewComment] = useState('');
+  const [newLabel, setNewLabel] = useState('');
+  const [newCommentError, setNewCommentError] = useState('');
+  const [newLabelError, setNewLabelError] = useState('');
+  const [deleteCommentError, setDeleteCommentError] = useState('');
+  const [deleteLabelError, setDeleteLabelError] = useState('');
+  const [deleteIssueLinkError, setDeleteIssueLinkError] = useState('');
+  const [newIssueLink, setNewIssueLink] = useState({ key: '', title: '' });
+  const [newIssueLinkError, setNewIssueLinkError] = useState('');
+  const [newIssueLinkType, setNewIssueLinkType] = useState('DEPENDS_ON');
 
   const { projectId } = useParams();
   const issueClientRef = useRef(new DiraIssueClient(projectId));
@@ -78,7 +89,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     setNewLabelError('');
     setDeleteLabelError('');
     setDeleteCommentError('');
-    setNewIssueLink({ key: '', name: '' });
+    setNewIssueLink({ key: '', title: '' });
     setNewIssueLinkError('');
     setDeleteIssueLinkError('');
     setNewIssueLinkType('DEPENDS_ON');
@@ -90,19 +101,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     setFocusedIssue(null);
     handleIssuePanel("hide");
   }
-  const [focusedIssueId, setFocusedIssueId] = useState(null);
-  const [focusedIssue, setFocusedIssue] = useState(null);
-
-  const [newComment, setNewComment] = useState('');
-  const [newLabel, setNewLabel] = useState('');
-  const [newCommentError, setNewCommentError] = useState('');
-  const [newLabelError, setNewLabelError] = useState('');
-  const [deleteCommentError, setDeleteCommentError] = useState('');
-  const [deleteLabelError, setDeleteLabelError] = useState('');
-  const [deleteIssueLinkError, setDeleteIssueLinkError] = useState('');
-  const [newIssueLink, setNewIssueLink] = useState({ key: '', name: '' });
-  const [newIssueLinkError, setNewIssueLinkError] = useState('');
-  const [newIssueLinkType, setNewIssueLinkType] = useState('DEPENDS_ON');
 
   const addNewValueToField = (field) => {
     if (field === 'label' && !newLabel) {
@@ -142,7 +140,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
           setNewComment('');
         }
         else if (field === 'link') {
-          setNewIssueLink({ key: '', name: '' });
+          setNewIssueLink({ key: '', title: '' });
           setNewIssueLinkType('DEPENDS_ON');
         }
       })
@@ -276,7 +274,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
               else {
                 isRelevant |= arrayItem.linkType.toLowerCase().includes(searchFilter.toLowerCase());
                 isRelevant |= arrayItem.linkedIssue.key.toLowerCase().includes(searchFilter.toLowerCase());
-                isRelevant |= arrayItem.linkedIssue.name.toLowerCase().includes(searchFilter.toLowerCase());
+                isRelevant |= arrayItem.linkedIssue.title.toLowerCase().includes(searchFilter.toLowerCase());
               }
             })
           }
@@ -339,9 +337,9 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     Blocked: 'purple'
   }
 
-  
 
-    
+
+
 
   return (
     <div className="backlog proj_page">
@@ -561,7 +559,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                             className="issueLink"
                             onClick={() => showIssuePanel(linkObject.linkedIssue.id)}
                           >
-                            {linkObject.linkType}:&nbsp;{linkObject.linkedIssue.key},&nbsp;{linkObject.linkedIssue.name}
+                            {linkObject.linkType}:&nbsp;{linkObject.linkedIssue.key},&nbsp;{linkObject.linkedIssue.title}
                           </span>
                         </div>
                       ))}
@@ -571,11 +569,11 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                         name="newLink"
                         onChange={(e) => {
                           if (e.target.value === '') {
-                            setNewIssueLink({ key: '', name: '' });
+                            setNewIssueLink({ key: '', title: '' });
                             return;
                           }
-                          const { key, title: name } = backlogIssues.find(issue => issue.key === e.target.value);
-                          setNewIssueLink({ key, name });
+                          const { key, title } = backlogIssues.find(issue => issue.key === e.target.value);
+                          setNewIssueLink({ key, title });
                         }}
                       >
                         <option value=''>
