@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepository> implements IIssueService {
@@ -163,7 +164,20 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
 
         newComments.forEach(comment -> comment.setIssue(issue));
 
-        commentRepository.saveAll(newComments);
+        List<IssueComment> toDelete = issue.getComments()
+                .stream()
+                .filter(comment -> issueModel.getComments()
+                        .stream()
+                        .noneMatch(modelComment -> modelComment.getKey() != null && comment.getId().equals(modelComment.getKey()))
+                ).collect(Collectors.toList());
+
+        issue.getComments().removeAll(toDelete);
+        toDelete.forEach(comment -> comment.setIssue(null));
+
+        List<IssueComment> toUpdate = Stream.concat(newComments.stream(), toDelete.stream())
+                .collect(Collectors.toList());
+
+        commentRepository.saveAll(toUpdate);
     }
 
     private void updateIssueLabels(IssueModel issueModel, Issue issue) {
@@ -192,7 +206,7 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
         List<IssueLink> issueLinks = issue.getIssueLinks();
         for (IssueLinkModel link : issueModel.getIssueLinks()) {
             issueLinks.stream()
-                    .filter(issueLink -> issueLink.getId().equals(link.getId()))
+                    .filter(issueLink -> issueLink.getId() != null && issueLink.getId().equals(link.getId()))
                     .findFirst()
                     .ifPresent(issueLink -> {
                         String linkedIssueKey = link.getLinkedIssue().getKey();

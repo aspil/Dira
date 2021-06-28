@@ -60,6 +60,7 @@ public class IssueMapperConfiguration implements IMapConfiguration {
 
         typeMap.addMappings(m -> m.skip(Issue::setId));
         typeMap.addMappings(m -> m.skip(Issue::setIssueLinks));
+        typeMap.addMappings(m -> m.skip(Issue::setComments));
 
         typeMap.addMappings(m -> m.using(ListConverter.withMapper(mapper, IssueLabel.class))
             .map(IssueModel::getLabels, Issue::setLabels)
@@ -67,10 +68,6 @@ public class IssueMapperConfiguration implements IMapConfiguration {
 
         typeMap.addMappings(m -> m.using(ListConverter.withMapper(mapper, IssueFixVersion.class))
             .map(IssueModel::getFixVersions, Issue::setFixVersions)
-        );
-
-        typeMap.addMappings(m -> m.using(ListConverter.withMapper(mapper, IssueComment.class))
-            .map(IssueModel::getComments, Issue::setComments)
         );
 
         typeMap.addMappings(m -> m.using(ListConverter.withMapper(mapper, IssueLink.class))
