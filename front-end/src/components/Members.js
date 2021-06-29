@@ -5,19 +5,19 @@ import { useParams } from 'react-router';
 import edit_icon from "../Images/edit_icon.png"
 
 const Members = ({ footerHandle, projectClientRef, userId }) => {
-    // Add member popup handlers
     const [add_members_popup, handleMembersPopup] = useState("hide");
     const [members, setMembers] = useState([]);
     const [memberPermissions, setMemberPermissions] = useState([]);
     const [projectName, setProjectName] = useState('');
-    // Edit member popup handlers
     const [edit_member_popup, handleEditMember] = useState("hide");
     const [current_member, handleCurrentMember] = useState(null);
     const [isAdmin, setIsAdmin] = useState(false);
     const [tableError, setTableError] = useState('');
     const [deleteMemberError, setDeleteMemberError] = useState('');
+    const [editPermissionsError, setEditPermissionsError] = useState('');
     const [addMemberError, setAddMemberError] = useState('');
     const [newMember, setNewMember] = useState('');
+    const [newPermissions, setNewPermissions] = useState([]);
 
     const hideAddMember = () => {
         handleMembersPopup("hide");
@@ -31,11 +31,11 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
         handleEditMember("hide");
     }
     const showEditMember = (member) => {
+        setDeleteMemberError('');
+        setEditPermissionsError('');
         handleCurrentMember(member);
+        setNewPermissions(memberPermissions.find(memberPermission => memberPermission.memberId === member.id).permissions);
         handleEditMember("show");
-    }
-    const handleEditMemberButtonClick = () => {
-        hideEditMember();
     }
 
     useEffect(() => {
@@ -49,7 +49,7 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
 
     const fetchMembers = () => {
         projectClientRef.current.get_all_users_in_project_by_id(projectId).then((res) => {
-            console.log(res);
+            console.log('project members', res);
             setMembers(res.users);
         }).catch((err) => {
             console.log(err);
@@ -59,7 +59,6 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
 
     useEffect(() => {
         projectClientRef.current.get_project_by_id(projectId).then(res => {
-            // console.log(res);
             setProjectName(res.name);
         }).catch(err => {
             console.log(err);
@@ -68,6 +67,7 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
 
     const fetchMemberPermissions = () => {
         projectClientRef.current.get_project_permissions_for_all_users(projectId).then(res => {
+            console.log('member permissions ', res);
             setMemberPermissions(res.map(permission => {
                 const toSave = {
                     memberId: permission.customerId,
@@ -89,11 +89,13 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
             console.log(res);
             fetchMemberPermissions();
             fetchMembers();
+            hideEditMember();
         }).catch((err) => {
             console.log(err);
             setDeleteMemberError('Couldn\'t delete the member you specified');
         });
     }
+
     const addMember = (e) => {
         e.preventDefault();
         if (!newMember) {
@@ -103,13 +105,30 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
         setAddMemberError('');
 
         projectClientRef.current.add_user_to_project_with_id(projectId, newMember).then((res) => {
-            console.log(res);
             fetchMemberPermissions();
             fetchMembers();
+            hideAddMember();
         }).catch((err) => {
             console.log(err);
             setAddMemberError('Couldn\'t add the member you specified');
         });
+    }
+
+    const editPermissions = (e) => {
+        e.preventDefault();
+        setEditPermissionsError('');
+
+        const permissionId = memberPermissions.find(memberPermission => memberPermission.memberId === current_member.id).permissionId;
+        projectClientRef.current.update_project_user_permission(projectId, permissionId, newPermissions)
+            .then((res) => {
+                console.log('updated member permissions ', res);
+                fetchMemberPermissions();
+                hideEditMember();
+            })
+            .catch(err => {
+                console.log(err);
+                setEditPermissionsError('Couldn\'t update permissions');
+            })
     }
 
     const checkForMembersFetchError = () => {
@@ -123,6 +142,17 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
     useEffect(checkForMembersFetchError, [members, memberPermissions]);
 
     useEffect(footerHandle, [footerHandle]);
+
+    const handlePermissionClick = (permission) => {
+        if (newPermissions.find(perm => perm === permission)) {
+            setNewPermissions(newPermissions.filter(perm => perm !== permission));
+        }
+        else {
+            const permissionsCopy = [...newPermissions];
+            permissionsCopy.push(permission);
+            setNewPermissions(permissionsCopy);
+        }
+    }
 
     return (
         <div className="members proj_page">
@@ -147,10 +177,6 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
                                 {
                                     Boolean(tableError) &&
                                     <p style={{ color: 'crimson', marginBottom: '1em' }}>{tableError}</p>
-                                }
-                                {
-                                    Boolean(deleteMemberError) &&
-                                    <p style={{ color: 'crimson', marginBottom: '1em' }}>{deleteMemberError}</p>
                                 }
                                 <table id="main_table">
                                     <thead>
@@ -212,7 +238,7 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
                                 <input
                                     id="memberEmail"
                                     type="text"
-                                    placeholder="Email Address"
+                                    placeholder="User Id"
                                     value={newMember}
                                     onChange={(e) => { setNewMember(e.target.value); }}
                                 />
@@ -234,36 +260,57 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
                             </div>
                             <br />
                             <div>
-                                <form className="edit_member_form">
+                                <form className="edit_member_form" onSubmit={editPermissions}>
                                     <h2>Permissions:</h2>
                                     <br></br>
                                     <br></br>
-                                    <label>
-                                        <input id="checkbox" type="checkbox" />
-                                        Read Issues
+                                    <label htmlFor="checkbox_read">
+                                        <input
+                                            id="checkbox_read"
+                                            type="checkbox"
+                                            defaultChecked={Boolean(newPermissions.find(perm => perm === 'READ'))}
+                                            onClick={() => handlePermissionClick('READ')}
+                                        />
+                                        Read Permission
                                     </label>
                                     <br />
-                                    <label>
-                                        <input id="checkbox" type="checkbox" />
-                                        Write Issues
+                                    <label htmlFor="checkbox_write">
+                                        <input
+                                            id="checkbox_write"
+                                            type="checkbox"
+                                            defaultChecked={Boolean(newPermissions.find(perm => perm === 'WRITE'))}
+                                            onClick={() => handlePermissionClick('WRITE')}
+                                        />
+                                        Write Permission
                                     </label>
                                     <br />
-                                    <label>
-                                        <input id="checkbox" type="checkbox" />
-                                        Delete Issues
+                                    <label htmlFor="checkbox_delete">
+                                        <input
+                                            id="checkbox_delete"
+                                            type="checkbox"
+                                            defaultChecked={Boolean(newPermissions.find(perm => perm === 'DELETE'))}
+                                            onClick={() => handlePermissionClick('DELETE')}
+                                        />
+                                        Delete Permission
                                     </label>
                                     <br />
-                                    <button onClick={handleEditMemberButtonClick}>Save changes</button>
+                                    {
+                                        Boolean(editPermissionsError) &&
+                                        <p style={{ color: 'crimson', marginBottom: '1em' }}>{editPermissionsError}</p>
+                                    }
+                                    <button >Save changes</button>
                                 </form>
                             </div>
-                            {(current_member.id !== userId) &&
-                                <div className="deleteMember">
-                                    <button
-                                        id="removeUserButton"
-                                        onClick={deleteMember}
-                                    > Remove member</button>
-                                </div>
-                            }
+                            <div className="deleteMember">
+                                {
+                                    Boolean(deleteMemberError) &&
+                                    <p style={{ color: 'crimson', marginBottom: '1em' }}>{deleteMemberError}</p>
+                                }
+                                <button
+                                    id="removeUserButton"
+                                    onClick={deleteMember}
+                                > Remove member</button>
+                            </div>
                         </div>
                     }
                 </main>
