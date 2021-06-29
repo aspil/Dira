@@ -13,17 +13,19 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
     // Edit member popup handlers
     const [edit_member_popup, handleEditMember] = useState("hide");
     const [current_member, handleCurrentMember] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [tableError, setTableError] = useState('');
+    const [deleteMemberError, setDeleteMemberError] = useState('');
+    const [addMemberError, setAddMemberError] = useState('');
+    const [newMember, setNewMember] = useState('');
 
-    const hide_members_popup = () => {
+    const hideAddMember = () => {
         handleMembersPopup("hide");
     }
-    const show_members_popup = () => {
+    const showAddMember = () => {
+        setAddMemberError('');
         handleMembersPopup("show");
     }
-    const handleAddMemberButtonClick = () => {
-        hide_members_popup();
-    }
-
 
     const hideEditMember = () => {
         handleEditMember("hide");
@@ -36,7 +38,6 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
         hideEditMember();
     }
 
-    const [isAdmin, setIsAdmin] = useState(false);
     useEffect(() => {
         const userPerms = memberPermissions.find(memberPermission => memberPermission.memberId === userId);
         if (userPerms) {
@@ -82,14 +83,44 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
     useEffect(fetchMemberPermissions, []);
 
     const deleteMember = () => {
+        setDeleteMemberError('');
+
         projectClientRef.current.delete_user_from_project_with_id(projectId, current_member.id).then((res) => {
             console.log(res);
             fetchMemberPermissions();
             fetchMembers();
         }).catch((err) => {
             console.log(err);
+            setDeleteMemberError('Couldn\'t delete the member you specified');
         });
     }
+    const addMember = (e) => {
+        e.preventDefault();
+        if (!newMember) {
+            setAddMemberError('Please fill in the field');
+            return;
+        }
+        setAddMemberError('');
+
+        projectClientRef.current.add_user_to_project_with_id(projectId, newMember).then((res) => {
+            console.log(res);
+            fetchMemberPermissions();
+            fetchMembers();
+        }).catch((err) => {
+            console.log(err);
+            setAddMemberError('Couldn\'t add the member you specified');
+        });
+    }
+
+    const checkForMembersFetchError = () => {
+        if (members.length === 0 || memberPermissions.length === 0) {
+            setTableError('Couldn\'t retrieve members from server');
+        }
+        else {
+            setTableError('');
+        }
+    }
+    useEffect(checkForMembersFetchError, [members, memberPermissions]);
 
     useEffect(footerHandle, [footerHandle]);
 
@@ -104,11 +135,23 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
                         {/* Main Panel */}
                         <div className="main_panel">
                             <h1 id="team_members">Team Members</h1>
-                            <button
-                                onClick={show_members_popup}
-                                style={isAdmin ? {} : { display: 'none' }}
-                            >+ Add Member</button>
+                            {
+                                !Boolean(tableError)
+                                &&
+                                <button
+                                    onClick={showAddMember}
+                                    style={isAdmin ? {} : { display: 'none' }}
+                                >+ Add Member</button>
+                            }
                             <div className="table_wrapper">
+                                {
+                                    Boolean(tableError) &&
+                                    <p style={{ color: 'crimson', marginBottom: '1em' }}>{tableError}</p>
+                                }
+                                {
+                                    Boolean(deleteMemberError) &&
+                                    <p style={{ color: 'crimson', marginBottom: '1em' }}>{deleteMemberError}</p>
+                                }
                                 <table id="main_table">
                                     <thead>
                                         <tr>
@@ -163,11 +206,21 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
                         <div className="members_popup">
                             <div>
                                 <h2>Add Member</h2>
-                                <img src={x_icon} alt="accountIcon" onClick={hide_members_popup}></img>
+                                <img src={x_icon} alt="accountIcon" onClick={hideAddMember}></img>
                             </div>
-                            <form className="add_member_form">
-                                <input id="memberEmail" type="text" placeholder="Email Address"></input>
-                                <button onClick={handleAddMemberButtonClick}>Add</button>
+                            <form className="add_member_form" onSubmit={addMember} noValidate>
+                                <input
+                                    id="memberEmail"
+                                    type="text"
+                                    placeholder="Email Address"
+                                    value={newMember}
+                                    onChange={(e) => { setNewMember(e.target.value); }}
+                                />
+                                {
+                                    Boolean(addMemberError) &&
+                                    <p style={{ color: 'crimson', marginBottom: '1em' }}>{addMemberError}</p>
+                                }
+                                <button>Add</button>
                             </form>
                         </div>
                     }
