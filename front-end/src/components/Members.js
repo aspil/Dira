@@ -119,7 +119,11 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
         setEditPermissionsError('');
 
         const permissionId = memberPermissions.find(memberPermission => memberPermission.memberId === current_member.id).permissionId;
-        projectClientRef.current.update_project_user_permission(projectId, permissionId, newPermissions)
+        projectClientRef.current.update_project_user_permission(projectId, permissionId, {
+            customerId: current_member.id,
+            id: permissionId,
+            permissions: newPermissions
+        })
             .then((res) => {
                 console.log('updated member permissions ', res);
                 fetchMemberPermissions();
