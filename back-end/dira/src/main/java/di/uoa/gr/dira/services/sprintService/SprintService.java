@@ -1,7 +1,6 @@
 package di.uoa.gr.dira.services.sprintService;
 
 
-import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.entities.sprint.Sprint;
 import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
@@ -20,23 +19,18 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @Service
 public class SprintService extends BaseService<SprintModel, Sprint, Long, SprintRepository> implements ISprintService  {
-    private final IssueRepository issueRepository;
     private final ProjectRepository projectRepository;
     private final CustomerRepository customerRepository;
 
     public SprintService(SprintRepository repository,
-                        IssueRepository issueRepository,
                         ProjectRepository projectRepository,
                         CustomerRepository customerRepository,
                         ModelMapper mapper) {
         super(repository, mapper);
-        this.issueRepository = issueRepository;
         this.projectRepository = projectRepository;
         this.customerRepository = customerRepository;
     }
