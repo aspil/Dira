@@ -170,7 +170,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       setDeleteCommentError('');
     }
     else if (field === 'link') {
-      issue.issueLinks = issue.issueLinks.filter(commentObj => commentObj.id !== toDeleteId);
+      issue.issueLinks = issue.issueLinks.filter(linkObj => linkObj.id !== toDeleteId);
       setDeleteIssueLinkError('');
     }
     issueClientRef.current.update_issue(focusedIssueId, issue)
