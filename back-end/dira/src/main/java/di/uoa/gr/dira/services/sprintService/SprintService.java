@@ -11,10 +11,15 @@ import di.uoa.gr.dira.exceptions.sprint.SprintDoesNotBelongToProjectException;
 import di.uoa.gr.dira.models.sprint.SprintModel;
 import di.uoa.gr.dira.repositories.*;
 import di.uoa.gr.dira.services.BaseService;
+import di.uoa.gr.dira.services.permissionService.PermissionService;
+import di.uoa.gr.dira.shared.PermissionType;
 import di.uoa.gr.dira.util.mapper.MapperHelper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -59,7 +64,32 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
     }
 
     public SprintModel createSprintWithProjectId(Long projectId, Long customerId, SprintModel sprintModel) {
-        return null;
+        Project project = checkPermissions(projectId, customerId);
+
+        if (!PermissionService.checkProjectUserPermissions(customerId, project, PermissionType.ADMIN)) {
+            throw new ActionNotPermittedException("You need ADMIN permissions in order to create a Sprint");
+        }
+
+        if (project.getSprints() == null) {
+            project.setSprints(new ArrayList<>());
+        }
+
+        Sprint sprint = mapper.map(sprintModel, Sprint.class);
+        sprint.setIssues(new ArrayList<>());
+        sprint.setStartDate(new Date());
+        int noOfDays = 14;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_YEAR, noOfDays);
+        Date date = calendar.getTime();
+        sprint.setDueDate(date);
+        sprint.setActive(true);
+        sprint = repository.save(sprint);
+
+        project.getSprints().add(sprint);
+        projectRepository.save(project);
+
+        return mapper.map(sprint, SprintModel.class);
     }
 
     public SprintModel findSprintWithProjectId(Long projectId, Long customerId, Long sprintId) {
