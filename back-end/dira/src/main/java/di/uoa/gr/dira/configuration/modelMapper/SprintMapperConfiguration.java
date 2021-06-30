@@ -19,7 +19,7 @@ public class SprintMapperConfiguration implements IMapConfiguration {
     /**
      * Creates the model mapper configuration when mapping a Sprint entity to a Sprint Model
      *
-     * @param mapper
+     * @param mapper The mapper to configure
      */
     private void configureSprintEntityToSprintModel(ModelMapper mapper) {
         TypeMap<Sprint, SprintModel> typeMap = mapper.createTypeMap(Sprint.class, SprintModel.class);

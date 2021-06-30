@@ -8,6 +8,7 @@ import di.uoa.gr.dira.exceptions.commonExceptions.CustomMessageException;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
 import di.uoa.gr.dira.exceptions.sprint.SprintDoesNotBelongToProjectException;
+import di.uoa.gr.dira.exceptions.sprint.SprintNotFoundException;
 import di.uoa.gr.dira.models.sprint.SprintModel;
 import di.uoa.gr.dira.repositories.*;
 import di.uoa.gr.dira.services.BaseService;
@@ -77,10 +78,10 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
         Sprint sprint = mapper.map(sprintModel, Sprint.class);
         sprint.setIssues(new ArrayList<>());
         sprint.setStartDate(new Date());
-        int noOfDays = 14;
+        int sprintInterval = 14;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.DAY_OF_YEAR, noOfDays);
+        calendar.add(Calendar.DAY_OF_YEAR, sprintInterval);
         Date date = calendar.getTime();
         sprint.setDueDate(date);
         sprint.setActive(true);
@@ -106,7 +107,16 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
     }
 
     public SprintModel updateSprintWithProjectId(Long projectId, Long customerId, Long sprintId, SprintModel sprintModel) {
-        return null;
+        Project project = checkPermissions(projectId, customerId);
+        Sprint sprint = repository.findById(sprintId).orElseThrow(() -> new SprintNotFoundException("sprintId", sprintId.toString()));
+
+        if (!PermissionService.checkProjectUserPermissions(customerId, project, PermissionType.ADMIN)) {
+            throw new ActionNotPermittedException("You need ADMIN permissions in order to update the Sprint");
+        }
+
+        mapper.map(sprintModel, sprint);
+        sprint = repository.save(sprint);
+        return mapper.map(sprint, SprintModel.class);
     }
 
     public void deleteSprintWithProjectId(Long projectId, Long customerId, Long sprintId) {

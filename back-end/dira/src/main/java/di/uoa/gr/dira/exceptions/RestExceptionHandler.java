@@ -12,6 +12,7 @@ import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
 import di.uoa.gr.dira.exceptions.project.permission.PermissionNotFoundException;
 import io.jsonwebtoken.JwtException;
 import di.uoa.gr.dira.exceptions.sprint.SprintDoesNotBelongToProjectException;
+import di.uoa.gr.dira.exceptions.sprint.SprintNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,7 @@ public class RestExceptionHandler {
             PermissionNotFoundException.class,
             // Issue
             IssueNotFoundException.class,
+            SprintNotFoundException.class,
             // Sprint
             SprintDoesNotBelongToProjectException.class,
             // General
@@ -92,6 +94,10 @@ public class RestExceptionHandler {
             HttpStatus status = HttpStatus.NOT_FOUND;
             return handleSprintDoesNotBelongToProject((SprintDoesNotBelongToProjectException) ex, headers, status, request);
         }
+        else if (ex instanceof SprintNotFoundException) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            return handleSprintNotFoundException((SprintNotFoundException) ex, headers, status, request);
+        }
 
         return null;
     }
@@ -106,6 +112,14 @@ public class RestExceptionHandler {
 
     private ResponseEntity<RestApiError> handleSprintDoesNotBelongToProject(
             SprintDoesNotBelongToProjectException ex,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
+        return handleExceptionInternal(ex, new RestApiError(ex.getMessage()), headers, status, request);
+    }
+
+    private ResponseEntity<RestApiError> handleSprintNotFoundException(
+            SprintNotFoundException ex,
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {

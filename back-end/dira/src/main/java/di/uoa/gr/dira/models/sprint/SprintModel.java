@@ -22,7 +22,7 @@ public class SprintModel implements IModel<Long> {
     private Long id;
 
     @NotNull
-    private ProjectModel projectModel;
+    private ProjectModel project;
 
     private List<IssueModel> issueModels;
 
