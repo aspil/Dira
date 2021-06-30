@@ -7,6 +7,7 @@ import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
 import di.uoa.gr.dira.exceptions.commonExceptions.CustomMessageException;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
+import di.uoa.gr.dira.exceptions.sprint.SprintDoesNotBelongToProjectException;
 import di.uoa.gr.dira.models.sprint.SprintModel;
 import di.uoa.gr.dira.repositories.*;
 import di.uoa.gr.dira.services.BaseService;
@@ -33,16 +34,22 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
         this.customerRepository = customerRepository;
     }
 
-    public List<SprintModel> findAllSprintsByProjectId(Long projectId, Long customerId) {
+    private Project checkPermissions(Long projectId, Long customerId) {
         customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
 
         project.
-        getCustomers().
-        stream().
-        filter(customer1 -> customer1.getId().equals(customerId)).
-        findFirst().
-        orElseThrow(ActionNotPermittedException::new);
+                getCustomers().
+                stream().
+                filter(customer1 -> customer1.getId().equals(customerId)).
+                findFirst().
+                orElseThrow(ActionNotPermittedException::new);
+
+        return project;
+    }
+
+    public List<SprintModel> findAllSprintsByProjectId(Long projectId, Long customerId) {
+        Project project = checkPermissions(projectId, customerId);
 
         if (project.getSprints().isEmpty()) {
             throw new CustomMessageException("There are no Sprints in this project!");
@@ -56,7 +63,16 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
     }
 
     public SprintModel findSprintWithProjectId(Long projectId, Long customerId, Long sprintId) {
-        return null;
+        Project project = checkPermissions(projectId, customerId);
+
+        Sprint sprint = project.
+                getSprints().
+                stream().
+                filter((sprint1 -> sprint1.getId().equals(sprintId))).
+                findAny().
+                orElseThrow(() -> new SprintDoesNotBelongToProjectException("sprintId", sprintId.toString()));
+
+        return mapper.map(sprint, SprintModel.class);
     }
 
     public SprintModel updateSprintWithProjectId(Long projectId, Long customerId, Long sprintId, SprintModel sprintModel) {
