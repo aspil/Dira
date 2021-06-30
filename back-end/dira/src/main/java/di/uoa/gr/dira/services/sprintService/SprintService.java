@@ -78,14 +78,6 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
 
         Sprint sprint = mapper.map(sprintModel, Sprint.class);
         sprint.setIssues(new ArrayList<>());
-        sprint.setStartDate(new Date());
-        int sprintInterval = 14;
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.add(Calendar.DAY_OF_YEAR, sprintInterval);
-        Date date = calendar.getTime();
-        sprint.setDueDate(date);
-        sprint.setActive(true);
         sprint = repository.save(sprint);
 
         project.getSprints().add(sprint);
