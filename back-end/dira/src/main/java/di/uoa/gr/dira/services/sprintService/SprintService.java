@@ -1,6 +1,7 @@
 package di.uoa.gr.dira.services.sprintService;
 
 
+import di.uoa.gr.dira.entities.customer.Customer;
 import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.entities.sprint.Sprint;
 import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
@@ -120,5 +121,15 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
     }
 
     public void deleteSprintWithProjectId(Long projectId, Long customerId, Long sprintId) {
+        Project project = checkPermissions(projectId, customerId);
+        repository.findById(sprintId).orElseThrow(() -> new SprintNotFoundException("sprintId", sprintId.toString()));
+
+        if (!PermissionService.checkProjectUserPermissions(customerId, project, PermissionType.ADMIN)) {
+            throw new ActionNotPermittedException("You need ADMIN permissions in order to delete the Sprint");
+        }
+
+        project.getSprints().removeIf(sprint1 -> sprint1.getId().equals(sprintId));
+        projectRepository.save(project);
+        repository.deleteById(sprintId);
     }
 }
