@@ -46,7 +46,7 @@ public class Issue {
     @ColumnDefault("0")
     private IssueStatusEnum status;
 
-    @OneToMany(mappedBy = "linkedIssue")
+    @OneToMany(mappedBy = "issue")
     private List<IssueLink> issueLinks;
 
     @ManyToMany

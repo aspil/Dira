@@ -209,8 +209,25 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
                 .collect(Collectors.toList());
 
         issue.getIssueLinks().removeIf(issueLink -> issueLink.getId() == null);
+        newLinks.forEach(link -> link.setIssue(issue));
 
-        linkRepository.saveAll(newLinks);
+        List<IssueLink> toDelete = issue.getIssueLinks()
+                .stream()
+                .filter(issueLink -> issueModel.getIssueLinks()
+                        .stream()
+                        .noneMatch(issueLinkModel -> issueLinkModel.getId() != null && issueLink.getId().equals(issueLinkModel.getId()))
+                ).collect(Collectors.toList());
+
+        issue.getIssueLinks().removeAll(toDelete);
+        toDelete.forEach(issueLink -> {
+            issueLink.setIssue(null);
+            issueLink.setLinkedIssue(null);
+        });
+
+        List<IssueLink> toUpdate = Stream.concat(newLinks.stream(), toDelete.stream())
+                .collect(Collectors.toList());
+
+        linkRepository.saveAll(toUpdate);
     }
 
     @Override

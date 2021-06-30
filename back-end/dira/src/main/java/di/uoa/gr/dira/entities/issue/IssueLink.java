@@ -21,6 +21,10 @@ public class IssueLink {
 
     @ManyToOne
     @JoinColumn(name = "issue_id")
+    private Issue issue;
+
+    @OneToOne
+    @JoinColumn(name = "linked_issue_id")
     private Issue linkedIssue;
 
     @Column(nullable = false)
