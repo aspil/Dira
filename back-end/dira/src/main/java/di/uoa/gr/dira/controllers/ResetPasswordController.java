@@ -38,7 +38,6 @@ public class ResetPasswordController {
         this.env = env;
     }
 
-
     @PostMapping("resetPassword")
     public ResponseEntity<Void> resetPassword(HttpServletRequest request, @RequestParam("email") final String customerEmail) {
         final String token = UUID.randomUUID().toString();
