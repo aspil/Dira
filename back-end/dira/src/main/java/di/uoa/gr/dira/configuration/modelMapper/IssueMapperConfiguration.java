@@ -4,11 +4,14 @@ import di.uoa.gr.dira.entities.issue.*;
 import di.uoa.gr.dira.models.issue.IssueCreateModel;
 import di.uoa.gr.dira.models.issue.IssueLinkModel;
 import di.uoa.gr.dira.models.issue.IssueModel;
+import di.uoa.gr.dira.models.issue.LinkedIssueModel;
 import di.uoa.gr.dira.shared.IssueLinkTypeEnum;
 import di.uoa.gr.dira.util.LongStringPair;
 import di.uoa.gr.dira.util.mapper.ListConverter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
+import org.modelmapper.convention.MatchingStrategies;
+import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -54,6 +57,9 @@ public class IssueMapperConfiguration implements IMapConfiguration {
 
         typeMap.addMappings(m -> m.using(ListConverter.withMapper(mapper, IssueLinkModel.class))
                 .map(Issue::getIssueLinks, IssueModel::setIssueLinks));
+
+        typeMap.addMappings(m -> m.using(ListConverter.withMapper(mapper, LinkedIssueModel.class))
+            .map(Issue::getEpicIssues, IssueModel::setEpicLinks));
     }
 
     /**
@@ -62,11 +68,15 @@ public class IssueMapperConfiguration implements IMapConfiguration {
      * @param mapper The mapper to configure
      */
     private void configureIssueModelToIssueEntity(ModelMapper mapper) {
+        mapper.getConfiguration().setAmbiguityIgnored(true);
         TypeMap<IssueModel, Issue> typeMap = mapper.createTypeMap(IssueModel.class, Issue.class);
+        mapper.getConfiguration().setAmbiguityIgnored(false);
 
         typeMap.addMappings(m -> m.skip(Issue::setId));
         typeMap.addMappings(m -> m.skip(Issue::setIssueLinks));
+        typeMap.addMappings(m -> m.skip(Issue::setEpicIssues));
         typeMap.addMappings(m -> m.skip(Issue::setComments));
+        typeMap.addMappings(m -> m.skip(Issue::setEpic));
 
         typeMap.addMappings(m -> m.using(ListConverter.withMapper(mapper, IssueLabel.class))
             .map(IssueModel::getLabels, Issue::setLabels)
@@ -87,8 +97,7 @@ public class IssueMapperConfiguration implements IMapConfiguration {
         typeMap.addMappings(m -> m.skip(Issue::setProject));
         typeMap.addMappings(m -> m.skip(Issue::setEpic));
         typeMap.addMappings(m -> m.skip(Issue::setAssignee));
-        typeMap.addMappings(m -> m.skip(Issue::setReporter));
-    }
+        typeMap.addMappings(m -> m.skip(Issue::setReporter)); }
 
     /**
      * Creates a model mapper configuration when mapping an IssueLink entity to an IssueLinkModel model

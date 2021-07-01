@@ -33,9 +33,12 @@ public class Issue {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "epic_id")
     private Issue epic;
+
+    @OneToMany(mappedBy = "epic")
+    private List<Issue> epicIssues;
 
     @Column(nullable = false)
     @Enumerated(EnumType.ORDINAL)

@@ -1,6 +1,7 @@
 package di.uoa.gr.dira.configuration.modelMapper;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

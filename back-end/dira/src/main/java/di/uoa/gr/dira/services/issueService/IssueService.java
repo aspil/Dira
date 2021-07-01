@@ -153,7 +153,9 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
 
         issue.getFixVersions().removeIf(fixVersion -> fixVersion.getId() == null);
 
-        issue.getFixVersions().addAll(fixVersionRepository.saveAll(newFixVersions));
+        if (!newFixVersions.isEmpty()) {
+            issue.getFixVersions().addAll(fixVersionRepository.saveAll(newFixVersions));
+        }
     }
 
     private void updateIssueComments(IssueModel issueModel, Issue issue) {
@@ -180,7 +182,9 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
         List<IssueComment> toUpdate = Stream.concat(newComments.stream(), toDelete.stream())
                 .collect(Collectors.toList());
 
-        commentRepository.saveAll(toUpdate);
+        if (!toUpdate.isEmpty()) {
+            commentRepository.saveAll(toUpdate);
+        }
     }
 
     private void updateIssueLabels(IssueModel issueModel, Issue issue) {
@@ -192,7 +196,9 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
 
         issue.getLabels().removeIf(label -> label.getId() == null);
 
-        issue.getLabels().addAll(labelRepository.saveAll(newLabels));
+        if (!newLabels.isEmpty()) {
+            issue.getLabels().addAll(labelRepository.saveAll(newLabels));
+        }
     }
 
     private void updateIssueLinks(Issue issue, IssueModel issueModel) {
@@ -227,7 +233,9 @@ public class IssueService extends BaseService<IssueModel, Issue, Long, IssueRepo
         List<IssueLink> toUpdate = Stream.concat(newLinks.stream(), toDelete.stream())
                 .collect(Collectors.toList());
 
-        linkRepository.saveAll(toUpdate);
+        if (!toUpdate.isEmpty()) {
+            linkRepository.saveAll(toUpdate);
+        }
     }
 
     @Override

@@ -25,6 +25,8 @@ public class IssueModel implements IModel<Long> {
     @Positive
     private Long epicId;
 
+    private List<LinkedIssueModel> epicLinks;
+
     @NotNull
     @NotEmpty
     @NotBlank
