@@ -1,11 +1,11 @@
 package di.uoa.gr.dira.services;
 
-
 import java.util.List;
 import java.util.Optional;
 
+public interface IService<TModel, ID, TRepo> {
+    TRepo getRepository();
 
-public interface IService<TModel, ID> {
     List<TModel> findAll();
 
     Optional<TModel> findById(ID id);

@@ -13,12 +13,12 @@ import di.uoa.gr.dira.repositories.PermissionRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
 import di.uoa.gr.dira.shared.PermissionType;
+import di.uoa.gr.dira.shared.PermissionTypeEnum;
 import di.uoa.gr.dira.util.mapper.MapperHelper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PermissionService extends BaseService<ProjectUserPermissionModel, Permission, Long, PermissionRepository> implements IPermissionService {
@@ -49,6 +49,14 @@ public class PermissionService extends BaseService<ProjectUserPermissionModel, P
                 .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
     }
 
+    private Permission createProjectUserPermissionInternal(Project project, Customer targetUser, Set<PermissionTypeEnum> permissions) {
+        Permission permission = new Permission();
+        permission.setProject(project);
+        permission.setUser(targetUser);
+        permission.setPermissionFromPermissionSet(permissions);
+        return repository.save(permission);
+    }
+
     @Override
     public ProjectUserPermissionModel createProjectUserPermission(
             Long creatorId,
@@ -67,11 +75,21 @@ public class PermissionService extends BaseService<ProjectUserPermissionModel, P
         Customer customer = customerRepository.findById(userPermissionModel.getCustomerId())
                 .orElseThrow(() -> new CustomerNotFoundException("id", userPermissionModel.getCustomerId().toString()));
 
-        Permission perm = mapper.map(userPermissionModel, entityType);
-        perm.setUser(customer);
-        perm.setProject(project);
-        perm = repository.save(perm);
+        Permission perm = createProjectUserPermissionInternal(project, customer, userPermissionModel.getPermissions());
         return mapper.map(perm, modelType);
+    }
+
+    @Override
+    public void createProjectUserPermission(Long creatorId, Project project, Customer targetUser, PermissionTypeEnum... permissions) {
+        customerRepository.findById(creatorId)
+                .orElseThrow(() -> new CustomerNotFoundException("id", creatorId.toString()));
+
+        if (!checkProjectUserPermissions(creatorId, project, PermissionType.ADMIN)) {
+            throw new ActionNotPermittedException("You need ADMIN permissions in order to create a Project User Permission");
+        }
+
+        Set<PermissionTypeEnum> permissionsSet = new HashSet<>(Arrays.asList(permissions));
+        createProjectUserPermissionInternal(project, targetUser, permissionsSet);
     }
 
     @Override

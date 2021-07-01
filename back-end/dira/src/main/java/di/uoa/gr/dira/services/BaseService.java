@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class BaseService<TModel extends IModel<ID>, TEntity, ID, TRepo extends JpaRepository<TEntity, ID>> implements IService<TModel, ID> {
+public abstract class BaseService<TModel extends IModel<ID>,
+        TEntity,
+        ID,
+        TRepo extends JpaRepository<TEntity, ID>> implements IService<TModel, ID, TRepo> {
     protected final TRepo repository;
     protected final ModelMapper mapper;
     protected final Type modelType;
@@ -23,6 +26,10 @@ public abstract class BaseService<TModel extends IModel<ID>, TEntity, ID, TRepo 
         this.mapper = mapper;
         this.modelType = genericClassTypes[0];
         this.entityType = genericClassTypes[1];
+    }
+
+    public TRepo getRepository() {
+        return this.repository;
     }
 
     @Override

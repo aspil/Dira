@@ -5,12 +5,13 @@ import di.uoa.gr.dira.entities.customer.PasswordResetToken;
 import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.models.customer.PasswordModel;
 import di.uoa.gr.dira.models.project.ProjectModel;
+import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.services.IService;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ICustomerService extends IService<CustomerModel, Long> {
+public interface ICustomerService extends IService<CustomerModel, Long, CustomerRepository> {
     /**
      * Searches for a Customer by their username
      *

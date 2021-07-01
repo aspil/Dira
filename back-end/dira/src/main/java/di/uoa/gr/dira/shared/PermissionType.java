@@ -53,7 +53,7 @@ public class PermissionType {
     }
 
     public boolean hasAdminPermissions() {
-        return hasPermission(ADMIN_PERMISSION);
+        return this.permission == ADMIN_PERMISSION;
     }
 
     public boolean hasReadPermissions() {

@@ -13,7 +13,9 @@ import di.uoa.gr.dira.repositories.CustomerRepository;
 import di.uoa.gr.dira.repositories.PermissionRepository;
 import di.uoa.gr.dira.repositories.ProjectRepository;
 import di.uoa.gr.dira.services.BaseService;
+import di.uoa.gr.dira.services.permissionService.IPermissionService;
 import di.uoa.gr.dira.shared.PermissionType;
+import di.uoa.gr.dira.shared.PermissionTypeEnum;
 import di.uoa.gr.dira.shared.ProjectVisibility;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import di.uoa.gr.dira.util.mapper.MapperHelper;
@@ -21,20 +23,22 @@ import org.jboss.logging.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class ProjectService extends BaseService<ProjectModel, Project, Long, ProjectRepository> implements IProjectService {
     CustomerRepository customerRepository;
-    PermissionRepository permissionRepository;
+    IPermissionService permissionService;
 
-    public ProjectService(ProjectRepository repository, CustomerRepository customerRepository, PermissionRepository permissionRepository, ModelMapper mapper) {
+    public ProjectService(
+            ProjectRepository repository,
+            CustomerRepository customerRepository,
+            IPermissionService permissionService,
+            ModelMapper mapper) {
         super(repository, mapper);
         this.customerRepository = customerRepository;
-        this.permissionRepository = permissionRepository;
+        this.permissionService = permissionService;
     }
 
     private Project checkPermissions(Long projectId, Long customerId) {
@@ -82,15 +86,15 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         // adding customer who created the project
         project.setCustomers(new ArrayList<>());
         project.getCustomers().add(customer);
-
+        project.setPermissions(new ArrayList<>());
         project = repository.save(project);
 
         /* Create a new permission for this customer in the current project */
         Permission permission = new Permission();
-        permission.setPermission(PermissionType.ADMIN.getPermission());
-        permission.setUser(customer);
         permission.setProject(project);
-        permissionRepository.save(permission);
+        permission.setUser(customer);
+        permission.setPermission(PermissionType.ADMIN.getPermission());
+        permissionService.getRepository().save(permission);
 
         return mapper.map(project, ProjectModel.class);
     }
@@ -143,10 +147,19 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         project.getCustomers().add(customer);
         repository.save(project);
 
-        Permission permission = new Permission();
-        permission.setUser(customer);
-        permission.setPermission(PermissionType.READ.getPermission());
-        permissionRepository.save(permission);
+        permissionService.createProjectUserPermission(inviterId, project, customer, PermissionTypeEnum.READ);
+    }
+
+    @Override
+    public void addUserToProjectWithEmail(Long projectId, Long inviterId, String email) {
+        Project project = checkPermissions(projectId, inviterId);
+        Customer customer = customerRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomerNotFoundException("email", email));
+
+        project.getCustomers().add(customer);
+        repository.save(project);
+
+        permissionService.createProjectUserPermission(inviterId, project, customer, PermissionTypeEnum.READ);
     }
 
     @Override

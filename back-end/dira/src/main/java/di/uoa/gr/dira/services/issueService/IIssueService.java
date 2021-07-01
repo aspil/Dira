@@ -3,11 +3,12 @@ package di.uoa.gr.dira.services.issueService;
 import di.uoa.gr.dira.models.issue.IssueCreateModel;
 import di.uoa.gr.dira.models.issue.IssueModel;
 import di.uoa.gr.dira.models.project.ProjectIssuesModel;
+import di.uoa.gr.dira.repositories.IssueRepository;
 import di.uoa.gr.dira.services.IService;
 
 import java.util.Optional;
 
-public interface IIssueService extends IService<IssueModel, Long> {
+public interface IIssueService extends IService<IssueModel, Long, IssueRepository> {
     ProjectIssuesModel findAllIssuesByProjectId(Long id);
 
     IssueModel createIssueWithProjectId(Long projectId, Long customerId, IssueCreateModel issueModel);

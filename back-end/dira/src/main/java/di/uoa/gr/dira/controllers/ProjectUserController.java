@@ -34,8 +34,7 @@ public class ProjectUserController {
     }
 
     @ApiOperation(
-            value = "Adds a user to the project with the given id",
-            consumes = MediaType.APPLICATION_JSON_VALUE
+            value = "Adds a user to the project with the given id"
     )
     @PostMapping("{userId}")
     public void addUserToProjectWithId(
@@ -43,9 +42,22 @@ public class ProjectUserController {
             @PathVariable Long userId,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
     ) {
-        Long inviter = jwtHelper.getId(jwtToken);
-        service.addUserToProjectWithId(projectId, inviter, userId);
+        Long inviterId = jwtHelper.getId(jwtToken);
+        service.addUserToProjectWithId(projectId, inviterId, userId);
     }
+
+    @ApiOperation(
+            value = "Adds the user with the given email to the project"
+    )
+    @PostMapping
+    public void addUserToProjectWithEmail(
+            @PathVariable Long projectId,
+            @RequestParam("email") String email,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
+        Long inviterId = jwtHelper.getId(jwtToken);
+        service.addUserToProjectWithEmail(projectId, inviterId, email);
+    }
+
 
     @ApiOperation(
             value = "Deletes a user from the project with the given id"
