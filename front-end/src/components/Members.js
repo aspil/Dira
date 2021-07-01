@@ -204,7 +204,8 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
                                                 <td>{member.name} {member.surname}</td>
                                                 <td>
                                                     {
-                                                        (memberPermissions.length > 0)
+                                                        Boolean(memberPermissions
+                                                            .find(memberPermission => memberPermission.memberId === member.id))
                                                         &&
                                                         memberPermissions
                                                             .find(memberPermission => memberPermission.memberId === member.id)

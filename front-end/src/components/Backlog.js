@@ -441,7 +441,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   {focusedIssue.epicId &&
                     <>
                       <span
-                        className="colored_text"
+                        className="colored_text epic_link"
                         onClick={() => showIssuePanel(focusedIssue.epicId)}
                       >
                         {backlogIssues.find(issue => issue.id === focusedIssue.epicId).key}

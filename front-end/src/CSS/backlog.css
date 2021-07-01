@@ -130,7 +130,10 @@
   padding-top: 3px;
   padding-bottom: 3px;
 }
-.backlog .issuePanel #issueEpic:hover{
+.backlog .issuePanel .epic_link{
+  background-color: orange;
+}
+.backlog .issuePanel .epic_link:hover{
   cursor: pointer;
 }
 
