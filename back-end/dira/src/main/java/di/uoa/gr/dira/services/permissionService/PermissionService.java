@@ -34,7 +34,7 @@ public class PermissionService extends BaseService<ProjectUserPermissionModel, P
         this.customerRepository = customerRepository;
     }
 
-    public static boolean checkProjectUserPermissions(Long customerId, Project project, PermissionType requiredPermission) {
+    public boolean checkProjectUserPermissions(Long customerId, Project project, PermissionType requiredPermission) {
         return project.getPermissions()
                 .stream()
                 .anyMatch(permission -> permission.getUser().getId().equals(customerId) &&

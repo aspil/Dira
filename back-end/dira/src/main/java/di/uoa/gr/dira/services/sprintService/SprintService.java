@@ -12,6 +12,7 @@ import di.uoa.gr.dira.exceptions.sprint.SprintNotFoundException;
 import di.uoa.gr.dira.models.sprint.SprintModel;
 import di.uoa.gr.dira.repositories.*;
 import di.uoa.gr.dira.services.BaseService;
+import di.uoa.gr.dira.services.permissionService.IPermissionService;
 import di.uoa.gr.dira.services.permissionService.PermissionService;
 import di.uoa.gr.dira.shared.PermissionType;
 import di.uoa.gr.dira.util.mapper.MapperHelper;
@@ -25,14 +26,18 @@ import java.util.List;
 public class SprintService extends BaseService<SprintModel, Sprint, Long, SprintRepository> implements ISprintService  {
     private final ProjectRepository projectRepository;
     private final CustomerRepository customerRepository;
+    private final IPermissionService permissionService;
+
 
     public SprintService(SprintRepository repository,
                         ProjectRepository projectRepository,
                         CustomerRepository customerRepository,
+                        IPermissionService permissionService,
                         ModelMapper mapper) {
         super(repository, mapper);
         this.projectRepository = projectRepository;
         this.customerRepository = customerRepository;
+        this.permissionService = permissionService;
     }
 
     private Project checkPermissions(Long projectId, Long customerId) {
@@ -61,7 +66,7 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
     public SprintModel createSprintWithProjectId(Long projectId, Long customerId, SprintModel sprintModel) {
         Project project = checkPermissions(projectId, customerId);
 
-        if (!PermissionService.checkProjectUserPermissions(customerId, project, PermissionType.ADMIN)) {
+        if (!permissionService.checkProjectUserPermissions(customerId, project, PermissionType.ADMIN)) {
             throw new ActionNotPermittedException("You need ADMIN permissions in order to create a Sprint");
         }
 
@@ -96,7 +101,7 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
         Project project = checkPermissions(projectId, customerId);
         Sprint sprint = repository.findById(sprintId).orElseThrow(() -> new SprintNotFoundException("sprintId", sprintId.toString()));
 
-        if (!PermissionService.checkProjectUserPermissions(customerId, project, PermissionType.ADMIN)) {
+        if (!permissionService.checkProjectUserPermissions(customerId, project, PermissionType.ADMIN)) {
             throw new ActionNotPermittedException("You need ADMIN permissions in order to update the Sprint");
         }
 
@@ -109,7 +114,7 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
         Project project = checkPermissions(projectId, customerId);
         repository.findById(sprintId).orElseThrow(() -> new SprintNotFoundException("sprintId", sprintId.toString()));
 
-        if (!PermissionService.checkProjectUserPermissions(customerId, project, PermissionType.ADMIN)) {
+        if (!permissionService.checkProjectUserPermissions(customerId, project, PermissionType.ADMIN)) {
             throw new ActionNotPermittedException("You need ADMIN permissions in order to delete the Sprint");
         }
 

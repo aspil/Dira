@@ -23,4 +23,6 @@ public interface IPermissionService extends IService<ProjectUserPermissionModel,
     ProjectUserPermissionModel updateProjectUserPermission(Long customerId, Long projectId, Long permissionId, ProjectUserPermissionModel userPermissionModel);
 
     void deleteProjectUserPermission(Long customerId, Long projectId, Long permissionId);
+
+    boolean checkProjectUserPermissions(Long customerId, Project project, PermissionType requiredPermission);
 }
