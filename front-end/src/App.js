@@ -152,7 +152,7 @@ function App() {
         </Route>
         <Route path="/recover">
           {token !== undefined && <Redirect to="/proj_main" />}
-          {token === undefined && <PasswordRecovery navHandle={showHomeNavHook} />}
+          {token === undefined && <PasswordRecovery userClientRef={userClientRef} navHandle={showHomeNavHook} />}
         </Route>
         <Route path="/change_password">
           {token === undefined && <Redirect to="/sign_in" />}
