@@ -16,7 +16,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class SprintModel implements IModel<Long> {
-
     @NotNull
     @Positive
     private Long id;
