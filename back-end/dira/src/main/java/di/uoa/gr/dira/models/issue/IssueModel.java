@@ -22,6 +22,9 @@ public class IssueModel implements IModel<Long> {
     @Positive
     private Long id;
 
+    @Positive
+    private Long epicId;
+
     @NotNull
     @NotEmpty
     @NotBlank

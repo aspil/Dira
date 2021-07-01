@@ -38,6 +38,10 @@ public class IssueMapperConfiguration implements IMapConfiguration {
 
         typeMap.addMappings(m -> m.map(s -> s.getAssignee().getName(), IssueModel::setAssignee));
         typeMap.addMappings(m -> m.map(s -> s.getReporter().getName(), IssueModel::setReporter));
+        typeMap.addMappings(m -> m.map(s -> {
+            Issue epic = s.getEpic();
+            return epic != null ? epic.getId() : null;
+        }, IssueModel::setEpicId));
 
         typeMap.addMappings(m -> m.using(ListConverter.withMapper(mapper, LongStringPair.class))
                 .map(Issue::getLabels, IssueModel::setLabels));
