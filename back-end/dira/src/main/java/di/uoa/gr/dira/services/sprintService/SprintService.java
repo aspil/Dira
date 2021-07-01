@@ -39,12 +39,11 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
         customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
 
-        project.
-                getCustomers().
-                stream().
-                filter(customer1 -> customer1.getId().equals(customerId)).
-                findFirst().
-                orElseThrow(ActionNotPermittedException::new);
+        project.getCustomers()
+                .stream()
+                .filter(customer1 -> customer1.getId().equals(customerId))
+                .findFirst()
+                .orElseThrow(ActionNotPermittedException::new);
 
         return project;
     }
