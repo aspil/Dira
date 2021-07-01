@@ -51,6 +51,25 @@ function App() {
     }
   }, [token, projectClientRef]);
 
+  const refreshToken = () => {
+    if (projectClientRef.current.headers.Authorization) {
+      projectClientRef.current.keepalive()
+        .then((res) => {
+          console.log(res);
+          setToken(res.token);
+        })
+        .catch(err => {
+          console.log(err);
+          doLogout();
+        });
+    }
+
+    setTimeout(refreshToken, 15 * 60 * 1e3);
+  };
+  useEffect(() => {
+    setTimeout(refreshToken, 15 * 60 * 1e3); // 15 minutes
+  }, []);
+
   useEffect(() => {
     const doBeforeUnload = () => {
       localStorage.setItem('JWToken', token);
