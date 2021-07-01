@@ -24,7 +24,6 @@ public class KeepAliveController {
 
         jwtHelper.refreshExpirationTime(jwtToken);
 
-
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, jwtToken)
                 .build();

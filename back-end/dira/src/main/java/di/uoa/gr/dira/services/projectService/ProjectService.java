@@ -48,11 +48,9 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         Project project = repository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException("projectId", projectId.toString()));
 
-        project.getPermissions()
-                .stream()
-                .filter(permission -> permission.getUser().getId().equals(customerId) && PermissionType.ADMIN.hasPermission(permission.getPermission()))
-                .findFirst()
-                .orElseThrow(ActionNotPermittedException::new);
+        if (!permissionService.checkProjectUserPermissions(customerId, project, PermissionType.ADMIN)) {
+            throw new ActionNotPermittedException("You need ADMIN permissions");
+        }
 
         return project;
     }
