@@ -66,6 +66,9 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   }, [token, issueClientRef]);
 
   const fetchAllIssues = () => {
+    if (!issueClientRef.current.headers.Authorization) {
+      return;
+    }
     issueClientRef.current.get_all_issues().then((res) => {
       console.log(res);
       setBacklogIssues(res.issues);
@@ -79,6 +82,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   }
 
   const fetchMembers = () => {
+    if (!projectClientRef.current.headers.Authorization) {
+      return;
+    }
+
     projectClientRef.current.get_all_users_in_project_by_id(projectId).then((res) => {
       setMembers(res.users);
     }).catch((err) => {
@@ -86,8 +93,8 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     });
   }
 
-  useEffect(fetchAllIssues, []);
-  useEffect(fetchMembers, []);
+  useEffect(fetchAllIssues, [issueClientRef, issueClientRef.current.headers.Authorization]);
+  useEffect(fetchMembers, [projectClientRef, projectId, projectClientRef.current.headers.Authorization]);
 
   useEffect(footerHandle, [footerHandle]);
 
@@ -313,6 +320,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   }, [searchFilter, backlogIssues]);
 
   const fetchUserPermissions = () => {
+    if (!projectClientRef.current.headers.Authorization) {
+      return;
+    }
+
     projectClientRef.current.get_project_permissions_for_all_users(projectId).then(res => {
       console.log(res);
       setUserPermissions(res.find(customer => customer.customerId === userId));
@@ -320,7 +331,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       console.log(err);
     });
   };
-  useEffect(fetchUserPermissions, []);
+  useEffect(fetchUserPermissions, [projectClientRef, projectId, userId, projectClientRef.current.headers.Authorization]);
 
   const decodePermissions = () => {
     if (!userPermissions) {

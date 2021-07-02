@@ -48,6 +48,10 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
     const { projectId } = useParams();
 
     const fetchMembers = () => {
+        if (!projectClientRef.current.headers.Authorization) {
+            return;
+        }
+
         projectClientRef.current.get_all_users_in_project_by_id(projectId).then((res) => {
             console.log('project members', res);
             setMembers(res.users);
@@ -55,17 +59,25 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
             console.log(err);
         });
     }
-    useEffect(fetchMembers, []);
+    useEffect(fetchMembers, [projectClientRef, projectId, projectClientRef.current.headers.Authorization]);
 
     useEffect(() => {
+        if (!projectClientRef.current.headers.Authorization) {
+            return;
+        }
+
         projectClientRef.current.get_project_by_id(projectId).then(res => {
             setProjectName(res.name);
         }).catch(err => {
             console.log(err);
         })
-    }, []);
+    }, [projectClientRef, projectId, projectClientRef.current.headers.Authorization]);
 
     const fetchMemberPermissions = () => {
+        if (!projectClientRef.current.headers.Authorization) {
+            return;
+        }
+
         projectClientRef.current.get_project_permissions_for_all_users(projectId).then(res => {
             console.log('member permissions ', res);
             setMemberPermissions(res.map(permission => {
@@ -80,7 +92,7 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
             console.log(err);
         })
     }
-    useEffect(fetchMemberPermissions, []);
+    useEffect(fetchMemberPermissions, [projectClientRef, projectId, projectClientRef.current.headers.Authorization]);
 
     const deleteMember = () => {
         setDeleteMemberError('');
