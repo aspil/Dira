@@ -276,8 +276,12 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
           }
           else if (Array.isArray(issue[field])) {
             issue[field].forEach(arrayItem => {
-              if (field !== 'issueLinks') {
+              if (field !== 'issueLinks' && field !== 'epicLinks') {
                 isRelevant |= arrayItem.value.toLowerCase().includes(searchFilter.toLowerCase());
+              }
+              else if (field === 'epicLinks') {
+                isRelevant |= arrayItem.key.toLowerCase().includes(searchFilter.toLowerCase());
+                isRelevant |= arrayItem.title.toLowerCase().includes(searchFilter.toLowerCase());
               }
               else {
                 isRelevant |= arrayItem.linkType.toLowerCase().includes(searchFilter.toLowerCase());
@@ -511,7 +515,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   {
                     hasWrite
                     &&
-                    <>
+                    <div>
                       <input
                         type="text"
                         name="newLabel"
@@ -527,7 +531,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                       >
                         +
                       </button>
-                    </>
+                    </div>
                   }
                   {Boolean(newLabelError) && <p style={{ color: 'crimson', marginTop: '-1em', fontSize: '0.8em' }}>{newLabelError}</p>}
 
@@ -557,7 +561,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   {
                     hasWrite
                     &&
-                    <>
+                    <div>
                       <input
                         type="text"
                         name="newComment"
@@ -573,10 +577,29 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                       >
                         +
                       </button>
-                    </>
+                    </div>
                   }
                   {Boolean(newCommentError) && <p style={{ color: 'crimson', marginTop: '-1em', fontSize: '0.8em' }}>{newCommentError}</p>}
 
+                  {/* Epic's Links */}
+                  {focusedIssue.type === 'Epic' &&
+                    <div>
+                      <p className="label">Links: </p>
+                      {focusedIssue.epicLinks.map(epicLinkObj => (
+                        <div
+                          key={epicLinkObj.id}
+                          className="issueLinksWrapper"
+                        >
+                          <span
+                            className="issueLink"
+                            onClick={() => showIssuePanel(epicLinkObj.id)}
+                          >
+                            {epicLinkObj.key},&nbsp;{epicLinkObj.title}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  }
                   {/* Links */}
                   {focusedIssue.type !== 'Epic' &&
                     <>
@@ -608,7 +631,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                       {
                         hasWrite
                         &&
-                        <>
+                        <div>
                           <select
                             style={{ marginLeft: '20px' }}
                             value={newIssueLink.key}
@@ -658,7 +681,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                           >
                             +
                           </button>
-                        </>
+                        </div>
                       }
                       {Boolean(newIssueLinkError) && <p style={{ color: 'crimson', fontSize: '0.8em' }}>{newIssueLinkError}</p>}
                     </>
