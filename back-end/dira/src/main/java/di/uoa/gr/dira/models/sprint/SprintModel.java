@@ -20,9 +20,6 @@ public class SprintModel implements IModel<Long> {
     @Positive
     private Long id;
 
-    @NotNull
-    private ProjectModel project;
-
     private List<IssueModel> issueModels;
 
     @NotNull
