@@ -276,8 +276,12 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
           }
           else if (Array.isArray(issue[field])) {
             issue[field].forEach(arrayItem => {
-              if (field !== 'issueLinks') {
+              if (field !== 'issueLinks' && field !== 'epicLinks') {
                 isRelevant |= arrayItem.value.toLowerCase().includes(searchFilter.toLowerCase());
+              }
+              else if (field === 'epicLinks') {
+                isRelevant |= arrayItem.key.toLowerCase().includes(searchFilter.toLowerCase());
+                isRelevant |= arrayItem.title.toLowerCase().includes(searchFilter.toLowerCase());
               }
               else {
                 isRelevant |= arrayItem.linkType.toLowerCase().includes(searchFilter.toLowerCase());
@@ -511,7 +515,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   {
                     hasWrite
                     &&
-                    <>
+                    <div>
                       <input
                         type="text"
                         name="newLabel"
@@ -527,7 +531,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                       >
                         +
                       </button>
-                    </>
+                    </div>
                   }
                   {Boolean(newLabelError) && <p style={{ color: 'crimson', marginTop: '-1em', fontSize: '0.8em' }}>{newLabelError}</p>}
 
@@ -557,7 +561,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   {
                     hasWrite
                     &&
-                    <>
+                    <div>
                       <input
                         type="text"
                         name="newComment"
@@ -573,10 +577,29 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                       >
                         +
                       </button>
-                    </>
+                    </div>
                   }
                   {Boolean(newCommentError) && <p style={{ color: 'crimson', marginTop: '-1em', fontSize: '0.8em' }}>{newCommentError}</p>}
 
+                  {/* Epic's Links */}
+                  {focusedIssue.type === 'Epic' &&
+                    <div>
+                      <p className="label">Links: </p>
+                      {focusedIssue.epicLinks.map(epicLinkObj => (
+                        <div
+                          key={epicLinkObj.id}
+                          className="issueLinksWrapper"
+                        >
+                          <span
+                            className="issueLink"
+                            onClick={() => showIssuePanel(epicLinkObj.id)}
+                          >
+                            {epicLinkObj.key},&nbsp;{epicLinkObj.title}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  }
                   {/* Links */}
                   {focusedIssue.type !== 'Epic' &&
                     <>
@@ -608,7 +631,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                       {
                         hasWrite
                         &&
-                        <>
+                        <div>
                           <select
                             style={{ marginLeft: '20px' }}
                             value={newIssueLink.key}
@@ -658,7 +681,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                           >
                             +
                           </button>
-                        </>
+                        </div>
                       }
                       {Boolean(newIssueLinkError) && <p style={{ color: 'crimson', fontSize: '0.8em' }}>{newIssueLinkError}</p>}
                     </>
@@ -734,10 +757,41 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
               <br />
               <br />
               <form className="newIssueForm" style={{ textAlign: "left" }} >
-                <p>Title:</p>
+                <p className="label">Title:</p>
                 <input type="text" id="sprintName" placeholder="Sprint Title" required></input>
                 <div className="priority">
-                  <p>Duration:</p>
+                <p className="label">Select Issues:</p>
+
+                  <div className="tableWrapper">
+                    <table id="createSprintTable">
+                      <thead>
+                        <tr>
+                          <th>Key</th>
+                          <th>Title</th>
+                          <th>Description</th>
+                          <th>Priority</th>
+                          <th>Select</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {hasRead && searchFilteredIssues.filter(issue => issue.type === 'Story').map(issue => (
+                          <tr key={issue.key}>
+                            <td>{issue.key}</td>
+                            <td>{issue.title}</td>
+                            <td className="largeCell">{issue.description}</td>
+                            <td style={{ textAlign: "center" }}>
+                              <span className="colored_text" style={{ backgroundColor: priorityToColorMapper[issue.priority], fontSize: "12px" }}>{issue.priority}</span>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                              <input type="checkbox" />  
+                            </td>
+
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <p className="label">Duration:</p>
                   <select name="priority" id="priority">
                     <option value="1week">1 week</option>
                     <option value="2weeks">2 weeks</option>
@@ -753,7 +807,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
           }
           {/* create Issue Popup */}
           {create_issue_popup === "show" &&
-            <div className="createPopup" style={{ fontWeight: "bold" }}>
+            <div className="createPopup">
               <div>
                 <h2>Create a new Issue</h2>
                 <img src={x_icon} id="xIcon" alt="x_icon" onClick={hideCreateIssuePopup}></img>
@@ -767,7 +821,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                 onSubmit={handleCreateIssueButtonClick}
                 noValidate
               >
-                <p>Title:</p>
+                <p className="label">Title:</p>
                 <input
                   type="text"
                   id="issueName"
@@ -775,7 +829,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   value={newTitle}
                   onChange={(e) => { setNewTitle(e.target.value); }}
                 />
-                <p>Description:</p>
+                <p className="label">Description:</p>
                 <textarea
                   type="range"
                   placeholder="Issue Description"
@@ -784,7 +838,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                 />
                 <div className="markdowns">
                   <div className="issueMarkdown">
-                    <p>Priority:</p>
+                    <p className="label">Priority:</p>
                     <select
                       id="priority"
                       onChange={(e) => { setNewPriority(e.target.value); }}
@@ -798,7 +852,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                     </select>
                   </div>
                   <div className="issueMarkdown">
-                    <p>Type:</p>
+                    <p className="label">Type:</p>
                     <select
                       id="type"
                       onChange={(e) => { setNewType(e.target.value); }}
@@ -812,7 +866,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                     </select>
                   </div>
                   <div className="issueMarkdown">
-                    <p>Assignee:</p>
+                    <p className="label">Assignee:</p>
                     <select
                       id="assignee"
                       onChange={(e) => { setNewAssignee(e.target.value !== 'None' ? e.target.value : null); }}
@@ -831,7 +885,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                     </select>
                   </div>
                   <div className="issueMarkdown">
-                    <p>Epic:</p>
+                    <p className="label">Epic:</p>
                     <select
                       id="epic"
                       onChange={(e) => { setNewEpicLink(e.target.value !== 'None' ? e.target.value : null); }}

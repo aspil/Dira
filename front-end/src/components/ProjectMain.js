@@ -17,6 +17,7 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
     visibility: ''
   });
   const [editError, setEditError] = useState('');
+  const [publicProjects, setPublicProjects] = useState([]);
 
 
   const editCurrProjField = (field, e) => {
@@ -88,21 +89,25 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
       console.log(res);
       setProjects(res);
     }).catch((err) => {
+      console.log('error while fetching user projects');
+      console.log(err);
+    });
+  }
+
+  const fetchAllPublicProjects = () => {
+    projectClientRef.current.get_all_projects().then((res) => {
+      setPublicProjects(res.filter(proj => proj.visibility === 'PUBLIC' && !Boolean(projects.find(p => p.id === proj.id))));
+    }).catch((err) => {
       console.log('error while fetching all projects');
       console.log(err);
     });
   }
 
   useEffect(fetchAllProjects, [userInfo.id, userClientRef]);
+  useEffect(fetchAllPublicProjects, [projects, projectClientRef]);
 
   useEffect(footerHandle, [footerHandle]);
   useEffect(footerStylesHandle, [footerStylesHandle]);
-
-  const [issues, setIssues] = useState([
-    { title: 'Issue x', project: '14/5/2021', status: "active", id: 1 },
-    { title: 'Issue X', project: 'DD/MM/YYYY', status: "active", id: 2 },
-    { title: 'Issue x', project: '3/8/2022', status: "active", id: 3 }
-  ])
 
   return (
     <div className="projectmain">
@@ -118,13 +123,13 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
             {listState === "showProjects" &&
               <div>
                 <button className="pressedButton" style={{ borderTopLeftRadius: "5px" }}>My Projects</button>
-                <button className="unpressedButton" style={{ borderTopRightRadius: "5px" }} onClick={swapList}>My Active Issues</button>
+                <button className="unpressedButton" style={{ borderTopRightRadius: "5px" }} onClick={swapList}>Dira Public Projects</button>
               </div>
             }
             {listState === "showIssues" &&
               <div>
                 <button className="unpressedButton" style={{ borderTopLeftRadius: "5px" }} onClick={swapList}>My Projects</button>
-                <button className="pressedButton" style={{ borderTopRightRadius: "5px" }}>My Active Issues</button>
+                <button className="pressedButton" style={{ borderTopRightRadius: "5px" }}>Dira Public Projects</button>
               </div>
             }
           </div>
@@ -208,17 +213,17 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
             <table id="main_table">
               <thead>
                 <tr>
-                  <th>Title</th>
-                  <th>Project</th>
-                  <th>Status</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Key</th>
                 </tr>
               </thead>
               <tbody>
-                {issues.map(issue => (
-                  <tr key={issue.id}>
-                    <td>{issue.title}</td>
-                    <td>{issue.project}</td>
-                    <td>{issue.status}</td>
+                {publicProjects.map(project => (
+                  <tr key={project.id}>
+                    <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.name}</td>
+                    <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.description}</td>
+                    <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.key}</td>
                   </tr>
                 ))}
               </tbody>

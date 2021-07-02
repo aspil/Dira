@@ -30,14 +30,9 @@ const ChangePassword = ({ userId, userClientRef, navHandle }) => {
     }
     setError(false);
 
-    // userClientRef.update_password_by_id(userId).then(res => {
-    //   console.log(res);
-    //   history.push('/');
-    // }).catch(err => {
-    //   setError(true);
-    //   setErrMessage('Couldn\'t update password');
-    //   console.log(err);
-    // });
+    // TO-DO
+    setError(true);
+    setErrMessage('Not available');
   };
 
   return (

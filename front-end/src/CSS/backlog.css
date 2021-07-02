@@ -137,7 +137,7 @@
   cursor: pointer;
 }
 
-.backlog .issuePanel .label{
+.backlog .label{
   font-weight: bold;
 }
 .backlog .issuePanel .answer{
@@ -209,13 +209,14 @@ vertical-align: middle;
   border-radius: 5px;
   margin-bottom: 8px;
 }
-/* Create issue Popup */
+/* Create Popups */
 .backlog .createPopup{
   position: absolute;
   top:20%;
   left:50%;
   width:20%;
-  min-width: 300px;
+  min-width: 500px;
+  max-height: 400px;
   margin-left:-12.5%;  
   text-align: center;  
   background-color: rgb(168, 208, 248);
@@ -230,6 +231,9 @@ vertical-align: middle;
   color: white;
   margin-bottom: 1vh;
 }
+
+/* Create Issue Popup */
+
 .backlog .createPopup #issueName,#sprintName{
   margin-top: 0;
   margin-bottom: 10px;
@@ -273,6 +277,20 @@ vertical-align: middle;
   margin-right: 10px;
 }
 .backlog .createPopup #issueLabelOption{
-  margin:0;
-  
+  margin:0; 
+}
+
+/* Create Sprint Popup */
+.backlog .createPopup #createSprintTable td:hover{
+  cursor: default;
+}
+
+.backlog .createPopup #createSprintTable input{
+  -ms-transform: scale(2); /* IE */
+  -moz-transform: scale(2); /* FF */
+  -webkit-transform: scale(2); /* Safari and Chrome */
+  -o-transform: scale(2); /* Opera */
+  transform: scale(2);
+  width: 10px;
+  /* margin: 10px; */
 }
