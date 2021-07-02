@@ -876,22 +876,28 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                       </tbody>
                     </table>
                   </div>
-                  <p className="label">Stard Date:</p>
-                  <input
-                    type="date"
-                    onChange={(e) => setNewSprintStartDate(e.target.value)}
-                    value={newSprintStartDate}
-                    min={getTodayDate()}
-                    max={getYearAfterTodayDate()}
-                  />
-                  <p className="label">Due Date:</p>
-                  <input
-                    type="date"
-                    onChange={(e) => setNewSprintDueDate(e.target.value)}
-                    value={newSprintDueDate}
-                    min={getTodayDate()}
-                    max={getYearAfterTodayDate()}
-                  />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
+                    <div>
+                      <p className="label">Start Date:</p>
+                      <input
+                        type="date"
+                        onChange={(e) => setNewSprintStartDate(e.target.value)}
+                        value={newSprintStartDate}
+                        min={getTodayDate()}
+                        max={getYearAfterTodayDate()}
+                      />
+                    </div>
+                    <div>
+                      <p className="label">Due Date:</p>
+                      <input
+                        type="date"
+                        onChange={(e) => setNewSprintDueDate(e.target.value)}
+                        value={newSprintDueDate}
+                        min={getTodayDate()}
+                        max={getYearAfterTodayDate()}
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div style={{ textAlign: "center" }}>
                   {Boolean(createSprintError) && <p style={{ color: 'crimson' }}>{createSprintError}</p>}
