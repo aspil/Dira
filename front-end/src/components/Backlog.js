@@ -4,7 +4,7 @@ import SideNav from './SideNav'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Search } from '@material-ui/icons'
-import { DiraIssueClient } from "dira-clients";
+import { DiraIssueClient, DiraSprintClient } from "dira-clients";
 import edit_icon from "../Images/edit_icon.png"
 
 const getTodayDate = () => {
@@ -55,15 +55,22 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   const [newSprintStartDate, setNewSprintStartDate] = useState(getTodayDate());
   const [newSprintDueDate, setNewSprintDueDate] = useState(getTodayDate());
   const [createSprintError, setCreateSprintError] = useState('');
+  const [sprints, setSprints] = useState([]);
 
   const { projectId } = useParams();
   const issueClientRef = useRef(new DiraIssueClient(projectId));
+  const sprintClientRef = useRef(new DiraSprintClient(projectId));
 
   useEffect(() => {
     if (token) {
       issueClientRef.current.set_authorization_token(token);
     }
   }, [token, issueClientRef]);
+  useEffect(() => {
+    if (token) {
+      sprintClientRef.current.set_authorization_token(token);
+    }
+  }, [token, sprintClientRef]);
 
   const fetchAllIssues = () => {
     if (!issueClientRef.current.headers.Authorization) {
@@ -402,7 +409,34 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     }
     setCreateSprintError('');
 
-  }
+    sprintClientRef.current.create_sprint({
+      dueDate: newSprintDueDate,
+      issueModels: newSprintIssues,
+      startDate: newSprintStartDate
+    })
+      .then(res => {
+        console.log('sprint creation response ', res);
+        fetchSprints();
+        hideCreateSprintPopup();
+      })
+      .catch(err => {
+        console.log(err);
+        setCreateSprintError('Couldn\'t create new sprint');
+      });
+  };
+
+  const fetchSprints = () => {
+    if (!sprintClientRef.current.headers.Authorization) {
+      return;
+    }
+    sprintClientRef.current.get_all_sprints().then((res) => {
+      console.log('get sprints response ', res);
+      setSprints(res);
+    }).catch((err) => {
+      console.log('get sprints error ', err);
+    });
+  };
+  useEffect(fetchSprints, [sprintClientRef, sprintClientRef.current.headers.Authorization]);
 
   return (
     <div className="backlog proj_page">
