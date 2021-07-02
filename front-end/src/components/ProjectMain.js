@@ -95,6 +95,9 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
   }
 
   const fetchAllPublicProjects = () => {
+    if (!projectClientRef.current.headers.Authorization) {
+      return;
+    }
     projectClientRef.current.get_all_projects().then((res) => {
       setPublicProjects(res.filter(proj => proj.visibility === 'PUBLIC' && !Boolean(projects.find(p => p.id === proj.id))));
     }).catch((err) => {
@@ -104,7 +107,7 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
   }
 
   useEffect(fetchAllProjects, [userInfo.id, userClientRef]);
-  useEffect(fetchAllPublicProjects, [projects, projectClientRef]);
+  useEffect(fetchAllPublicProjects, [projects, projectClientRef, projectClientRef.current.headers.Authorization]);
 
   useEffect(footerHandle, [footerHandle]);
   useEffect(footerStylesHandle, [footerStylesHandle]);

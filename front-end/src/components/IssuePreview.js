@@ -20,6 +20,9 @@ const IssuePreview = ({ footerHandle, token }) => {
   }, [token, issueClientRef]);
 
   const fetchIssue = () => {
+    if (!issueClientRef.current.headers.Authorization) {
+      return;
+    }
     issueClientRef.current.get_issue(issueId)
       .then(res => {
         console.log(res);
@@ -29,7 +32,7 @@ const IssuePreview = ({ footerHandle, token }) => {
         console.log(err);
       })
   }
-  useEffect(fetchIssue, [issueClientRef, issueId]);
+  useEffect(fetchIssue, [issueClientRef.current.headers.Authorization, issueClientRef, issueId]);
 
   const editIssueField = (field, e) => {
     const newIssue = { ...issue };

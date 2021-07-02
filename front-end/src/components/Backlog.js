@@ -7,6 +7,15 @@ import { Search } from '@material-ui/icons'
 import { DiraIssueClient } from "dira-clients";
 import edit_icon from "../Images/edit_icon.png"
 
+const getTodayDate = () => {
+  const today = new Date().toLocaleDateString().split('/');
+  return `${today[2]}-${today[0].length === 1 ? '0' + today[0] : today[0]}-${today[1].length === 1 ? '0' + today[1] : today[1]}`;
+}
+const getYearAfterTodayDate = () => {
+  const today = new Date().toLocaleDateString().split('/');
+  return `${String(Number(today[2]) + 1)}-${today[0].length === 1 ? '0' + today[0] : today[0]}-${today[1].length === 1 ? '0' + today[1] : today[1]}`
+}
+
 const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) => {
   const [backlogIssues, setBacklogIssues] = useState([]);
   const [searchFilteredIssues, setSearchFilteredIssues] = useState([]);
@@ -42,6 +51,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   const [newIssueLink, setNewIssueLink] = useState({ key: '', title: '' });
   const [newIssueLinkError, setNewIssueLinkError] = useState('');
   const [newIssueLinkType, setNewIssueLinkType] = useState('DEPENDS_ON');
+  const [newSprintIssues, setNewSprintIssues] = useState([]);
+  const [newSprintStartDate, setNewSprintStartDate] = useState(getTodayDate());
+  const [newSprintDueDate, setNewSprintDueDate] = useState(getTodayDate());
+  const [createSprintError, setCreateSprintError] = useState('');
 
   const { projectId } = useParams();
   const issueClientRef = useRef(new DiraIssueClient(projectId));
@@ -53,6 +66,9 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   }, [token, issueClientRef]);
 
   const fetchAllIssues = () => {
+    if (!issueClientRef.current.headers.Authorization) {
+      return;
+    }
     issueClientRef.current.get_all_issues().then((res) => {
       console.log(res);
       setBacklogIssues(res.issues);
@@ -66,6 +82,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   }
 
   const fetchMembers = () => {
+    if (!projectClientRef.current.headers.Authorization) {
+      return;
+    }
+
     projectClientRef.current.get_all_users_in_project_by_id(projectId).then((res) => {
       setMembers(res.users);
     }).catch((err) => {
@@ -73,8 +93,8 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     });
   }
 
-  useEffect(fetchAllIssues, []);
-  useEffect(fetchMembers, []);
+  useEffect(fetchAllIssues, [issueClientRef, issueClientRef.current.headers.Authorization]);
+  useEffect(fetchMembers, [projectClientRef, projectId, projectClientRef.current.headers.Authorization]);
 
   useEffect(footerHandle, [footerHandle]);
 
@@ -199,10 +219,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     handleCreateSprintPopup("hide");
   }
   const showCreateSprintPopup = () => {
+    setNewSprintStartDate(getTodayDate());
+    setNewSprintDueDate(getTodayDate());
+    setNewSprintIssues([]);
     handleCreateSprintPopup("show");
-  }
-  const handleCreateSprintButtonClick = () => {
-    hideCreateSprintPopup();
   }
 
 
@@ -300,6 +320,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   }, [searchFilter, backlogIssues]);
 
   const fetchUserPermissions = () => {
+    if (!projectClientRef.current.headers.Authorization) {
+      return;
+    }
+
     projectClientRef.current.get_project_permissions_for_all_users(projectId).then(res => {
       console.log(res);
       setUserPermissions(res.find(customer => customer.customerId === userId));
@@ -307,7 +331,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       console.log(err);
     });
   };
-  useEffect(fetchUserPermissions, []);
+  useEffect(fetchUserPermissions, [projectClientRef, projectId, userId, projectClientRef.current.headers.Authorization]);
 
   const decodePermissions = () => {
     if (!userPermissions) {
@@ -354,8 +378,31 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   }
 
 
+  const handleSprintIssueClick = (issue) => {
+    if (newSprintIssues.find(sprintIssue => sprintIssue.id === issue.id)) {
+      setNewSprintIssues(newSprintIssues.filter(sprintIssue => sprintIssue.id !== issue.id));
+    }
+    else {
+      const sprintIssues = [...newSprintIssues];
+      sprintIssues.push(issue);
+      setNewSprintIssues(sprintIssues);
+    }
+  };
 
+  const handleCreateSprintButtonClick = (e) => {
+    e.preventDefault();
 
+    if (newSprintIssues.length === 0) {
+      setCreateSprintError('No issues selected');
+      return;
+    }
+    else if (new Date(newSprintStartDate) >= new Date(newSprintDueDate)) {
+      setCreateSprintError('Invalid dates selected');
+      return;
+    }
+    setCreateSprintError('');
+
+  }
 
   return (
     <div className="backlog proj_page">
@@ -757,10 +804,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
               <br />
               <br />
               <form className="newIssueForm" style={{ textAlign: "left" }} >
-                <p className="label">Title:</p>
-                <input type="text" id="sprintName" placeholder="Sprint Title" required></input>
+                {/* <p className="label">Title:</p>
+                <input type="text" id="sprintName" placeholder="Sprint Title" required></input> */}
                 <div className="priority">
-                <p className="label">Select Issues:</p>
+                  <p className="label">Select Issues:</p>
 
                   <div className="tableWrapper">
                     <table id="createSprintTable">
@@ -774,7 +821,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                         </tr>
                       </thead>
                       <tbody>
-                        {hasRead && searchFilteredIssues.filter(issue => issue.type === 'Story').map(issue => (
+                        {hasRead && backlogIssues.filter(issue => issue.type !== 'Epic').map(issue => (
                           <tr key={issue.key}>
                             <td>{issue.key}</td>
                             <td>{issue.title}</td>
@@ -783,7 +830,11 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                               <span className="colored_text" style={{ backgroundColor: priorityToColorMapper[issue.priority], fontSize: "12px" }}>{issue.priority}</span>
                             </td>
                             <td style={{ textAlign: "center" }}>
-                              <input type="checkbox" />  
+                              <input
+                                type="checkbox"
+                                defaultChecked={Boolean(newSprintIssues.find(sprintIssue => sprintIssue.id === issue.id))}
+                                onClick={() => handleSprintIssueClick(issue)}
+                              />
                             </td>
 
                           </tr>
@@ -791,15 +842,25 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                       </tbody>
                     </table>
                   </div>
-                  <p className="label">Duration:</p>
-                  <select name="priority" id="priority">
-                    <option value="1week">1 week</option>
-                    <option value="2weeks">2 weeks</option>
-                    <option value="3weeks">3 weeks</option>
-                    <option value="4weeks">4 weeks</option>
-                  </select>
+                  <p className="label">Stard Date:</p>
+                  <input
+                    type="date"
+                    onChange={(e) => setNewSprintStartDate(e.target.value)}
+                    value={newSprintStartDate}
+                    min={getTodayDate()}
+                    max={getYearAfterTodayDate()}
+                  />
+                  <p className="label">Due Date:</p>
+                  <input
+                    type="date"
+                    onChange={(e) => setNewSprintDueDate(e.target.value)}
+                    value={newSprintDueDate}
+                    min={getTodayDate()}
+                    max={getYearAfterTodayDate()}
+                  />
                 </div>
                 <div style={{ textAlign: "center" }}>
+                  {Boolean(createSprintError) && <p style={{ color: 'crimson' }}>{createSprintError}</p>}
                   <button onClick={handleCreateSprintButtonClick}>Create Sprint</button>
                 </div>
               </form>
