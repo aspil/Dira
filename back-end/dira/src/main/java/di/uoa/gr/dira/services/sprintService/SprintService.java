@@ -1,10 +1,10 @@
 package di.uoa.gr.dira.services.sprintService;
 
 
+import di.uoa.gr.dira.entities.issue.Issue;
 import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.entities.sprint.Sprint;
 import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
-import di.uoa.gr.dira.exceptions.commonExceptions.CustomMessageException;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
 import di.uoa.gr.dira.exceptions.sprint.SprintDoesNotBelongToProjectException;
@@ -13,7 +13,6 @@ import di.uoa.gr.dira.models.sprint.SprintModel;
 import di.uoa.gr.dira.repositories.*;
 import di.uoa.gr.dira.services.BaseService;
 import di.uoa.gr.dira.services.permissionService.IPermissionService;
-import di.uoa.gr.dira.services.permissionService.PermissionService;
 import di.uoa.gr.dira.shared.PermissionType;
 import di.uoa.gr.dira.util.mapper.MapperHelper;
 import org.modelmapper.ModelMapper;
@@ -56,10 +55,6 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
     public List<SprintModel> findAllSprintsByProjectId(Long projectId, Long customerId) {
         Project project = checkPermissions(projectId, customerId);
 
-        if (project.getSprints().isEmpty()) {
-            throw new CustomMessageException("There are no Sprints in this project!");
-        }
-
         return MapperHelper.mapList(mapper, project.getSprints(), SprintModel.class);
     }
 
@@ -75,7 +70,7 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
         }
 
         Sprint sprint = mapper.map(sprintModel, Sprint.class);
-        sprint.setIssues(new ArrayList<>());
+        sprint.setIssues(MapperHelper.mapList(mapper, sprintModel.getIssueModels(), Issue.class));
         sprint = repository.save(sprint);
 
         project.getSprints().add(sprint);
