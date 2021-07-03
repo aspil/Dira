@@ -34,9 +34,6 @@ public class SprintMapperConfiguration implements IMapConfiguration {
 
     private void configureSprintModelToSprintEntity(ModelMapper mapper) {
         TypeMap<SprintModel, Sprint> typeMap = mapper.createTypeMap(SprintModel.class, Sprint.class);
-        typeMap.addMappings(mapping -> mapping.using(ListConverter.withMapper(mapper, Issue.class))
-                .map(SprintModel::getIssueModels, Sprint::setIssues)
-        );
         typeMap.addMappings(m -> m.skip(SprintModel::getId, Sprint::setId));
     }
 }

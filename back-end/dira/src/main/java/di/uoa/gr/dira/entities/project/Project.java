@@ -39,13 +39,13 @@ public class Project {
     )
     private List<Customer> customers;
 
-    @OneToMany(mappedBy="project", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy="project")
     private List<Sprint> sprints;
 
-    @OneToMany(mappedBy="project", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy="project")
     private List<Issue> issues;
 
-    @OneToMany(mappedBy="project", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy="project")
     private List<Permission> permissions;
 
     @Column(nullable = false)
