@@ -34,7 +34,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   const [newType, setNewType] = useState('Story');
   const [issueCreationError, setIssueCreationError] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const [sprint, handleSprintPanel] = useState("hide");
   const [userPermissions, setUserPermissions] = useState(undefined);
   const [hasRead, setHasRead] = useState(false);
   const [hasWrite, setHasWrite] = useState(false);
@@ -219,21 +218,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       });
   }
 
-
-  // Create sprint popup handlers
-  const [create_sprint_popup, handleCreateSprintPopup] = useState("hide");
-  const hideCreateSprintPopup = () => {
-    handleCreateSprintPopup("hide");
-  }
-  const showCreateSprintPopup = () => {
-    setNewSprintStartDate(getTodayDate());
-    setNewSprintDueDate(getTodayDate());
-    setNewSprintIssues([]);
-    handleCreateSprintPopup("show");
-  }
-
-
-
   // Create issue popup handlers
   const [create_issue_popup, handleCreateIssuePopup] = useState("hide");
 
@@ -385,6 +369,19 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   }
 
 
+  // Create sprint popup handlers
+  const [create_sprint_popup, handleCreateSprintPopup] = useState("hide");
+  const hideCreateSprintPopup = () => {
+    handleCreateSprintPopup("hide");
+  }
+  const showCreateSprintPopup = () => {
+    setNewSprintStartDate(getTodayDate());
+    setNewSprintDueDate(getTodayDate());
+    setNewSprintIssues([]);
+    setCreateSprintError('');
+    handleCreateSprintPopup("show");
+  }
+
   const handleSprintIssueClick = (issue) => {
     if (newSprintIssues.find(sprintIssue => sprintIssue.id === issue.id)) {
       setNewSprintIssues(newSprintIssues.filter(sprintIssue => sprintIssue.id !== issue.id));
@@ -436,7 +433,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       console.log('get sprints error ', err);
     });
   };
-  useEffect(fetchSprints, [sprintClientRef, sprintClientRef.current.headers.Authorization]);
+  useEffect(fetchSprints, [backlogIssues, sprintClientRef, sprintClientRef.current.headers.Authorization]);
 
   return (
     <div className="backlog proj_page">
@@ -779,7 +776,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                 }
               </div>
             }
-            {sprint === "show"
+            {sprints.length > 0
               // current sprint (if there is one)
               ?
               <div className="sprint">
