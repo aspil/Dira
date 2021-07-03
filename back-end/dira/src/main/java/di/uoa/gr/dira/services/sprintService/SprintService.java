@@ -9,7 +9,6 @@ import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
 import di.uoa.gr.dira.exceptions.sprint.SprintDoesNotBelongToProjectException;
 import di.uoa.gr.dira.exceptions.sprint.SprintNotFoundException;
-import di.uoa.gr.dira.models.project.ProjectIssuesModel;
 import di.uoa.gr.dira.models.project.ProjectSprintsModel;
 import di.uoa.gr.dira.models.sprint.SprintModel;
 import di.uoa.gr.dira.repositories.*;
@@ -20,8 +19,6 @@ import di.uoa.gr.dira.util.mapper.MapperHelper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class SprintService extends BaseService<SprintModel, Sprint, Long, SprintRepository> implements ISprintService  {
@@ -67,7 +64,7 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
             throw new ActionNotPermittedException("You need ADMIN permissions in order to create a Sprint");
         }
 
-        
+
         Sprint sprint = mapper.map(sprintModel, Sprint.class);
         sprint.setIssues(MapperHelper.mapList(mapper, sprintModel.getIssueModels(), Issue.class));
         sprint = repository.save(sprint);
