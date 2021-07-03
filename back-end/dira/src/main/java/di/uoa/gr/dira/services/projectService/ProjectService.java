@@ -7,6 +7,7 @@ import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.exceptions.project.ProjectAlreadyExistsException;
 import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
+import di.uoa.gr.dira.exceptions.project.permission.PermissionNotFoundException;
 import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.models.project.ProjectUsersModel;
 import di.uoa.gr.dira.repositories.CustomerRepository;
@@ -71,9 +72,9 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
                 .orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
 
         repository.findByKey(projectModel.getKey())
-            .ifPresent(project -> {
-                throw new ProjectAlreadyExistsException("projectId", project.getId().toString());
-            });
+                .ifPresent(project -> {
+                    throw new ProjectAlreadyExistsException("projectId", project.getId().toString());
+                });
 
         if ((customer.getSubscriptionPlan().getPlan().equals(SubscriptionPlanEnum.STANDARD)) && (projectModel.getVisibility().equals(ProjectVisibility.PRIVATE))) {
             throw new ActionNotPermittedException();
@@ -120,7 +121,7 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     @Override
     public void deleteProjectWithId(Long projectId, Long customerId) {
         Project project = checkPermissions(projectId, customerId);
-        for (Customer customer: project.getCustomers()) {
+        for (Customer customer : project.getCustomers()) {
             customer.getProjects().remove(project);
         }
         customerRepository.saveAll(project.getCustomers());
@@ -162,19 +163,24 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
 
     @Override
     public void deleteUserFromProjectWithId(Long id, Long projectOwnerId, Long userId) {
-        customerRepository.findById(userId).orElseThrow(() -> new CustomerNotFoundException("userId", userId.toString()));
+        Customer customer = customerRepository.findById(userId)
+                .orElseThrow(() -> new CustomerNotFoundException("userId", userId.toString()));
+
         Project project = checkPermissions(id, projectOwnerId);
 
-        project.getPermissions().removeIf(permission -> permission.getUser().getId().equals(userId));
-
-        List<Customer> customers = project.getCustomers();
-        Customer customer = customers.stream()
-                .filter(user -> user.getId().equals(userId))
-                .findFirst()
-                .orElseThrow(() -> new CustomerNotFoundException("userId", userId.toString()));
-        customers.remove(customer);
-        // we might need to delete the project from customer's project list
+        if (!project.getCustomers().contains(customer)) {
+            throw new CustomerNotFoundException(
+                    String.format("Customer %s was not found in project %s", customer.getName(), project.getName())
+            );
+        }
+        project.getCustomers().remove(customer);
         repository.save(project);
+
+        Permission permission = permissionService.getRepository()
+                .findByUserId(customer.getId())
+                .orElseThrow(() -> new PermissionNotFoundException(String.format("Permission for user %s not found", customer.getName())));
+
+        permissionService.getRepository().delete(permission);
     }
 
     @Override
