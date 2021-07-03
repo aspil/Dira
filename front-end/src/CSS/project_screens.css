@@ -1,3 +1,31 @@
+.proj_page {
+  height: 84.9vh;
+  width: 100vw;
+  display: flex;
+  /* flex-direction: column; */
+}
+
+.proj_page .projectnav {
+  flex-grow: 0;
+}
+
+.proj_page .center_content {
+  flex-grow: 1;
+  display: flex;
+  overflow: hidden !important;
+}
+
+.proj_page .footer {
+  flex-grow: 0;
+}
+
+.proj_page .center_content main {
+  flex-grow: 1;
+  flex-basis: 70%;
+  margin: 0px 0px 6px 0px;
+  padding: 40px 0px 0px 22px;
+
+}
 .projectnav {
   display: flex;
   background-color: rgb(0, 132, 255);
