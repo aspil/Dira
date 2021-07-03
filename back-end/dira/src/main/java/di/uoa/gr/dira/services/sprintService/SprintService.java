@@ -9,6 +9,8 @@ import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
 import di.uoa.gr.dira.exceptions.sprint.SprintDoesNotBelongToProjectException;
 import di.uoa.gr.dira.exceptions.sprint.SprintNotFoundException;
+import di.uoa.gr.dira.models.project.ProjectIssuesModel;
+import di.uoa.gr.dira.models.project.ProjectSprintsModel;
 import di.uoa.gr.dira.models.sprint.SprintModel;
 import di.uoa.gr.dira.repositories.*;
 import di.uoa.gr.dira.services.BaseService;
@@ -52,10 +54,10 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
         return project;
     }
 
-    public List<SprintModel> findAllSprintsByProjectId(Long projectId, Long customerId) {
+    public ProjectSprintsModel findAllSprintsByProjectId(Long projectId, Long customerId) {
         Project project = checkPermissions(projectId, customerId);
 
-        return MapperHelper.mapList(mapper, project.getSprints(), SprintModel.class);
+        return mapper.map(project, ProjectSprintsModel.class);
     }
 
     public SprintModel createSprintWithProjectId(Long projectId, Long customerId, SprintModel sprintModel) {
@@ -65,16 +67,10 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
             throw new ActionNotPermittedException("You need ADMIN permissions in order to create a Sprint");
         }
 
-        if (project.getSprints() == null) {
-            project.setSprints(new ArrayList<>());
-        }
-
+        
         Sprint sprint = mapper.map(sprintModel, Sprint.class);
         sprint.setIssues(MapperHelper.mapList(mapper, sprintModel.getIssueModels(), Issue.class));
         sprint = repository.save(sprint);
-
-        project.getSprints().add(sprint);
-        projectRepository.save(project);
 
         return mapper.map(sprint, SprintModel.class);
     }
