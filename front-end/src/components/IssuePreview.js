@@ -101,7 +101,7 @@ const IssuePreview = ({ footerHandle, token }) => {
                   <div style={{ margin: "auto", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
                     {/* Priority */}
                     <div>
-                      <span>Priority: </span>
+                      <span className="label">Priority: </span>
                       <select
                         name="priority"
                         id="priority"
@@ -116,7 +116,7 @@ const IssuePreview = ({ footerHandle, token }) => {
                     </div>
                     {/* Status */}
                     <div>
-                      <span>Status: </span>
+                      <span className="label">Status: </span>
                       <select
                         name="status"
                         id="status"
@@ -132,7 +132,7 @@ const IssuePreview = ({ footerHandle, token }) => {
                     </div>
                     <div>
                       {/* Resolution */}
-                      <span>Resolution: </span>
+                      <span className="label">Resolution: </span>
                       <select
                         name="resolution"
                         id="resolution"
@@ -147,7 +147,8 @@ const IssuePreview = ({ footerHandle, token }) => {
                   <br />
                   <div style={{ margin: "auto", alignItems: "center", display: "flex" }}>
                     <div>
-                      <span>Description:</span>
+                      <span className="label">Description:</span>
+                      <br />
                       <textarea
                         type="range"
                         placeholder="Issue Description"

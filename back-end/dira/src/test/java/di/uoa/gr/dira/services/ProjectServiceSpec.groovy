@@ -12,6 +12,7 @@ import di.uoa.gr.dira.models.project.ProjectModel
 import di.uoa.gr.dira.repositories.CustomerRepository
 import di.uoa.gr.dira.repositories.PermissionRepository
 import di.uoa.gr.dira.repositories.ProjectRepository
+import di.uoa.gr.dira.services.permissionService.PermissionService
 import di.uoa.gr.dira.services.projectService.ProjectService
 import di.uoa.gr.dira.shared.PermissionType
 import di.uoa.gr.dira.shared.ProjectVisibility
@@ -32,9 +33,10 @@ class ProjectServiceSpec extends Specification {
     private final ProjectRepository projectRepository = Mock()
     private final CustomerRepository customerRepository = Mock()
     private final PermissionRepository permissionRepository = Mock()
+    private final PermissionService permissionService = Mock()
 
     void setup() {
-        service = new ProjectService(projectRepository, customerRepository, permissionRepository, mapper)
+        service = new ProjectService(projectRepository, customerRepository, permissionService, mapper)
     }
 
     def "find all public projects"() {
@@ -153,6 +155,7 @@ class ProjectServiceSpec extends Specification {
 
         and: "a given permission"
         permissionRepository.save(_ as Permission) >> { Permission perm -> perm }
+        permissionService.getRepository() >> permissionRepository
 
         when: "this user creates a project"
         ProjectModel createdModel = service.createProject(customer.getId(), projectModel)
