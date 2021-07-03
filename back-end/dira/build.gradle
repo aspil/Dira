@@ -68,6 +68,10 @@ test {
     useJUnitPlatform()
 }
 
+bootBuildImage {
+    imageName = "dira-backend:latest"
+}
+
 sourceSets.main.java.srcDirs = ['src/main/java']
 sourceSets.test.java.srcDirs = ['src/test/java']
 sourceSets.test.groovy.srcDirs = ['src/test/java']
