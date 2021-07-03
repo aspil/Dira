@@ -6,6 +6,11 @@
   font-family: 'Open Sans';
   color: #333;
 }
+.label{
+  font-weight: bold;
+}
+
+
 
 #xIcon{
   width: 2vw;

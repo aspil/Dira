@@ -10,6 +10,7 @@
 .proj_page .center_content {
   flex-grow: 1;
   display: flex;
+  overflow: auto !important;
 }
 .proj_page .footer {
   flex-grow: 0;
@@ -19,6 +20,7 @@
   flex-grow: 1;
   flex-basis: 70%;
   margin: 40px;
+
 }
 .backlog .center_content main {
   display: flex;
@@ -137,9 +139,7 @@
   cursor: pointer;
 }
 
-.backlog .label{
-  font-weight: bold;
-}
+
 .backlog .issuePanel .answer{
   margin-left: 7px;
 }
