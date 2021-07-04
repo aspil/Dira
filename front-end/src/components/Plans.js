@@ -121,8 +121,8 @@ const Plan = ({ userClientRef, userId, userPlan, isLogged, setPremiumPlan }) => 
   const tableContent = [
     [
       'User limit (per project)',
-      '7',
-      '50'
+      '5',
+      '15'
     ],
     [
       'Scrum statistic reports',
