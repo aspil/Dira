@@ -1,8 +1,10 @@
 package di.uoa.gr.dira.services.projectService;
 
 import di.uoa.gr.dira.entities.customer.Customer;
+import di.uoa.gr.dira.entities.issue.Issue;
 import di.uoa.gr.dira.entities.project.Permission;
 import di.uoa.gr.dira.entities.project.Project;
+import di.uoa.gr.dira.entities.sprint.Sprint;
 import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.exceptions.project.ProjectAlreadyExistsException;
@@ -10,9 +12,7 @@ import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
 import di.uoa.gr.dira.exceptions.project.permission.PermissionNotFoundException;
 import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.models.project.ProjectUsersModel;
-import di.uoa.gr.dira.repositories.CustomerRepository;
-import di.uoa.gr.dira.repositories.PermissionRepository;
-import di.uoa.gr.dira.repositories.ProjectRepository;
+import di.uoa.gr.dira.repositories.*;
 import di.uoa.gr.dira.services.BaseService;
 import di.uoa.gr.dira.services.permissionService.IPermissionService;
 import di.uoa.gr.dira.shared.PermissionType;
@@ -20,7 +20,6 @@ import di.uoa.gr.dira.shared.PermissionTypeEnum;
 import di.uoa.gr.dira.shared.ProjectVisibility;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import di.uoa.gr.dira.util.mapper.MapperHelper;
-import org.jboss.logging.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -30,16 +29,22 @@ import java.util.stream.Collectors;
 @Service
 public class ProjectService extends BaseService<ProjectModel, Project, Long, ProjectRepository> implements IProjectService {
     CustomerRepository customerRepository;
+    IssueRepository issueRepository;
+    SprintRepository sprintRepository;
     IPermissionService permissionService;
 
     public ProjectService(
             ProjectRepository repository,
             CustomerRepository customerRepository,
+            IssueRepository issueRepository,
+            SprintRepository sprintRepository,
             IPermissionService permissionService,
             ModelMapper mapper) {
         super(repository, mapper);
         this.customerRepository = customerRepository;
         this.permissionService = permissionService;
+        this.issueRepository = issueRepository;
+        this.sprintRepository = sprintRepository;
     }
 
     private Project checkPermissions(Long projectId, Long customerId) {
@@ -124,8 +129,16 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         for (Customer customer : project.getCustomers()) {
             customer.getProjects().remove(project);
         }
-        customerRepository.saveAll(project.getCustomers());
-        repository.deleteById(projectId);
+        for (Issue issue : project.getIssues()) {
+            issueRepository.delete(issue);
+        }
+        for (Sprint sprint : project.getSprints()) {
+            sprintRepository.delete(sprint);
+        }
+        for (Permission permission : project.getPermissions()) {
+            permissionService.getRepository().delete(permission);
+        }
+        repository.delete(project);
     }
 
     /* ProjectUserController */
