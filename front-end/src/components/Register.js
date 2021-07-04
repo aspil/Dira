@@ -11,8 +11,6 @@ const Register = ({ userClientRef, navHandle }) => {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const history = useHistory();
-  const [error, setError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
   const [errMessage, setErrMessage] = useState('');
 
   useEffect(navHandle, [navHandle]);
@@ -21,13 +19,10 @@ const Register = ({ userClientRef, navHandle }) => {
     e.preventDefault()
 
     if (password !== confirmPassword) {
-      setError(false);
-      setPasswordError(true);
-      setErrMessage("Passwords don't match.");
+      setErrMessage('Passwords don\'t match');
       return;
     }
-    setError(false);
-    setPasswordError(false);
+    setErrMessage('');
 
     userClientRef.current.register_user({
       "username": username,
@@ -41,17 +36,7 @@ const Register = ({ userClientRef, navHandle }) => {
       history.push('/');
     }).catch((err) => {
       console.log(err);
-      if (err === undefined) {
-        return;
-      }
-      if (err.errors) {
-        setPasswordError(true);
-        setErrMessage(err.errors[0].defaultMessage);
-      }
-      else {
-        setError(true);
-        setErrMessage(err.error.message);
-      }
+      setErrMessage('Couldn\'t perform registration');
     });
   }
 
@@ -65,7 +50,7 @@ const Register = ({ userClientRef, navHandle }) => {
         <div className="login_grad" style={{ textAlign: "center" }}>
           <h1 style={{ fontWeight: "normal", margin: "15px" }}>Register</h1>
           <form onSubmit={onSubmit}>
-            {error && <p style={{ "color": "red" }}>{errMessage}</p>}
+            {Boolean(errMessage) && <p style={{ "color": "red" }}>{errMessage}</p>}
             <div style={{ textAlign: "left" }}>
               <p className="inputHead">Email Adress:</p>
               <input
@@ -97,7 +82,6 @@ const Register = ({ userClientRef, navHandle }) => {
                 </div>
               </div>
 
-              {passwordError && <p style={{ "color": "red" }}>{errMessage}</p>}
               <p className="inputHead">Password:</p>
               <input
                 type="password" placeholder="Password" required

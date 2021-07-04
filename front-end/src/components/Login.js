@@ -6,8 +6,6 @@ import { useEffect, useState } from "react";
 const Login = ({ setToken, userClientRef, setUserInfo, setIsLogged, navHandle, setStayLogged, stayLogged }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [usernameError, setUsernameError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
   const [errMessage, setErrMessage] = useState('');
   const history = useHistory();
 
@@ -15,9 +13,7 @@ const Login = ({ setToken, userClientRef, setUserInfo, setIsLogged, navHandle, s
 
   const onSubmit = (e) => {
     e.preventDefault();
-
-    setUsernameError(false);
-    setPasswordError(false);
+    setErrMessage('');
 
     userClientRef.current
       .login_user(username, password)
@@ -34,18 +30,8 @@ const Login = ({ setToken, userClientRef, setUserInfo, setIsLogged, navHandle, s
         history.push('/proj_main');
       })
       .catch((err) => {
+        setErrMessage('Failed to login with given credentials');
         console.log(err);
-        if (err === undefined) {
-          return;
-        }
-        if (err.errors) {
-          setPasswordError(true);
-          setErrMessage(err.errors[0].defaultMessage);
-        }
-        else {
-          setUsernameError(true);
-          setErrMessage(err.error.message);
-        }
       });
   }
   const redirectToMain = () => {
@@ -66,7 +52,6 @@ const Login = ({ setToken, userClientRef, setUserInfo, setIsLogged, navHandle, s
                 onChange={(e) => { setUsername(e.target.value) }}
                 required
                 value={username} />
-              {usernameError && <p style={{ "color": "red" }}>{errMessage}</p>}
               <p className="inputHead">Password:</p>
               <input
                 type="password"
@@ -75,7 +60,7 @@ const Login = ({ setToken, userClientRef, setUserInfo, setIsLogged, navHandle, s
                 required
                 value={password} />
             </div>
-            {passwordError && <p style={{ "color": "red" }}>{errMessage}</p>}
+            {Boolean(errMessage) && <p style={{ "color": "crimson" }}>{errMessage}</p>}
             <button type="submit">Login</button>
           </form>
           <label htmlFor='stay_logged' style={{ alignItems: "center" }}>
