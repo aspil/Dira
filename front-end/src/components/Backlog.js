@@ -1,12 +1,9 @@
 import x_icon from "../Images/x_icon.png"
-
 import SideNav from './SideNav'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { DiraIssueClient, DiraSprintClient } from "dira-clients";
 import edit_icon from "../Images/edit_icon.png"
-import checkedIcon from "../Images/checked.png";
-import stoppedIcon from "../Images/stop.png";
 
 const getTodayDate = () => {
   const today = new Date().toLocaleDateString().split('/');

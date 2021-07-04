@@ -1,7 +1,8 @@
 import Home from './components/Home';
 import Register from './components/Register';
 import Login from './components/Login';
-import Plan from './components/Plans'
+import Plan from './components/Plans';
+import Reports from './components/Reports';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import ProjectMain from './components/ProjectMain';
 import ProjectNav from './components/ProjectNav';
@@ -207,6 +208,10 @@ function App() {
         <Route path="/project/:projectId/issue_preview/:issueId">
           {token === undefined && <Redirect to="/sign_in" />}
           {token !== undefined && <IssuePreview username={userInfo.username} footerHandle={showFooterHook} token={token} />}
+        </Route>
+        <Route path="/project/:projectId/graphic_reports">
+          {token === undefined && <Redirect to="/sign_in" />}
+          {token !== undefined && <Reports footerHandle={showFooterHook} token={token} />}
         </Route>
         <Route path="/create_project">
           {token === undefined && <Redirect to="/sign_in" />}

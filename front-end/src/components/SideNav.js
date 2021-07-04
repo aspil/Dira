@@ -13,6 +13,10 @@ const SideNav = () => {
       name: "Members",
       path: `/project/${projectId}/members`
     },
+    {
+      name: "Reports",
+      path: `/project/${projectId}/graphic_reports`
+    },
   ]
 
   return (
