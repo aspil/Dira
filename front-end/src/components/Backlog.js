@@ -1,10 +1,9 @@
 import x_icon from "../Images/x_icon.png"
 
 import SideNav from './SideNav'
-import {useEffect, useRef, useState} from 'react'
-import {Link, useParams} from 'react-router-dom'
-import {Search} from '@material-ui/icons'
-import {DiraIssueClient, DiraSprintClient} from "dira-clients";
+import { useEffect, useRef, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { DiraIssueClient, DiraSprintClient } from "dira-clients";
 import edit_icon from "../Images/edit_icon.png"
 import checkedIcon from "../Images/checked.png";
 import stoppedIcon from "../Images/stop.png";
@@ -18,13 +17,10 @@ const getYearAfterTodayDate = () => {
     return `${String(Number(today[2]) + 1)}-${today[0].length === 1 ? '0' + today[0] : today[0]}-${today[1].length === 1 ? '0' + today[1] : today[1]}`
 }
 
-const Backlog = ({token, footerHandle, projectClientRef, userId, username}) => {
+const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) => {
     const [backlogIssues, setBacklogIssues] = useState([]);
     const [searchFilteredIssues, setSearchFilteredIssues] = useState([]);
     const [searchFilter, setSearchFilter] = useState('');
-    const [sprintIssues, setSprintIssues] = useState([
-        {title: 'Issue y', dateCreated: "10/5/2023", priority: "high", key: 2},
-    ])
 
     const [members, setMembers] = useState([]);
     const [projectName, setProjectName] = useState('');
@@ -49,7 +45,7 @@ const Backlog = ({token, footerHandle, projectClientRef, userId, username}) => {
     const [deleteCommentError, setDeleteCommentError] = useState('');
     const [deleteLabelError, setDeleteLabelError] = useState('');
     const [deleteIssueLinkError, setDeleteIssueLinkError] = useState('');
-    const [newIssueLink, setNewIssueLink] = useState({key: '', title: ''});
+    const [newIssueLink, setNewIssueLink] = useState({ key: '', title: '' });
     const [newIssueLinkError, setNewIssueLinkError] = useState('');
     const [newIssueLinkType, setNewIssueLinkType] = useState('DEPENDS_ON');
     const [newSprintIssues, setNewSprintIssues] = useState([]);
@@ -58,7 +54,7 @@ const Backlog = ({token, footerHandle, projectClientRef, userId, username}) => {
     const [createSprintError, setCreateSprintError] = useState('');
     const [sprints, setSprints] = useState([]);
 
-    const {projectId} = useParams();
+    const { projectId } = useParams();
     const issueClientRef = useRef(new DiraIssueClient(projectId));
     const sprintClientRef = useRef(new DiraSprintClient(projectId));
 
@@ -119,7 +115,7 @@ const Backlog = ({token, footerHandle, projectClientRef, userId, username}) => {
         setNewLabelError('');
         setDeleteLabelError('');
         setDeleteCommentError('');
-        setNewIssueLink({key: '', title: ''});
+        setNewIssueLink({ key: '', title: '' });
         setNewIssueLinkError('');
         setDeleteIssueLinkError('');
         setNewIssueLinkType('DEPENDS_ON');
@@ -146,13 +142,13 @@ const Backlog = ({token, footerHandle, projectClientRef, userId, username}) => {
 
         const newIssue = JSON.parse(JSON.stringify(focusedIssue));
         if (field === 'label') {
-            newIssue.labels.push({'value': newLabel});
+            newIssue.labels.push({ 'value': newLabel });
             setNewLabelError('');
         } else if (field === 'comment') {
-            newIssue.comments.push({'value': `${username},${newComment}`});
+            newIssue.comments.push({ 'value': `${username},${newComment}` });
             setNewCommentError('');
         } else if (field === 'link') {
-            newIssue.issueLinks.push({'linkType': newIssueLinkType, 'linkedIssue': newIssueLink})
+            newIssue.issueLinks.push({ 'linkType': newIssueLinkType, 'linkedIssue': newIssueLink })
             setNewIssueLinkError('');
         }
         issueClientRef.current.update_issue(focusedIssueId, newIssue)
@@ -164,7 +160,7 @@ const Backlog = ({token, footerHandle, projectClientRef, userId, username}) => {
                 } else if (field === 'comment') {
                     setNewComment('');
                 } else if (field === 'link') {
-                    setNewIssueLink({key: '', title: ''});
+                    setNewIssueLink({ key: '', title: '' });
                     setNewIssueLinkType('DEPENDS_ON');
                 }
             })
@@ -372,7 +368,8 @@ const Backlog = ({token, footerHandle, projectClientRef, userId, username}) => {
     const handleSprintIssueClick = (issue) => {
         if (newSprintIssues.find(sprintIssue => sprintIssue.id === issue.id)) {
             setNewSprintIssues(newSprintIssues.filter(sprintIssue => sprintIssue.id !== issue.id));
-        } else {
+        }
+        else {
             const sprintIssues = [...newSprintIssues];
             sprintIssues.push(issue);
             setNewSprintIssues(sprintIssues);
@@ -385,8 +382,19 @@ const Backlog = ({token, footerHandle, projectClientRef, userId, username}) => {
         if (newSprintIssues.length === 0) {
             setCreateSprintError('No issues selected');
             return;
-        } else if (new Date(newSprintStartDate) >= new Date(newSprintDueDate)) {
+        }
+        else if (new Date(newSprintStartDate) >= new Date(newSprintDueDate)) {
             setCreateSprintError('Invalid dates selected');
+            return;
+        }
+        else if (sprints.filter(existingSprint => {
+            const startDate = new Date(existingSprint.startDate.split('T', 1)[0]);
+            const dueDate = new Date(existingSprint.dueDate.split('T', 1)[0]);
+            return !(new Date(newSprintStartDate) < startDate && new Date(newSprintDueDate) < startDate)
+                &&
+                !(new Date(newSprintStartDate) > dueDate && new Date(newSprintDueDate) > dueDate);
+        }).length > 0) {
+            setCreateSprintError('The time span of the sprint overlaps with an already existing one');
             return;
         }
         setCreateSprintError('');
@@ -408,334 +416,42 @@ const Backlog = ({token, footerHandle, projectClientRef, userId, username}) => {
     };
 
     const fetchSprints = () => {
-        //TODO REMOVE IT
-        setSprints([
-            {
-                active: false,
-                dueDate: "2021-07-03",
-                id: 0,
-                issueModels: [
-                    {
-                        assignee: "string",
-                        comments: [
-                            {
-                                key: 0,
-                                value: "string"
-                            }
-                        ],
-                        created: "2021-07-03",
-                        description: "string",
-                        dueDate: "2021-07-03",
-                        epicId: 0,
-                        epicLinks: [
-                            {
-                                id: 0,
-                                key: "string",
-                                title: "string"
-                            }
-                        ],
-                        fixVersions: [
-                            {
-                                key: 0,
-                                value: "string"
-                            }
-                        ],
-                        id: 0,
-                        issueLinks: [
-                            {
-                                id: 0,
-                                linkType: "string",
-                                linkedIssue: {
-                                    id: 0,
-                                    key: "string",
-                                    title: "string"
-                                }
-                            }
-                        ],
-                        key: "string",
-                        labels: [
-                            {
-                                key: 0,
-                                value: "string"
-                            }
-                        ],
-                        priority: "Blocked",
-                        projectName: "string",
-                        reporter: "string",
-                        resolved: true,
-                        status: "Blocked",
-                        title: "string",
-                        type: "Defect",
-                        updated: "2021-07-03T13:06:55.288Z"
-                    }
-                ],
-                startDate: "2021-07-03"
-            },
-            {
-                active: true,
-                dueDate: "2021-07-03",
-                id: 1,
-                issueModels: [
-                    {
-                        assignee: "string",
-                        comments: [
-                            {
-                                key: 0,
-                                value: "string"
-                            }
-                        ],
-                        created: "2021-07-03T13:06:55.286Z",
-                        description: "string",
-                        dueDate: "2021-07-03T13:06:55.286Z",
-                        epicId: 0,
-                        epicLinks: [
-                            {
-                                id: 0,
-                                key: "string",
-                                title: "string"
-                            }
-                        ],
-                        fixVersions: [
-                            {
-                                key: 0,
-                                value: "string"
-                            }
-                        ],
-                        id: 0,
-                        issueLinks: [
-                            {
-                                id: 0,
-                                linkType: "string",
-                                linkedIssue: {
-                                    id: 0,
-                                    key: "string",
-                                    title: "string"
-                                }
-                            }
-                        ],
-                        key: "string",
-                        labels: [
-                            {
-                                key: 0,
-                                value: "string"
-                            }
-                        ],
-                        priority: "Blocked",
-                        projectName: "string",
-                        reporter: "string",
-                        resolved: true,
-                        status: "Blocked",
-                        title: "string",
-                        type: "Defect",
-                        updated: "2021-07-03T13:06:55.288Z"
-                    }
-                ],
-                startDate: "2021-07-03"
-            },
-            {
-                active: false,
-                dueDate: "2021-07-03",
-                id: 3,
-                issueModels: [
-                    {
-                        assignee: "string",
-                        comments: [
-                            {
-                                key: 0,
-                                value: "string"
-                            }
-                        ],
-                        created: "2021-07-03T13:06:55.286Z",
-                        description: "string",
-                        dueDate: "2021-07-03T13:06:55.286Z",
-                        epicId: 0,
-                        epicLinks: [
-                            {
-                                id: 0,
-                                key: "string",
-                                title: "string"
-                            }
-                        ],
-                        fixVersions: [
-                            {
-                                key: 0,
-                                value: "string"
-                            }
-                        ],
-                        id: 0,
-                        issueLinks: [
-                            {
-                                id: 0,
-                                linkType: "string",
-                                linkedIssue: {
-                                    id: 0,
-                                    key: "string",
-                                    title: "string"
-                                }
-                            }
-                        ],
-                        key: "1234567",
-                        labels: [
-                            {
-                                key: 0,
-                                value: "string"
-                            }
-                        ],
-                        priority: "Normal",
-                        projectName: "string",
-                        reporter: "string",
-                        resolved: true,
-                        status: "Blocked",
-                        title: "string",
-                        type: "Defect",
-                        updated: "2021-07-03T13:06:55.288Z"
-                    }
-                ],
-                startDate: "2021-07-03"
-            },
-            {
-                active: true,
-                dueDate: "2021-07-03T13:06:55.286Z",
-                id: 4,
-                issueModels: [
-                    {
-                        assignee: "string",
-                        comments: [
-                            {
-                                key: 0,
-                                value: "string"
-                            }
-                        ],
-                        created: "2021-07-03T13:06:55.286Z",
-                        description: "string",
-                        dueDate: "2021-07-03T13:06:55.286Z",
-                        epicId: 0,
-                        epicLinks: [
-                            {
-                                id: 0,
-                                key: "string",
-                                title: "string"
-                            }
-                        ],
-                        fixVersions: [
-                            {
-                                key: 0,
-                                value: "string"
-                            }
-                        ],
-                        id: 0,
-                        issueLinks: [
-                            {
-                                id: 0,
-                                linkType: "string",
-                                linkedIssue: {
-                                    id: 0,
-                                    key: "string",
-                                    title: "string"
-                                }
-                            }
-                        ],
-                        key: "string",
-                        labels: [
-                            {
-                                key: 0,
-                                value: "string"
-                            }
-                        ],
-                        priority: "Blocked",
-                        projectName: "string",
-                        reporter: "string",
-                        resolved: true,
-                        status: "Blocked",
-                        title: "string",
-                        type: "Defect",
-                        updated: "2021-07-03T13:06:55.288Z"
-                    }
-                ],
-                startDate: "2021-07-03T13:06:55.288Z"
-            },
-            {
-                active: true,
-                dueDate: "2021-07-03T13:06:55.286Z",
-                id: 5,
-                issueModels: [
-                    {
-                        assignee: "string",
-                        comments: [
-                            {
-                                key: 0,
-                                value: "string"
-                            }
-                        ],
-                        created: "2021-07-03T13:06:55.286Z",
-                        description: "string",
-                        dueDate: "2021-07-03T13:06:55.286Z",
-                        epicId: 0,
-                        epicLinks: [
-                            {
-                                id: 0,
-                                key: "string",
-                                title: "string"
-                            }
-                        ],
-                        fixVersions: [
-                            {
-                                key: 0,
-                                value: "string"
-                            }
-                        ],
-                        id: 0,
-                        issueLinks: [
-                            {
-                                id: 0,
-                                linkType: "string",
-                                linkedIssue: {
-                                    id: 0,
-                                    key: "string",
-                                    title: "string"
-                                }
-                            }
-                        ],
-                        key: "string",
-                        labels: [
-                            {
-                                key: 0,
-                                value: "string"
-                            }
-                        ],
-                        priority: "Blocked",
-                        projectName: "string",
-                        reporter: "string",
-                        resolved: true,
-                        status: "Blocked",
-                        title: "string",
-                        type: "Defect",
-                        updated: "2021-07-03T13:06:55.288Z"
-                    }
-                ],
-                startDate: "2021-07-03T13:06:55.288Z"
-            }
-        ]);
-
-        console.log("Fetch sprints");
         if (!sprintClientRef.current.headers.Authorization) {
             return;
         }
         sprintClientRef.current.get_all_sprints().then((res) => {
             console.log('get sprints response ', res);
-            // todo uncomment this setSprints(res);
+            setSprints(res.sprints);
         }).catch((err) => {
             console.log('get sprints error ', err);
         });
     };
     useEffect(fetchSprints, [backlogIssues, sprintClientRef, sprintClientRef.current.headers.Authorization]);
 
+    const statusToColorMapper = {
+        Upcoming: 'brown',
+        Active: 'hotpink',
+        Old: 'grey',
+    }
+
+    const getSprintStatus = (startDate, dueDate) => {
+        const today = new Date();
+
+        if (new Date(startDate.split('T', 1)[0]) <= today && today <= new Date(dueDate.split('T', 1)[0])) {
+            return 'Active';
+        }
+        else if (new Date(startDate.split('T', 1)[0]) > today) {
+            return 'Upcoming';
+        }
+        return 'Old';
+    }
+
     return (
         <div className="backlog proj_page">
             <div className="center_content">
-                <SideNav/>
+                <SideNav />
                 <main>
-                    <div className="backlogHead" style={{marginBottom: "15px", display: "flex"}}>
+                    <div className="backlogHead" style={{ marginBottom: "15px", display: "flex" }}>
                         <h1>{projectName}</h1>
                     </div>
                     <div className="flex_cont">
@@ -746,28 +462,28 @@ const Backlog = ({token, footerHandle, projectClientRef, userId, username}) => {
                                     <div className="title">
                                         <h2>Backlog</h2>
                                         {hasWrite &&
-                                        <div style={{textAlign: "center"}}>
-                                            <button id="addIssuesButton" onClick={showCreateIssuePopup}> + Create New
-                                                Issue
-                                            </button>
-                                        </div>
+                                            <div style={{ textAlign: "center" }}>
+                                                <button id="addIssuesButton" onClick={showCreateIssuePopup}> + Create New
+                                                    Issue
+                                                </button>
+                                            </div>
                                         }
                                     </div>
                                     <p
                                         className="issue_total"
-                                        style={!hasRead ? {display: 'none'} : {}}
+                                        style={!hasRead ? { display: 'none' } : {}}
                                     >
-                                        {searchFilteredIssues.length} Issues
+                                        {searchFilteredIssues.length}&nbsp;{searchFilteredIssues.length === 1 ? 'Issue' : 'Issues'}
                                     </p>
                                     {!hasRead &&
-                                    <p style={{color: 'crimson'}}>You don't have permission to view this Backlog</p>
+                                        <p style={{ color: 'crimson' }}>You don't have permission to view this Backlog</p>
                                     }
                                 </div>
                             </div>
                             <form
                                 onSubmit={handleClearSearch}
                                 noValidate
-                                style={!hasRead ? {display: 'none'} : {}}
+                                style={!hasRead ? { display: 'none' } : {}}
                             >
                                 <input
                                     type="text"
@@ -781,39 +497,39 @@ const Backlog = ({token, footerHandle, projectClientRef, userId, username}) => {
                                         width: "93%"
                                     }}
                                 />
-                                <button type="submit" style={{backgroundColor: 'grey', border: "2px solid grey"}}>
+                                <button type="submit" style={{ backgroundColor: 'grey', border: "2px solid grey" }}>
                                     X
                                 </button>
                             </form>
-                            <hr/>
-                            <br/>
+                            <hr />
+                            <br />
                             {/*</div>*/}
                             <div className="tableWrapper">
                                 <table id="backlogIssuesTable">
                                     <thead>
-                                    <tr>
-                                        <th>Key</th>
-                                        <th>Title</th>
-                                        <th>Description</th>
-                                        <th>Type</th>
-                                        <th>Priority</th>
-                                    </tr>
+                                        <tr>
+                                            <th>Key</th>
+                                            <th>Title</th>
+                                            <th>Description</th>
+                                            <th>Type</th>
+                                            <th>Priority</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    {hasRead && searchFilteredIssues.map(issue => (
-                                        <tr key={issue.key} onClick={() => showIssuePanel(issue.id)}>
-                                            <td>{issue.key}</td>
-                                            <td>{issue.title}</td>
-                                            <td className="largeCell">{issue.description}</td>
-                                            <td>{issue.type}</td>
-                                            <td style={{textAlign: "center"}}>
-                                                <span className="colored_text" style={{
-                                                    backgroundColor: priorityToColorMapper[issue.priority],
-                                                    fontSize: "12px"
-                                                }}>{issue.priority}</span>
-                                            </td>
-                                        </tr>
-                                    ))}
+                                        {hasRead && searchFilteredIssues.map(issue => (
+                                            <tr key={issue.key} onClick={() => showIssuePanel(issue.id)}>
+                                                <td>{issue.key}</td>
+                                                <td>{issue.title}</td>
+                                                <td className="largeCell">{issue.description}</td>
+                                                <td>{issue.type}</td>
+                                                <td style={{ textAlign: "center" }}>
+                                                    <span className="colored_text" style={{
+                                                        backgroundColor: priorityToColorMapper[issue.priority],
+                                                        fontSize: "12px"
+                                                    }}>{issue.priority}</span>
+                                                </td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
@@ -821,347 +537,351 @@ const Backlog = ({token, footerHandle, projectClientRef, userId, username}) => {
                         </div>
                         {/* Issue Panel */}
                         {issue_panel === "show" &&
-                        <div className="issuePanel">
-                            <h2 style={{color: "gray"}}>
-                                <img src={x_icon} id="xIcon" alt="x_icon" onClick={hideIssuePanel}></img>
-                                {focusedIssue.type}
-                            </h2>
-                            <h1 id="issueName" style={{alignItems: "center"}}>
-                                {focusedIssue.title}
-                            </h1>
-                            <div className="issuePanelMain">
-                                <br/>
-                                {focusedIssue.epicId &&
-                                <>
-                      <span
-                          className="colored_text epic_link"
-                          onClick={() => showIssuePanel(focusedIssue.epicId)}
-                      >
-                        {backlogIssues.find(issue => issue.id === focusedIssue.epicId).key}
-                      </span>
-                                    <br/>
-                                    <br/>
-                                </>
-                                }
-                                <h3>Description</h3>
-                                <p>{focusedIssue.description}</p>
-                                <br/>
-                                <span className="label" id="status">Status: </span>
-                                <span className="answer" id="statusAnswer">{focusedIssue.status}</span>
-                                <br/>
-                                <span className="label" id="priority">Priority: </span>
-                                <span
-                                    className="colored_text answer"
-                                    style={{
-                                        display: 'inline-block',
-                                        fontSize: '1em',
-                                        marginTop: '0.2em',
-                                        backgroundColor: priorityToColorMapper[focusedIssue.priority]
-                                    }}
-                                >
-                    {focusedIssue.priority}
-                  </span>
-                                <br/>
-                                <br/>
-                                <span className="label" id="resolution">Resolution: </span>
-                                <span className="answer"
-                                      id="resolutionAnswer">{focusedIssue.resolved ? "Resolved" : "Unresolved"}</span>
-                                <br/>
-                                <br/>
-                                <span className="label" id="assignee">Assignee: </span>
-                                <span className="answer"
-                                      id="assigneeAnswer">{focusedIssue.assignee ? focusedIssue.assignee : "-"}</span>
-                                <br/>
-                                <span className="label" id="reporter">Reporter: </span>
-                                <span id="reporterAnswer">{focusedIssue.reporter}</span>
-                                <br/>
-                                <br/>
-                                <span className="label" id="dateCreated">Created on: </span>
-                                <span className="answer"
-                                      id="dateCreatedAnswer">{new Date(focusedIssue.created).toLocaleString()}</span>
-                                <br/>
-                                <span className="label" id="dateCreated">Last Updated: </span>
-                                <span className="answer"
-                                      id="dateCreatedAnswer">{new Date(focusedIssue.updated).toLocaleString()}</span>
-                                <br/><br/>
-                                {/* Labels */}
-                                <p className="label">Labels: </p>
-                                {Boolean(deleteLabelError) && <p style={{color: 'crimson'}}>{deleteLabelError}</p>}
-                                {focusedIssue.labels.map(({key, value: label}) => (
-                                    <div
-                                        className="issueLabelsWrapper"
-                                        key={key}
-                                    >
-                                        {
-                                            hasDelete
-                                            &&
-                                            <button
-                                                className="issueLabelX"
-                                                onClick={() => deleteValueFromField('label', key)}
+                            <div className="issuePanel">
+                                <h2 style={{ color: "gray" }}>
+                                    <img src={x_icon} id="xIcon" alt="x_icon" onClick={hideIssuePanel}></img>
+                                    {focusedIssue.type}
+                                </h2>
+                                <h1 id="issueName" style={{ alignItems: "center" }}>
+                                    {focusedIssue.title}
+                                </h1>
+                                <div className="issuePanelMain">
+                                    <br />
+                                    {focusedIssue.epicId &&
+                                        <>
+                                            <span
+                                                className="colored_text epic_link"
+                                                onClick={() => showIssuePanel(focusedIssue.epicId)}
                                             >
-                                                X
-                                            </button>
-                                        }
-                                        <span className="issueLabel"> {label} </span>
-                                    </div>
-                                ))}
-                                {
-                                    hasWrite
-                                    &&
-                                    <div>
-                                        <input
-                                            type="text"
-                                            name="newLabel"
-                                            id="newLabel"
-                                            placeholder="+ Add label"
-                                            style={{
-                                                marginLeft: "10px",
-                                                marginRight: "0px",
-                                                border: "1px solid grey",
-                                                borderRadius: "0"
-                                            }}
-                                            value={newLabel}
-                                            onChange={(e) => (setNewLabel(e.target.value))}
-                                        />
-                                        <button
-                                            style={{backgroundColor: "grey"}}
-                                            onClick={() => addNewValueToField('label')}
-                                        >
-                                            +
-                                        </button>
-                                    </div>
-                                }
-                                {Boolean(newLabelError) &&
-                                <p style={{color: 'crimson', marginTop: '-1em', fontSize: '0.8em'}}>{newLabelError}</p>}
-
-                                {/* Comments */}
-                                <p className="label">Comments: </p>
-                                {Boolean(deleteCommentError) && <p style={{color: 'crimson'}}>{deleteCommentError}</p>}
-                                {focusedIssue.comments.map(({key, value: comment}) => (
-                                    <div
-                                        className="issueCommentsWrapper"
-                                        key={key}
+                                                {backlogIssues.find(issue => issue.id === focusedIssue.epicId).key}
+                                            </span>
+                                            <br />
+                                            <br />
+                                        </>
+                                    }
+                                    <h3>Description</h3>
+                                    <p>{focusedIssue.description}</p>
+                                    <br />
+                                    <span className="label" id="status">Status: </span>
+                                    <span className="answer" id="statusAnswer">{focusedIssue.status}</span>
+                                    <br />
+                                    <span className="label" id="priority">Priority: </span>
+                                    <span
+                                        className="colored_text answer"
+                                        style={{
+                                            display: 'inline-block',
+                                            fontSize: '1em',
+                                            marginTop: '0.2em',
+                                            backgroundColor: priorityToColorMapper[focusedIssue.priority]
+                                        }}
                                     >
-                                        {
-                                            hasDelete
-                                            &&
-                                            <button
-                                                className="issueCommentX"
-                                                onClick={() => deleteValueFromField('comment', key)}
-                                            >
-                                                X
-                                            </button>
-                                        }
-                                        <span className="issueComment">
-                        {comment.slice(0, comment.indexOf(','))} wrote: {comment.slice(comment.indexOf(',') + 1)}
-                      </span>
-                                    </div>
-                                ))}
-                                {
-                                    hasWrite
-                                    &&
-                                    <div>
-                                        <input
-                                            type="text"
-                                            name="newComment"
-                                            id="newComment"
-                                            placeholder="+ Add comment"
-                                            style={{
-                                                marginLeft: "10px",
-                                                marginRight: "0px",
-                                                border: "1px solid grey",
-                                                borderRadius: "0"
-                                            }}
-                                            value={newComment}
-                                            onChange={(e) => (setNewComment(e.target.value))}
-                                        />
-                                        <button
-                                            style={{backgroundColor: "grey"}}
-                                            onClick={() => addNewValueToField('comment')}
-                                        >
-                                            +
-                                        </button>
-                                    </div>
-                                }
-                                {Boolean(newCommentError) && <p style={{
-                                    color: 'crimson',
-                                    marginTop: '-1em',
-                                    fontSize: '0.8em'
-                                }}>{newCommentError}</p>}
-
-                                {/* Epic's Links */}
-                                {focusedIssue.type === 'Epic' &&
-                                <div>
-                                    <p className="label">Links: </p>
-                                    {focusedIssue.epicLinks.map(epicLinkObj => (
+                                        {focusedIssue.priority}
+                                    </span>
+                                    <br />
+                                    <br />
+                                    <span className="label" id="resolution">Resolution: </span>
+                                    <span className="answer"
+                                        id="resolutionAnswer">{focusedIssue.resolved ? "Resolved" : "Unresolved"}</span>
+                                    <br />
+                                    <br />
+                                    <span className="label" id="assignee">Assignee: </span>
+                                    <span className="answer"
+                                        id="assigneeAnswer">{focusedIssue.assignee ? focusedIssue.assignee : "-"}</span>
+                                    <br />
+                                    <span className="label" id="reporter">Reporter: </span>
+                                    <span id="reporterAnswer">{focusedIssue.reporter}</span>
+                                    <br />
+                                    <br />
+                                    <span className="label" id="dateCreated">Created on: </span>
+                                    <span className="answer"
+                                        id="dateCreatedAnswer">{new Date(focusedIssue.created).toLocaleString()}</span>
+                                    <br />
+                                    <span className="label" id="dateCreated">Last Updated: </span>
+                                    <span className="answer"
+                                        id="dateCreatedAnswer">{new Date(focusedIssue.updated).toLocaleString()}</span>
+                                    <br /><br />
+                                    {/* Labels */}
+                                    <p className="label">Labels: </p>
+                                    {Boolean(deleteLabelError) && <p style={{ color: 'crimson' }}>{deleteLabelError}</p>}
+                                    {focusedIssue.labels.map(({ key, value: label }) => (
                                         <div
-                                            key={epicLinkObj.id}
-                                            className="issueLinksWrapper"
-                                        >
-                          <span
-                              className="issueLink"
-                              onClick={() => showIssuePanel(epicLinkObj.id)}
-                          >
-                            {epicLinkObj.key},&nbsp;{epicLinkObj.title}
-                          </span>
-                                        </div>
-                                    ))}
-                                </div>
-                                }
-                                {/* Links */}
-                                {focusedIssue.type !== 'Epic' &&
-                                <>
-                                    <p className="label">Links: </p>
-                                    {Boolean(deleteIssueLinkError) &&
-                                    <p style={{color: 'crimson'}}>{deleteIssueLinkError}</p>}
-                                    {focusedIssue.issueLinks.map(linkObject => (
-                                        <div
-                                            key={linkObject.id}
-                                            className="issueLinksWrapper"
+                                            className="issueLabelsWrapper"
+                                            key={key}
                                         >
                                             {
                                                 hasDelete
                                                 &&
                                                 <button
-                                                    className="issueLinkX"
-                                                    onClick={() => deleteValueFromField('link', linkObject.id)}
+                                                    className="issueLabelX"
+                                                    onClick={() => deleteValueFromField('label', key)}
                                                 >
                                                     X
                                                 </button>
                                             }
-                                            <span
-                                                className="issueLink"
-                                                onClick={() => showIssuePanel(linkObject.linkedIssue.id)}
-                                            >
-                            {linkObject.linkType}:&nbsp;{linkObject.linkedIssue.key},&nbsp;{linkObject.linkedIssue.title}
-                          </span>
+                                            <span className="issueLabel"> {label} </span>
                                         </div>
                                     ))}
                                     {
                                         hasWrite
                                         &&
                                         <div>
-                                            <select
-                                                style={{marginLeft: '20px'}}
-                                                value={newIssueLink.key}
-                                                name="newLink"
-                                                onChange={(e) => {
-                                                    if (e.target.value === '') {
-                                                        setNewIssueLink({key: '', title: ''});
-                                                        return;
-                                                    }
-                                                    const {
-                                                        id,
-                                                        key,
-                                                        title
-                                                    } = backlogIssues.find(issue => issue.key === e.target.value);
-                                                    setNewIssueLink({id, key, title});
+                                            <input
+                                                type="text"
+                                                name="newLabel"
+                                                id="newLabel"
+                                                placeholder="+ Add label"
+                                                style={{
+                                                    marginLeft: "10px",
+                                                    marginRight: "0px",
+                                                    border: "1px solid grey",
+                                                    borderRadius: "0"
                                                 }}
-                                            >
-                                                <option value=''>
-                                                    None
-                                                </option>
-                                                {backlogIssues.filter(issue =>
-                                                    (issue.id !== focusedIssueId)
-                                                    &&
-                                                    (issue.type !== 'Epic')
-                                                    &&
-                                                    (focusedIssue.issueLinks.find(linkObj => linkObj.linkedIssue.id === issue.id) === undefined)
-                                                ).map(issue => (
-                                                    <option
-                                                        key={issue.id}
-                                                        value={issue.key}
-                                                    >
-                                                        {issue.key}, {issue.title}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                            <select
-                                                style={{marginLeft: '20px'}}
-                                                value={newIssueLinkType}
-                                                onChange={(e) => setNewIssueLinkType(e.target.value)}
-                                            >
-                                                <option value='DEPENDS_ON'>
-                                                    Depends on
-                                                </option>
-                                                <option value='RELATES_TO'>
-                                                    Relates to
-                                                </option>
-                                            </select>
+                                                value={newLabel}
+                                                onChange={(e) => (setNewLabel(e.target.value))}
+                                            />
                                             <button
-                                                style={{backgroundColor: "grey"}}
-                                                onClick={() => addNewValueToField('link')}
+                                                style={{ backgroundColor: "grey" }}
+                                                onClick={() => addNewValueToField('label')}
                                             >
                                                 +
                                             </button>
                                         </div>
                                     }
-                                    {Boolean(newIssueLinkError) &&
-                                    <p style={{color: 'crimson', fontSize: '0.8em'}}>{newIssueLinkError}</p>}
-                                </>
+                                    {Boolean(newLabelError) &&
+                                        <p style={{ color: 'crimson', marginTop: '-1em', fontSize: '0.8em' }}>{newLabelError}</p>}
+
+                                    {/* Comments */}
+                                    <p className="label">Comments: </p>
+                                    {Boolean(deleteCommentError) && <p style={{ color: 'crimson' }}>{deleteCommentError}</p>}
+                                    {focusedIssue.comments.map(({ key, value: comment }) => (
+                                        <div
+                                            className="issueCommentsWrapper"
+                                            key={key}
+                                        >
+                                            {
+                                                hasDelete
+                                                &&
+                                                <button
+                                                    className="issueCommentX"
+                                                    onClick={() => deleteValueFromField('comment', key)}
+                                                >
+                                                    X
+                                                </button>
+                                            }
+                                            <span className="issueComment">
+                                                {comment.slice(0, comment.indexOf(','))} wrote: {comment.slice(comment.indexOf(',') + 1)}
+                                            </span>
+                                        </div>
+                                    ))}
+                                    {
+                                        hasWrite
+                                        &&
+                                        <div>
+                                            <input
+                                                type="text"
+                                                name="newComment"
+                                                id="newComment"
+                                                placeholder="+ Add comment"
+                                                style={{
+                                                    marginLeft: "10px",
+                                                    marginRight: "0px",
+                                                    border: "1px solid grey",
+                                                    borderRadius: "0"
+                                                }}
+                                                value={newComment}
+                                                onChange={(e) => (setNewComment(e.target.value))}
+                                            />
+                                            <button
+                                                style={{ backgroundColor: "grey" }}
+                                                onClick={() => addNewValueToField('comment')}
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                    }
+                                    {Boolean(newCommentError) && <p style={{
+                                        color: 'crimson',
+                                        marginTop: '-1em',
+                                        fontSize: '0.8em'
+                                    }}>{newCommentError}</p>}
+
+                                    {/* Epic's Links */}
+                                    {focusedIssue.type === 'Epic' &&
+                                        <div>
+                                            <p className="label">Links: </p>
+                                            {focusedIssue.epicLinks.map(epicLinkObj => (
+                                                <div
+                                                    key={epicLinkObj.id}
+                                                    className="issueLinksWrapper"
+                                                >
+                                                    <span
+                                                        className="issueLink"
+                                                        onClick={() => showIssuePanel(epicLinkObj.id)}
+                                                    >
+                                                        {epicLinkObj.key},&nbsp;{epicLinkObj.title}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    }
+                                    {/* Links */}
+                                    {focusedIssue.type !== 'Epic' &&
+                                        <>
+                                            <p className="label">Links: </p>
+                                            {Boolean(deleteIssueLinkError) &&
+                                                <p style={{ color: 'crimson' }}>{deleteIssueLinkError}</p>}
+                                            {focusedIssue.issueLinks.map(linkObject => (
+                                                <div
+                                                    key={linkObject.id}
+                                                    className="issueLinksWrapper"
+                                                >
+                                                    {
+                                                        hasDelete
+                                                        &&
+                                                        <button
+                                                            className="issueLinkX"
+                                                            onClick={() => deleteValueFromField('link', linkObject.id)}
+                                                        >
+                                                            X
+                                                        </button>
+                                                    }
+                                                    <span
+                                                        className="issueLink"
+                                                        onClick={() => showIssuePanel(linkObject.linkedIssue.id)}
+                                                    >
+                                                        {linkObject.linkType}:&nbsp;{linkObject.linkedIssue.key},&nbsp;{linkObject.linkedIssue.title}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                            {
+                                                hasWrite
+                                                &&
+                                                <div>
+                                                    <select
+                                                        style={{ marginLeft: '20px' }}
+                                                        value={newIssueLink.key}
+                                                        name="newLink"
+                                                        onChange={(e) => {
+                                                            if (e.target.value === '') {
+                                                                setNewIssueLink({ key: '', title: '' });
+                                                                return;
+                                                            }
+                                                            const {
+                                                                id,
+                                                                key,
+                                                                title
+                                                            } = backlogIssues.find(issue => issue.key === e.target.value);
+                                                            setNewIssueLink({ id, key, title });
+                                                        }}
+                                                    >
+                                                        <option value=''>
+                                                            None
+                                                        </option>
+                                                        {backlogIssues.filter(issue =>
+                                                            (issue.id !== focusedIssueId)
+                                                            &&
+                                                            (issue.type !== 'Epic')
+                                                            &&
+                                                            (focusedIssue.issueLinks.find(linkObj => linkObj.linkedIssue.id === issue.id) === undefined)
+                                                        ).map(issue => (
+                                                            <option
+                                                                key={issue.id}
+                                                                value={issue.key}
+                                                            >
+                                                                {issue.key}, {issue.title}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                    <select
+                                                        style={{ marginLeft: '20px' }}
+                                                        value={newIssueLinkType}
+                                                        onChange={(e) => setNewIssueLinkType(e.target.value)}
+                                                    >
+                                                        <option value='DEPENDS_ON'>
+                                                            Depends on
+                                                        </option>
+                                                        <option value='RELATES_TO'>
+                                                            Relates to
+                                                        </option>
+                                                    </select>
+                                                    <button
+                                                        style={{ backgroundColor: "grey" }}
+                                                        onClick={() => addNewValueToField('link')}
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                            }
+                                            {Boolean(newIssueLinkError) &&
+                                                <p style={{ color: 'crimson', fontSize: '0.8em' }}>{newIssueLinkError}</p>}
+                                        </>
+                                    }
+                                </div>
+                                {/* Edit Issue */}
+                                {hasWrite &&
+                                    <div style={{ textAlign: "center", marginTop: "20px" }}>
+                                        <Link to={`/project/${projectId}/issue_preview/${focusedIssueId}`} id="editIssueLink">
+                                            <img id="pencilIcon" src={edit_icon} alt="Pencil"></img>
+                                            Edit Issue
+                                        </Link>
+                                    </div>
                                 }
                             </div>
-                            {/* Edit Issue */}
-                            {hasWrite &&
-                            <div style={{textAlign: "center", marginTop: "20px"}}>
-                                <Link to={`/project/${projectId}/issue_preview/${focusedIssueId}`} id="editIssueLink">
-                                    <img id="pencilIcon" src={edit_icon} alt="Pencil"></img>
-                                    Edit Issue
-                                </Link>
-                            </div>
-                            }
-                        </div>
                         }
-                        {sprints.length > 0
-                            // project sprints (if there is one)
+                        {(sprints.length > 0 || !hasRead)
                             ?
                             <div className="sprints">
                                 <div className="title">
-                                    <h2>{projectName} Sprints</h2>
-                                    <button id="add-sprint-button" onClick={showCreateSprintPopup}>+ Create Sprint
-                                    </button>
+                                    <h2>Sprints</h2>
+                                    {
+                                        hasWrite
+                                        &&
+                                        <button id="add-sprint-button" onClick={showCreateSprintPopup}>
+                                            + Create Sprint
+                                        </button>
+                                    }
                                 </div>
-
-                                <form
-                                    onSubmit={handleClearSearch}
-                                    noValidate
-                                    style={!hasRead ? {display: 'none'} : {}}
+                                <p
+                                    style={!hasRead ? { display: 'none' } : {}}
                                 >
-                                    <input
-                                        type="text"
-                                        placeholder="Search for and issue"
-                                        value={searchFilter}
-                                        onChange={(e) => {
-                                            setSearchFilter(e.target.value);
-                                        }}
-                                        style={{margin: "15px 0px", width: "93%"}}
-                                    />
-                                    <button type="submit" style={{backgroundColor: 'grey', border: "2px solid grey"}}>
-                                        X
-                                    </button>
-                                </form>
-                                <hr/>
-                                <br/>
+                                    {sprints.length}&nbsp;{sprints.length === 1 ? 'Sprint' : 'Sprints'}
+                                </p>
+                                {!hasRead &&
+                                    <p style={{ color: 'crimson' }}>You don't have permission to view the Sprints</p>
+                                }
+
+                                <br />
+                                <hr />
+                                <br />
                                 <div className="sprintTable">
                                     {hasRead && sprints.map(sprint => (
-                                        <div className="sprint">
-                                            <div className="head" style={{display: "block"}}>
+                                        <div key={sprint.id} className="sprint">
+                                            <div className="head" style={{ display: "block" }}>
                                                 <div className="info">
                                                     <div>
-                                                        <h3>    <span style={{textAlign: "right"}}>
-                                                        <img id="active-icon"
-                                                             src={sprint.active ? checkedIcon : stoppedIcon}></img></span>
-                                                            Sprint {sprint.id}
+                                                        <h3>
+                                                            <span
+                                                                className="colored_text answer"
+                                                                style={{
+                                                                    display: 'inline-block',
+                                                                    fontSize: '0.8em',
+                                                                    margin: '0.2em',
+                                                                    backgroundColor: statusToColorMapper[getSprintStatus(sprint.startDate, sprint.dueDate)]
+                                                                }}
+                                                            >
+                                                                {getSprintStatus(sprint.startDate, sprint.dueDate)}
+                                                            </span>
+                                                            Sprint {sprints.indexOf(sprint) + 1}
 
                                                         </h3>
                                                         <div className="dates">
                                                             <div>
-                                                                <span style={{fontWeight: "bold"}}>Start date: </span>
-                                                                <span className="dueDate:">{sprint.startDate}</span>
+                                                                <span style={{ fontWeight: "bold" }}>Start date: </span>
+                                                                <span className="dueDate:">{sprint.startDate.split('T', 1)}</span>
                                                             </div>
                                                             <div>
-                                                                <span style={{fontWeight: "bold"}}>Due Date: </span>
-                                                                <span className="timeRemaining:">{sprint.dueDate}</span>
+                                                                <span style={{ fontWeight: "bold" }}>Due Date: </span>
+                                                                <span className="timeRemaining:">{sprint.dueDate.split('T', 1)}</span>
                                                             </div>
                                                         </div>
 
@@ -1172,29 +892,29 @@ const Backlog = ({token, footerHandle, projectClientRef, userId, username}) => {
                                             <div className="tableWrapper">
                                                 <table id="backlogIssuesTable">
                                                     <thead>
-                                                    <tr>
-                                                        <th>Key</th>
-                                                        <th>Title</th>
-                                                        <th>Description</th>
-                                                        <th>Type</th>
-                                                        <th>Priority</th>
-                                                    </tr>
+                                                        <tr>
+                                                            <th>Key</th>
+                                                            <th>Title</th>
+                                                            <th>Description</th>
+                                                            <th>Type</th>
+                                                            <th>Priority</th>
+                                                        </tr>
                                                     </thead>
                                                     <tbody>
-                                                    {hasRead && sprint.issueModels.map(issue => (
-                                                        <tr key={issue.key} onClick={() => showIssuePanel(issue.id)}>
-                                                            <td>{issue.key}</td>
-                                                            <td>{issue.title}</td>
-                                                            <td className="largeCell">{issue.description}</td>
-                                                            <td>{issue.type}</td>
-                                                            <td style={{textAlign: "center"}}>
-                                                            <span className="colored_text" style={{
-                                                                backgroundColor: priorityToColorMapper[issue.priority],
-                                                                fontSize: "12px"
-                                                            }}>{issue.priority}</span>
-                                                            </td>
-                                                        </tr>
-                                                    ))}
+                                                        {hasRead && sprint.issueModels.map(issue => (
+                                                            <tr key={issue.key} onClick={() => showIssuePanel(issue.id)}>
+                                                                <td>{issue.key}</td>
+                                                                <td>{issue.title}</td>
+                                                                <td className="largeCell">{issue.description}</td>
+                                                                <td>{issue.type}</td>
+                                                                <td style={{ textAlign: "center" }}>
+                                                                    <span className="colored_text" style={{
+                                                                        backgroundColor: priorityToColorMapper[issue.priority],
+                                                                        fontSize: "12px"
+                                                                    }}>{issue.priority}</span>
+                                                                </td>
+                                                            </tr>
+                                                        ))}
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -1218,207 +938,216 @@ const Backlog = ({token, footerHandle, projectClientRef, userId, username}) => {
                     </div>
                     {/* create Sprint Popup */}
                     {create_sprint_popup === "show" &&
-                    <div className="createPopup">
-                        <div>
-                            <h2>Create a new Sprint</h2>
-                            <img src={x_icon} id="xIcon" alt="x_icon" onClick={hideCreateSprintPopup}></img>
+                        <div className="createPopup">
+                            <div>
+                                <h2>Create a new Sprint</h2>
+                                <img src={x_icon} id="xIcon" alt="x_icon" onClick={hideCreateSprintPopup}></img>
+                            </div>
+                            <br />
+                            <br />
+                            <form className="newIssueForm" style={{ textAlign: "left" }}>
+                                <div className="priority">
+                                    <p className="label">Select Issues:</p>
+
+                                    <div className="tableWrapper">
+                                        <table id="createSprintTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Key</th>
+                                                    <th>Title</th>
+                                                    <th>Description</th>
+                                                    <th>Priority</th>
+                                                    <th>Select</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {hasRead && backlogIssues
+                                                    .filter(issue => issue.type !== 'Epic')
+                                                    .filter(issue =>
+                                                        sprints
+                                                            .filter(sprint => getSprintStatus(sprint.startDate, sprint.dueDate) !== 'Old')
+                                                            .find(sprint =>
+                                                                sprint.issueModels
+                                                                    .find(sprintIssue => sprintIssue.id === issue.id)
+                                                            ) === undefined
+                                                    )
+                                                    .map(issue => (
+                                                        <tr key={issue.key}>
+                                                            <td>{issue.key}</td>
+                                                            <td>{issue.title}</td>
+                                                            <td className="largeCell">{issue.description}</td>
+                                                            <td style={{ textAlign: "center" }}>
+                                                                <span className="colored_text" style={{
+                                                                    backgroundColor: priorityToColorMapper[issue.priority],
+                                                                    fontSize: "12px"
+                                                                }}>{issue.priority}</span>
+                                                            </td>
+                                                            <td style={{ textAlign: "center" }}>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    defaultChecked={Boolean(newSprintIssues.find(sprintIssue => sprintIssue.id === issue.id))}
+                                                                    onClick={() => handleSprintIssueClick(issue)}
+                                                                />
+                                                            </td>
+
+                                                        </tr>
+                                                    ))
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
+                                        <div>
+                                            <p className="label">Start Date:</p>
+                                            <input
+                                                type="date"
+                                                onChange={(e) => setNewSprintStartDate(e.target.value)}
+                                                value={newSprintStartDate}
+                                                min={getTodayDate()}
+                                                max={getYearAfterTodayDate()}
+                                            />
+                                        </div>
+                                        <div>
+                                            <p className="label">Due Date:</p>
+                                            <input
+                                                type="date"
+                                                onChange={(e) => setNewSprintDueDate(e.target.value)}
+                                                value={newSprintDueDate}
+                                                min={getTodayDate()}
+                                                max={getYearAfterTodayDate()}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style={{ textAlign: "center" }}>
+                                    {Boolean(createSprintError) && <p style={{ color: 'crimson' }}>{createSprintError}</p>}
+                                    <button onClick={handleCreateSprintButtonClick}>Create Sprint</button>
+                                </div>
+                            </form>
                         </div>
-                        <br/>
-                        <br/>
-                        <form className="newIssueForm" style={{textAlign: "left"}}>
-                            {/* <p className="label">Title:</p>
-                <input type="text" id="sprintName" placeholder="Sprint Title" required></input> */}
-                            <div className="priority">
-                                <p className="label">Select Issues:</p>
-
-                                <div className="tableWrapper">
-                                    <table id="createSprintTable">
-                                        <thead>
-                                        <tr>
-                                            <th>Key</th>
-                                            <th>Title</th>
-                                            <th>Description</th>
-                                            <th>Priority</th>
-                                            <th>Select</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {hasRead && backlogIssues.filter(issue => issue.type !== 'Epic').map(issue => (
-                                            <tr key={issue.key}>
-                                                <td>{issue.key}</td>
-                                                <td>{issue.title}</td>
-                                                <td className="largeCell">{issue.description}</td>
-                                                <td style={{textAlign: "center"}}>
-                                                    <span className="colored_text" style={{
-                                                        backgroundColor: priorityToColorMapper[issue.priority],
-                                                        fontSize: "12px"
-                                                    }}>{issue.priority}</span>
-                                                </td>
-                                                <td style={{textAlign: "center"}}>
-                                                    <input
-                                                        type="checkbox"
-                                                        defaultChecked={Boolean(newSprintIssues.find(sprintIssue => sprintIssue.id === issue.id))}
-                                                        onClick={() => handleSprintIssueClick(issue)}
-                                                    />
-                                                </td>
-
-                                            </tr>
-                                        ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '1rem'}}>
-                                    <div>
-                                        <p className="label">Start Date:</p>
-                                        <input
-                                            type="date"
-                                            onChange={(e) => setNewSprintStartDate(e.target.value)}
-                                            value={newSprintStartDate}
-                                            min={getTodayDate()}
-                                            max={getYearAfterTodayDate()}
-                                        />
-                                    </div>
-                                    <div>
-                                        <p className="label">Due Date:</p>
-                                        <input
-                                            type="date"
-                                            onChange={(e) => setNewSprintDueDate(e.target.value)}
-                                            value={newSprintDueDate}
-                                            min={getTodayDate()}
-                                            max={getYearAfterTodayDate()}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div style={{textAlign: "center"}}>
-                                {Boolean(createSprintError) && <p style={{color: 'crimson'}}>{createSprintError}</p>}
-                                <button onClick={handleCreateSprintButtonClick}>Create Sprint</button>
-                            </div>
-                        </form>
-                    </div>
                     }
                     {/* create Issue Popup */}
                     {create_issue_popup === "show" &&
-                    <div className="createPopup">
-                        <div>
-                            <h2>Create a new Issue</h2>
-                            <img src={x_icon} id="xIcon" alt="x_icon" onClick={hideCreateIssuePopup}></img>
+                        <div className="createPopup">
+                            <div>
+                                <h2>Create a new Issue</h2>
+                                <img src={x_icon} id="xIcon" alt="x_icon" onClick={hideCreateIssuePopup}></img>
 
+                            </div>
+                            <br />
+                            <br />
+                            <form
+                                className="newIssueForm"
+                                style={{ textAlign: "left" }}
+                                onSubmit={handleCreateIssueButtonClick}
+                                noValidate
+                            >
+                                <p className="label">Title:</p>
+                                <input
+                                    type="text"
+                                    id="issueName"
+                                    placeholder="Issue Title"
+                                    value={newTitle}
+                                    onChange={(e) => {
+                                        setNewTitle(e.target.value);
+                                    }}
+                                />
+                                <p className="label">Description:</p>
+                                <textarea
+                                    type="range"
+                                    placeholder="Issue Description"
+                                    value={newDescription}
+                                    onChange={(e) => {
+                                        setNewDescription(e.target.value);
+                                    }}
+                                />
+                                <div className="markdowns">
+                                    <div className="issueMarkdown">
+                                        <p className="label">Priority:</p>
+                                        <select
+                                            id="priority"
+                                            onChange={(e) => {
+                                                setNewPriority(e.target.value);
+                                            }}
+                                            value={newPriority}
+                                        >
+                                            {priorities.map((priority) => (
+                                                <option key={priority} value={priority}>
+                                                    {priority}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="issueMarkdown">
+                                        <p className="label">Type:</p>
+                                        <select
+                                            id="type"
+                                            onChange={(e) => {
+                                                setNewType(e.target.value);
+                                            }}
+                                            value={newType}
+                                        >
+                                            {types.map((type) => (
+                                                <option key={type} value={type}>
+                                                    {type}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="issueMarkdown">
+                                        <p className="label">Assignee:</p>
+                                        <select
+                                            id="assignee"
+                                            onChange={(e) => {
+                                                setNewAssignee(e.target.value !== 'None' ? e.target.value : null);
+                                            }}
+                                        >
+                                            <option value='None'>
+                                                None
+                                            </option>
+                                            {members.map(member => (
+                                                <option
+                                                    key={member.id}
+                                                    value={member.id}
+                                                >
+                                                    {member.name} {member.surname}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="issueMarkdown">
+                                        <p className="label">Epic:</p>
+                                        <select
+                                            id="epic"
+                                            onChange={(e) => {
+                                                setNewEpicLink(e.target.value !== 'None' ? e.target.value : null);
+                                            }}
+                                        >
+                                            <option value='None'>
+                                                None
+                                            </option>
+                                            {backlogIssues.filter(issue => issue.type === 'Epic').map(epic => (
+                                                <option
+                                                    key={epic.id}
+                                                    value={epic.id}
+                                                >
+                                                    {epic.key}, {epic.title}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                                {issueCreationError &&
+                                    <p style={{ color: 'crimson', marginTop: '1em', textAlign: 'center' }}>
+                                        {errorMsg}
+                                    </p>
+                                }
+
+                                <div style={{ textAlign: "center" }}>
+                                    <button>Create Issue</button>
+                                </div>
+                            </form>
                         </div>
-                        <br/>
-                        <br/>
-                        <form
-                            className="newIssueForm"
-                            style={{textAlign: "left"}}
-                            onSubmit={handleCreateIssueButtonClick}
-                            noValidate
-                        >
-                            <p className="label">Title:</p>
-                            <input
-                                type="text"
-                                id="issueName"
-                                placeholder="Issue Title"
-                                value={newTitle}
-                                onChange={(e) => {
-                                    setNewTitle(e.target.value);
-                                }}
-                            />
-                            <p className="label">Description:</p>
-                            <textarea
-                                type="range"
-                                placeholder="Issue Description"
-                                value={newDescription}
-                                onChange={(e) => {
-                                    setNewDescription(e.target.value);
-                                }}
-                            />
-                            <div className="markdowns">
-                                <div className="issueMarkdown">
-                                    <p className="label">Priority:</p>
-                                    <select
-                                        id="priority"
-                                        onChange={(e) => {
-                                            setNewPriority(e.target.value);
-                                        }}
-                                        value={newPriority}
-                                    >
-                                        {priorities.map((priority) => (
-                                            <option key={priority} value={priority}>
-                                                {priority}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="issueMarkdown">
-                                    <p className="label">Type:</p>
-                                    <select
-                                        id="type"
-                                        onChange={(e) => {
-                                            setNewType(e.target.value);
-                                        }}
-                                        value={newType}
-                                    >
-                                        {types.map((type) => (
-                                            <option key={type} value={type}>
-                                                {type}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="issueMarkdown">
-                                    <p className="label">Assignee:</p>
-                                    <select
-                                        id="assignee"
-                                        onChange={(e) => {
-                                            setNewAssignee(e.target.value !== 'None' ? e.target.value : null);
-                                        }}
-                                    >
-                                        <option value='None'>
-                                            None
-                                        </option>
-                                        {members.map(member => (
-                                            <option
-                                                key={member.id}
-                                                value={member.id}
-                                            >
-                                                {member.name} {member.surname}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="issueMarkdown">
-                                    <p className="label">Epic:</p>
-                                    <select
-                                        id="epic"
-                                        onChange={(e) => {
-                                            setNewEpicLink(e.target.value !== 'None' ? e.target.value : null);
-                                        }}
-                                    >
-                                        <option value='None'>
-                                            None
-                                        </option>
-                                        {backlogIssues.filter(issue => issue.type === 'Epic').map(epic => (
-                                            <option
-                                                key={epic.id}
-                                                value={epic.id}
-                                            >
-                                                {epic.key}, {epic.title}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-                            {issueCreationError &&
-                            <p style={{color: 'crimson', marginTop: '1em', textAlign: 'center'}}>
-                                {errorMsg}
-                            </p>
-                            }
-
-                            <div style={{textAlign: "center"}}>
-                                <button>Create Issue</button>
-                            </div>
-                        </form>
-                    </div>
                     }
                 </main>
             </div>

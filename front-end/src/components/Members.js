@@ -24,6 +24,7 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
     }
     const showAddMember = () => {
         setAddMemberError('');
+        setNewMember('');
         handleMembersPopup("show");
     }
 
@@ -111,12 +112,16 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
     const addMember = (e) => {
         e.preventDefault();
         if (!newMember) {
-            setAddMemberError('Please fill in the field');
+            setAddMemberError('Please fill in the email address');
+            return;
+        }
+        else if (!newMember.includes('@') || newMember.indexOf('@') === 0 || newMember.indexOf('@') === (newMember.length - 1)) {
+            setAddMemberError('Invalid email format');
             return;
         }
         setAddMemberError('');
 
-        projectClientRef.current.add_user_to_project_with_id(projectId, newMember).then((res) => {
+        projectClientRef.current.add_user_to_project_with_email(projectId, newMember).then(() => {
             fetchMemberPermissions();
             fetchMembers();
             hideAddMember();
@@ -255,7 +260,7 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
                                 <input
                                     id="memberEmail"
                                     type="text"
-                                    placeholder="User Id"
+                                    placeholder="User Email"
                                     value={newMember}
                                     onChange={(e) => { setNewMember(e.target.value); }}
                                 />
