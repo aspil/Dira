@@ -306,7 +306,7 @@
     align-items: center;
 }
 
-#add-sprint-button, #addIssuesButton{
+#add-sprint-button, #addIssuesButton {
     font-size: 20px !important;
     padding: 6px;
 }
