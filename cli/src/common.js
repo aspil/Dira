@@ -1,5 +1,6 @@
 'use strict';
 const { DiraUserClient } = require("dira-clients");
+const { flags } = require('@oclif/command');
 const confirm = require('inquirer-confirm');
 const io_utils = require("./io_utils");
 const questions = require("./questions");
@@ -37,5 +38,21 @@ async function try_get_auth_token_from_fs_or_prompt_for_login() {
     return token;
 }
 
+const common_flags = {
+    "auth-token": flags.string({ char: 't', description: 'The authentication token to use for user' }),
+    login: flags.boolean({ char: 'l', description: 'Force login of user before sending the request' }),
+};
 
-module.exports = { prompt_login_and_get_token, try_get_auth_token_from_fs_or_prompt_for_login };
+async function get_token (parsed_flags) {
+    return parsed_flags.login
+        ? await prompt_login_and_get_token()
+        : parsed_flags['auth-token'] || await try_get_auth_token_from_fs_or_prompt_for_login();
+}
+
+
+module.exports = {
+    prompt_login_and_get_token,
+    try_get_auth_token_from_fs_or_prompt_for_login,
+    get_token,
+    common_flags
+};

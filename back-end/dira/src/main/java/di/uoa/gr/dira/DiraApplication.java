@@ -30,8 +30,7 @@ public class DiraApplication {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("https://localhost:3000").allowedMethods("*");
-                registry.addMapping("/**").allowedOrigins("http://localhost:3000").allowedMethods("*");
+                registry.addMapping("/**").allowedOrigins("http://localhost:3000", "https://localhost:3000").allowedMethods("*");
             }
         };
     }
