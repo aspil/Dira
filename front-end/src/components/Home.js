@@ -1,10 +1,10 @@
 import logo from "../Images/dira_icon.png"
 import { useHistory } from "react-router-dom";
-import { useEffect } from 'react';
+import Footer from "./Footer";
 import { useState } from "react";
 
 
-function Home({ footerHandle }) {
+function Home() {
   const history = useHistory();
   const [email, setEmail] = useState('');
 
@@ -17,7 +17,6 @@ function Home({ footerHandle }) {
       history.push(`/register`);
     }
   }
-  useEffect(footerHandle, [footerHandle]);
 
   return (
     <div className="home">
@@ -48,6 +47,7 @@ function Home({ footerHandle }) {
         <br /><br /><br /><br /><br /><br />
 
       </div>
+      <Footer position={'fixed'}/>
     </div>
   );
 }

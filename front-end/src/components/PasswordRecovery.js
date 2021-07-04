@@ -63,7 +63,7 @@ const PasswordRecovery = ({ navHandle, userClientRef }) => {
           <h1 style={{ fontWeight: "normal", marginBottom: "40px" }}>Password Recovery</h1>
           {step === 1 &&
             <div>
-              <p className="inputHead" style={{ textAlign: 'left' }}>Enter e-mail address:</p>
+              <p className="inputHead" style={{ textAlign: 'left' }}>Enter your e-mail address:</p>
               <input
                 type="text"
                 placeholder="E-mail"
