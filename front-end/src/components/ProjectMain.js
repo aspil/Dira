@@ -17,6 +17,7 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
     visibility: ''
   });
   const [editError, setEditError] = useState('');
+  const [deleteError, setDeleteError] = useState('');
   const [publicProjects, setPublicProjects] = useState([]);
 
 
@@ -65,12 +66,13 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
   }
 
   const handleDeleteProject = (id) => {
+    setDeleteError('');
     projectClientRef.current.delete_project_by_id(id)
       .then(() => {
         fetchAllProjects();
       })
       .catch(err => {
-        console.log('error during deletion');
+        setDeleteError('Couldn\'t delete the project. Check your permissions');
         console.log(err);
       });
   }
@@ -138,30 +140,37 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
           </div>
           {/* tables */}
           {listState === "showProjects" &&
-            <table id="main_table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>Key</th>
-                  <th>Visibility</th>
-                </tr>
-              </thead>
-              <tbody>
-                {projects.map(project => (
-                  <tr key={project.id}>
-                    <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.name}</td>
-                    <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.description}</td>
-                    <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.key}</td>
-                    <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.visibility}</td>
-                    <td style={{ position: "absolute", borderWidth: "0", padding: "0" }}>
-                      <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditProject(project)}></img>
-                      <img id="trashcanIcon" src={trashcan_icon} alt="Trashcan" onClick={() => { handleDeleteProject(project.id); }}></img>
-                    </td>
+            <>
+              <table id="main_table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Key</th>
+                    <th>Visibility</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {projects.map(project => (
+                    <tr key={project.id}>
+                      <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.name}</td>
+                      <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.description}</td>
+                      <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.key}</td>
+                      <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.visibility}</td>
+                      <td style={{ position: "absolute", borderWidth: "0", padding: "0" }}>
+                        <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditProject(project)}></img>
+                        <img id="trashcanIcon" src={trashcan_icon} alt="Trashcan" onClick={() => { handleDeleteProject(project.id); }}></img>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p
+                style={Boolean(deleteError) ? { color: 'crimson', textAlign: 'center' } : { display: 'none' }}
+              >
+                {deleteError}
+              </p>
+            </>
           }
           {/* Edit Project Popop */}
           {edit_project_popup === "show" &&
