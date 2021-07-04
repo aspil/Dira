@@ -3,7 +3,6 @@ const { Command, flags } = require('@oclif/command');
 const { DiraIssueClient } = require("dira-clients");
 const logging = require("../../logging");
 const common = require('../../common');
-const io_utils = require('../../io_utils');
 
 class GetIssueCommand extends Command {
     async run() {
