@@ -622,6 +622,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   {/* Labels */}
                   <p className="label">Labels: </p>
                   {Boolean(deleteLabelError) && <p style={{ color: 'crimson' }}>{deleteLabelError}</p>}
+                  {focusedIssue.labels.length === 0 && <p style={{ marginLeft: '0.5rem' }}>-</p>}
                   {focusedIssue.labels.map(({ key, value: label }) => (
                     <div
                       className="issueLabelsWrapper"
@@ -672,6 +673,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   {/* Comments */}
                   <p className="label">Comments: </p>
                   {Boolean(deleteCommentError) && <p style={{ color: 'crimson' }}>{deleteCommentError}</p>}
+                  {focusedIssue.comments.length === 0 && <p style={{ marginLeft: '0.5rem' }}>-</p>}
                   {focusedIssue.comments.map(({ key, value: comment }) => (
                     <div
                       className="issueCommentsWrapper"
@@ -728,6 +730,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   {focusedIssue.type === 'Epic' &&
                     <div>
                       <p className="label">Links: </p>
+                      {focusedIssue.epicLinks.length === 0 && <p style={{ marginLeft: '0.5rem' }}>-</p>}
                       {focusedIssue.epicLinks.map(epicLinkObj => (
                         <div
                           key={epicLinkObj.id}
@@ -749,6 +752,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                       <p className="label">Links: </p>
                       {Boolean(deleteIssueLinkError) &&
                         <p style={{ color: 'crimson' }}>{deleteIssueLinkError}</p>}
+                      {focusedIssue.issueLinks.length === 0 && <p style={{ marginLeft: '0.5rem' }}>-</p>}
                       {focusedIssue.issueLinks.map(linkObject => (
                         <div
                           key={linkObject.id}
