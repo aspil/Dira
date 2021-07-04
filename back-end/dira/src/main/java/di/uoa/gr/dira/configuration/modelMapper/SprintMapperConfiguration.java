@@ -1,8 +1,11 @@
 package di.uoa.gr.dira.configuration.modelMapper;
 
 
+import di.uoa.gr.dira.entities.issue.Issue;
+import di.uoa.gr.dira.entities.project.Project;
 import di.uoa.gr.dira.entities.sprint.Sprint;
 import di.uoa.gr.dira.models.issue.IssueModel;
+import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.models.sprint.SprintModel;
 import di.uoa.gr.dira.util.mapper.ListConverter;
 import org.modelmapper.ModelMapper;
@@ -14,6 +17,7 @@ public class SprintMapperConfiguration implements IMapConfiguration {
     @Override
     public void configure(ModelMapper mapper) {
         configureSprintEntityToSprintModel(mapper);
+        configureSprintModelToSprintEntity(mapper);
     }
 
     /**
@@ -26,5 +30,10 @@ public class SprintMapperConfiguration implements IMapConfiguration {
         typeMap.addMappings(mapping -> mapping.using(ListConverter.withMapper(mapper, IssueModel.class))
                 .map(Sprint::getIssues, SprintModel::setIssueModels)
         );
+    }
+
+    private void configureSprintModelToSprintEntity(ModelMapper mapper) {
+        TypeMap<SprintModel, Sprint> typeMap = mapper.createTypeMap(SprintModel.class, Sprint.class);
+        typeMap.addMappings(m -> m.skip(SprintModel::getId, Sprint::setId));
     }
 }

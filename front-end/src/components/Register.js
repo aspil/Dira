@@ -2,7 +2,7 @@ import logo from "../Images/dira_icon_cropped.png"
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-const Register = ({ userClientRef, navHandle, enteredEmail }) => {
+const Register = ({ userClientRef, navHandle }) => {
   const { userEmail } = useParams();
   const [name, setName] = useState('')
   const [surname, setSurname] = useState('')

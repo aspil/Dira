@@ -1,19 +1,23 @@
 import x_icon from "../Images/x_icon.png"
-
 import SideNav from './SideNav'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Search } from '@material-ui/icons'
-import { DiraIssueClient } from "dira-clients";
+import { DiraIssueClient, DiraSprintClient } from "dira-clients";
 import edit_icon from "../Images/edit_icon.png"
+
+const getTodayDate = () => {
+  const today = new Date().toLocaleDateString().split('/');
+  return `${today[2]}-${today[0].length === 1 ? '0' + today[0] : today[0]}-${today[1].length === 1 ? '0' + today[1] : today[1]}`;
+}
+const getYearAfterTodayDate = () => {
+  const today = new Date().toLocaleDateString().split('/');
+  return `${String(Number(today[2]) + 1)}-${today[0].length === 1 ? '0' + today[0] : today[0]}-${today[1].length === 1 ? '0' + today[1] : today[1]}`
+}
 
 const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) => {
   const [backlogIssues, setBacklogIssues] = useState([]);
   const [searchFilteredIssues, setSearchFilteredIssues] = useState([]);
   const [searchFilter, setSearchFilter] = useState('');
-  const [sprintIssues, setSprintIssues] = useState([
-    { title: 'Issue y', dateCreated: "10/5/2023", priority: "high", key: 2 },
-  ])
 
   const [members, setMembers] = useState([]);
   const [projectName, setProjectName] = useState('');
@@ -25,7 +29,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   const [newType, setNewType] = useState('Story');
   const [issueCreationError, setIssueCreationError] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const [sprint, handleSprintPanel] = useState("hide");
   const [userPermissions, setUserPermissions] = useState(undefined);
   const [hasRead, setHasRead] = useState(false);
   const [hasWrite, setHasWrite] = useState(false);
@@ -42,17 +45,32 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   const [newIssueLink, setNewIssueLink] = useState({ key: '', title: '' });
   const [newIssueLinkError, setNewIssueLinkError] = useState('');
   const [newIssueLinkType, setNewIssueLinkType] = useState('DEPENDS_ON');
+  const [newSprintIssues, setNewSprintIssues] = useState([]);
+  const [newSprintStartDate, setNewSprintStartDate] = useState(getTodayDate());
+  const [newSprintDueDate, setNewSprintDueDate] = useState(getTodayDate());
+  const [createSprintError, setCreateSprintError] = useState('');
+  const [sprints, setSprints] = useState([]);
 
   const { projectId } = useParams();
   const issueClientRef = useRef(new DiraIssueClient(projectId));
+  const sprintClientRef = useRef(new DiraSprintClient(projectId));
+
 
   useEffect(() => {
     if (token) {
       issueClientRef.current.set_authorization_token(token);
     }
   }, [token, issueClientRef]);
+  useEffect(() => {
+    if (token) {
+      sprintClientRef.current.set_authorization_token(token);
+    }
+  }, [token, sprintClientRef]);
 
   const fetchAllIssues = () => {
+    if (!issueClientRef.current.headers.Authorization) {
+      return;
+    }
     issueClientRef.current.get_all_issues().then((res) => {
       console.log(res);
       setBacklogIssues(res.issues);
@@ -66,6 +84,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   }
 
   const fetchMembers = () => {
+    if (!projectClientRef.current.headers.Authorization) {
+      return;
+    }
+
     projectClientRef.current.get_all_users_in_project_by_id(projectId).then((res) => {
       setMembers(res.users);
     }).catch((err) => {
@@ -73,8 +95,8 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     });
   }
 
-  useEffect(fetchAllIssues, []);
-  useEffect(fetchMembers, []);
+  useEffect(fetchAllIssues, [issueClientRef, issueClientRef.current.headers.Authorization]);
+  useEffect(fetchMembers, [projectClientRef, projectId, projectClientRef.current.headers.Authorization]);
 
   useEffect(footerHandle, [footerHandle]);
 
@@ -107,12 +129,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     if (field === 'label' && !newLabel) {
       setNewLabelError('Please fill in field');
       return;
-    }
-    else if (field === 'comment' && !newComment) {
+    } else if (field === 'comment' && !newComment) {
       setNewCommentError('Please fill in field');
       return;
-    }
-    else if (field === 'link' && !newIssueLink.key) {
+    } else if (field === 'link' && !newIssueLink.key) {
       setNewIssueLinkError('Please pick an issue');
       return;
     }
@@ -121,12 +141,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     if (field === 'label') {
       newIssue.labels.push({ 'value': newLabel });
       setNewLabelError('');
-    }
-    else if (field === 'comment') {
+    } else if (field === 'comment') {
       newIssue.comments.push({ 'value': `${username},${newComment}` });
       setNewCommentError('');
-    }
-    else if (field === 'link') {
+    } else if (field === 'link') {
       newIssue.issueLinks.push({ 'linkType': newIssueLinkType, 'linkedIssue': newIssueLink })
       setNewIssueLinkError('');
     }
@@ -136,11 +154,9 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
         fetchAllIssues();
         if (field === 'label') {
           setNewLabel('');
-        }
-        else if (field === 'comment') {
+        } else if (field === 'comment') {
           setNewComment('');
-        }
-        else if (field === 'link') {
+        } else if (field === 'link') {
           setNewIssueLink({ key: '', title: '' });
           setNewIssueLinkType('DEPENDS_ON');
         }
@@ -149,11 +165,9 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
         console.log(err);
         if (field === 'label') {
           setNewLabelError('Couldn\'t add label');
-        }
-        else if (field === 'comment') {
+        } else if (field === 'comment') {
           setNewCommentError('Couldn\'t add comment');
-        }
-        else if (field === 'link') {
+        } else if (field === 'link') {
           setNewIssueLinkError('Couldn\'t add link');
         }
       })
@@ -164,12 +178,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     if (field === 'label') {
       issue.labels = issue.labels.filter(labelObj => labelObj.key !== toDeleteId);
       setDeleteLabelError('');
-    }
-    else if (field === 'comment') {
+    } else if (field === 'comment') {
       issue.comments = issue.comments.filter(commentObj => commentObj.key !== toDeleteId);
       setDeleteCommentError('');
-    }
-    else if (field === 'link') {
+    } else if (field === 'link') {
       issue.issueLinks = issue.issueLinks.filter(linkObj => linkObj.id !== toDeleteId);
       setDeleteIssueLinkError('');
     }
@@ -182,30 +194,13 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
         console.log(err);
         if (field === 'label') {
           setDeleteLabelError('Couldn\'t delete label');
-        }
-        else if (field === 'comment') {
+        } else if (field === 'comment') {
           setDeleteCommentError('Couldn\'t delete comment');
-        }
-        else if (field === 'link') {
+        } else if (field === 'link') {
           setDeleteIssueLinkError('Couldn\'t delete link');
         }
       });
   }
-
-
-  // Create sprint popup handlers
-  const [create_sprint_popup, handleCreateSprintPopup] = useState("hide");
-  const hideCreateSprintPopup = () => {
-    handleCreateSprintPopup("hide");
-  }
-  const showCreateSprintPopup = () => {
-    handleCreateSprintPopup("show");
-  }
-  const handleCreateSprintButtonClick = () => {
-    hideCreateSprintPopup();
-  }
-
-
 
   // Create issue popup handlers
   const [create_issue_popup, handleCreateIssuePopup] = useState("hide");
@@ -234,8 +229,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       setIssueCreationError(true);
       setErrorMsg('Please fill in both title and description fields');
       return;
-    }
-    else if (newType === 'Epic' && newEpicLink) {
+    } else if (newType === 'Epic' && newEpicLink) {
       setIssueCreationError(true);
       setErrorMsg('An Epic can\'t link to another Epic');
       return;
@@ -273,13 +267,14 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
         issueFields.forEach(field => {
           if (typeof issue[field] === 'string') {
             isRelevant |= issue[field].toLowerCase().includes(searchFilter.toLowerCase());
-          }
-          else if (Array.isArray(issue[field])) {
+          } else if (Array.isArray(issue[field])) {
             issue[field].forEach(arrayItem => {
-              if (field !== 'issueLinks') {
+              if (field !== 'issueLinks' && field !== 'epicLinks') {
                 isRelevant |= arrayItem.value.toLowerCase().includes(searchFilter.toLowerCase());
-              }
-              else {
+              } else if (field === 'epicLinks') {
+                isRelevant |= arrayItem.key.toLowerCase().includes(searchFilter.toLowerCase());
+                isRelevant |= arrayItem.title.toLowerCase().includes(searchFilter.toLowerCase());
+              } else {
                 isRelevant |= arrayItem.linkType.toLowerCase().includes(searchFilter.toLowerCase());
                 isRelevant |= arrayItem.linkedIssue.key.toLowerCase().includes(searchFilter.toLowerCase());
                 isRelevant |= arrayItem.linkedIssue.title.toLowerCase().includes(searchFilter.toLowerCase());
@@ -296,6 +291,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   }, [searchFilter, backlogIssues]);
 
   const fetchUserPermissions = () => {
+    if (!projectClientRef.current.headers.Authorization) {
+      return;
+    }
+
     projectClientRef.current.get_project_permissions_for_all_users(projectId).then(res => {
       console.log(res);
       setUserPermissions(res.find(customer => customer.customerId === userId));
@@ -303,7 +302,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       console.log(err);
     });
   };
-  useEffect(fetchUserPermissions, []);
+  useEffect(fetchUserPermissions, [projectClientRef, projectId, userId, projectClientRef.current.headers.Authorization]);
 
   const decodePermissions = () => {
     if (!userPermissions) {
@@ -350,8 +349,118 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   }
 
 
+  // Create sprint popup handlers
+  const [create_sprint_popup, handleCreateSprintPopup] = useState("hide");
+  const hideCreateSprintPopup = () => {
+    handleCreateSprintPopup("hide");
+  }
+  const showCreateSprintPopup = () => {
+    setNewSprintStartDate(getTodayDate());
+    setNewSprintDueDate(getTodayDate());
+    setNewSprintIssues([]);
+    setCreateSprintError('');
+    handleCreateSprintPopup("show");
+  }
 
+  const handleSprintIssueClick = (issue) => {
+    if (newSprintIssues.find(sprintIssue => sprintIssue.id === issue.id)) {
+      setNewSprintIssues(newSprintIssues.filter(sprintIssue => sprintIssue.id !== issue.id));
+    }
+    else {
+      const sprintIssues = [...newSprintIssues];
+      sprintIssues.push(issue);
+      setNewSprintIssues(sprintIssues);
+    }
+  };
 
+  const handleCreateSprintButtonClick = (e) => {
+    e.preventDefault();
+
+    if (newSprintIssues.length === 0) {
+      setCreateSprintError('No issues selected');
+      return;
+    }
+    else if (new Date(newSprintStartDate) >= new Date(newSprintDueDate)) {
+      setCreateSprintError('Invalid dates selected');
+      return;
+    }
+    else if (sprints.filter(existingSprint => {
+      const startDate = new Date(existingSprint.startDate.split('T', 1)[0]);
+      const dueDate = new Date(existingSprint.dueDate.split('T', 1)[0]);
+      return !(new Date(newSprintStartDate) < startDate && new Date(newSprintDueDate) < startDate)
+        &&
+        !(new Date(newSprintStartDate) > dueDate && new Date(newSprintDueDate) > dueDate);
+    }).length > 0) {
+      setCreateSprintError('The time span of the sprint overlaps with an already existing one');
+      return;
+    }
+    setCreateSprintError('');
+
+    sprintClientRef.current.create_sprint({
+      dueDate: newSprintDueDate,
+      issueModels: newSprintIssues,
+      startDate: newSprintStartDate
+    })
+      .then(res => {
+        console.log('sprint creation response ', res);
+        fetchSprints();
+        hideCreateSprintPopup();
+      })
+      .catch(err => {
+        console.log(err);
+        setCreateSprintError('Couldn\'t create new sprint');
+      });
+  };
+
+  const fetchSprints = () => {
+    if (!sprintClientRef.current.headers.Authorization) {
+      return;
+    }
+    sprintClientRef.current.get_all_sprints().then((res) => {
+      console.log('get sprints response ', res);
+      setSprints(res.sprints);
+    }).catch((err) => {
+      console.log('get sprints error ', err);
+    });
+  };
+  useEffect(fetchSprints, [backlogIssues, sprintClientRef, sprintClientRef.current.headers.Authorization]);
+
+  const statusToColorMapper = {
+    Upcoming: 'brown',
+    Active: 'hotpink',
+    Old: 'grey',
+  }
+
+  const getSprintStatus = (startDate, dueDate) => {
+    const today = new Date();
+
+    if (new Date(startDate.split('T', 1)[0]) <= today && today <= new Date(dueDate.split('T', 1)[0])) {
+      return 'Active';
+    }
+    else if (new Date(startDate.split('T', 1)[0]) > today) {
+      return 'Upcoming';
+    }
+    return 'Old';
+  }
+
+  const deleteEmptySprints = () => {
+    if (!sprintClientRef.current.headers.Authorization) {
+      return;
+    }
+    sprints
+      .filter(sprint => sprint.issueModels.length === 0)
+      .forEach(sprint => {
+        sprintClientRef.current
+          .delete_sprint(sprint.id)
+          .then(() => {
+            fetchSprints();
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      });
+  };
+  useEffect(deleteEmptySprints, [sprints, sprintClientRef, sprintClientRef.current.headers.Authorization]);
 
   return (
     <div className="backlog proj_page">
@@ -366,34 +475,51 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
             <div className="backlogPanel">
               <div className="head">
                 <div className="info">
-                  <h2>Backlog</h2>
+                  <div className="title">
+                    <h2>Backlog</h2>
+                    {hasWrite &&
+                      <div style={{ textAlign: "center" }}>
+                        <button id="addIssuesButton" onClick={showCreateIssuePopup}> + Create New
+                          Issue
+                        </button>
+                      </div>
+                    }
+                  </div>
                   <p
                     className="issue_total"
                     style={!hasRead ? { display: 'none' } : {}}
                   >
-                    {searchFilteredIssues.length} Issues
+                    {searchFilteredIssues.length}&nbsp;{searchFilteredIssues.length === 1 ? 'Issue' : 'Issues'}
                   </p>
                   {!hasRead &&
                     <p style={{ color: 'crimson' }}>You don't have permission to view this Backlog</p>
                   }
                 </div>
-                <form
-                  onSubmit={handleClearSearch}
-                  noValidate
-                  style={!hasRead ? { display: 'none' } : {}}
-                >
-                  <input
-                    type="text"
-                    placeholder="Search for and issue"
-                    value={searchFilter}
-                    onChange={(e) => { setSearchFilter(e.target.value); }}
-                    style={{ marginRight: "0" }}
-                  />
-                  <button type="submit" style={{ backgroundColor: 'grey', border: "2px solid grey" }}>
-                    X
-                  </button>
-                </form>
               </div>
+              <form
+                onSubmit={handleClearSearch}
+                noValidate
+                style={!hasRead ? { display: 'none' } : {}}
+              >
+                <input
+                  type="text"
+                  placeholder="Search for and issue"
+                  value={searchFilter}
+                  onChange={(e) => {
+                    setSearchFilter(e.target.value);
+                  }}
+                  style={{
+                    margin: "15px 0px",
+                    width: "93%"
+                  }}
+                />
+                <button type="submit" style={{ backgroundColor: 'grey', border: "2px solid grey" }}>
+                  X
+                </button>
+              </form>
+              <hr />
+              <br />
+              {/*</div>*/}
               <div className="tableWrapper">
                 <table id="backlogIssuesTable">
                   <thead>
@@ -413,18 +539,17 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                         <td className="largeCell">{issue.description}</td>
                         <td>{issue.type}</td>
                         <td style={{ textAlign: "center" }}>
-                          <span className="colored_text" style={{ backgroundColor: priorityToColorMapper[issue.priority], fontSize: "12px" }}>{issue.priority}</span>
+                          <span className="colored_text" style={{
+                            backgroundColor: priorityToColorMapper[issue.priority],
+                            fontSize: "12px"
+                          }}>{issue.priority}</span>
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              {hasWrite &&
-                <div style={{ textAlign: "center" }}>
-                  <button id="createIssueButton" onClick={showCreateIssuePopup}> + Create New Issue</button>
-                </div>
-              }
+
             </div>
             {/* Issue Panel */}
             {issue_panel === "show" &&
@@ -471,25 +596,30 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   <br />
                   <br />
                   <span className="label" id="resolution">Resolution: </span>
-                  <span className="answer" id="resolutionAnswer">{focusedIssue.resolved ? "Resolved" : "Unresolved"}</span>
+                  <span className="answer"
+                    id="resolutionAnswer">{focusedIssue.resolved ? "Resolved" : "Unresolved"}</span>
                   <br />
                   <br />
                   <span className="label" id="assignee">Assignee: </span>
-                  <span className="answer" id="assigneeAnswer">{focusedIssue.assignee ? focusedIssue.assignee : "-"}</span>
+                  <span className="answer"
+                    id="assigneeAnswer">{focusedIssue.assignee ? focusedIssue.assignee : "-"}</span>
                   <br />
                   <span className="label" id="reporter">Reporter: </span>
                   <span id="reporterAnswer">{focusedIssue.reporter}</span>
                   <br />
                   <br />
                   <span className="label" id="dateCreated">Created on: </span>
-                  <span className="answer" id="dateCreatedAnswer">{new Date(focusedIssue.created).toLocaleString()}</span>
+                  <span className="answer"
+                    id="dateCreatedAnswer">{new Date(focusedIssue.created).toLocaleString()}</span>
                   <br />
                   <span className="label" id="dateCreated">Last Updated: </span>
-                  <span className="answer" id="dateCreatedAnswer">{new Date(focusedIssue.updated).toLocaleString()}</span>
+                  <span className="answer"
+                    id="dateCreatedAnswer">{new Date(focusedIssue.updated).toLocaleString()}</span>
                   <br /><br />
                   {/* Labels */}
                   <p className="label">Labels: </p>
                   {Boolean(deleteLabelError) && <p style={{ color: 'crimson' }}>{deleteLabelError}</p>}
+                  {focusedIssue.labels.length === 0 && <p style={{ marginLeft: '0.5rem' }}>-</p>}
                   {focusedIssue.labels.map(({ key, value: label }) => (
                     <div
                       className="issueLabelsWrapper"
@@ -511,13 +641,18 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   {
                     hasWrite
                     &&
-                    <>
+                    <div>
                       <input
                         type="text"
                         name="newLabel"
                         id="newLabel"
                         placeholder="+ Add label"
-                        style={{ marginLeft: "10px", marginRight: "0px", border: "1px solid grey", borderRadius: "0" }}
+                        style={{
+                          marginLeft: "10px",
+                          marginRight: "0px",
+                          border: "1px solid grey",
+                          borderRadius: "0"
+                        }}
                         value={newLabel}
                         onChange={(e) => (setNewLabel(e.target.value))}
                       />
@@ -527,13 +662,15 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                       >
                         +
                       </button>
-                    </>
+                    </div>
                   }
-                  {Boolean(newLabelError) && <p style={{ color: 'crimson', marginTop: '-1em', fontSize: '0.8em' }}>{newLabelError}</p>}
+                  {Boolean(newLabelError) &&
+                    <p style={{ color: 'crimson', marginTop: '-1em', fontSize: '0.8em' }}>{newLabelError}</p>}
 
                   {/* Comments */}
                   <p className="label">Comments: </p>
                   {Boolean(deleteCommentError) && <p style={{ color: 'crimson' }}>{deleteCommentError}</p>}
+                  {focusedIssue.comments.length === 0 && <p style={{ marginLeft: '0.5rem' }}>-</p>}
                   {focusedIssue.comments.map(({ key, value: comment }) => (
                     <div
                       className="issueCommentsWrapper"
@@ -557,13 +694,18 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                   {
                     hasWrite
                     &&
-                    <>
+                    <div>
                       <input
                         type="text"
                         name="newComment"
                         id="newComment"
                         placeholder="+ Add comment"
-                        style={{ marginLeft: "10px", marginRight: "0px", border: "1px solid grey", borderRadius: "0" }}
+                        style={{
+                          marginLeft: "10px",
+                          marginRight: "0px",
+                          border: "1px solid grey",
+                          borderRadius: "0"
+                        }}
                         value={newComment}
                         onChange={(e) => (setNewComment(e.target.value))}
                       />
@@ -573,15 +715,41 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                       >
                         +
                       </button>
-                    </>
+                    </div>
                   }
-                  {Boolean(newCommentError) && <p style={{ color: 'crimson', marginTop: '-1em', fontSize: '0.8em' }}>{newCommentError}</p>}
+                  {Boolean(newCommentError) && <p style={{
+                    color: 'crimson',
+                    marginTop: '-1em',
+                    fontSize: '0.8em'
+                  }}>{newCommentError}</p>}
 
+                  {/* Epic's Links */}
+                  {focusedIssue.type === 'Epic' &&
+                    <div>
+                      <p className="label">Links: </p>
+                      {focusedIssue.epicLinks.length === 0 && <p style={{ marginLeft: '0.5rem' }}>-</p>}
+                      {focusedIssue.epicLinks.map(epicLinkObj => (
+                        <div
+                          key={epicLinkObj.id}
+                          className="issueLinksWrapper"
+                        >
+                          <span
+                            className="issueLink"
+                            onClick={() => showIssuePanel(epicLinkObj.id)}
+                          >
+                            {epicLinkObj.key},&nbsp;{epicLinkObj.title}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  }
                   {/* Links */}
                   {focusedIssue.type !== 'Epic' &&
                     <>
                       <p className="label">Links: </p>
-                      {Boolean(deleteIssueLinkError) && <p style={{ color: 'crimson' }}>{deleteIssueLinkError}</p>}
+                      {Boolean(deleteIssueLinkError) &&
+                        <p style={{ color: 'crimson' }}>{deleteIssueLinkError}</p>}
+                      {focusedIssue.issueLinks.length === 0 && <p style={{ marginLeft: '0.5rem' }}>-</p>}
                       {focusedIssue.issueLinks.map(linkObject => (
                         <div
                           key={linkObject.id}
@@ -608,7 +776,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                       {
                         hasWrite
                         &&
-                        <>
+                        <div>
                           <select
                             style={{ marginLeft: '20px' }}
                             value={newIssueLink.key}
@@ -618,7 +786,11 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                                 setNewIssueLink({ key: '', title: '' });
                                 return;
                               }
-                              const { id, key, title } = backlogIssues.find(issue => issue.key === e.target.value);
+                              const {
+                                id,
+                                key,
+                                title
+                              } = backlogIssues.find(issue => issue.key === e.target.value);
                               setNewIssueLink({ id, key, title });
                             }}
                           >
@@ -658,9 +830,10 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                           >
                             +
                           </button>
-                        </>
+                        </div>
                       }
-                      {Boolean(newIssueLinkError) && <p style={{ color: 'crimson', fontSize: '0.8em' }}>{newIssueLinkError}</p>}
+                      {Boolean(newIssueLinkError) &&
+                        <p style={{ color: 'crimson', fontSize: '0.8em' }}>{newIssueLinkError}</p>}
                     </>
                   }
                 </div>
@@ -668,57 +841,116 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                 {hasWrite &&
                   <div style={{ textAlign: "center", marginTop: "20px" }}>
                     <Link to={`/project/${projectId}/issue_preview/${focusedIssueId}`} id="editIssueLink">
-                      <img id="pencilIcon" src={edit_icon} alt="Pencil" ></img>
+                      <img id="pencilIcon" src={edit_icon} alt="Pencil"></img>
                       Edit Issue
                     </Link>
                   </div>
                 }
               </div>
             }
-            {sprint === "show"
-              // current sprint (if there is one)
+            {(sprints.length > 0 || !hasRead)
               ?
-              <div className="sprint">
-                <div className="head">
-                  <div className="info">
-                    <h2>Active Sprint</h2>
-                    <span style={{ fontWeight: "bold" }}>Due date: </span>
-                    <span className="dueDate:">12/5/2022</span>
-                    <br />
-                    <span style={{ fontWeight: "bold" }}>Time Remaining: </span>
-                    <span className="timeRemaining:">8 days</span>
-                  </div>
-                  <form>
-                    <input type="search" placeholder="Search for and issue" />
-                    <button type="submit">
-                      <Search fontSize="small" />
+              <div className="sprints">
+                <div className="title">
+                  <h2>Sprints</h2>
+                  {
+                    hasWrite
+                    &&
+                    <button id="add-sprint-button" onClick={showCreateSprintPopup}>
+                      + Create Sprint
                     </button>
-                  </form>
+                  }
                 </div>
-                <div className="tableWrapper">
-                  <table id="backlogIssuesTable">
-                    <tr>
-                      <th>Title</th>
-                      <th>Date Created</th>
-                      <th>Priority</th>
-                    </tr>
-                    {sprintIssues.map(issue => (
-                      <tr key={issue.id} onClick={() => showIssuePanel(issue.id)}>
-                        <td>{issue.title}</td>
-                        <td>{issue.dateCreated}</td>
-                        <td>{issue.priority}</td>
-                      </tr>
-                    ))}
-                  </table>
+                <p
+                  style={!hasRead ? { display: 'none' } : {}}
+                >
+                  {sprints.length}&nbsp;{sprints.length === 1 ? 'Sprint' : 'Sprints'}
+                </p>
+                {!hasRead &&
+                  <p style={{ color: 'crimson' }}>You don't have permission to view the Sprints</p>
+                }
+
+                <br />
+                <hr />
+                <br />
+                <div className="sprintTable">
+                  {hasRead && [...sprints].sort((first, second) => new Date(first.startDate) > new Date(second.startDate) ? 1 : -1).map(sprint => (
+                    <div key={sprint.id} className="sprint">
+                      <div className="head" style={{ display: "block" }}>
+                        <div className="info">
+                          <div>
+                            <h3>
+                              <span
+                                className="colored_text answer"
+                                style={{
+                                  display: 'inline-block',
+                                  fontSize: '0.8em',
+                                  margin: '0.2em',
+                                  backgroundColor: statusToColorMapper[getSprintStatus(sprint.startDate, sprint.dueDate)]
+                                }}
+                              >
+                                {getSprintStatus(sprint.startDate, sprint.dueDate)}
+                              </span>
+                              Sprint {sprints.indexOf(sprint) + 1}
+
+                            </h3>
+                            <div className="dates">
+                              <div>
+                                <span style={{ fontWeight: "bold" }}>Start date: </span>
+                                <span className="dueDate:">{sprint.startDate.split('T', 1)}</span>
+                              </div>
+                              <div>
+                                <span style={{ fontWeight: "bold" }}>Due Date: </span>
+                                <span className="timeRemaining:">{sprint.dueDate.split('T', 1)}</span>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+
+                      </div>
+                      <div className="tableWrapper">
+                        <table id="backlogIssuesTable">
+                          <thead>
+                            <tr>
+                              <th>Key</th>
+                              <th>Title</th>
+                              <th>Description</th>
+                              <th>Type</th>
+                              <th>Priority</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {hasRead && sprint.issueModels.map(issue => (
+                              <tr key={issue.key} onClick={() => showIssuePanel(issue.id)}>
+                                <td>{issue.key}</td>
+                                <td>{issue.title}</td>
+                                <td className="largeCell">{issue.description}</td>
+                                <td>{issue.type}</td>
+                                <td style={{ textAlign: "center" }}>
+                                  <span className="colored_text" style={{
+                                    backgroundColor: priorityToColorMapper[issue.priority],
+                                    fontSize: "12px"
+                                  }}>{issue.priority}</span>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
+
               // create sprint button (if there is no sprint)
               :
               <div className="createSprint">
                 <div id="createSprintContent">
-                  <span id="createSprintText">No active sprint</span>
+                  <span id="createSprintText">No sprints to show</span>
                   <br></br>
-                  <button id="createSprintButton" onClick={showCreateSprintPopup}>+ Create Sprint</button>
+                  <button id="createSprintButton" onClick={showCreateSprintPopup}>+ Create Sprint
+                  </button>
                 </div>
               </div>
             }
@@ -733,19 +965,82 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
               </div>
               <br />
               <br />
-              <form className="newIssueForm" style={{ textAlign: "left" }} >
-                <p>Title:</p>
-                <input type="text" id="sprintName" placeholder="Sprint Title" required></input>
+              <form className="newIssueForm" style={{ textAlign: "left" }}>
                 <div className="priority">
-                  <p>Duration:</p>
-                  <select name="priority" id="priority">
-                    <option value="1week">1 week</option>
-                    <option value="2weeks">2 weeks</option>
-                    <option value="3weeks">3 weeks</option>
-                    <option value="4weeks">4 weeks</option>
-                  </select>
+                  <p className="label">Select Issues:</p>
+
+                  <div className="tableWrapper">
+                    <table id="createSprintTable">
+                      <thead>
+                        <tr>
+                          <th>Key</th>
+                          <th>Title</th>
+                          <th>Description</th>
+                          <th>Priority</th>
+                          <th>Select</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {hasRead && backlogIssues
+                          .filter(issue => issue.type !== 'Epic')
+                          .filter(issue =>
+                            sprints
+                              .filter(sprint => getSprintStatus(sprint.startDate, sprint.dueDate) !== 'Old')
+                              .find(sprint =>
+                                sprint.issueModels
+                                  .find(sprintIssue => sprintIssue.id === issue.id)
+                              ) === undefined
+                          )
+                          .map(issue => (
+                            <tr key={issue.key}>
+                              <td>{issue.key}</td>
+                              <td>{issue.title}</td>
+                              <td className="largeCell">{issue.description}</td>
+                              <td style={{ textAlign: "center" }}>
+                                <span className="colored_text" style={{
+                                  backgroundColor: priorityToColorMapper[issue.priority],
+                                  fontSize: "12px"
+                                }}>{issue.priority}</span>
+                              </td>
+                              <td style={{ textAlign: "center" }}>
+                                <input
+                                  type="checkbox"
+                                  defaultChecked={Boolean(newSprintIssues.find(sprintIssue => sprintIssue.id === issue.id))}
+                                  onClick={() => handleSprintIssueClick(issue)}
+                                />
+                              </td>
+
+                            </tr>
+                          ))
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
+                    <div>
+                      <p className="label">Start Date:</p>
+                      <input
+                        type="date"
+                        onChange={(e) => setNewSprintStartDate(e.target.value)}
+                        value={newSprintStartDate}
+                        min={getTodayDate()}
+                        max={getYearAfterTodayDate()}
+                      />
+                    </div>
+                    <div>
+                      <p className="label">Due Date:</p>
+                      <input
+                        type="date"
+                        onChange={(e) => setNewSprintDueDate(e.target.value)}
+                        value={newSprintDueDate}
+                        min={getTodayDate()}
+                        max={getYearAfterTodayDate()}
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div style={{ textAlign: "center" }}>
+                  {Boolean(createSprintError) && <p style={{ color: 'crimson' }}>{createSprintError}</p>}
                   <button onClick={handleCreateSprintButtonClick}>Create Sprint</button>
                 </div>
               </form>
@@ -753,7 +1048,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
           }
           {/* create Issue Popup */}
           {create_issue_popup === "show" &&
-            <div className="createPopup" style={{ fontWeight: "bold" }}>
+            <div className="createPopup">
               <div>
                 <h2>Create a new Issue</h2>
                 <img src={x_icon} id="xIcon" alt="x_icon" onClick={hideCreateIssuePopup}></img>
@@ -767,55 +1062,65 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                 onSubmit={handleCreateIssueButtonClick}
                 noValidate
               >
-                <p>Title:</p>
+                <p className="label">Title:</p>
                 <input
                   type="text"
                   id="issueName"
                   placeholder="Issue Title"
                   value={newTitle}
-                  onChange={(e) => { setNewTitle(e.target.value); }}
+                  onChange={(e) => {
+                    setNewTitle(e.target.value);
+                  }}
                 />
-                <p>Description:</p>
+                <p className="label">Description:</p>
                 <textarea
                   type="range"
                   placeholder="Issue Description"
                   value={newDescription}
-                  onChange={(e) => { setNewDescription(e.target.value); }}
+                  onChange={(e) => {
+                    setNewDescription(e.target.value);
+                  }}
                 />
                 <div className="markdowns">
                   <div className="issueMarkdown">
-                    <p>Priority:</p>
+                    <p className="label">Priority:</p>
                     <select
                       id="priority"
-                      onChange={(e) => { setNewPriority(e.target.value); }}
+                      onChange={(e) => {
+                        setNewPriority(e.target.value);
+                      }}
                       value={newPriority}
                     >
                       {priorities.map((priority) => (
-                        <option key={priority} value={priority} >
+                        <option key={priority} value={priority}>
                           {priority}
                         </option>
                       ))}
                     </select>
                   </div>
                   <div className="issueMarkdown">
-                    <p>Type:</p>
+                    <p className="label">Type:</p>
                     <select
                       id="type"
-                      onChange={(e) => { setNewType(e.target.value); }}
+                      onChange={(e) => {
+                        setNewType(e.target.value);
+                      }}
                       value={newType}
                     >
                       {types.map((type) => (
-                        <option key={type} value={type} >
+                        <option key={type} value={type}>
                           {type}
                         </option>
                       ))}
                     </select>
                   </div>
                   <div className="issueMarkdown">
-                    <p>Assignee:</p>
+                    <p className="label">Assignee:</p>
                     <select
                       id="assignee"
-                      onChange={(e) => { setNewAssignee(e.target.value !== 'None' ? e.target.value : null); }}
+                      onChange={(e) => {
+                        setNewAssignee(e.target.value !== 'None' ? e.target.value : null);
+                      }}
                     >
                       <option value='None'>
                         None
@@ -831,10 +1136,12 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                     </select>
                   </div>
                   <div className="issueMarkdown">
-                    <p>Epic:</p>
+                    <p className="label">Epic:</p>
                     <select
                       id="epic"
-                      onChange={(e) => { setNewEpicLink(e.target.value !== 'None' ? e.target.value : null); }}
+                      onChange={(e) => {
+                        setNewEpicLink(e.target.value !== 'None' ? e.target.value : null);
+                      }}
                     >
                       <option value='None'>
                         None
@@ -857,14 +1164,14 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                 }
 
                 <div style={{ textAlign: "center" }}>
-                  <button >Create Issue</button>
+                  <button>Create Issue</button>
                 </div>
               </form>
             </div>
           }
         </main>
       </div>
-    </div >
+    </div>
   );
 }
 

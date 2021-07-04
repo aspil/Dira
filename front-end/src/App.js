@@ -1,13 +1,13 @@
 import Home from './components/Home';
 import Register from './components/Register';
 import Login from './components/Login';
-import Plan from './components/Plans'
+import Plan from './components/Plans';
+import Reports from './components/Reports';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import ProjectMain from './components/ProjectMain';
 import ProjectNav from './components/ProjectNav';
 import PasswordRecovery from './components/PasswordRecovery';
 import ChangePassword from './components/ChangePassword';
-import ActiveSprint from './components/ActiveSprint';
 import Members from './components/Members';
 import Backlog from './components/Backlog';
 import IssuePreview from './components/IssuePreview';
@@ -16,9 +16,6 @@ import { DiraProjectClient, DiraUserClient } from "dira-clients";
 import CreateProject from './components/CreateProject';
 import HomeNav from './components/HomeNav';
 import Footer from './components/Footer';
-
-// const userClient = new DiraUserClient();
-// const projectClient = new DiraProjectClient();
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('JWToken') || undefined);
@@ -186,7 +183,7 @@ function App() {
             userPlan={userInfo.plan}
             projectClientRef={projectClientRef} />}
         </Route>
-        <Route path="/backlog/:projectId">
+        <Route path="/project/:projectId/backlog">
           {token === undefined && <Redirect to="/sign_in" />}
           {token !== undefined && <Backlog
             userId={userInfo.id}
@@ -194,11 +191,10 @@ function App() {
             token={token}
             doLogout={doLogout}
             footerHandle={showFooterHook}
-            username={userInfo.username}
             projectClientRef={projectClientRef}
           />}
         </Route>
-        <Route path="/members/:projectId">
+        <Route path="/project/:projectId/members">
           {token === undefined && <Redirect to="/sign_in" />}
           {token !== undefined &&
             <Members
@@ -209,13 +205,13 @@ function App() {
               footerHandle={showFooterHook} />
           }
         </Route>
-        <Route path="/active_sprint/:projectId">
-          {token === undefined && <Redirect to="/sign_in" />}
-          {token !== undefined && <ActiveSprint username={userInfo.username} footerHandle={showFooterHook} />}
-        </Route>
         <Route path="/project/:projectId/issue_preview/:issueId">
           {token === undefined && <Redirect to="/sign_in" />}
           {token !== undefined && <IssuePreview username={userInfo.username} footerHandle={showFooterHook} token={token} />}
+        </Route>
+        <Route path="/project/:projectId/graphic_reports">
+          {token === undefined && <Redirect to="/sign_in" />}
+          {token !== undefined && <Reports footerHandle={showFooterHook} token={token} />}
         </Route>
         <Route path="/create_project">
           {token === undefined && <Redirect to="/sign_in" />}

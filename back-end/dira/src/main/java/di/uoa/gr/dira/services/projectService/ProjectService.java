@@ -1,17 +1,18 @@
 package di.uoa.gr.dira.services.projectService;
 
 import di.uoa.gr.dira.entities.customer.Customer;
+import di.uoa.gr.dira.entities.issue.Issue;
 import di.uoa.gr.dira.entities.project.Permission;
 import di.uoa.gr.dira.entities.project.Project;
+import di.uoa.gr.dira.entities.sprint.Sprint;
 import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.exceptions.project.ProjectAlreadyExistsException;
 import di.uoa.gr.dira.exceptions.project.ProjectNotFoundException;
+import di.uoa.gr.dira.exceptions.project.permission.PermissionNotFoundException;
 import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.models.project.ProjectUsersModel;
-import di.uoa.gr.dira.repositories.CustomerRepository;
-import di.uoa.gr.dira.repositories.PermissionRepository;
-import di.uoa.gr.dira.repositories.ProjectRepository;
+import di.uoa.gr.dira.repositories.*;
 import di.uoa.gr.dira.services.BaseService;
 import di.uoa.gr.dira.services.permissionService.IPermissionService;
 import di.uoa.gr.dira.shared.PermissionType;
@@ -19,7 +20,6 @@ import di.uoa.gr.dira.shared.PermissionTypeEnum;
 import di.uoa.gr.dira.shared.ProjectVisibility;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import di.uoa.gr.dira.util.mapper.MapperHelper;
-import org.jboss.logging.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -28,17 +28,26 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProjectService extends BaseService<ProjectModel, Project, Long, ProjectRepository> implements IProjectService {
+    private final static int STANDARD_MEMBER_LIMIT = 5;
+    private final static int PREMIUM_MEMBER_LIMIT = 15;
+
     CustomerRepository customerRepository;
+    IssueRepository issueRepository;
+    SprintRepository sprintRepository;
     IPermissionService permissionService;
 
     public ProjectService(
             ProjectRepository repository,
             CustomerRepository customerRepository,
+            IssueRepository issueRepository,
+            SprintRepository sprintRepository,
             IPermissionService permissionService,
             ModelMapper mapper) {
         super(repository, mapper);
         this.customerRepository = customerRepository;
         this.permissionService = permissionService;
+        this.issueRepository = issueRepository;
+        this.sprintRepository = sprintRepository;
     }
 
     private Project checkPermissions(Long projectId, Long customerId) {
@@ -71,9 +80,9 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
                 .orElseThrow(() -> new CustomerNotFoundException("customerId", customerId.toString()));
 
         repository.findByKey(projectModel.getKey())
-            .ifPresent(project -> {
-                throw new ProjectAlreadyExistsException("projectId", project.getId().toString());
-            });
+                .ifPresent(project -> {
+                    throw new ProjectAlreadyExistsException("projectId", project.getId().toString());
+                });
 
         if ((customer.getSubscriptionPlan().getPlan().equals(SubscriptionPlanEnum.STANDARD)) && (projectModel.getVisibility().equals(ProjectVisibility.PRIVATE))) {
             throw new ActionNotPermittedException();
@@ -120,11 +129,19 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     @Override
     public void deleteProjectWithId(Long projectId, Long customerId) {
         Project project = checkPermissions(projectId, customerId);
-        for (Customer customer: project.getCustomers()) {
+        for (Customer customer : project.getCustomers()) {
             customer.getProjects().remove(project);
         }
-        customerRepository.saveAll(project.getCustomers());
-        repository.deleteById(projectId);
+        for (Issue issue : project.getIssues()) {
+            issueRepository.delete(issue);
+        }
+        for (Sprint sprint : project.getSprints()) {
+            sprintRepository.delete(sprint);
+        }
+        for (Permission permission : project.getPermissions()) {
+            permissionService.getRepository().delete(permission);
+        }
+        repository.delete(project);
     }
 
     /* ProjectUserController */
@@ -151,8 +168,20 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     @Override
     public void addUserToProjectWithEmail(Long projectId, Long inviterId, String email) {
         Project project = checkPermissions(projectId, inviterId);
+        Customer inviter = customerRepository.findById(inviterId).get();
         Customer customer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomerNotFoundException("email", email));
+
+        if (project.getCustomers().contains(customer)) {
+            throw new ActionNotPermittedException();
+        }
+
+        if (inviter.getSubscriptionPlan().getPlan().equals(SubscriptionPlanEnum.STANDARD) && project.getCustomers().size() == STANDARD_MEMBER_LIMIT) {
+            throw new ActionNotPermittedException();
+        }
+        else if (inviter.getSubscriptionPlan().getPlan().equals(SubscriptionPlanEnum.PREMIUM) && project.getCustomers().size() == PREMIUM_MEMBER_LIMIT) {
+            throw new ActionNotPermittedException();
+        }
 
         project.getCustomers().add(customer);
         repository.save(project);
@@ -162,29 +191,23 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
 
     @Override
     public void deleteUserFromProjectWithId(Long id, Long projectOwnerId, Long userId) {
-        customerRepository.findById(userId).orElseThrow(() -> new CustomerNotFoundException("userId", userId.toString()));
+        Customer customer = customerRepository.findById(userId)
+                .orElseThrow(() -> new CustomerNotFoundException("userId", userId.toString()));
+
         Project project = checkPermissions(id, projectOwnerId);
 
-        project.getPermissions().removeIf(permission -> permission.getUser().getId().equals(userId));
-
-        List<Customer> customers = project.getCustomers();
-        Customer customer = customers.stream()
-                .filter(user -> user.getId().equals(userId))
-                .findFirst()
-                .orElseThrow(() -> new CustomerNotFoundException("userId", userId.toString()));
-        customers.remove(customer);
-        // we might need to delete the project from customer's project list
+        if (!project.getCustomers().contains(customer)) {
+            throw new CustomerNotFoundException(
+                    String.format("Customer %s was not found in project %s", customer.getName(), project.getName())
+            );
+        }
+        project.getCustomers().remove(customer);
         repository.save(project);
-    }
 
-    @Override
-    public void deleteUserFromAllProjects(Long userId) {
-        Customer customer = customerRepository.findById(userId).orElseThrow(() -> new CustomerNotFoundException("userId", userId.toString()));
+        Permission permission = permissionService.getRepository()
+                .findByUserId(customer.getId())
+                .orElseThrow(() -> new PermissionNotFoundException(String.format("Permission for user %s not found", customer.getName())));
 
-        customer.getProjects().forEach(project -> {
-            project.getCustomers().remove(customer);
-            project.getPermissions().removeIf(permission -> permission.getUser().getId().equals(customer.getId()));
-        });
-        customerRepository.save(customer);
+        permissionService.getRepository().delete(permission);
     }
 }

@@ -22,4 +22,24 @@ function fatal(msg) {
     process.exit(1);
 }
 
-module.exports = { info, error, warn, log, fatal };
+function response_error(err, msg) {
+    var err_msg = err.error.message;
+
+    if (msg) {
+        error(msg);
+        err_msg = `Reason: ${err_msg}`;
+    }
+
+    info(err_msg);
+}
+
+function response_success(data, msg) {
+    log();
+    if (msg) {
+        info(msg);
+        log();
+    }
+    console.table(data);
+}
+
+module.exports = { info, error, warn, log, fatal, response_error, response_success };

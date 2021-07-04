@@ -6,8 +6,10 @@ import di.uoa.gr.dira.models.customer.CustomerModel;
 import di.uoa.gr.dira.models.issue.IssueModel;
 import di.uoa.gr.dira.models.project.ProjectIssuesModel;
 import di.uoa.gr.dira.models.project.ProjectModel;
+import di.uoa.gr.dira.models.project.ProjectSprintsModel;
 import di.uoa.gr.dira.models.project.ProjectUsersModel;
 import di.uoa.gr.dira.models.project.permission.ProjectUserPermissionModel;
+import di.uoa.gr.dira.models.sprint.SprintModel;
 import di.uoa.gr.dira.util.mapper.ListConverter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -22,6 +24,7 @@ public class ProjectMapperConfiguration implements IMapConfiguration {
         configureProjectEntityToProjectIssuesModel(mapper);
         configurePermissionEntityToProjectUserPermissionModel(mapper);
         configureProjectUserPermissionModelToPermissionEntity(mapper);
+        configureProjectEntityToProjectSprintsModel(mapper);
     }
 
     /**
@@ -55,6 +58,18 @@ public class ProjectMapperConfiguration implements IMapConfiguration {
         TypeMap<Project, ProjectIssuesModel> typeMap = mapper.createTypeMap(Project.class, ProjectIssuesModel.class);
         typeMap.addMappings(mapping -> mapping.using(ListConverter.withMapper(mapper, IssueModel.class))
                 .map(Project::getIssues, ProjectIssuesModel::setIssues)
+        );
+    }
+
+    /**
+     * Creates the model mapper configuration when mapping a Project entity to a ProjectSprintsModel model
+     *
+     * @param mapper The mapper to configure
+     */
+    private void configureProjectEntityToProjectSprintsModel(ModelMapper mapper) {
+        TypeMap<Project, ProjectSprintsModel> typeMap = mapper.createTypeMap(Project.class, ProjectSprintsModel.class);
+        typeMap.addMappings(mapping -> mapping.using(ListConverter.withMapper(mapper, SprintModel.class))
+                .map(Project::getSprints, ProjectSprintsModel::setSprints)
         );
     }
 

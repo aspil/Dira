@@ -1,6 +1,7 @@
 package di.uoa.gr.dira.controllers;
 
 
+import di.uoa.gr.dira.models.project.ProjectSprintsModel;
 import di.uoa.gr.dira.models.sprint.SprintModel;
 import di.uoa.gr.dira.security.JwtHelper;
 import di.uoa.gr.dira.services.sprintService.ISprintService;
@@ -31,7 +32,7 @@ public class SprintController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @GetMapping
-    public @Valid List<SprintModel> getAllSprintsWithProjectId(
+    public @Valid ProjectSprintsModel getAllSprintsWithProjectId(
             @PathVariable Long projectId,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
         Long customerId = jwtHelper.getId(jwtToken);

@@ -17,6 +17,8 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
     visibility: ''
   });
   const [editError, setEditError] = useState('');
+  const [deleteError, setDeleteError] = useState('');
+  const [publicProjects, setPublicProjects] = useState([]);
 
 
   const editCurrProjField = (field, e) => {
@@ -64,12 +66,13 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
   }
 
   const handleDeleteProject = (id) => {
+    setDeleteError('');
     projectClientRef.current.delete_project_by_id(id)
       .then(() => {
         fetchAllProjects();
       })
       .catch(err => {
-        console.log('error during deletion');
+        setDeleteError('Couldn\'t delete the project. Check your permissions');
         console.log(err);
       });
   }
@@ -88,21 +91,28 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
       console.log(res);
       setProjects(res);
     }).catch((err) => {
+      console.log('error while fetching user projects');
+      console.log(err);
+    });
+  }
+
+  const fetchAllPublicProjects = () => {
+    if (!projectClientRef.current.headers.Authorization) {
+      return;
+    }
+    projectClientRef.current.get_all_projects().then((res) => {
+      setPublicProjects(res.filter(proj => proj.visibility === 'PUBLIC' && !Boolean(projects.find(p => p.id === proj.id))));
+    }).catch((err) => {
       console.log('error while fetching all projects');
       console.log(err);
     });
   }
 
   useEffect(fetchAllProjects, [userInfo.id, userClientRef]);
+  useEffect(fetchAllPublicProjects, [projects, projectClientRef, projectClientRef.current.headers.Authorization]);
 
   useEffect(footerHandle, [footerHandle]);
   useEffect(footerStylesHandle, [footerStylesHandle]);
-
-  const [issues, setIssues] = useState([
-    { title: 'Issue x', project: '14/5/2021', status: "active", id: 1 },
-    { title: 'Issue X', project: 'DD/MM/YYYY', status: "active", id: 2 },
-    { title: 'Issue x', project: '3/8/2022', status: "active", id: 3 }
-  ])
 
   return (
     <div className="projectmain">
@@ -118,42 +128,49 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
             {listState === "showProjects" &&
               <div>
                 <button className="pressedButton" style={{ borderTopLeftRadius: "5px" }}>My Projects</button>
-                <button className="unpressedButton" style={{ borderTopRightRadius: "5px" }} onClick={swapList}>My Active Issues</button>
+                <button className="unpressedButton" style={{ borderTopRightRadius: "5px" }} onClick={swapList}>Dira Public Projects</button>
               </div>
             }
             {listState === "showIssues" &&
               <div>
                 <button className="unpressedButton" style={{ borderTopLeftRadius: "5px" }} onClick={swapList}>My Projects</button>
-                <button className="pressedButton" style={{ borderTopRightRadius: "5px" }}>My Active Issues</button>
+                <button className="pressedButton" style={{ borderTopRightRadius: "5px" }}>Dira Public Projects</button>
               </div>
             }
           </div>
           {/* tables */}
           {listState === "showProjects" &&
-            <table id="main_table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>Key</th>
-                  <th>Visibility</th>
-                </tr>
-              </thead>
-              <tbody>
-                {projects.map(project => (
-                  <tr key={project.id}>
-                    <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.name}</td>
-                    <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.description}</td>
-                    <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.key}</td>
-                    <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.visibility}</td>
-                    <td style={{ position: "absolute", borderWidth: "0", padding: "0" }}>
-                      <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditProject(project)}></img>
-                      <img id="trashcanIcon" src={trashcan_icon} alt="Trashcan" onClick={() => { handleDeleteProject(project.id); }}></img>
-                    </td>
+            <>
+              <table id="main_table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Key</th>
+                    <th>Visibility</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {projects.map(project => (
+                    <tr key={project.id}>
+                      <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.name}</td>
+                      <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.description}</td>
+                      <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.key}</td>
+                      <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.visibility}</td>
+                      <td style={{ position: "absolute", borderWidth: "0", padding: "0" }}>
+                        <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditProject(project)}></img>
+                        <img id="trashcanIcon" src={trashcan_icon} alt="Trashcan" onClick={() => { handleDeleteProject(project.id); }}></img>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p
+                style={Boolean(deleteError) ? { color: 'crimson', textAlign: 'center' } : { display: 'none' }}
+              >
+                {deleteError}
+              </p>
+            </>
           }
           {/* Edit Project Popop */}
           {edit_project_popup === "show" &&
@@ -208,17 +225,17 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
             <table id="main_table">
               <thead>
                 <tr>
-                  <th>Title</th>
-                  <th>Project</th>
-                  <th>Status</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Key</th>
                 </tr>
               </thead>
               <tbody>
-                {issues.map(issue => (
-                  <tr key={issue.id}>
-                    <td>{issue.title}</td>
-                    <td>{issue.project}</td>
-                    <td>{issue.status}</td>
+                {publicProjects.map(project => (
+                  <tr key={project.id}>
+                    <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.name}</td>
+                    <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.description}</td>
+                    <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.key}</td>
                   </tr>
                 ))}
               </tbody>

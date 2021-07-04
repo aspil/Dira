@@ -47,12 +47,6 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
     }
 
     @Override
-    public void deleteById(Long userId) {
-        projectService.deleteUserFromAllProjects(userId);
-        super.deleteById(userId);
-    }
-
-    @Override
     public void updatePlan(Long customerId) {
         Customer customer = repository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException("id", customerId.toString()));

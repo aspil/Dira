@@ -20,6 +20,9 @@ const IssuePreview = ({ footerHandle, token }) => {
   }, [token, issueClientRef]);
 
   const fetchIssue = () => {
+    if (!issueClientRef.current.headers.Authorization) {
+      return;
+    }
     issueClientRef.current.get_issue(issueId)
       .then(res => {
         console.log(res);
@@ -29,7 +32,7 @@ const IssuePreview = ({ footerHandle, token }) => {
         console.log(err);
       })
   }
-  useEffect(fetchIssue, [issueClientRef, issueId]);
+  useEffect(fetchIssue, [issueClientRef.current.headers.Authorization, issueClientRef, issueId]);
 
   const editIssueField = (field, e) => {
     const newIssue = { ...issue };
@@ -56,7 +59,7 @@ const IssuePreview = ({ footerHandle, token }) => {
     issueClientRef.current.update_issue(issueId, issue)
       .then(res => {
         console.log(res);
-        history.push(`/backlog/${projectId}`);
+        history.push(`/project/${projectId}/backlog`);
       })
       .catch(err => {
         console.log(err);
@@ -98,7 +101,7 @@ const IssuePreview = ({ footerHandle, token }) => {
                   <div style={{ margin: "auto", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
                     {/* Priority */}
                     <div>
-                      <span>Priority: </span>
+                      <span className="label">Priority: </span>
                       <select
                         name="priority"
                         id="priority"
@@ -113,7 +116,7 @@ const IssuePreview = ({ footerHandle, token }) => {
                     </div>
                     {/* Status */}
                     <div>
-                      <span>Status: </span>
+                      <span className="label">Status: </span>
                       <select
                         name="status"
                         id="status"
@@ -129,7 +132,7 @@ const IssuePreview = ({ footerHandle, token }) => {
                     </div>
                     <div>
                       {/* Resolution */}
-                      <span>Resolution: </span>
+                      <span className="label">Resolution: </span>
                       <select
                         name="resolution"
                         id="resolution"
@@ -144,7 +147,8 @@ const IssuePreview = ({ footerHandle, token }) => {
                   <br />
                   <div style={{ margin: "auto", alignItems: "center", display: "flex" }}>
                     <div>
-                      <span>Description:</span>
+                      <span className="label">Description:</span>
+                      <br />
                       <textarea
                         type="range"
                         placeholder="Issue Description"
