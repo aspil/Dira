@@ -432,12 +432,12 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   }
 
   const getSprintStatus = (startDate, dueDate) => {
-    const today = new Date();
+    const today = getTodayDate();
 
-    if (new Date(startDate.split('T', 1)[0]) <= today && today <= new Date(dueDate.split('T', 1)[0])) {
+    if (new Date(startDate.split('T', 1)[0]) <= new Date(today) && new Date(today) <= new Date(dueDate.split('T', 1)[0])) {
       return 'Active';
     }
-    else if (new Date(startDate.split('T', 1)[0]) > today) {
+    else if (new Date(startDate.split('T', 1)[0]) > new Date(today)) {
       return 'Upcoming';
     }
     return 'Old';

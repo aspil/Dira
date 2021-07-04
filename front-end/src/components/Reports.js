@@ -6,48 +6,58 @@ import { Bar } from 'react-chartjs-2';
 const Reports = ({ footerHandle, token }) => {
   useEffect(footerHandle, [footerHandle]);
   const { projectId } = useParams();
+  const [datasetBarChart, setDatasetBarChart] = useState([]);
+  const [dataBarChart, setDataBarChart] = useState(null);
 
-  const datasetBarChart = [
-    {
-      assignee: 'Tester',
-      epicsAssigned: 10,
-      storiesAssigned: 5,
-      defectsAssigned: 19,
-    },
-    {
-      assignee: 'Tester2',
-      epicsAssigned: 6,
-      storiesAssigned: 15,
-      defectsAssigned: 12,
-    },
-    {
-      assignee: 'Tester3',
-      epicsAssigned: 16,
-      storiesAssigned: 2,
-      defectsAssigned: 8,
-    },
-  ]
-
-  const dataBarChart = {
-    labels: datasetBarChart.map(record => record.assignee),
-    datasets: [
+  const fetchBarChartDataset = () => {
+    setDatasetBarChart([
       {
-        label: 'Epics',
-        data: datasetBarChart.map(record => record.epicsAssigned),
-        backgroundColor: 'rgb(255, 99, 132)',
+        assignee: 'Tester',
+        epicsAssigned: 10,
+        storiesAssigned: 5,
+        defectsAssigned: 19,
       },
       {
-        label: 'Stories',
-        data: datasetBarChart.map(record => record.storiesAssigned),
-        backgroundColor: 'rgb(54, 162, 235)',
+        assignee: 'Tester2',
+        epicsAssigned: 6,
+        storiesAssigned: 15,
+        defectsAssigned: 12,
       },
       {
-        label: 'Defects',
-        data: datasetBarChart.map(record => record.defectsAssigned),
-        backgroundColor: 'rgb(75, 192, 192)',
+        assignee: 'Tester3',
+        epicsAssigned: 16,
+        storiesAssigned: 2,
+        defectsAssigned: 8,
       },
-    ]
+    ]);
   };
+  useEffect(fetchBarChartDataset, []);
+
+  const prepareBarChartProps = () => {
+    setDataBarChart({
+      labels: datasetBarChart.map(record => record.assignee),
+      datasets: [
+        {
+          label: 'Epics',
+          data: datasetBarChart.map(record => record.epicsAssigned),
+          backgroundColor: 'rgb(255, 99, 132)',
+        },
+        {
+          label: 'Stories',
+          data: datasetBarChart.map(record => record.storiesAssigned),
+          backgroundColor: 'rgb(54, 162, 235)',
+        },
+        {
+          label: 'Defects',
+          data: datasetBarChart.map(record => record.defectsAssigned),
+          backgroundColor: 'rgb(75, 192, 192)',
+        },
+      ]
+    });
+
+  }
+  useEffect(prepareBarChartProps, [datasetBarChart]);
+
 
   const optionsBarChart = {
     responsive: true,
@@ -89,7 +99,7 @@ const Reports = ({ footerHandle, token }) => {
             }}
           >
             <div style={{ flexBasis: '40%' }}>
-              <Bar data={dataBarChart} options={optionsBarChart} />
+              {dataBarChart !== null && <Bar data={dataBarChart} options={optionsBarChart} />}
             </div>
 
             <div style={{ backgroundColor: 'purple', flexBasis: '40%' }}>
