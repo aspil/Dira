@@ -150,10 +150,10 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
               <tbody>
                 {projects.map(project => (
                   <tr key={project.id}>
-                    <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.name}</td>
-                    <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.description}</td>
-                    <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.key}</td>
-                    <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.visibility}</td>
+                    <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.name}</td>
+                    <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.description}</td>
+                    <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.key}</td>
+                    <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.visibility}</td>
                     <td style={{ position: "absolute", borderWidth: "0", padding: "0" }}>
                       <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditProject(project)}></img>
                       <img id="trashcanIcon" src={trashcan_icon} alt="Trashcan" onClick={() => { handleDeleteProject(project.id); }}></img>
@@ -224,9 +224,9 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
               <tbody>
                 {publicProjects.map(project => (
                   <tr key={project.id}>
-                    <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.name}</td>
-                    <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.description}</td>
-                    <td onClick={() => { history.push(`/backlog/${project.id}`) }}>{project.key}</td>
+                    <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.name}</td>
+                    <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.description}</td>
+                    <td onClick={() => { history.push(`/project/${project.id}/backlog`) }}>{project.key}</td>
                   </tr>
                 ))}
               </tbody>

@@ -59,7 +59,7 @@ const IssuePreview = ({ footerHandle, token }) => {
     issueClientRef.current.update_issue(issueId, issue)
       .then(res => {
         console.log(res);
-        history.push(`/backlog/${projectId}`);
+        history.push(`/project/${projectId}/backlog`);
       })
       .catch(err => {
         console.log(err);

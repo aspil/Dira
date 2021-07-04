@@ -7,15 +7,15 @@ const SideNav = () => {
   const links = [
     {
       name: "Active Sprint",
-      path: `/active_sprint/${projectId}`
+      path: `/project/${projectId}/active_sprint`
     },
     {
       name: "Backlog",
-      path: `/backlog/${projectId}`
+      path: `/project/${projectId}/backlog`
     },
     {
       name: "Members",
-      path: `/members/${projectId}`
+      path: `/project/${projectId}/members`
     },
   ]
 

@@ -186,7 +186,7 @@ function App() {
             userPlan={userInfo.plan}
             projectClientRef={projectClientRef} />}
         </Route>
-        <Route path="/backlog/:projectId">
+        <Route path="/project/:projectId/backlog">
           {token === undefined && <Redirect to="/sign_in" />}
           {token !== undefined && <Backlog
             userId={userInfo.id}
@@ -194,11 +194,10 @@ function App() {
             token={token}
             doLogout={doLogout}
             footerHandle={showFooterHook}
-            username={userInfo.username}
             projectClientRef={projectClientRef}
           />}
         </Route>
-        <Route path="/members/:projectId">
+        <Route path="/project/:projectId/members">
           {token === undefined && <Redirect to="/sign_in" />}
           {token !== undefined &&
             <Members
@@ -209,7 +208,7 @@ function App() {
               footerHandle={showFooterHook} />
           }
         </Route>
-        <Route path="/active_sprint/:projectId">
+        <Route path="/project/:projectId/active_sprint">
           {token === undefined && <Redirect to="/sign_in" />}
           {token !== undefined && <ActiveSprint username={userInfo.username} footerHandle={showFooterHook} />}
         </Route>
