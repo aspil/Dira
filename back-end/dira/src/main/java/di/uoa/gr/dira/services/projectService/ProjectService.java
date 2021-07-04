@@ -168,6 +168,10 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
         Customer customer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomerNotFoundException("email", email));
 
+        if (project.getCustomers().contains(customer)) {
+            throw new ActionNotPermittedException();
+        }
+
         project.getCustomers().add(customer);
         repository.save(project);
 
@@ -194,16 +198,5 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
                 .orElseThrow(() -> new PermissionNotFoundException(String.format("Permission for user %s not found", customer.getName())));
 
         permissionService.getRepository().delete(permission);
-    }
-
-    @Override
-    public void deleteUserFromAllProjects(Long userId) {
-        Customer customer = customerRepository.findById(userId).orElseThrow(() -> new CustomerNotFoundException("userId", userId.toString()));
-
-        customer.getProjects().forEach(project -> {
-            project.getCustomers().remove(customer);
-            project.getPermissions().removeIf(permission -> permission.getUser().getId().equals(customer.getId()));
-        });
-        customerRepository.save(customer);
     }
 }
