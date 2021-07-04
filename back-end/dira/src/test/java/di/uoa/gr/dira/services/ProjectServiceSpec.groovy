@@ -10,8 +10,10 @@ import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException
 import di.uoa.gr.dira.exceptions.project.ProjectAlreadyExistsException
 import di.uoa.gr.dira.models.project.ProjectModel
 import di.uoa.gr.dira.repositories.CustomerRepository
+import di.uoa.gr.dira.repositories.IssueRepository
 import di.uoa.gr.dira.repositories.PermissionRepository
 import di.uoa.gr.dira.repositories.ProjectRepository
+import di.uoa.gr.dira.repositories.SprintRepository
 import di.uoa.gr.dira.services.permissionService.PermissionService
 import di.uoa.gr.dira.services.projectService.ProjectService
 import di.uoa.gr.dira.shared.PermissionType
@@ -34,9 +36,11 @@ class ProjectServiceSpec extends Specification {
     private final CustomerRepository customerRepository = Mock()
     private final PermissionRepository permissionRepository = Mock()
     private final PermissionService permissionService = Mock()
+    private final IssueRepository issueRepository = Mock()
+    private final SprintRepository sprintRepository = Mock()
 
     void setup() {
-        service = new ProjectService(projectRepository, customerRepository, permissionService, mapper)
+        service = new ProjectService(projectRepository, customerRepository, issueRepository, sprintRepository, permissionService, mapper)
     }
 
     def "find all public projects"() {
