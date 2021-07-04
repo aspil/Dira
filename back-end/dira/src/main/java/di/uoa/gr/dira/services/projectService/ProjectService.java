@@ -28,6 +28,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProjectService extends BaseService<ProjectModel, Project, Long, ProjectRepository> implements IProjectService {
+    private final static int STANDARD_MEMBER_LIMIT = 5;
+    private final static int PREMIUM_MEMBER_LIMIT = 15;
+
     CustomerRepository customerRepository;
     IssueRepository issueRepository;
     SprintRepository sprintRepository;
@@ -165,10 +168,18 @@ public class ProjectService extends BaseService<ProjectModel, Project, Long, Pro
     @Override
     public void addUserToProjectWithEmail(Long projectId, Long inviterId, String email) {
         Project project = checkPermissions(projectId, inviterId);
+        Customer inviter = customerRepository.findById(inviterId).get();
         Customer customer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomerNotFoundException("email", email));
 
         if (project.getCustomers().contains(customer)) {
+            throw new ActionNotPermittedException();
+        }
+
+        if (inviter.getSubscriptionPlan().getPlan().equals(SubscriptionPlanEnum.STANDARD) && project.getCustomers().size() == STANDARD_MEMBER_LIMIT) {
+            throw new ActionNotPermittedException();
+        }
+        else if (inviter.getSubscriptionPlan().getPlan().equals(SubscriptionPlanEnum.PREMIUM) && project.getCustomers().size() == PREMIUM_MEMBER_LIMIT) {
             throw new ActionNotPermittedException();
         }
 
