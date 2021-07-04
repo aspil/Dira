@@ -446,6 +446,25 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     return 'Old';
   }
 
+  const deleteEmptySprints = () => {
+    if (!sprintClientRef.current.headers.Authorization) {
+      return;
+    }
+    sprints
+      .filter(sprint => sprint.issueModels.length === 0)
+      .forEach(sprint => {
+        sprintClientRef.current
+          .delete_sprint(sprint.id)
+          .then(() => {
+            fetchSprints();
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      });
+  };
+  useEffect(deleteEmptySprints, [sprints, sprintClientRef, sprintClientRef.current.headers.Authorization]);
+
   return (
     <div className="backlog proj_page">
       <div className="center_content">

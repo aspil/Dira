@@ -6,10 +6,6 @@ const SideNav = () => {
 
   const links = [
     {
-      name: "Active Sprint",
-      path: `/project/${projectId}/active_sprint`
-    },
-    {
       name: "Backlog",
       path: `/project/${projectId}/backlog`
     },

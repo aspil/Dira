@@ -7,7 +7,6 @@ import ProjectMain from './components/ProjectMain';
 import ProjectNav from './components/ProjectNav';
 import PasswordRecovery from './components/PasswordRecovery';
 import ChangePassword from './components/ChangePassword';
-import ActiveSprint from './components/ActiveSprint';
 import Members from './components/Members';
 import Backlog from './components/Backlog';
 import IssuePreview from './components/IssuePreview';
@@ -16,9 +15,6 @@ import { DiraProjectClient, DiraUserClient } from "dira-clients";
 import CreateProject from './components/CreateProject';
 import HomeNav from './components/HomeNav';
 import Footer from './components/Footer';
-
-// const userClient = new DiraUserClient();
-// const projectClient = new DiraProjectClient();
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('JWToken') || undefined);
@@ -207,10 +203,6 @@ function App() {
               userId={userInfo.id}
               footerHandle={showFooterHook} />
           }
-        </Route>
-        <Route path="/project/:projectId/active_sprint">
-          {token === undefined && <Redirect to="/sign_in" />}
-          {token !== undefined && <ActiveSprint username={userInfo.username} footerHandle={showFooterHook} />}
         </Route>
         <Route path="/project/:projectId/issue_preview/:issueId">
           {token === undefined && <Redirect to="/sign_in" />}
