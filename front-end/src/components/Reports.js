@@ -5,8 +5,12 @@ import { Bar } from 'react-chartjs-2';
 import { DiraIssueClient } from 'dira-clients';
 
 const Reports = ({ footerHandle, token, projectClientRef, fetchAllIssues, fetchMembers }) => {
-  const [datasetBarChart, setDatasetBarChart] = useState([]);
-  const [dataBarChart, setDataBarChart] = useState(null);
+  // const [datasetBarChart, setDatasetBarChart] = useState([]);
+  const [dataIssuesByMemberBarChart, setDataIssuesByMemberBarChart] = useState(null);
+  const [dataIssuesByPriorityBarChart, setDataIssuesByPriorityBarChart] = useState(null);
+  const [projectIssues, setProjectIssues] = useState([]);
+  const [projectMembers, setProjectMembers] = useState([]);
+  const [projectName, setProjectName] = useState('');
 
   useEffect(footerHandle, [footerHandle]);
 
@@ -19,77 +23,127 @@ const Reports = ({ footerHandle, token, projectClientRef, fetchAllIssues, fetchM
     }
   }, [token, issueClientRef]);
 
-  const fetchBarChartDataset = () => {
-    setDatasetBarChart([
-      {
-        assignee: 'Tester',
-        epicsAssigned: 10,
-        storiesAssigned: 5,
-        defectsAssigned: 19,
-      },
-      {
-        assignee: 'Tester2',
-        epicsAssigned: 6,
-        storiesAssigned: 15,
-        defectsAssigned: 12,
-      },
-      {
-        assignee: 'Tester3',
-        epicsAssigned: 16,
-        storiesAssigned: 2,
-        defectsAssigned: 8,
-      },
-    ]);
-  };
-  useEffect(fetchBarChartDataset, []);
+  useEffect(() => fetchAllIssues(issueClientRef, setProjectIssues, setProjectName, null, null),
+    [issueClientRef, issueClientRef.current.headers.Authorization, fetchAllIssues]
+  );
+  useEffect(() => fetchMembers(projectId, setProjectMembers),
+    [projectClientRef, projectId, projectClientRef.current.headers.Authorization, fetchMembers]
+  );
 
-  const prepareBarChartProps = () => {
-    setDataBarChart({
-      labels: datasetBarChart.map(record => record.assignee),
+  // const fetchBarChartDataset = () => {
+  //   setDatasetBarChart([
+  //     {
+  //       assignee: 'Tester',
+  //       epicsAssigned: 10,
+  //       storiesAssigned: 5,
+  //       defectsAssigned: 19,
+  //     },
+  //     {
+  //       assignee: 'Tester2',
+  //       epicsAssigned: 6,
+  //       storiesAssigned: 15,
+  //       defectsAssigned: 12,
+  //     },
+  //     {
+  //       assignee: 'Tester3',
+  //       epicsAssigned: 16,
+  //       storiesAssigned: 2,
+  //       defectsAssigned: 8,
+  //     },
+  //   ]);
+  // };
+  // useEffect(fetchBarChartDataset, []);
+
+  const prepareIssuesByMemberBarChartProps = () => {
+    setDataIssuesByMemberBarChart({
+      labels: projectMembers.map(member => member.name),
       datasets: [
         {
           label: 'Epics',
-          data: datasetBarChart.map(record => record.epicsAssigned),
-          backgroundColor: 'rgb(255, 99, 132)',
+          data: projectMembers.map(member => projectIssues.filter(issue => issue.assignee === member.name && issue.type === 'Epic').length),
+          backgroundColor: 'rgb(255, 99, 132, 0.4)',
+          borderColor: 'rgb(255, 99, 132, 1)',
+          borderWidth: 2
         },
         {
           label: 'Stories',
-          data: datasetBarChart.map(record => record.storiesAssigned),
-          backgroundColor: 'rgb(54, 162, 235)',
+          data: projectMembers.map(member => projectIssues.filter(issue => issue.assignee === member.name && issue.type === 'Story').length),
+          backgroundColor: 'rgb(54, 162, 235, 0.4)',
+          borderColor: 'rgb(54, 162, 235, 1)',
+          borderWidth: 2
         },
         {
           label: 'Defects',
-          data: datasetBarChart.map(record => record.defectsAssigned),
-          backgroundColor: 'rgb(75, 192, 192)',
+          data: projectMembers.map(member => projectIssues.filter(issue => issue.assignee === member.name && issue.type === 'Defect').length),
+          backgroundColor: 'rgb(75, 192, 192, 0.4)',
+          borderColor: 'rgb(75, 192, 192, 1)',
+          borderWidth: 2
         },
       ]
     });
 
   }
-  useEffect(prepareBarChartProps, [datasetBarChart]);
+  useEffect(prepareIssuesByMemberBarChartProps, [projectMembers, projectIssues]);
 
 
-  const optionsBarChart = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: true,
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Issues Assigned per Member'
-      },
-      scales: {
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: true,
+  const prepareIssuesByPriorityBarChartProps = () => {
+    const priorities = [
+      'Normal',
+      'Low',
+      'Major',
+      'Blocked'
+    ]
+    const priorityToColorMapper = {
+      Normal: 'rgba(75, 192, 192, 0.4)',
+      Low: 'rgba(54, 162, 235, 0.4)',
+      Major: 'rgba(255, 99, 132, 0.4)',
+      Blocked: 'rgba(153, 102, 255, 0.4)',
+    }
+    const priorityToColorBorderMapper = {
+      Normal: 'rgba(75, 192, 192, 1)',
+      Low: 'rgba(54, 162, 235, 1)',
+      Major: 'rgba(255, 99, 132, 1)',
+      Blocked: 'rgba(153, 102, 255, 1)',
+    }
+    setDataIssuesByPriorityBarChart({
+      labels: priorities,
+      datasets: [
+        {
+          label: '# of Issues',
+          data: priorities.map(priority => projectIssues.filter(issue => issue.priority === priority).length),
+          backgroundColor: priorities.map(priority => priorityToColorMapper[priority]),
+          borderColor: priorities.map(priority => priorityToColorBorderMapper[priority]),
+          borderWidth: 2
+        }
+      ]
+    });
+
+  }
+  useEffect(prepareIssuesByPriorityBarChartProps, [projectIssues]);
+
+  const getOptionsBarChart = (title) => {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: title
+        },
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+              },
             },
-          },
-        ],
-      },
+          ],
+        },
+      }
     }
   };
 
@@ -97,7 +151,8 @@ const Reports = ({ footerHandle, token, projectClientRef, fetchAllIssues, fetchM
     <div className="proj_page">
       <div className="center_content">
         <SideNav />
-        <main >
+        <main style={{ padding: '0' }}>
+          <h1 style={{ textAlign: 'center' }}>{projectName} Statistic Reports</h1>
           <div
             style={{
               display: 'flex',
@@ -105,14 +160,35 @@ const Reports = ({ footerHandle, token, projectClientRef, fetchAllIssues, fetchM
               width: '95%',
               margin: 'auto',
               flexDirection: 'column',
-              justifyContent: 'space-around'
+              justifyContent: 'space-evenly'
             }}
           >
-            <div style={{ flexBasis: '40%' }}>
-              {dataBarChart !== null && <Bar data={dataBarChart} options={optionsBarChart} />}
+            <div style={{ flexBasis: '45%' }}>
+              {
+                dataIssuesByMemberBarChart !== null
+                &&
+                <Bar data={dataIssuesByMemberBarChart} options={getOptionsBarChart('Issues Assigned Per Member')} />
+              }
             </div>
 
-            <div style={{ backgroundColor: 'purple', flexBasis: '40%' }}>
+            <div
+              style={{
+                flexBasis: '48%',
+                marginBottom: '2%'
+                // display: 'flex',
+                // justifyContent: 'space-between'
+              }}
+            >
+              {/* <div style={{ flexBasis: '48%' }}> */}
+              {
+                dataIssuesByPriorityBarChart !== null
+                &&
+                <Bar data={dataIssuesByPriorityBarChart} options={getOptionsBarChart('Issues Per Priority')} />
+              }
+              {/* </div> */}
+
+              {/* <div style={{ flexBasis: '48%', backgroundColor: 'orange' }}> */}
+              {/* </div> */}
             </div>
           </div>
         </main>

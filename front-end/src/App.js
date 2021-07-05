@@ -243,7 +243,13 @@ function App() {
         </Route>
         <Route path="/project/:projectId/graphic_reports">
           {token === undefined && <Redirect to="/sign_in" />}
-          {token !== undefined && <Reports footerHandle={showFooterHook} token={token} />}
+          {token !== undefined && <Reports
+            footerHandle={showFooterHook}
+            token={token}
+            projectClientRef={projectClientRef}
+            fetchAllIssues={fetchAllIssues}
+            fetchMembers={fetchMembers}
+          />}
         </Route>
         <Route path="/create_project">
           {token === undefined && <Redirect to="/sign_in" />}

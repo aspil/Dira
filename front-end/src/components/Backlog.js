@@ -479,7 +479,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
               >
                 <input
                   type="text"
-                  placeholder="Search for and issue"
+                  placeholder="Search for an issue"
                   value={searchFilter}
                   onChange={(e) => {
                     setSearchFilter(e.target.value);
