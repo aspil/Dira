@@ -27,7 +27,7 @@ function Home() {
       <div className="home_grad1">
         <img src={logo} alt="dira logo" id="dira logo" />
 
-        <form onSubmit={handleStartForFreeButtonClick}>
+        <form onSubmit={handleStartForFreeButtonClick} style={{display:"flex", alignItems:"center"}}>
           <input
             type="email"
             placeholder="Email Adress"
