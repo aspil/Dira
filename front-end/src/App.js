@@ -50,7 +50,7 @@ function App() {
   }, [token, projectClientRef]);
 
   const refreshToken = () => {
-    if (projectClientRef.current.headers.Authorization) {
+    if (isLogged && projectClientRef.current.headers.Authorization) {
       projectClientRef.current.keepalive()
         .then((res) => {
           setToken(res.token);
