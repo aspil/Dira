@@ -42,10 +42,12 @@ p,h1,h2,h3,h4,h5,link,a,tr,td,th{
 
 /* Homepage */
 .home .home_grad1 {
+  border-bottom: 1px solid lightgray;
   background-image: linear-gradient(to bottom, rgb(0, 132, 255) , rgb(255, 255, 255));
 }
 .home .home_grad2 {
   background-image: linear-gradient(to top, rgb(0, 132, 255) , rgb(255, 255, 255));
+
 }
 .home_nav {
   height: 7vh;
@@ -138,6 +140,24 @@ button:hover{
     border-radius: 5px;
 
 }
+.home .homeScreenshot{
+  border-radius: 15px;
+  box-shadow: 7px 7px 10px black;
+  /* margin-right: 0;
+  margin-left: 0; */
+
+}
+.home .rightContent{
+  margin-right: 5%;
+}
+.home .leftContent{
+  margin-left: 5%;
+}
+.home .description{
+  font-size: 40px;
+  font-weight: bold;
+}
+
 /* Footer */
 .footer {
   height: 7vh;
