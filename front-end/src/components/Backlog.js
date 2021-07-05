@@ -14,7 +14,7 @@ const getYearAfterTodayDate = () => {
   return `${String(Number(today[2]) + 1)}-${today[0].length === 1 ? '0' + today[0] : today[0]}-${today[1].length === 1 ? '0' + today[1] : today[1]}`
 }
 
-const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) => {
+const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetchAllIssues, fetchMembers }) => {
   const [backlogIssues, setBacklogIssues] = useState([]);
   const [searchFilteredIssues, setSearchFilteredIssues] = useState([]);
   const [searchFilter, setSearchFilter] = useState('');
@@ -67,36 +67,12 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     }
   }, [token, sprintClientRef]);
 
-  const fetchAllIssues = () => {
-    if (!issueClientRef.current.headers.Authorization) {
-      return;
-    }
-    issueClientRef.current.get_all_issues().then((res) => {
-      console.log(res);
-      setBacklogIssues(res.issues);
-      setProjectName(res.name);
-      if (focusedIssueId) {
-        setFocusedIssue(res.issues.find(issue => issue.id === focusedIssueId));
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
-  }
-
-  const fetchMembers = () => {
-    if (!projectClientRef.current.headers.Authorization) {
-      return;
-    }
-
-    projectClientRef.current.get_all_users_in_project_by_id(projectId).then((res) => {
-      setMembers(res.users);
-    }).catch((err) => {
-      console.log(err);
-    });
-  }
-
-  useEffect(fetchAllIssues, [issueClientRef, issueClientRef.current.headers.Authorization]);
-  useEffect(fetchMembers, [projectClientRef, projectId, projectClientRef.current.headers.Authorization]);
+  useEffect(() => fetchAllIssues(issueClientRef, setBacklogIssues, setProjectName, focusedIssueId, setFocusedIssue),
+    [issueClientRef, issueClientRef.current.headers.Authorization, fetchAllIssues]
+  );
+  useEffect(() => fetchMembers(projectId, setMembers),
+    [projectClientRef, projectId, projectClientRef.current.headers.Authorization, fetchMembers]
+  );
 
   useEffect(footerHandle, [footerHandle]);
 
@@ -151,7 +127,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     issueClientRef.current.update_issue(focusedIssueId, newIssue)
       .then(res => {
         console.log(res);
-        fetchAllIssues();
+        fetchAllIssues(issueClientRef, setBacklogIssues, setProjectName, focusedIssueId, setFocusedIssue);
         if (field === 'label') {
           setNewLabel('');
         } else if (field === 'comment') {
@@ -188,7 +164,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     issueClientRef.current.update_issue(focusedIssueId, issue)
       .then(res => {
         console.log(res);
-        fetchAllIssues();
+        fetchAllIssues(issueClientRef, setBacklogIssues, setProjectName, focusedIssueId, setFocusedIssue);
       })
       .catch(err => {
         console.log(err);
@@ -244,7 +220,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       "assigneeId": newAssignee,
       "epicId": newEpicLink
     }).then((res) => {
-      fetchAllIssues();
+      fetchAllIssues(issueClientRef, setBacklogIssues, setProjectName, focusedIssueId, setFocusedIssue);
       hideCreateIssuePopup();
     }).catch((err) => {
       setIssueCreationError(true);
@@ -949,8 +925,12 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                 <div id="createSprintContent">
                   <span id="createSprintText">No sprints to show</span>
                   <br></br>
-                  <button id="createSprintButton" onClick={showCreateSprintPopup}>+ Create Sprint
-                  </button>
+                  {
+                    hasWrite
+                    &&
+                    <button id="createSprintButton" onClick={showCreateSprintPopup}>+ Create Sprint
+                    </button>
+                  }
                 </div>
               </div>
             }

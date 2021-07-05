@@ -120,6 +120,34 @@ function App() {
     }
   }
 
+  const fetchAllIssues = (issueClientRef, setIssues, setProjectName, focusedIssueId, setFocusedIssue) => {
+    if (!issueClientRef.current.headers.Authorization) {
+      return;
+    }
+    issueClientRef.current.get_all_issues().then((res) => {
+      console.log(res);
+      setIssues(res.issues);
+      setProjectName(res.name);
+      if (focusedIssueId) {
+        setFocusedIssue(res.issues.find(issue => issue.id === focusedIssueId));
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+
+  const fetchMembers = (projectId, setMembers) => {
+    if (!projectClientRef.current.headers.Authorization) {
+      return;
+    }
+
+    projectClientRef.current.get_all_users_in_project_by_id(projectId).then((res) => {
+      setMembers(res.users);
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+
   return (
     <div className="App">
       {isLogged && <ProjectNav username={userInfo.username} doLogout={doLogout} />}
@@ -192,6 +220,8 @@ function App() {
             doLogout={doLogout}
             footerHandle={showFooterHook}
             projectClientRef={projectClientRef}
+            fetchAllIssues={fetchAllIssues}
+            fetchMembers={fetchMembers}
           />}
         </Route>
         <Route path="/project/:projectId/members">
@@ -202,7 +232,9 @@ function App() {
               doLogout={doLogout}
               projectClientRef={projectClientRef}
               userId={userInfo.id}
-              footerHandle={showFooterHook} />
+              footerHandle={showFooterHook}
+              fetchMembers={fetchMembers}
+            />
           }
         </Route>
         <Route path="/project/:projectId/issue_preview/:issueId">

@@ -2,12 +2,22 @@ import SideNav from './SideNav';
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router';
 import { Bar } from 'react-chartjs-2';
+import { DiraIssueClient } from 'dira-clients';
 
-const Reports = ({ footerHandle, token }) => {
-  useEffect(footerHandle, [footerHandle]);
-  const { projectId } = useParams();
+const Reports = ({ footerHandle, token, projectClientRef, fetchAllIssues, fetchMembers }) => {
   const [datasetBarChart, setDatasetBarChart] = useState([]);
   const [dataBarChart, setDataBarChart] = useState(null);
+
+  useEffect(footerHandle, [footerHandle]);
+
+  const { projectId } = useParams();
+  const issueClientRef = useRef(new DiraIssueClient(projectId));
+
+  useEffect(() => {
+    if (token) {
+      issueClientRef.current.set_authorization_token(token);
+    }
+  }, [token, issueClientRef]);
 
   const fetchBarChartDataset = () => {
     setDatasetBarChart([
