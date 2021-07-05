@@ -233,7 +233,7 @@ public class RestExceptionHandler {
             details.add(error.getDefaultMessage());
         }
 
-        String msg = String.join("\n", details);
+        String msg = String.join("|", details);
         return handleExceptionInternal(ex ,new RestApiError(msg), headers, status, request);
     }
 

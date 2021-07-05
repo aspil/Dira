@@ -31,35 +31,14 @@ INSERT INTO customer(
     subscription_plan_id
 )
 SELECT
-    'tester',
-    'Tester',
-    'Mc Tester',
-    'test@otenet.gr',
-    '$2a$10$bb/RXy.KPolaCeW14ADg0eC9.kchxyHCu5T5m.C1GBHkA.vdK5ST.', -- 12345678
+    'admin',
+    'Admin',
+    'Mc Admin',
+    'admin@otenet.gr',
+    '$2a$10$btQaiUjTL6z03Gk4oYxwvu1RSJXgwc2AKOlqJBZaqihVzk8PjSnmy', -- @adm!n1A
     1
 WHERE NOT EXISTS (
     SELECT 1
     FROM customer
     WHERE username = 'tester'
-);
-
-INSERT INTO customer(
-    username,
-    name,
-    surname,
-    email,
-    password,
-    subscription_plan_id
-)
-SELECT
-    'tester2',
-    'Tester2',
-    'Mc Tester Cousin',
-    'test2@otenet.gr',
-    '$2a$10$bb/RXy.KPolaCeW14ADg0eC9.kchxyHCu5T5m.C1GBHkA.vdK5ST.', -- 12345678
-    1
-    WHERE NOT EXISTS (
-    SELECT 1
-    FROM customer
-    WHERE username = 'tester2'
 );
