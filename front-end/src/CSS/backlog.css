@@ -336,13 +336,13 @@
     width: 100%;
 }
 
-.backlog .sprints #pencilIcon{
+.backlog #sprintPencilIcon{
   margin: 4px 4px;
   height: 1.5em;
   width: auto;
   opacity: 70%;
 }
-.backlog .sprints #pencilIcon:hover{
+.backlog #sprintPencilIcon:hover{
   cursor: pointer;
   opacity: 100%;
 }
