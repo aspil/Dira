@@ -130,7 +130,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
     }
     issueClientRef.current.update_issue(focusedIssueId, newIssue)
       .then(res => {
-        console.log(res);
         fetchAllIssues(issueClientRef, setBacklogIssues, setProjectName, focusedIssueId, setFocusedIssue);
         if (field === 'label') {
           setNewLabel('');
@@ -167,7 +166,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
     }
     issueClientRef.current.update_issue(focusedIssueId, issue)
       .then(res => {
-        console.log(res);
         fetchAllIssues(issueClientRef, setBacklogIssues, setProjectName, focusedIssueId, setFocusedIssue);
       })
       .catch(err => {
@@ -276,7 +274,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
     }
 
     projectClientRef.current.get_project_permissions_for_all_users(projectId).then(res => {
-      console.log(res);
       setUserPermissions(res.find(customer => customer.customerId === userId));
     }).catch(err => {
       console.log(err);
@@ -390,7 +387,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
       startDate: newSprintStartDate
     })
       .then(res => {
-        console.log('sprint creation response ', res);
         fetchSprints();
         hideCreateSprintPopup();
       })
@@ -405,7 +401,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
       return;
     }
     sprintClientRef.current.get_all_sprints().then((res) => {
-      console.log('get sprints response ', res);
       setSprints(res.sprints);
     }).catch((err) => {
       console.log('get sprints error ', err);
@@ -479,7 +474,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
 
     sprintClientRef.current.update_sprint(sprintToEdit.id, sprintToEdit)
       .then(res => {
-        console.log('sprint update response ', res);
         fetchSprints();
         hideEditSprintPopup();
       })

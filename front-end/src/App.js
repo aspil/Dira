@@ -53,7 +53,6 @@ function App() {
     if (projectClientRef.current.headers.Authorization) {
       projectClientRef.current.keepalive()
         .then((res) => {
-          console.log(res);
           setToken(res.token);
         })
         .catch(err => {
@@ -133,7 +132,6 @@ function App() {
       return;
     }
     issueClientRef.current.get_all_issues().then((res) => {
-      console.log(res);
       setIssues(res.issues);
       setProjectName(res.name);
       if (focusedIssueId) {
@@ -191,8 +189,9 @@ function App() {
           {token === undefined && <Redirect to="/sign_in" />}
           {token !== undefined && <ChangePassword
             navHandle={showProjectNavHook}
-            userId={userInfo.userId}
+            username={userInfo.username}
             userClientRef={userClientRef}
+            doLogout={doLogout}
           />}
 
         </Route>

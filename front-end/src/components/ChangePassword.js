@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 
 
 
-const ChangePassword = ({ userId, userClientRef, navHandle }) => {
+const ChangePassword = ({ userClientRef, navHandle, username, doLogout }) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -30,9 +30,17 @@ const ChangePassword = ({ userId, userClientRef, navHandle }) => {
     }
     setError(false);
 
-    // TO-DO
-    setError(true);
-    setErrMessage('Not available');
+    userClientRef.current.change_password({
+      username,
+      currentPassword,
+      newPassword
+    }).then(res => {
+      doLogout();
+    }).catch(err => {
+      console.log(err);
+      setError(true);
+      setErrMessage('Couldn\'t update password');
+    })
   };
 
   return (

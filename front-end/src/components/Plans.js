@@ -157,7 +157,6 @@ const Plan = ({ userClientRef, userId, userPlan, isLogged, setPremiumPlan }) => 
       return;
     }
     userClientRef.current.update_user_plan_by_id(userId).then((res) => {
-      console.log(res);
       setPremiumPlan();
       // history.push('/');
     }).catch((err) => {
