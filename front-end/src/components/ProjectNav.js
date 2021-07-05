@@ -9,10 +9,10 @@ const ProjectNav = ({ username, doLogout }) => {
   const [settingsState, setSettingsState] = useState("hide");
 
   const handleAccountClick = () => {
-    if(settingsState === "hide"){
+    if (settingsState === "hide") {
       setSettingsState("show");
     }
-    else{
+    else {
       setSettingsState("hide");
     }
   }
@@ -32,7 +32,7 @@ const ProjectNav = ({ username, doLogout }) => {
 
   return (
     <div className="projectnav">
-      <Link to="/proj_main" className="dira_link" style={{alignSelf: 'center'}}>Dira</Link>
+      <Link to="/proj_main" className="dira_link" style={{ alignSelf: 'center' }}>Dira</Link>
       <div className="right_links">
         <Link to="/create_project">+ Create a Project</Link>
         <Link to="/proj_main">My Projects</Link>
