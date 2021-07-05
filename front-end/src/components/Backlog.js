@@ -50,6 +50,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
   const [newSprintDueDate, setNewSprintDueDate] = useState(getTodayDate());
   const [createSprintError, setCreateSprintError] = useState('');
   const [sprints, setSprints] = useState([]);
+  const [focusedSprint, setFocusedSprint] = useState(null);
 
   const { projectId } = useParams();
   const issueClientRef = useRef(new DiraIssueClient(projectId));
@@ -437,6 +438,16 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
       });
   };
   useEffect(deleteEmptySprints, [sprints, sprintClientRef, sprintClientRef.current.headers.Authorization]);
+
+  const [edit_sprint_popup, handleEditSprintPopup] = useState("hide");
+  const hideEditSprintPopup = () => {
+    handleEditSprintPopup("hide");
+  }
+  const showEditSprintPopup = (sprint) => {
+    setFocusedSprint(sprint);
+    handleEditSprintPopup("show");
+  }
+
 
   return (
     <div className="backlog proj_page">
@@ -855,21 +866,28 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
                       <div className="head" style={{ display: "block" }}>
                         <div className="info">
                           <div>
-                            <h3>
-                              <span
-                                className="colored_text answer"
-                                style={{
-                                  display: 'inline-block',
-                                  fontSize: '0.8em',
-                                  margin: '0.2em',
-                                  backgroundColor: statusToColorMapper[getSprintStatus(sprint.startDate, sprint.dueDate)]
-                                }}
-                              >
-                                {getSprintStatus(sprint.startDate, sprint.dueDate)}
-                              </span>
-                              Sprint {sprints.indexOf(sprint) + 1}
+                            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                              <h3 >
+                                <span
+                                  className="colored_text answer"
+                                  style={{
+                                    display: 'inline-block',
+                                    fontSize: '0.8em',
+                                    margin: '0.2em',
+                                    backgroundColor: statusToColorMapper[getSprintStatus(sprint.startDate, sprint.dueDate)]
+                                  }}
+                                >
+                                  {getSprintStatus(sprint.startDate, sprint.dueDate)}
+                                </span>
+                                Sprint {sprints.indexOf(sprint) + 1}
 
-                            </h3>
+                              </h3>
+                              {
+                                hasWrite
+                                &&
+                                <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditSprintPopup(sprint)}></img>
+                              }
+                            </div>
                             <div className="dates">
                               <div>
                                 <span style={{ fontWeight: "bold" }}>Start date: </span>
@@ -936,6 +954,31 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
             }
 
           </div>
+          {/* edit Sprint Popup */}
+          {
+            edit_sprint_popup === "show"
+            &&
+            <div className="createPopup">
+              <div>
+                <h2>Edit Sprint</h2>
+                <img src={x_icon} id="xIcon" alt="x_icon" onClick={hideEditSprintPopup}></img>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
+                <div>
+                  <p className="label">New Start Date:</p>
+                  <input
+                    type="date"
+                  />
+                </div>
+                <div>
+                  <p className="label">New Due Date:</p>
+                  <input
+                    type="date"
+                  />
+                </div>
+              </div>
+            </div>
+          }
           {/* create Sprint Popup */}
           {create_sprint_popup === "show" &&
             <div className="createPopup">
