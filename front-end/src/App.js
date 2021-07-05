@@ -27,6 +27,7 @@ function App() {
   });
   const [isLogged, setIsLogged] = useState(localStorage.getItem('JWToken') ? true : false);
   const [showHomeNav, setShowHomeNav] = useState(true);
+  const [showProjectNav, setShowProjectNav] = useState(true);
   const [showFooter, setShowFooter] = useState(false);
   const [showFooterStyles, setShowFooterStyles] = useState(false);
   const [stayLogged, setStayLogged] = useState(true);
@@ -103,6 +104,13 @@ function App() {
       setShowHomeNav(true);
     }
   }
+  const showProjectNavHook = () => {
+    setShowProjectNav(false);
+
+    return function cleanup() {
+      setShowProjectNav(true);
+    }
+  }
 
   const showFooterHook = () => {
     setShowFooter(true);
@@ -150,7 +158,7 @@ function App() {
 
   return (
     <div className="App">
-      {isLogged && <ProjectNav username={userInfo.username} doLogout={doLogout} />}
+      {isLogged && showProjectNav && <ProjectNav username={userInfo.username} doLogout={doLogout} />}
       {!isLogged && showHomeNav && <HomeNav />}
 
       <Switch>
@@ -182,7 +190,7 @@ function App() {
         <Route path="/change_password">
           {token === undefined && <Redirect to="/sign_in" />}
           {token !== undefined && <ChangePassword
-            navHandle={showHomeNavHook}
+            navHandle={showProjectNavHook}
             userId={userInfo.userId}
             userClientRef={userClientRef}
           />}
@@ -255,6 +263,7 @@ function App() {
           {token === undefined && <Redirect to="/sign_in" />}
           {token !== undefined && <CreateProject
             projectClientRef={projectClientRef}
+            navHandle={showProjectNavHook}
             userPlan={userInfo.plan}
           />}
         </Route>

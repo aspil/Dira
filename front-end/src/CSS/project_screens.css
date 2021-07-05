@@ -1,22 +1,14 @@
 .proj_page {
-  height: 84.9vh;
+  height: 90vh;
   width: 100vw;
   display: flex;
   /* flex-direction: column; */
-}
-
-.proj_page .projectnav {
-  flex-grow: 0;
 }
 
 .proj_page .center_content {
   flex-grow: 1;
   display: flex;
   overflow: hidden !important;
-}
-
-.proj_page .footer {
-  flex-grow: 0;
 }
 
 .proj_page .center_content main {
@@ -27,6 +19,7 @@
 
 }
 .projectnav {
+  height: 5vh;
   display: flex;
   background-color: rgb(0, 132, 255);
   overflow:auto;
