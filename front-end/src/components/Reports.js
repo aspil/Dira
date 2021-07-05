@@ -1,16 +1,17 @@
 import SideNav from './SideNav';
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Line } from 'react-chartjs-2';
 import { DiraIssueClient } from 'dira-clients';
 
 const Reports = ({ footerHandle, token, projectClientRef, fetchAllIssues, fetchMembers }) => {
-  // const [datasetBarChart, setDatasetBarChart] = useState([]);
   const [dataIssuesByMemberBarChart, setDataIssuesByMemberBarChart] = useState(null);
   const [dataIssuesByPriorityBarChart, setDataIssuesByPriorityBarChart] = useState(null);
+  const [dataRateByMonthChart, setDataRateByMonthChart] = useState(null);
   const [projectIssues, setProjectIssues] = useState([]);
   const [projectMembers, setProjectMembers] = useState([]);
   const [projectName, setProjectName] = useState('');
+  const [year, setYear] = useState(new Date().getFullYear());
 
   useEffect(footerHandle, [footerHandle]);
 
@@ -29,30 +30,6 @@ const Reports = ({ footerHandle, token, projectClientRef, fetchAllIssues, fetchM
   useEffect(() => fetchMembers(projectId, setProjectMembers),
     [projectClientRef, projectId, projectClientRef.current.headers.Authorization, fetchMembers]
   );
-
-  // const fetchBarChartDataset = () => {
-  //   setDatasetBarChart([
-  //     {
-  //       assignee: 'Tester',
-  //       epicsAssigned: 10,
-  //       storiesAssigned: 5,
-  //       defectsAssigned: 19,
-  //     },
-  //     {
-  //       assignee: 'Tester2',
-  //       epicsAssigned: 6,
-  //       storiesAssigned: 15,
-  //       defectsAssigned: 12,
-  //     },
-  //     {
-  //       assignee: 'Tester3',
-  //       epicsAssigned: 16,
-  //       storiesAssigned: 2,
-  //       defectsAssigned: 8,
-  //     },
-  //   ]);
-  // };
-  // useEffect(fetchBarChartDataset, []);
 
   const prepareIssuesByMemberBarChartProps = () => {
     setDataIssuesByMemberBarChart({
@@ -121,6 +98,42 @@ const Reports = ({ footerHandle, token, projectClientRef, fetchAllIssues, fetchM
   }
   useEffect(prepareIssuesByPriorityBarChartProps, [projectIssues]);
 
+  const prepareRateByMonthChart = () => {
+    const MonthsToNumbers = {
+      January: 0,
+      February: 1,
+      March: 2,
+      April: 3,
+      May: 4,
+      June: 5,
+      July: 6,
+      August: 7,
+      September: 8,
+      October: 9,
+      November: 10,
+      December: 11
+    }
+
+    setDataRateByMonthChart({
+      labels: Object.keys(MonthsToNumbers),
+      datasets: [
+        {
+          label: `Weekly Rate Of Issues Created In ${year}`,
+          data: Object.keys(MonthsToNumbers).map(
+            month => projectIssues.filter(issue => new Date(issue.created).getFullYear() === year
+              && new Date(issue.created).getMonth() === MonthsToNumbers[month]).length / 4
+          ),
+          fill: false,
+          backgroundColor: 'rgb(54, 162, 235)',
+          borderColor: 'rgba(54, 162, 235, 0.2)',
+        }
+      ]
+    });
+
+  }
+  useEffect(prepareRateByMonthChart, [projectIssues, year]);
+
+
   const getOptionsBarChart = (title, makeHorizontal = false) => {
     return {
       indexAxis: makeHorizontal ? 'y' : 'x',
@@ -155,6 +168,25 @@ const Reports = ({ footerHandle, token, projectClientRef, fetchAllIssues, fetchM
     }
   };
 
+  const optionsLineChart = {
+    maintainAspectRatio: false,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Quick Tip: Click on Chart to view previous years'
+      },
+    },
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      ],
+    },
+  };
+
   return (
     <div className="proj_page">
       <div className="center_content">
@@ -171,11 +203,14 @@ const Reports = ({ footerHandle, token, projectClientRef, fetchAllIssues, fetchM
               justifyContent: 'space-evenly'
             }}
           >
-            <div style={{ flexBasis: '45%' }}>
+            <div
+              style={{ flexBasis: '45%' }}
+              onClick={() => setYear(year - 1)}
+            >
               {
-                dataIssuesByMemberBarChart !== null
+                dataRateByMonthChart !== null
                 &&
-                <Bar data={dataIssuesByMemberBarChart} options={getOptionsBarChart('Issues Assigned Per Member')} />
+                <Line data={dataRateByMonthChart} options={optionsLineChart} />
               }
             </div>
 
@@ -195,7 +230,14 @@ const Reports = ({ footerHandle, token, projectClientRef, fetchAllIssues, fetchM
                 }
               </div>
 
-              <div style={{ flexBasis: '48%' }}>
+              <div
+                style={{ flexBasis: '48%' }}
+              >
+                {
+                  dataIssuesByMemberBarChart !== null
+                  &&
+                  <Bar data={dataIssuesByMemberBarChart} options={getOptionsBarChart('Issues Assigned Per Member')} />
+                }
               </div>
             </div>
           </div>
