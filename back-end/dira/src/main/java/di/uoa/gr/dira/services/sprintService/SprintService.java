@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
@@ -111,8 +112,36 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
         }
 
         mapper.map(sprintModel, sprint);
-        sprint = repository.save(sprint);
-        return mapper.map(sprint, SprintModel.class);
+//        updateSprintIssues(sprintModel, sprint);
+
+        return mapper.map(repository.save(sprint), SprintModel.class);
+    }
+
+    private void updateSprintIssues(SprintModel sprintModel, Sprint sprint) {
+        List<Issue> newIssues = sprintModel.getIssueModels()
+                .stream()
+                .map(issue -> mapper.map(issue, Issue.class))
+                .filter(issue -> issue.getBelongsToSprint() == null)
+                .collect(Collectors.toList());
+
+        newIssues.forEach(issue -> issue.setBelongsToSprint(sprint));
+
+        List<Issue> toDelete = sprint.getIssues()
+                .stream()
+                .filter(issue -> sprintModel.getIssueModels()
+                        .stream()
+                        .noneMatch(modelIssue -> modelIssue.getKey() != null && issue.getId().equals(modelIssue.getId()))
+                ).collect(Collectors.toList());
+
+        sprint.getIssues().removeAll(toDelete);
+        toDelete.forEach(issue -> issue.setBelongsToSprint(null));
+
+        List<Issue> toUpdate = Stream.concat(newIssues.stream(), toDelete.stream())
+                .collect(Collectors.toList());
+
+        if (!toUpdate.isEmpty()) {
+            issueService.getRepository().saveAll(toUpdate);
+        }
     }
 
     public void deleteSprintWithProjectId(Long projectId, Long customerId, Long sprintId) {

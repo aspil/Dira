@@ -18,7 +18,6 @@ const Login = ({ setToken, userClientRef, setUserInfo, setIsLogged, navHandle, s
     userClientRef.current
       .login_user(username, password)
       .then((user) => {
-        console.log(user);
         setUserInfo({
           username: user.username,
           email: user.email,

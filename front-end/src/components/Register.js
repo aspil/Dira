@@ -32,7 +32,6 @@ const Register = ({ userClientRef, navHandle }) => {
       "password": password,
       "subscriptionPlan": "STANDARD"
     }).then(res => {
-      console.log(res);
       history.push('/');
     }).catch((err) => {
       console.log(err);

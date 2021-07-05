@@ -70,7 +70,6 @@ const Members = ({ footerHandle, projectClientRef, userId, fetchMembers }) => {
     }
 
     projectClientRef.current.get_project_permissions_for_all_users(projectId).then(res => {
-      console.log('member permissions ', res);
       setMemberPermissions(res.map(permission => {
         const toSave = {
           memberId: permission.customerId,
@@ -89,7 +88,6 @@ const Members = ({ footerHandle, projectClientRef, userId, fetchMembers }) => {
     setDeleteMemberError('');
 
     projectClientRef.current.delete_user_from_project_with_id(projectId, current_member.id).then((res) => {
-      console.log(res);
       fetchMemberPermissions();
       fetchMembers(projectId, setMembers);
       hideEditMember();
@@ -132,7 +130,6 @@ const Members = ({ footerHandle, projectClientRef, userId, fetchMembers }) => {
       permissions: newPermissions
     })
       .then((res) => {
-        console.log('updated member permissions ', res);
         fetchMemberPermissions();
         hideEditMember();
       })

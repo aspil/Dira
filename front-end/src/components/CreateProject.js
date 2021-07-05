@@ -38,7 +38,6 @@ const CreateProject = ({ projectClientRef, userPlan, navHandle }) => {
       "visibility": visibility
     })
       .then(res => {
-        console.log(res);
         history.push('proj_main');
       })
       .catch((err) => {

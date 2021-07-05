@@ -130,7 +130,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
     }
     issueClientRef.current.update_issue(focusedIssueId, newIssue)
       .then(res => {
-        console.log(res);
         fetchAllIssues(issueClientRef, setBacklogIssues, setProjectName, focusedIssueId, setFocusedIssue);
         if (field === 'label') {
           setNewLabel('');
@@ -167,7 +166,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
     }
     issueClientRef.current.update_issue(focusedIssueId, issue)
       .then(res => {
-        console.log(res);
         fetchAllIssues(issueClientRef, setBacklogIssues, setProjectName, focusedIssueId, setFocusedIssue);
       })
       .catch(err => {
@@ -276,7 +274,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
     }
 
     projectClientRef.current.get_project_permissions_for_all_users(projectId).then(res => {
-      console.log(res);
       setUserPermissions(res.find(customer => customer.customerId === userId));
     }).catch(err => {
       console.log(err);
@@ -354,14 +351,17 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
   };
 
   const datesOverlap = (onEdit = false) => {
-    const currentSprints = onEdit ? sprints.filter(sprint => sprint.id !== focusedSprint.id) : sprints
+    const currentSprints = onEdit ? sprints.filter(sprint => sprint.id !== focusedSprint.id) : sprints;
     return currentSprints.filter(existingSprint => {
       const startDate = new Date(existingSprint.startDate.split('T', 1)[0]);
       const dueDate = new Date(existingSprint.dueDate.split('T', 1)[0]);
-      return !(new Date(newSprintStartDate) < startDate && new Date(newSprintDueDate) < startDate)
+      const startDateToCheck = new Date(onEdit ? editSprintStartDate : newSprintStartDate);
+      const dueDateToCheck = new Date(onEdit ? editSprintDueDate : newSprintDueDate);
+
+      return !(startDateToCheck < startDate && dueDateToCheck < startDate)
         &&
-        !(new Date(newSprintStartDate) > dueDate && new Date(newSprintDueDate) > dueDate);
-    }).length > 0
+        !(startDateToCheck > dueDate && dueDateToCheck > dueDate);
+    }).length > 0;
   }
 
   const handleCreateSprintButtonClick = (e) => {
@@ -387,7 +387,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
       startDate: newSprintStartDate
     })
       .then(res => {
-        console.log('sprint creation response ', res);
         fetchSprints();
         hideCreateSprintPopup();
       })
@@ -402,7 +401,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
       return;
     }
     sprintClientRef.current.get_all_sprints().then((res) => {
-      console.log('get sprints response ', res);
       setSprints(res.sprints);
     }).catch((err) => {
       console.log('get sprints error ', err);
@@ -455,6 +453,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
     setFocusedSprint(sprint);
     setEditSprintStartDate(sprint.startDate.split('T', 1)[0]);
     setEditSprintDueDate(sprint.dueDate.split('T', 1)[0]);
+    setEditSprintError('');
     handleEditSprintPopup("show");
   }
 
@@ -475,7 +474,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
 
     sprintClientRef.current.update_sprint(sprintToEdit.id, sprintToEdit)
       .then(res => {
-        console.log('sprint update response ', res);
         fetchSprints();
         hideEditSprintPopup();
       })
@@ -915,13 +913,13 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
                                 >
                                   {getSprintStatus(sprint.startDate, sprint.dueDate)}
                                 </span>
-                                Sprint {sprints.indexOf(sprint) + 1}
+                                Sprint {sprint.id}
 
                               </h3>
                               {
                                 hasWrite
                                 &&
-                                <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditSprintPopup(sprint)}></img>
+                                <img className="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditSprintPopup(sprint)}></img>
                               }
                             </div>
                             <div className="dates">
@@ -1024,6 +1022,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
                   />
                 </div>
               </div>
+              {Boolean(editSprintError) && <p style={{ color: 'crimson' }}>{editSprintError}</p>}
               <button
                 style={{ width: '25%', margin: 'auto' }}
                 onClick={handleEditSprint}
