@@ -27,7 +27,7 @@ public class RegisterController {
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public @Valid CustomerModel registerCustomer(@Valid @RequestBody CustomerModel customerModel) {
+    public CustomerModel registerCustomer(@Valid @RequestBody CustomerModel customerModel) {
         return service.registerCustomer(customerModel);
     }
 }

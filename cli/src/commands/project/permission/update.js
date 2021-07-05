@@ -7,15 +7,6 @@ const io_utils = require("../../../io_utils");
 
 const update_project_user_permission_questions = [
     {
-        type: 'input',
-        name: 'customerId',
-        message: "Enter the user's id",
-        validate: id => {
-            const valid = id > 0;
-            return valid ? true : "The user's id must be a positive number";
-        }
-    },
-    {
         type: 'checkbox',
         name: 'permissions',
         message: 'Select permissions',
@@ -25,11 +16,7 @@ const update_project_user_permission_questions = [
             { value: 'WRITE' },
             { value: 'DELETE' }
         ],
-        validate: perms => {
-            const valid = perms.includes('ADMIN') && perms.length === 1;
-            return valid ? true : "If you select ADMIN, you cannot select anything else";
-        }
-    }
+   }
 ];
 
 class UpdateProjectUserPermissionsCommand extends Command {
@@ -45,7 +32,7 @@ class UpdateProjectUserPermissionsCommand extends Command {
 
         client.set_authorization_token(token);
 
-        const permission = await client.get_project_user_permission_by_id(flags.id)
+        const permission = await client.get_project_user_permission_by_id(projectId, flags.id)
             .catch(() => logging.fatal(`Could not retrieve permission with id '${flags.id}'`));
 
         var data;
@@ -61,7 +48,12 @@ class UpdateProjectUserPermissionsCommand extends Command {
                 question.default = permission[question.name];
             }
 
-            data = await io_utils.get_answers_serialized(update_project_user_permission_questions);
+            data = await io_utils.get_answers(update_project_user_permission_questions);
+            data = {
+                id: flags.id,
+                customerId: permission.customerId,
+                permissions: data
+            };
         }
 
         client.update_project_user_permission(projectId, flags.id, data)
