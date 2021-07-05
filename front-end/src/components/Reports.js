@@ -121,27 +121,35 @@ const Reports = ({ footerHandle, token, projectClientRef, fetchAllIssues, fetchM
   }
   useEffect(prepareIssuesByPriorityBarChartProps, [projectIssues]);
 
-  const getOptionsBarChart = (title) => {
+  const getOptionsBarChart = (title, makeHorizontal = false) => {
     return {
+      indexAxis: makeHorizontal ? 'y' : 'x',
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
         legend: {
           display: true,
-          position: 'top',
+          position: makeHorizontal ? 'right' : 'top'
         },
         title: {
           display: true,
           text: title
         },
         scales: {
-          yAxes: [
+          yAxes: !makeHorizontal ? [
             {
               ticks: {
                 beginAtZero: true,
               },
             },
-          ],
+          ] : [],
+          xAxes: makeHorizontal ? [
+            {
+              ticks: {
+                beginAtZero: true,
+              },
+            },
+          ] : [],
         },
       }
     }
@@ -174,21 +182,21 @@ const Reports = ({ footerHandle, token, projectClientRef, fetchAllIssues, fetchM
             <div
               style={{
                 flexBasis: '48%',
-                marginBottom: '2%'
-                // display: 'flex',
-                // justifyContent: 'space-between'
+                marginBottom: '2%',
+                display: 'flex',
+                justifyContent: 'space-between'
               }}
             >
-              {/* <div style={{ flexBasis: '48%' }}> */}
-              {
-                dataIssuesByPriorityBarChart !== null
-                &&
-                <Bar data={dataIssuesByPriorityBarChart} options={getOptionsBarChart('Issues Per Priority')} />
-              }
-              {/* </div> */}
+              <div style={{ flexBasis: '48%' }}>
+                {
+                  dataIssuesByPriorityBarChart !== null
+                  &&
+                  <Bar data={dataIssuesByPriorityBarChart} options={getOptionsBarChart('Issues Per Priority', true)} />
+                }
+              </div>
 
-              {/* <div style={{ flexBasis: '48%', backgroundColor: 'orange' }}> */}
-              {/* </div> */}
+              <div style={{ flexBasis: '48%' }}>
+              </div>
             </div>
           </div>
         </main>
