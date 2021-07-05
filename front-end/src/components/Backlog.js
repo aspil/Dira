@@ -925,7 +925,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
                               {
                                 hasWrite
                                 &&
-                                <img id="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditSprintPopup(sprint)}></img>
+                                <img className="pencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditSprintPopup(sprint)}></img>
                               }
                             </div>
                             <div className="dates">

@@ -336,13 +336,13 @@
     width: 100%;
 }
 
-.backlog #pencilIcon{
+.backlog .pencilIcon{
   margin: 4px 4px;
   height: 1.5em;
   width: auto;
   opacity: 70%;
 }
-.backlog #pencilIcon:hover{
+.backlog .pencilIcon:hover{
   cursor: pointer;
   opacity: 100%;
 }

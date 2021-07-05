@@ -112,7 +112,7 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
         }
 
         mapper.map(sprintModel, sprint);
-        updateSprintIssues(sprintModel, sprint);
+//        updateSprintIssues(sprintModel, sprint);
 
         return mapper.map(repository.save(sprint), SprintModel.class);
     }
