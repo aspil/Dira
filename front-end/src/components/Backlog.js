@@ -49,8 +49,11 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
   const [newSprintStartDate, setNewSprintStartDate] = useState(getTodayDate());
   const [newSprintDueDate, setNewSprintDueDate] = useState(getTodayDate());
   const [createSprintError, setCreateSprintError] = useState('');
+  const [editSprintError, setEditSprintError] = useState('');
   const [sprints, setSprints] = useState([]);
   const [focusedSprint, setFocusedSprint] = useState(null);
+  const [editSprintStartDate, setEditSprintStartDate] = useState(null);
+  const [editSprintDueDate, setEditSprintDueDate] = useState(null);
 
   const { projectId } = useParams();
   const issueClientRef = useRef(new DiraIssueClient(projectId));
@@ -350,6 +353,17 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
     }
   };
 
+  const datesOverlap = (onEdit = false) => {
+    const currentSprints = onEdit ? sprints.filter(sprint => sprint.id !== focusedSprint.id) : sprints
+    return currentSprints.filter(existingSprint => {
+      const startDate = new Date(existingSprint.startDate.split('T', 1)[0]);
+      const dueDate = new Date(existingSprint.dueDate.split('T', 1)[0]);
+      return !(new Date(newSprintStartDate) < startDate && new Date(newSprintDueDate) < startDate)
+        &&
+        !(new Date(newSprintStartDate) > dueDate && new Date(newSprintDueDate) > dueDate);
+    }).length > 0
+  }
+
   const handleCreateSprintButtonClick = (e) => {
     e.preventDefault();
 
@@ -361,13 +375,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
       setCreateSprintError('Invalid dates selected');
       return;
     }
-    else if (sprints.filter(existingSprint => {
-      const startDate = new Date(existingSprint.startDate.split('T', 1)[0]);
-      const dueDate = new Date(existingSprint.dueDate.split('T', 1)[0]);
-      return !(new Date(newSprintStartDate) < startDate && new Date(newSprintDueDate) < startDate)
-        &&
-        !(new Date(newSprintStartDate) > dueDate && new Date(newSprintDueDate) > dueDate);
-    }).length > 0) {
+    else if (datesOverlap()) {
       setCreateSprintError('The time span of the sprint overlaps with an already existing one');
       return;
     }
@@ -445,9 +453,37 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
   }
   const showEditSprintPopup = (sprint) => {
     setFocusedSprint(sprint);
+    setEditSprintStartDate(sprint.startDate.split('T', 1)[0]);
+    setEditSprintDueDate(sprint.dueDate.split('T', 1)[0]);
     handleEditSprintPopup("show");
   }
 
+  const handleEditSprint = () => {
+    if (new Date(editSprintStartDate) >= new Date(editSprintDueDate)) {
+      setEditSprintError('Invalid dates selected');
+      return;
+    }
+    else if (datesOverlap(true)) {
+      setEditSprintError('The time span of the sprint overlaps with an already existing one');
+      return;
+    }
+    setEditSprintError('');
+
+    const sprintToEdit = JSON.parse(JSON.stringify(focusedSprint));
+    sprintToEdit.startDate = editSprintStartDate;
+    sprintToEdit.dueDate = editSprintDueDate;
+
+    sprintClientRef.current.update_sprint(sprintToEdit.id, sprintToEdit)
+      .then(res => {
+        console.log('sprint update response ', res);
+        fetchSprints();
+        hideEditSprintPopup();
+      })
+      .catch(err => {
+        console.log(err);
+        setEditSprintError('Couldn\'t update sprint');
+      });
+  }
 
   return (
     <div className="backlog proj_page">
@@ -958,25 +994,42 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
           {
             edit_sprint_popup === "show"
             &&
-            <div className="createPopup">
+            <div
+              className="createPopup"
+              style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}
+            >
               <div>
                 <h2>Edit Sprint</h2>
                 <img src={x_icon} id="xIcon" alt="x_icon" onClick={hideEditSprintPopup}></img>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', margin: '1rem 0' }}>
                 <div>
                   <p className="label">New Start Date:</p>
                   <input
                     type="date"
+                    onChange={(e) => setEditSprintStartDate(e.target.value)}
+                    value={editSprintStartDate}
+                    min={getTodayDate()}
+                    max={getYearAfterTodayDate()}
                   />
                 </div>
                 <div>
                   <p className="label">New Due Date:</p>
                   <input
                     type="date"
+                    onChange={(e) => setEditSprintDueDate(e.target.value)}
+                    value={editSprintDueDate}
+                    min={getTodayDate()}
+                    max={getYearAfterTodayDate()}
                   />
                 </div>
               </div>
+              <button
+                style={{ width: '25%', margin: 'auto' }}
+                onClick={handleEditSprint}
+              >
+                Submit
+              </button>
             </div>
           }
           {/* create Sprint Popup */}
