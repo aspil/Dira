@@ -50,7 +50,7 @@ function App() {
   }, [token, projectClientRef]);
 
   const refreshToken = () => {
-    if (projectClientRef.current.headers.Authorization) {
+    if (isLogged && projectClientRef.current.headers.Authorization) {
       projectClientRef.current.keepalive()
         .then((res) => {
           setToken(res.token);
@@ -61,10 +61,10 @@ function App() {
         });
     }
 
-    setTimeout(refreshToken, 15 * 60 * 1e3);
+    setTimeout(refreshToken, 1 * 60 * 1e3);
   };
   useEffect(() => {
-    setTimeout(refreshToken, 15 * 60 * 1e3); // 15 minutes
+    setTimeout(refreshToken, 1 * 60 * 1e3); // 15 minutes
   }, []);
 
   useEffect(() => {

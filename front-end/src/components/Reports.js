@@ -205,7 +205,7 @@ const Reports = ({ footerHandle, token, projectClientRef, fetchAllIssues, fetchM
           >
             <div
               style={{ flexBasis: '45%' }}
-              onClick={() => setYear(year - 1)}
+              onClick={() => year > (new Date().getFullYear() - 4) ? setYear(year - 1) : setYear(new Date().getFullYear())}
             >
               {
                 dataRateByMonthChart !== null

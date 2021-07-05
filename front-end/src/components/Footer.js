@@ -9,7 +9,7 @@ const Footer = ({position}) => {
             <div className="footer">
                 <img src={logo} alt="dira logo" id="dira logo"/>
                 <div className="links">
-                    <Link to="#">Features</Link>
+                    {/*<Link to="#">Features</Link>*/}
                     <Link to="/pricing">Pricing</Link>
                 </div>
             </div>
