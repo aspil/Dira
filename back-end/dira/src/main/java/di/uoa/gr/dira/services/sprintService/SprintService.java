@@ -114,7 +114,7 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
         mapper.map(sprintModel, sprint);
         return mapper.map(repository.save(sprint), SprintModel.class);
     }
-    
+
     public void deleteSprintWithProjectId(Long projectId, Long customerId, Long sprintId) {
         Project project = checkPermissions(projectId, customerId);
         repository.findById(sprintId).orElseThrow(() -> new SprintNotFoundException("sprintId", sprintId.toString()));
