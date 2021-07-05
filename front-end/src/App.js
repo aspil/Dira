@@ -49,8 +49,12 @@ function App() {
     }
   }, [token, projectClientRef]);
 
+  const keepAliveRef = useRef(setTimeout(() => { }, 0));
   const refreshToken = () => {
+    console.log('refreshing');
+    console.log(Boolean(isLogged && projectClientRef.current.headers.Authorization))
     if (isLogged && projectClientRef.current.headers.Authorization) {
+      console.log('entered');
       projectClientRef.current.keepalive()
         .then((res) => {
           setToken(res.token);
@@ -61,11 +65,15 @@ function App() {
         });
     }
 
-    setTimeout(refreshToken, 1 * 60 * 1e3);
+    keepAliveRef.current = setTimeout(refreshToken, 1 * 1e3);
   };
   useEffect(() => {
-    setTimeout(refreshToken, 1 * 60 * 1e3); // 15 minutes
-  }, []);
+    keepAliveRef.current = setTimeout(refreshToken, 1 * 1e3); // 15 minutes
+
+    return function cleanup() {
+      clearTimeout(keepAliveRef.current);
+    }
+  }, [isLogged, projectClientRef.current.headers.Authorization]);
 
   useEffect(() => {
     const doBeforeUnload = () => {
