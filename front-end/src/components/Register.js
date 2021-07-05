@@ -35,7 +35,12 @@ const Register = ({ userClientRef, navHandle }) => {
       history.push('/');
     }).catch((err) => {
       console.log(err);
-      setErrMessage('Couldn\'t perform registration');
+      try {
+        setErrMessage(err.error.message);
+      }
+      catch {
+        setErrMessage('Couldn\'t perform registration');
+      }
     });
   }
 
@@ -49,7 +54,13 @@ const Register = ({ userClientRef, navHandle }) => {
         <div className="login_grad" style={{ textAlign: "center" }}>
           <h1 style={{ fontWeight: "normal", margin: "15px" }}>Register</h1>
           <form onSubmit={onSubmit}>
-            {Boolean(errMessage) && <p style={{ "color": "red" }}>{errMessage}</p>}
+            {
+              Boolean(errMessage)
+              &&
+              <ul>
+                {errMessage.split('|').map(message => <li style={{ "color": "crimson" }}>{message}</li>)}
+              </ul>
+            }
             <div style={{ textAlign: "left" }}>
               <p className="inputHead">Email Adress:</p>
               <input

@@ -39,7 +39,12 @@ const ChangePassword = ({ userClientRef, navHandle, username, doLogout }) => {
     }).catch(err => {
       console.log(err);
       setError(true);
-      setErrMessage('Couldn\'t update password');
+      try {
+        setErrMessage(err.error.message);
+      }
+      catch {
+        setErrMessage('Couldn\'t update password');
+      }
     })
   };
 
@@ -72,8 +77,13 @@ const ChangePassword = ({ userClientRef, navHandle, username, doLogout }) => {
                 value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); }}
               >
               </input>
-              {error && <p style={{ "color": "crimson" }}>{errMessage}</p>}
-
+              {
+                error
+                &&
+                <ul>
+                  {errMessage.split('|').map(message => <li style={{ "color": "crimson" }}>{message}</li>)}
+                </ul>
+              }
               <p><button type="submit">Update Password</button></p>
             </form>
           </div>

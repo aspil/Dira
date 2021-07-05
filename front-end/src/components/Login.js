@@ -13,6 +13,10 @@ const Login = ({ setToken, userClientRef, setUserInfo, setIsLogged, navHandle, s
 
   const onSubmit = (e) => {
     e.preventDefault();
+    if (!(username && password)) {
+      setErrMessage('Please fill in fields');
+      return;
+    }
     setErrMessage('');
 
     userClientRef.current
@@ -29,8 +33,13 @@ const Login = ({ setToken, userClientRef, setUserInfo, setIsLogged, navHandle, s
         history.push('/proj_main');
       })
       .catch((err) => {
-        setErrMessage('Failed to login with given credentials');
         console.log(err);
+        try {
+          setErrMessage(err.error.message);
+        }
+        catch {
+          setErrMessage('Failed to login with given credentials');
+        }
       });
   }
   const redirectToMain = () => {
@@ -49,17 +58,21 @@ const Login = ({ setToken, userClientRef, setUserInfo, setIsLogged, navHandle, s
                 type="text"
                 placeholder="Username"
                 onChange={(e) => { setUsername(e.target.value) }}
-                required
                 value={username} />
               <p className="inputHead">Password:</p>
               <input
                 type="password"
                 placeholder="Password"
                 onChange={(e) => { setPassword(e.target.value) }}
-                required
                 value={password} />
             </div>
-            {Boolean(errMessage) && <p style={{ "color": "crimson" }}>{errMessage}</p>}
+            {
+              Boolean(errMessage)
+              &&
+              <ul>
+                {errMessage.split('|').map(message => <li style={{ "color": "crimson" }}>{message}</li>)}
+              </ul>
+            }
             <button type="submit">Login</button>
           </form>
           <label htmlFor='stay_logged' style={{ alignItems: "center" }}>
