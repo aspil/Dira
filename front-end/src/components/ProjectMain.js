@@ -3,7 +3,6 @@ import { Link, useHistory } from 'react-router-dom';
 import edit_icon from "../Images/edit_icon.png"
 import x_icon from "../Images/x_icon.png"
 import trashcan_icon from "../Images/trashcan_icon.png"
-import Calendar from 'react-calendar';
 
 
 const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle, footerStylesHandle, projectClientRef }) => {
@@ -110,8 +109,6 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
   useEffect(footerHandle, [footerHandle]);
   useEffect(footerStylesHandle, [footerStylesHandle]);
 
-  // Calendar
-  const [value, onChange] = useState(new Date());
 
   return (
     <div className="projectmain">
@@ -241,11 +238,6 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
             </table>
           }
         </div>
-      </div>
-      <div>
-        <Calendar onChange={onChange}
-                  value={value}
-        />
       </div>
     </div>
   );
