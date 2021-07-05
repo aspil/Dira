@@ -2,6 +2,7 @@ package di.uoa.gr.dira.models.customer;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import di.uoa.gr.dira.models.IModel;
+import di.uoa.gr.dira.security.ValidPassword;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,10 +38,7 @@ public class CustomerModel implements IModel<Long> {
     @Email
     private String email;
 
-    @NotNull
-    @NotEmpty
-    @NotBlank
-    @Size(min = 8)
+    @ValidPassword
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
