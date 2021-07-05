@@ -354,14 +354,14 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
   };
 
   const datesOverlap = (onEdit = false) => {
-    const currentSprints = onEdit ? sprints.filter(sprint => sprint.id !== focusedSprint.id) : sprints
+    const currentSprints = onEdit ? sprints.filter(sprint => sprint.id !== focusedSprint.id) : sprints;
     return currentSprints.filter(existingSprint => {
       const startDate = new Date(existingSprint.startDate.split('T', 1)[0]);
       const dueDate = new Date(existingSprint.dueDate.split('T', 1)[0]);
       return !(new Date(newSprintStartDate) < startDate && new Date(newSprintDueDate) < startDate)
         &&
         !(new Date(newSprintStartDate) > dueDate && new Date(newSprintDueDate) > dueDate);
-    }).length > 0
+    }).length > 0;
   }
 
   const handleCreateSprintButtonClick = (e) => {
@@ -455,6 +455,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
     setFocusedSprint(sprint);
     setEditSprintStartDate(sprint.startDate.split('T', 1)[0]);
     setEditSprintDueDate(sprint.dueDate.split('T', 1)[0]);
+    setEditSprintError('');
     handleEditSprintPopup("show");
   }
 
@@ -1024,6 +1025,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
                   />
                 </div>
               </div>
+              {Boolean(editSprintError) && <p style={{ color: 'crimson' }}>{editSprintError}</p>}
               <button
                 style={{ width: '25%', margin: 'auto' }}
                 onClick={handleEditSprint}
