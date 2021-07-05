@@ -33,7 +33,7 @@ class CustomerRepositorySpec extends Specification {
 
         then: "The customer is saved successfully"
         saved
-        saved.getId() == 2L
+        saved.getId() == 3L
     }
 
     void "insert two customers works"() {
@@ -51,8 +51,8 @@ class CustomerRepositorySpec extends Specification {
 
         then: "The customers are saved successfully"
         saved.size() == 2
-        saved[0].getId() == 2L
-        saved[1].getId() == 3L
+        saved[0].getId() == 3L
+        saved[1].getId() == 4L
     }
 
     void "insert customer with same username throws exception"() {
