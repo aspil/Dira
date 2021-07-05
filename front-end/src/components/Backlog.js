@@ -358,9 +358,12 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
     return currentSprints.filter(existingSprint => {
       const startDate = new Date(existingSprint.startDate.split('T', 1)[0]);
       const dueDate = new Date(existingSprint.dueDate.split('T', 1)[0]);
-      return !(new Date(newSprintStartDate) < startDate && new Date(newSprintDueDate) < startDate)
+      const startDateToCheck = new Date(onEdit ? editSprintStartDate : newSprintStartDate);
+      const dueDateToCheck = new Date(onEdit ? editSprintDueDate : newSprintDueDate);
+
+      return !(startDateToCheck < startDate && dueDateToCheck < startDate)
         &&
-        !(new Date(newSprintStartDate) > dueDate && new Date(newSprintDueDate) > dueDate);
+        !(startDateToCheck > dueDate && dueDateToCheck > dueDate);
     }).length > 0;
   }
 
@@ -916,7 +919,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetc
                                 >
                                   {getSprintStatus(sprint.startDate, sprint.dueDate)}
                                 </span>
-                                Sprint {sprints.indexOf(sprint) + 1}
+                                Sprint {sprint.id}
 
                               </h3>
                               {
