@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory } from 'react-router-dom';
 import edit_icon from "../Images/edit_icon.png"
 import x_icon from "../Images/x_icon.png"
 import trashcan_icon from "../Images/trashcan_icon.png"
+import Calendar from 'react-calendar';
 
 
 const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle, footerStylesHandle, projectClientRef }) => {
@@ -114,10 +115,13 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
   useEffect(footerHandle, [footerHandle]);
   useEffect(footerStylesHandle, [footerStylesHandle]);
 
+  // Calendar
+  const [value, onChange] = useState(new Date());
+
   return (
     <div className="projectmain">
 
-      <div className="leftPanel" style={{ width: "60%", margin: "0.5%" }}>
+      <div className="leftPanel">
         {/* projectButtons */}
         <div className="projectButtons">
           <button onClick={() => { history.push("/create_project") }}> + New Project</button>
@@ -243,7 +247,11 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
           }
         </div>
       </div>
-
+      <div>
+        <Calendar onChange={onChange}
+                  value={value}
+        />
+      </div>
     </div>
   );
 }

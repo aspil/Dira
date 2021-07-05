@@ -1,7 +1,15 @@
 /* Project_Main */
-.projectmain .leftPanel{
-  margin: 0 auto;
+.projectmain{
+  display: flex;
+  /*justify-content: space-between;*/
+  margin: 0px 20px 0px 20px;
 }
+
+.projectmain .leftPanel{
+  width: 60%;
+  display: block;
+
+  }
 
 .projectmain .projectButtons{
   padding-top: 2vh;
@@ -35,6 +43,7 @@
 .projectmain #main_table {
   border-collapse: collapse;
   width: 100%;
+
 }
 
 .projectmain #main_table td:hover {

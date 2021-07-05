@@ -4,13 +4,15 @@
 * {
   margin: 0;
   font-family: 'Open Sans';
+}
+
+p,h1,h2,h3,h4,h5,link,a,tr,td,th{
   color: #333;
 }
+
 .label{
   font-weight: bold;
 }
-
-
 
 #xIcon{
   width: 2vw;
@@ -46,7 +48,7 @@
   background-image: linear-gradient(to top, rgb(0, 132, 255) , rgb(255, 255, 255));
 }
 .home_nav {
-  height: 5vh;
+  height: 7vh;
   padding: 0.4%;
   display: flex;
   align-items: center;
@@ -138,7 +140,7 @@ button:hover{
 }
 /* Footer */
 .footer {
-  height: 5vh;
+  height: 7vh;
   background-color: rgb(0, 132, 255);
   display: flex;
   align-items: center;
@@ -152,9 +154,10 @@ button:hover{
   }
 
 .footer img{
-  max-height: 100%;
+  max-height: 80%;
   width: auto;
-  margin-left: 10vh;
+  margin-left: 5vw;
+
 }
 .footer .links {
   text-align: right;
@@ -179,9 +182,6 @@ button:hover{
 }
 
 /*password recovery  */
-
-
-
 
 
 .password_recovery .arrows{
