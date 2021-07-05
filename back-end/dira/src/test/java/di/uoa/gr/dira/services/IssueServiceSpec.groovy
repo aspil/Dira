@@ -8,30 +8,16 @@ import di.uoa.gr.dira.entities.project.Project
 import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException
 import di.uoa.gr.dira.models.issue.IssueCreateModel
 import di.uoa.gr.dira.models.issue.IssueModel
-import di.uoa.gr.dira.models.project.ProjectIssuesModel
-import di.uoa.gr.dira.repositories.CustomerRepository
-import di.uoa.gr.dira.repositories.IssueCommentRepository
-import di.uoa.gr.dira.repositories.IssueFixVersionRepository
-import di.uoa.gr.dira.repositories.IssueLabelRepository
-import di.uoa.gr.dira.repositories.IssueLinkRepository
-import di.uoa.gr.dira.repositories.IssueRepository
-import di.uoa.gr.dira.repositories.PermissionRepository
-import di.uoa.gr.dira.repositories.ProjectRepository
+import di.uoa.gr.dira.repositories.*
 import di.uoa.gr.dira.services.issueService.IssueService
 import di.uoa.gr.dira.services.permissionService.IPermissionService
-import di.uoa.gr.dira.shared.IssuePriorityEnum
-import di.uoa.gr.dira.shared.IssueStatusEnum
-import di.uoa.gr.dira.shared.IssueTypeEnum
-import di.uoa.gr.dira.shared.PermissionType
-import di.uoa.gr.dira.shared.ProjectVisibility
-import di.uoa.gr.dira.shared.SubscriptionPlanEnum
+import di.uoa.gr.dira.shared.*
 import di.uoa.gr.dira.utils.ObjectGenerator
 import org.modelmapper.ModelMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
-
 
 @ActiveProfiles(SpringProfiles.TEST)
 @ContextConfiguration(classes = ModelMapperConfiguration.class)
@@ -131,29 +117,6 @@ class IssueServiceSpec  extends Specification {
         }
     }
 
-    def "find all issues within a project" () {
-        given: "two customers"
-        Customer reporter = ObjectGenerator.generateObject(Customer.class)
-        reporter.setSubscriptionPlanFromEnum(SubscriptionPlanEnum.STANDARD)
-
-        and: "a project that the issues belong to"
-        Project project = ObjectGenerator.generateObject(Project.class)
-        project.setVisibility(ProjectVisibility.PUBLIC)
-
-        and: "a list with one issue"
-        List<Issue> issues = ObjectGenerator.generateObjectList(Issue.class, 1)
-        populateIssue(issues[0], project, reporter, null, IssueTypeEnum.Epic, IssueStatusEnum.New, IssuePriorityEnum.Normal)
-
-        project.setIssues(issues)
-        projectRepository.findById(project.getId()) >> project
-
-        when: "We ask for all the issues in the project"
-        ProjectIssuesModel projectIssuesModel = service.findAllIssuesByProjectId(project.getId()) // TODO: fix StackOverflowError
-
-        then: "We get all the issues"
-//        projectIssuesModel.getIssues().size() == 1
-//        projectIssuesModel.getIssues()[0] == mapper.map(issues[0], IssueModel.class)
-    }
 
     def "a customer with WRITE permissions creates a new issue"() {
         given: "a customer "
