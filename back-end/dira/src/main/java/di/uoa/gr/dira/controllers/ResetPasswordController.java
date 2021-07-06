@@ -1,77 +1,62 @@
 package di.uoa.gr.dira.controllers;
 
-import di.uoa.gr.dira.entities.customer.Customer;
-import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
-import di.uoa.gr.dira.exceptions.security.InvalidOldPasswordException;
-import di.uoa.gr.dira.exceptions.security.PasswordResetTokenException;
+import di.uoa.gr.dira.exceptions.security.PasswordResetPinException;
 import di.uoa.gr.dira.models.customer.CustomerModel;
-import di.uoa.gr.dira.models.customer.PasswordModel;
+import di.uoa.gr.dira.models.customer.PasswordResetModel;
 import di.uoa.gr.dira.services.customerService.ICustomerService;
+import di.uoa.gr.dira.util.PinGenerator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.core.env.Environment;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
 
 @Validated
 @RestController
 public class ResetPasswordController {
-    private final ICustomerService service;
+    private final ICustomerService customerService;
     private final JavaMailSender mailSender;
     private final Environment env;
 
-    public ResetPasswordController(ICustomerService service,
+    public ResetPasswordController(ICustomerService customerService,
                                    JavaMailSender mailSender,
                                    Environment env) {
-        this.service = service;
+        this.customerService = customerService;
         this.mailSender = mailSender;
         this.env = env;
     }
 
     @PostMapping("resetPassword")
-    public ResponseEntity<Void> resetPassword(HttpServletRequest request, @RequestParam("email") final String customerEmail) {
-        final String token = UUID.randomUUID().toString();
-        CustomerModel customerModel = service.createPasswordResetTokenForUser(customerEmail, token);
-        mailSender.send(constructResetTokenEmail(getAppUrl(request), token, customerModel));
+    public ResponseEntity<Void> resetPassword(@RequestParam("email") String customerEmail) {
+        String pin = String.format("%05d", PinGenerator.generateRandomPin());
+        CustomerModel customerModel = customerService.createResetPinForCustomer(customerEmail, pin);
+        mailSender.send(constructResetPasswordEmail(pin, customerModel));
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("savePassword")
-    public ResponseEntity<Void> savePassword(@Valid PasswordModel passwordModel) {
+    @PostMapping("finalizeResetPassword")
+    public ResponseEntity<Void> finalizeResetPassword(@Valid @RequestBody PasswordResetModel passwordResetModel) {
+        String result = customerService.validatePasswordResetPin(passwordResetModel.getPin());
 
-        String result = service.validatePasswordResetToken(passwordModel.getToken());
-        if(result != null) {
-            throw new PasswordResetTokenException("PasswordResetToken", passwordModel.getToken());
+        if(!result.isEmpty()) {
+            throw new PasswordResetPinException("PasswordResetPin", passwordResetModel.getPin());
         }
 
-        service.changeUserPassword(passwordModel);
+        CustomerModel customer = customerService.getCustomerByResetPin(passwordResetModel.getPin())
+                .orElseThrow(() -> new PasswordResetPinException(
+                        String.format("Could not find customer with token [%s]", passwordResetModel.getPin()))
+                );
 
-        return ResponseEntity.ok().build();
-    }
+        customer.setPassword(passwordResetModel.getNewPassword());
+        customerService.save(customer);
 
-    @PostMapping("updatePassword")
-    public ResponseEntity<Void> changeUserPassword(@Valid PasswordModel passwordModel) {
-        Optional<CustomerModel> customer = service.findByEmail(((Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getEmail());
-        if (customer.isPresent()) {
-            if (!service.checkIfValidOldPassword(passwordModel.getOldPassword(), customer.get().getPassword())) {
-                throw new InvalidOldPasswordException();
-            }
-            service.changeUserPassword(passwordModel);
-        }
-        else {
-            // customer with the above email not found actually, could not get its info since customer is null
-            throw new ActionNotPermittedException();
-        }
         return ResponseEntity.ok().build();
     }
 
@@ -84,13 +69,8 @@ public class ResetPasswordController {
         return email;
     }
 
-    private String getAppUrl(HttpServletRequest request) {
-        return String.format("http://%s:%d%s", request.getServerName(), request.getServerPort(), request.getContextPath());
-    }
-
-    private SimpleMailMessage constructResetTokenEmail(String contextPath, String token, CustomerModel customerModel) {
-        String url = String.format("%s/user/changePassword?token=%s", contextPath, token);
-        String message = String.format("Please reset your password by clicking the link below\n%s", url);
-        return constructEmail("Reset Password", message, customerModel);
+    private SimpleMailMessage constructResetPasswordEmail(String pin, CustomerModel customerModel) {
+        String message = String.format("Please reset your password by providing the code below\nCode: %s", pin);
+        return constructEmail("Reset Dira Password", message, customerModel);
     }
 }

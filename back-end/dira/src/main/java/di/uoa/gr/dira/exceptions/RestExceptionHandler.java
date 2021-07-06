@@ -3,7 +3,7 @@ package di.uoa.gr.dira.exceptions;
 import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
 import di.uoa.gr.dira.exceptions.commonExceptions.CustomMessageException;
 import di.uoa.gr.dira.exceptions.security.InvalidOldPasswordException;
-import di.uoa.gr.dira.exceptions.security.PasswordResetTokenException;
+import di.uoa.gr.dira.exceptions.security.PasswordResetPinException;
 import di.uoa.gr.dira.exceptions.customer.CustomerAlreadyExistsException;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.exceptions.issue.IssueNotFoundException;
@@ -46,7 +46,7 @@ public class RestExceptionHandler {
             // General
             CustomMessageException.class,
             ActionNotPermittedException.class,
-            PasswordResetTokenException.class,
+            PasswordResetPinException.class,
             InvalidOldPasswordException.class,
             BadCredentialsException.class,
             JwtException.class,
@@ -80,9 +80,9 @@ public class RestExceptionHandler {
             HttpStatus status = HttpStatus.CONFLICT;
             return handleProjectAlreadyExistsException((ProjectAlreadyExistsException) ex, headers, status, request);
         }
-        else if (ex instanceof PasswordResetTokenException) {
+        else if (ex instanceof PasswordResetPinException) {
             HttpStatus status = HttpStatus.UNAUTHORIZED;
-            return handlePasswordResetTokenException((PasswordResetTokenException) ex, headers, status, request);
+            return handlePasswordResetTokenException((PasswordResetPinException) ex, headers, status, request);
         }
         else if (ex instanceof InvalidOldPasswordException) {
             HttpStatus status = HttpStatus.UNAUTHORIZED;
@@ -144,7 +144,7 @@ public class RestExceptionHandler {
     }
 
     private ResponseEntity<RestApiError> handlePasswordResetTokenException(
-            PasswordResetTokenException ex,
+            PasswordResetPinException ex,
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {

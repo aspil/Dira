@@ -1,18 +1,14 @@
 package di.uoa.gr.dira.services.customerService;
 
 import di.uoa.gr.dira.entities.customer.Customer;
-import di.uoa.gr.dira.entities.customer.PasswordResetToken;
+import di.uoa.gr.dira.entities.customer.PasswordResetPin;
 import di.uoa.gr.dira.entities.project.Project;
-import di.uoa.gr.dira.exceptions.security.PasswordResetTokenException;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.models.customer.CustomerModel;
-import di.uoa.gr.dira.models.customer.PasswordModel;
 import di.uoa.gr.dira.models.project.ProjectModel;
 import di.uoa.gr.dira.repositories.CustomerRepository;
-import di.uoa.gr.dira.repositories.PasswordResetTokenRepository;
-import di.uoa.gr.dira.security.PasswordManager;
+import di.uoa.gr.dira.repositories.PasswordResetPinRepository;
 import di.uoa.gr.dira.services.BaseService;
-import di.uoa.gr.dira.services.projectService.IProjectService;
 import di.uoa.gr.dira.shared.SubscriptionPlanEnum;
 import di.uoa.gr.dira.util.mapper.MapperHelper;
 import org.modelmapper.ModelMapper;
@@ -24,16 +20,13 @@ import java.util.Optional;
 
 @Service
 public class CustomerService extends BaseService<CustomerModel, Customer, Long, CustomerRepository> implements ICustomerService {
-    private final IProjectService projectService;
-    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final PasswordResetPinRepository passwordResetPinRepository;
 
     public CustomerService(CustomerRepository repository,
-                           IProjectService projectService,
-                           PasswordResetTokenRepository passwordResetTokenRepository,
+                           PasswordResetPinRepository passwordResetPinRepository,
                            ModelMapper mapper) {
         super(repository, mapper);
-        this.projectService = projectService;
-        this.passwordResetTokenRepository = passwordResetTokenRepository;
+        this.passwordResetPinRepository = passwordResetPinRepository;
     }
 
     @Override
@@ -63,40 +56,31 @@ public class CustomerService extends BaseService<CustomerModel, Customer, Long, 
     }
 
     @Override
-    public CustomerModel createPasswordResetTokenForUser(String customerEmail, String token) {
-        Customer customer = repository.findByEmail(customerEmail).orElseThrow(() -> new CustomerNotFoundException("email", customerEmail));
-        PasswordResetToken myToken = new PasswordResetToken(token, customer);
-        passwordResetTokenRepository.save(myToken);
+    public CustomerModel createResetPinForCustomer(String customerEmail, String pin) {
+        Customer customer = repository.findByEmail(customerEmail).
+                orElseThrow(() -> new CustomerNotFoundException("email", customerEmail));
+
+        PasswordResetPin pinEntity = new PasswordResetPin(pin, customer);
+        passwordResetPinRepository.save(pinEntity);
 
         return mapper.map(customer, CustomerModel.class);
     }
 
     @Override
-    public String validatePasswordResetToken(String token) {
-        return passwordResetTokenRepository.findByToken(token)
-                .map(resetToken -> isTokenExpired(resetToken) ? "expired" : null)
-                .orElse("invalidToken");
+    public Optional<CustomerModel> getCustomerByResetPin(String resetPin) {
+        return passwordResetPinRepository.findByPin(resetPin)
+                .map(pin -> mapper.map(pin.getCustomer(), CustomerModel.class));
     }
 
-    private boolean isTokenExpired(PasswordResetToken passToken) {
+    @Override
+    public String validatePasswordResetPin(String pin) {
+        return passwordResetPinRepository.findByPin(pin)
+                .map(resetPin -> isPinExpired(resetPin) ? "expired" : "")
+                .orElse("invalidPin");
+    }
+
+    private boolean isPinExpired(PasswordResetPin passPin) {
         Calendar cal = Calendar.getInstance();
-        return passToken.getExpiryDate().before(cal.getTime());
-    }
-
-    @Override
-    public void changeUserPassword(PasswordModel passwordModel) {
-        Optional<Customer> customer = passwordResetTokenRepository.findByToken(passwordModel.getToken()).map(PasswordResetToken::getCustomer);
-        if (customer.isPresent()) {
-            customer.get().setPassword(PasswordManager.encoder().encode(passwordModel.getNewPassword()));
-            repository.save(customer.get());
-        }
-        else {
-            throw new PasswordResetTokenException("PasswordResetToken", passwordModel.getToken());
-        }
-    }
-
-    @Override
-    public boolean checkIfValidOldPassword(String oldPassword, String customerPassword) {
-        return PasswordManager.encoder().matches(oldPassword, customerPassword);
+        return passPin.getExpiryDate().before(cal.getTime());
     }
 }
