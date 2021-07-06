@@ -70,7 +70,14 @@ const Login = ({ setToken, userClientRef, setUserInfo, setIsLogged, navHandle, s
               Boolean(errMessage)
               &&
               <ul>
-                {errMessage.split('|').map(message => <li style={{ "color": "crimson" }}>{message}</li>)}
+                {
+                  errMessage.split('|').map((message, index) => <li
+                    key={index}
+                    style={{ "color": "crimson" }}
+                  >
+                    {message}
+                  </li>)
+                }
               </ul>
             }
             <button type="submit">Login</button>

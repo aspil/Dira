@@ -48,8 +48,20 @@ const PasswordRecovery = ({ navHandle, userClientRef }) => {
     }
     setRecoveryError('');
 
-    // TO-DO
-    setRecoveryError('Not Available');
+    userClientRef.current.finalize_reset_password({
+      pin,
+      newPassword: password
+    }).then(() => {
+      history.push('/');
+    }).catch(err => {
+      console.log(err);
+      try {
+        setRecoveryError(err.error.message)
+      }
+      catch {
+        setRecoveryError('Couldn\'t Complete recovery process');
+      }
+    })
   }
 
   useEffect(navHandle, [navHandle]);
@@ -97,7 +109,20 @@ const PasswordRecovery = ({ navHandle, userClientRef }) => {
                 value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
               />
-              {Boolean(recoveryError) && <p style={{ color: 'crimson' }}>{recoveryError}</p>}
+              {
+                Boolean(recoveryError)
+                &&
+                <ul>
+                  {
+                    recoveryError.split('|').map((message, index) => <li
+                      key={index}
+                      style={{ "color": "crimson" }}
+                    >
+                      {message}
+                    </li>)
+                  }
+                </ul>
+              }
               <p><button onClick={resetPassword} >Update Password</button></p>
             </div>
           }
