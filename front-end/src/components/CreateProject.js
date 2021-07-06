@@ -2,15 +2,18 @@ import { Link, useHistory } from "react-router-dom";
 import logo from "../Images/dira_icon_cropped.png"
 import questionmark from "../Images/questionmark_icon.png"
 import { useState } from "react";
+import { useEffect } from "react";
 
 
-const CreateProject = ({ projectClientRef, userPlan }) => {
+const CreateProject = ({ projectClientRef, userPlan, navHandle }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [key, setKey] = useState("");
   const [visibility, setVisibility] = useState("PUBLIC");
   const [errorMsg, setErrorMsg] = useState('');
   const history = useHistory();
+
+  useEffect(navHandle, [navHandle]);
 
   function myFunction() {
     var popup = document.getElementById("myPopup");
@@ -35,7 +38,6 @@ const CreateProject = ({ projectClientRef, userPlan }) => {
       "visibility": visibility
     })
       .then(res => {
-        console.log(res);
         history.push('proj_main');
       })
       .catch((err) => {

@@ -27,6 +27,7 @@ function App() {
   });
   const [isLogged, setIsLogged] = useState(localStorage.getItem('JWToken') ? true : false);
   const [showHomeNav, setShowHomeNav] = useState(true);
+  const [showProjectNav, setShowProjectNav] = useState(true);
   const [showFooter, setShowFooter] = useState(false);
   const [showFooterStyles, setShowFooterStyles] = useState(false);
   const [stayLogged, setStayLogged] = useState(true);
@@ -48,11 +49,11 @@ function App() {
     }
   }, [token, projectClientRef]);
 
+  const keepAliveRef = useRef(setTimeout(() => { }, 0));
   const refreshToken = () => {
-    if (projectClientRef.current.headers.Authorization) {
+    if (isLogged && projectClientRef.current.headers.Authorization) {
       projectClientRef.current.keepalive()
         .then((res) => {
-          console.log(res);
           setToken(res.token);
         })
         .catch(err => {
@@ -61,11 +62,15 @@ function App() {
         });
     }
 
-    setTimeout(refreshToken, 15 * 60 * 1e3);
+    keepAliveRef.current = setTimeout(refreshToken, 15 * 60 * 1e3);
   };
   useEffect(() => {
-    setTimeout(refreshToken, 15 * 60 * 1e3); // 15 minutes
-  }, []);
+    keepAliveRef.current = setTimeout(refreshToken, 15 * 60 * 1e3); // 15 minutes
+
+    return function cleanup() {
+      clearTimeout(keepAliveRef.current);
+    }
+  }, [isLogged, projectClientRef.current.headers.Authorization]);
 
   useEffect(() => {
     const doBeforeUnload = () => {
@@ -103,6 +108,13 @@ function App() {
       setShowHomeNav(true);
     }
   }
+  const showProjectNavHook = () => {
+    setShowProjectNav(false);
+
+    return function cleanup() {
+      setShowProjectNav(true);
+    }
+  }
 
   const showFooterHook = () => {
     setShowFooter(true);
@@ -120,9 +132,36 @@ function App() {
     }
   }
 
+  const fetchAllIssues = (issueClientRef, setIssues, setProjectName, focusedIssueId, setFocusedIssue) => {
+    if (!issueClientRef.current.headers.Authorization) {
+      return;
+    }
+    issueClientRef.current.get_all_issues().then((res) => {
+      setIssues(res.issues);
+      setProjectName(res.name);
+      if (focusedIssueId) {
+        setFocusedIssue(res.issues.find(issue => issue.id === focusedIssueId));
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+
+  const fetchMembers = (projectId, setMembers) => {
+    if (!projectClientRef.current.headers.Authorization) {
+      return;
+    }
+
+    projectClientRef.current.get_all_users_in_project_by_id(projectId).then((res) => {
+      setMembers(res.users);
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+
   return (
     <div className="App">
-      {isLogged && <ProjectNav username={userInfo.username} doLogout={doLogout} />}
+      {isLogged && showProjectNav && <ProjectNav username={userInfo.username} doLogout={doLogout} />}
       {!isLogged && showHomeNav && <HomeNav />}
 
       <Switch>
@@ -154,9 +193,10 @@ function App() {
         <Route path="/change_password">
           {token === undefined && <Redirect to="/sign_in" />}
           {token !== undefined && <ChangePassword
-            navHandle={showHomeNavHook}
-            userId={userInfo.userId}
+            navHandle={showProjectNavHook}
+            username={userInfo.username}
             userClientRef={userClientRef}
+            doLogout={doLogout}
           />}
 
         </Route>
@@ -192,6 +232,8 @@ function App() {
             doLogout={doLogout}
             footerHandle={showFooterHook}
             projectClientRef={projectClientRef}
+            fetchAllIssues={fetchAllIssues}
+            fetchMembers={fetchMembers}
           />}
         </Route>
         <Route path="/project/:projectId/members">
@@ -202,7 +244,9 @@ function App() {
               doLogout={doLogout}
               projectClientRef={projectClientRef}
               userId={userInfo.id}
-              footerHandle={showFooterHook} />
+              footerHandle={showFooterHook}
+              fetchMembers={fetchMembers}
+            />
           }
         </Route>
         <Route path="/project/:projectId/issue_preview/:issueId">
@@ -211,12 +255,19 @@ function App() {
         </Route>
         <Route path="/project/:projectId/graphic_reports">
           {token === undefined && <Redirect to="/sign_in" />}
-          {token !== undefined && <Reports footerHandle={showFooterHook} token={token} />}
+          {token !== undefined && <Reports
+            footerHandle={showFooterHook}
+            token={token}
+            projectClientRef={projectClientRef}
+            fetchAllIssues={fetchAllIssues}
+            fetchMembers={fetchMembers}
+          />}
         </Route>
         <Route path="/create_project">
           {token === undefined && <Redirect to="/sign_in" />}
           {token !== undefined && <CreateProject
             projectClientRef={projectClientRef}
+            navHandle={showProjectNavHook}
             userPlan={userInfo.plan}
           />}
         </Route>

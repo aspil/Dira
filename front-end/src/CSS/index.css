@@ -4,13 +4,15 @@
 * {
   margin: 0;
   font-family: 'Open Sans';
+}
+
+p,h1,h2,h3,h4,h5,link,a,tr,td,th{
   color: #333;
 }
+
 .label{
   font-weight: bold;
 }
-
-
 
 #xIcon{
   width: 2vw;
@@ -40,12 +42,15 @@
 
 /* Homepage */
 .home .home_grad1 {
+  border-bottom: 1px solid lightgray;
   background-image: linear-gradient(to bottom, rgb(0, 132, 255) , rgb(255, 255, 255));
 }
 .home .home_grad2 {
   background-image: linear-gradient(to top, rgb(0, 132, 255) , rgb(255, 255, 255));
+
 }
 .home_nav {
+  height: 7vh;
   padding: 0.4%;
   display: flex;
   align-items: center;
@@ -110,7 +115,6 @@ button:hover{
 .home form {
   margin-left: 60%;
   margin-right: 10%;
-  height: 3.5vh;
 }
 .home form button,input { 
   margin: 15px; 
@@ -135,9 +139,27 @@ button:hover{
     border-radius: 5px;
 
 }
+.home .homeScreenshot{
+  border-radius: 15px;
+  box-shadow: 7px 7px 10px black;
+  /* margin-right: 0;
+  margin-left: 0; */
+
+}
+.home .rightContent{
+  margin-right: 5%;
+}
+.home .leftContent{
+  margin-left: 5%;
+}
+.home .description{
+  font-size: 40px;
+  font-weight: bold;
+}
+
 /* Footer */
 .footer {
-  border-top: 1px solid #f2f2f2;
+  height: 7vh;
   background-color: rgb(0, 132, 255);
   display: flex;
   align-items: center;
@@ -151,9 +173,10 @@ button:hover{
   }
 
 .footer img{
-  max-height:10vh;
-  max-width:9vw;
-  margin-left: 10vh;
+  max-height: 80%;
+  width: auto;
+  margin-left: 5vw;
+
 }
 .footer .links {
   text-align: right;
@@ -178,9 +201,6 @@ button:hover{
 }
 
 /*password recovery  */
-
-
-
 
 
 .password_recovery .arrows{

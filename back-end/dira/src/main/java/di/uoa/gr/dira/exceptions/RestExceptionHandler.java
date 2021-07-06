@@ -3,7 +3,7 @@ package di.uoa.gr.dira.exceptions;
 import di.uoa.gr.dira.exceptions.commonExceptions.ActionNotPermittedException;
 import di.uoa.gr.dira.exceptions.commonExceptions.CustomMessageException;
 import di.uoa.gr.dira.exceptions.security.InvalidOldPasswordException;
-import di.uoa.gr.dira.exceptions.security.PasswordResetTokenException;
+import di.uoa.gr.dira.exceptions.security.PasswordResetPinException;
 import di.uoa.gr.dira.exceptions.customer.CustomerAlreadyExistsException;
 import di.uoa.gr.dira.exceptions.customer.CustomerNotFoundException;
 import di.uoa.gr.dira.exceptions.issue.IssueNotFoundException;
@@ -17,10 +17,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.util.WebUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ControllerAdvice
 public class RestExceptionHandler {
@@ -41,10 +46,11 @@ public class RestExceptionHandler {
             // General
             CustomMessageException.class,
             ActionNotPermittedException.class,
-            PasswordResetTokenException.class,
+            PasswordResetPinException.class,
             InvalidOldPasswordException.class,
             BadCredentialsException.class,
             JwtException.class,
+            MethodArgumentNotValidException.class,
     })
     public final ResponseEntity<RestApiError> handleException(Exception ex, WebRequest request) {
         HttpHeaders headers = new HttpHeaders();
@@ -74,9 +80,9 @@ public class RestExceptionHandler {
             HttpStatus status = HttpStatus.CONFLICT;
             return handleProjectAlreadyExistsException((ProjectAlreadyExistsException) ex, headers, status, request);
         }
-        else if (ex instanceof PasswordResetTokenException) {
+        else if (ex instanceof PasswordResetPinException) {
             HttpStatus status = HttpStatus.UNAUTHORIZED;
-            return handlePasswordResetTokenException((PasswordResetTokenException) ex, headers, status, request);
+            return handlePasswordResetTokenException((PasswordResetPinException) ex, headers, status, request);
         }
         else if (ex instanceof InvalidOldPasswordException) {
             HttpStatus status = HttpStatus.UNAUTHORIZED;
@@ -97,6 +103,9 @@ public class RestExceptionHandler {
         else if (ex instanceof SprintNotFoundException) {
             HttpStatus status = HttpStatus.NOT_FOUND;
             return handleSprintNotFoundException((SprintNotFoundException) ex, headers, status, request);
+        } else if (ex instanceof  MethodArgumentNotValidException) {
+            HttpStatus status = HttpStatus.BAD_REQUEST;
+            return handleMethodArgumentNotValidException((MethodArgumentNotValidException) ex, headers, status, request);
         }
 
         return null;
@@ -135,7 +144,7 @@ public class RestExceptionHandler {
     }
 
     private ResponseEntity<RestApiError> handlePasswordResetTokenException(
-            PasswordResetTokenException ex,
+            PasswordResetPinException ex,
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {
@@ -212,6 +221,20 @@ public class RestExceptionHandler {
             HttpStatus status,
             WebRequest request) {
         return handleExceptionInternal(ex, new RestApiError(ex.getMessage()), headers, status, request);
+    }
+
+    private ResponseEntity<RestApiError> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException ex,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
+        List<String> details = new ArrayList<>();
+        for(ObjectError error : ex.getBindingResult().getAllErrors()) {
+            details.add(error.getDefaultMessage());
+        }
+
+        String msg = String.join("|", details);
+        return handleExceptionInternal(ex ,new RestApiError(msg), headers, status, request);
     }
 
     private ResponseEntity<RestApiError> handleExceptionInternal(

@@ -25,7 +25,6 @@ const IssuePreview = ({ footerHandle, token }) => {
     }
     issueClientRef.current.get_issue(issueId)
       .then(res => {
-        console.log(res);
         setIssue(res);
       })
       .catch(err => {
@@ -58,7 +57,6 @@ const IssuePreview = ({ footerHandle, token }) => {
 
     issueClientRef.current.update_issue(issueId, issue)
       .then(res => {
-        console.log(res);
         history.push(`/project/${projectId}/backlog`);
       })
       .catch(err => {

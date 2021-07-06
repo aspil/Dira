@@ -5,6 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import './CSS/index.css'
 import './CSS/project_screens.css'
 import './CSS/project_main.css'
+import './CSS/calendar.css'
 import './CSS/backlog.css'
 import './CSS/sidenav.css'
 import './CSS/activesprint.css'

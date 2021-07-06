@@ -14,15 +14,15 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @DynamicUpdate
-public class PasswordResetToken {
+public class PasswordResetPin {
 
-    private static final int EXPIRATION = 60;
+    private static final int EXPIRATION_MS = 7_200_000;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String token;
+    private String pin;
 
     @OneToOne
     @JoinColumn(nullable = false, name = "customer_id")
@@ -30,8 +30,9 @@ public class PasswordResetToken {
 
     private Date expiryDate;
 
-    public PasswordResetToken(String token, Customer customer) {
-        this.token = token;
+    public PasswordResetPin(String pin, Customer customer) {
+        this.pin = pin;
         this.customer = customer;
+        this.expiryDate = new Date(System.currentTimeMillis() + EXPIRATION_MS);
     }
 }

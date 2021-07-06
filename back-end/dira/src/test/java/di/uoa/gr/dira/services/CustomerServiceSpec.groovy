@@ -6,7 +6,7 @@ import di.uoa.gr.dira.entities.customer.Customer
 import di.uoa.gr.dira.models.customer.CustomerModel
 import di.uoa.gr.dira.models.project.ProjectModel
 import di.uoa.gr.dira.repositories.CustomerRepository
-import di.uoa.gr.dira.repositories.PasswordResetTokenRepository
+import di.uoa.gr.dira.repositories.PasswordResetPinRepository
 import di.uoa.gr.dira.services.customerService.CustomerService
 import di.uoa.gr.dira.services.projectService.IProjectService
 import di.uoa.gr.dira.utils.ObjectGenerator
@@ -26,7 +26,7 @@ class CustomerServiceSpec extends Specification {
     private CustomerService service
     private final IProjectService projectService = Mock()
     private final CustomerRepository customerRepository = Mock()
-    private final PasswordResetTokenRepository passwordResetTokenRepository = Mock()
+    private final PasswordResetPinRepository passwordResetTokenRepository = Mock()
 
     void setup() {
         service = new CustomerService(customerRepository, projectService, passwordResetTokenRepository, mapper)

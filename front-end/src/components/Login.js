@@ -6,8 +6,6 @@ import { useEffect, useState } from "react";
 const Login = ({ setToken, userClientRef, setUserInfo, setIsLogged, navHandle, setStayLogged, stayLogged }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [usernameError, setUsernameError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
   const [errMessage, setErrMessage] = useState('');
   const history = useHistory();
 
@@ -15,14 +13,15 @@ const Login = ({ setToken, userClientRef, setUserInfo, setIsLogged, navHandle, s
 
   const onSubmit = (e) => {
     e.preventDefault();
-
-    setUsernameError(false);
-    setPasswordError(false);
+    if (!(username && password)) {
+      setErrMessage('Please fill in fields');
+      return;
+    }
+    setErrMessage('');
 
     userClientRef.current
       .login_user(username, password)
       .then((user) => {
-        console.log(user);
         setUserInfo({
           username: user.username,
           email: user.email,
@@ -35,16 +34,11 @@ const Login = ({ setToken, userClientRef, setUserInfo, setIsLogged, navHandle, s
       })
       .catch((err) => {
         console.log(err);
-        if (err === undefined) {
-          return;
-        }
-        if (err.errors) {
-          setPasswordError(true);
-          setErrMessage(err.errors[0].defaultMessage);
-        }
-        else {
-          setUsernameError(true);
+        try {
           setErrMessage(err.error.message);
+        }
+        catch {
+          setErrMessage('Failed to login with given credentials');
         }
       });
   }
@@ -64,18 +58,28 @@ const Login = ({ setToken, userClientRef, setUserInfo, setIsLogged, navHandle, s
                 type="text"
                 placeholder="Username"
                 onChange={(e) => { setUsername(e.target.value) }}
-                required
                 value={username} />
-              {usernameError && <p style={{ "color": "red" }}>{errMessage}</p>}
               <p className="inputHead">Password:</p>
               <input
                 type="password"
                 placeholder="Password"
                 onChange={(e) => { setPassword(e.target.value) }}
-                required
                 value={password} />
             </div>
-            {passwordError && <p style={{ "color": "red" }}>{errMessage}</p>}
+            {
+              Boolean(errMessage)
+              &&
+              <ul>
+                {
+                  errMessage.split('|').map((message, index) => <li
+                    key={index}
+                    style={{ "color": "crimson" }}
+                  >
+                    {message}
+                  </li>)
+                }
+              </ul>
+            }
             <button type="submit">Login</button>
           </form>
           <label htmlFor='stay_logged' style={{ alignItems: "center" }}>

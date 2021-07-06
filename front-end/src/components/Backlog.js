@@ -14,7 +14,7 @@ const getYearAfterTodayDate = () => {
   return `${String(Number(today[2]) + 1)}-${today[0].length === 1 ? '0' + today[0] : today[0]}-${today[1].length === 1 ? '0' + today[1] : today[1]}`
 }
 
-const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) => {
+const Backlog = ({ token, footerHandle, projectClientRef, userId, username, fetchAllIssues, fetchMembers }) => {
   const [backlogIssues, setBacklogIssues] = useState([]);
   const [searchFilteredIssues, setSearchFilteredIssues] = useState([]);
   const [searchFilter, setSearchFilter] = useState('');
@@ -49,7 +49,11 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   const [newSprintStartDate, setNewSprintStartDate] = useState(getTodayDate());
   const [newSprintDueDate, setNewSprintDueDate] = useState(getTodayDate());
   const [createSprintError, setCreateSprintError] = useState('');
+  const [editSprintError, setEditSprintError] = useState('');
   const [sprints, setSprints] = useState([]);
+  const [focusedSprint, setFocusedSprint] = useState(null);
+  const [editSprintStartDate, setEditSprintStartDate] = useState(null);
+  const [editSprintDueDate, setEditSprintDueDate] = useState(null);
 
   const { projectId } = useParams();
   const issueClientRef = useRef(new DiraIssueClient(projectId));
@@ -67,36 +71,12 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     }
   }, [token, sprintClientRef]);
 
-  const fetchAllIssues = () => {
-    if (!issueClientRef.current.headers.Authorization) {
-      return;
-    }
-    issueClientRef.current.get_all_issues().then((res) => {
-      console.log(res);
-      setBacklogIssues(res.issues);
-      setProjectName(res.name);
-      if (focusedIssueId) {
-        setFocusedIssue(res.issues.find(issue => issue.id === focusedIssueId));
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
-  }
-
-  const fetchMembers = () => {
-    if (!projectClientRef.current.headers.Authorization) {
-      return;
-    }
-
-    projectClientRef.current.get_all_users_in_project_by_id(projectId).then((res) => {
-      setMembers(res.users);
-    }).catch((err) => {
-      console.log(err);
-    });
-  }
-
-  useEffect(fetchAllIssues, [issueClientRef, issueClientRef.current.headers.Authorization]);
-  useEffect(fetchMembers, [projectClientRef, projectId, projectClientRef.current.headers.Authorization]);
+  useEffect(() => fetchAllIssues(issueClientRef, setBacklogIssues, setProjectName, focusedIssueId, setFocusedIssue),
+    [issueClientRef, issueClientRef.current.headers.Authorization, fetchAllIssues]
+  );
+  useEffect(() => fetchMembers(projectId, setMembers),
+    [projectClientRef, projectId, projectClientRef.current.headers.Authorization, fetchMembers]
+  );
 
   useEffect(footerHandle, [footerHandle]);
 
@@ -150,8 +130,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     }
     issueClientRef.current.update_issue(focusedIssueId, newIssue)
       .then(res => {
-        console.log(res);
-        fetchAllIssues();
+        fetchAllIssues(issueClientRef, setBacklogIssues, setProjectName, focusedIssueId, setFocusedIssue);
         if (field === 'label') {
           setNewLabel('');
         } else if (field === 'comment') {
@@ -187,8 +166,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     }
     issueClientRef.current.update_issue(focusedIssueId, issue)
       .then(res => {
-        console.log(res);
-        fetchAllIssues();
+        fetchAllIssues(issueClientRef, setBacklogIssues, setProjectName, focusedIssueId, setFocusedIssue);
       })
       .catch(err => {
         console.log(err);
@@ -244,7 +222,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       "assigneeId": newAssignee,
       "epicId": newEpicLink
     }).then((res) => {
-      fetchAllIssues();
+      fetchAllIssues(issueClientRef, setBacklogIssues, setProjectName, focusedIssueId, setFocusedIssue);
       hideCreateIssuePopup();
     }).catch((err) => {
       setIssueCreationError(true);
@@ -296,7 +274,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     }
 
     projectClientRef.current.get_project_permissions_for_all_users(projectId).then(res => {
-      console.log(res);
       setUserPermissions(res.find(customer => customer.customerId === userId));
     }).catch(err => {
       console.log(err);
@@ -373,6 +350,20 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
     }
   };
 
+  const datesOverlap = (onEdit = false) => {
+    const currentSprints = onEdit ? sprints.filter(sprint => sprint.id !== focusedSprint.id) : sprints;
+    return currentSprints.filter(existingSprint => {
+      const startDate = new Date(existingSprint.startDate.split('T', 1)[0]);
+      const dueDate = new Date(existingSprint.dueDate.split('T', 1)[0]);
+      const startDateToCheck = new Date(onEdit ? editSprintStartDate : newSprintStartDate);
+      const dueDateToCheck = new Date(onEdit ? editSprintDueDate : newSprintDueDate);
+
+      return !(startDateToCheck < startDate && dueDateToCheck < startDate)
+        &&
+        !(startDateToCheck > dueDate && dueDateToCheck > dueDate);
+    }).length > 0;
+  }
+
   const handleCreateSprintButtonClick = (e) => {
     e.preventDefault();
 
@@ -384,13 +375,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       setCreateSprintError('Invalid dates selected');
       return;
     }
-    else if (sprints.filter(existingSprint => {
-      const startDate = new Date(existingSprint.startDate.split('T', 1)[0]);
-      const dueDate = new Date(existingSprint.dueDate.split('T', 1)[0]);
-      return !(new Date(newSprintStartDate) < startDate && new Date(newSprintDueDate) < startDate)
-        &&
-        !(new Date(newSprintStartDate) > dueDate && new Date(newSprintDueDate) > dueDate);
-    }).length > 0) {
+    else if (datesOverlap()) {
       setCreateSprintError('The time span of the sprint overlaps with an already existing one');
       return;
     }
@@ -402,7 +387,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       startDate: newSprintStartDate
     })
       .then(res => {
-        console.log('sprint creation response ', res);
         fetchSprints();
         hideCreateSprintPopup();
       })
@@ -417,7 +401,6 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       return;
     }
     sprintClientRef.current.get_all_sprints().then((res) => {
-      console.log('get sprints response ', res);
       setSprints(res.sprints);
     }).catch((err) => {
       console.log('get sprints error ', err);
@@ -432,12 +415,12 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
   }
 
   const getSprintStatus = (startDate, dueDate) => {
-    const today = new Date();
+    const today = getTodayDate();
 
-    if (new Date(startDate.split('T', 1)[0]) <= today && today <= new Date(dueDate.split('T', 1)[0])) {
+    if (new Date(startDate.split('T', 1)[0]) <= new Date(today) && new Date(today) <= new Date(dueDate.split('T', 1)[0])) {
       return 'Active';
     }
-    else if (new Date(startDate.split('T', 1)[0]) > today) {
+    else if (new Date(startDate.split('T', 1)[0]) > new Date(today)) {
       return 'Upcoming';
     }
     return 'Old';
@@ -461,6 +444,44 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
       });
   };
   useEffect(deleteEmptySprints, [sprints, sprintClientRef, sprintClientRef.current.headers.Authorization]);
+
+  const [edit_sprint_popup, handleEditSprintPopup] = useState("hide");
+  const hideEditSprintPopup = () => {
+    handleEditSprintPopup("hide");
+  }
+  const showEditSprintPopup = (sprint) => {
+    setFocusedSprint(sprint);
+    setEditSprintStartDate(sprint.startDate.split('T', 1)[0]);
+    setEditSprintDueDate(sprint.dueDate.split('T', 1)[0]);
+    setEditSprintError('');
+    handleEditSprintPopup("show");
+  }
+
+  const handleEditSprint = () => {
+    if (new Date(editSprintStartDate) >= new Date(editSprintDueDate)) {
+      setEditSprintError('Invalid dates selected');
+      return;
+    }
+    else if (datesOverlap(true)) {
+      setEditSprintError('The time span of the sprint overlaps with an already existing one');
+      return;
+    }
+    setEditSprintError('');
+
+    const sprintToEdit = JSON.parse(JSON.stringify(focusedSprint));
+    sprintToEdit.startDate = editSprintStartDate;
+    sprintToEdit.dueDate = editSprintDueDate;
+
+    sprintClientRef.current.update_sprint(sprintToEdit.id, sprintToEdit)
+      .then(res => {
+        fetchSprints();
+        hideEditSprintPopup();
+      })
+      .catch(err => {
+        console.log(err);
+        setEditSprintError('Couldn\'t update sprint');
+      });
+  }
 
   return (
     <div className="backlog proj_page">
@@ -503,7 +524,7 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
               >
                 <input
                   type="text"
-                  placeholder="Search for and issue"
+                  placeholder="Search for an issue"
                   value={searchFilter}
                   onChange={(e) => {
                     setSearchFilter(e.target.value);
@@ -879,21 +900,28 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                       <div className="head" style={{ display: "block" }}>
                         <div className="info">
                           <div>
-                            <h3>
-                              <span
-                                className="colored_text answer"
-                                style={{
-                                  display: 'inline-block',
-                                  fontSize: '0.8em',
-                                  margin: '0.2em',
-                                  backgroundColor: statusToColorMapper[getSprintStatus(sprint.startDate, sprint.dueDate)]
-                                }}
-                              >
-                                {getSprintStatus(sprint.startDate, sprint.dueDate)}
-                              </span>
-                              Sprint {sprints.indexOf(sprint) + 1}
+                            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                              <h3 >
+                                <span
+                                  className="colored_text answer"
+                                  style={{
+                                    display: 'inline-block',
+                                    fontSize: '0.8em',
+                                    margin: '0.2em',
+                                    backgroundColor: statusToColorMapper[getSprintStatus(sprint.startDate, sprint.dueDate)]
+                                  }}
+                                >
+                                  {getSprintStatus(sprint.startDate, sprint.dueDate)}
+                                </span>
+                                Sprint {sprint.id}
 
-                            </h3>
+                              </h3>
+                              {
+                                hasWrite
+                                &&
+                                <img id="sprintPencilIcon" src={edit_icon} alt="Pencil" onClick={() => showEditSprintPopup(sprint)}></img>
+                              }
+                            </div>
                             <div className="dates">
                               <div>
                                 <span style={{ fontWeight: "bold" }}>Start date: </span>
@@ -949,13 +977,60 @@ const Backlog = ({ token, footerHandle, projectClientRef, userId, username }) =>
                 <div id="createSprintContent">
                   <span id="createSprintText">No sprints to show</span>
                   <br></br>
-                  <button id="createSprintButton" onClick={showCreateSprintPopup}>+ Create Sprint
-                  </button>
+                  {
+                    hasWrite
+                    &&
+                    <button id="createSprintButton" onClick={showCreateSprintPopup}>+ Create Sprint
+                    </button>
+                  }
                 </div>
               </div>
             }
 
           </div>
+          {/* edit Sprint Popup */}
+          {
+            edit_sprint_popup === "show"
+            &&
+            <div
+              className="createPopup"
+              style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}
+            >
+              <div>
+                <h2>Edit Sprint</h2>
+                <img src={x_icon} id="xIcon" alt="x_icon" onClick={hideEditSprintPopup}></img>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', margin: '1rem 0' }}>
+                <div>
+                  <p className="label">New Start Date:</p>
+                  <input
+                    type="date"
+                    onChange={(e) => setEditSprintStartDate(e.target.value)}
+                    value={editSprintStartDate}
+                    min={getTodayDate()}
+                    max={getYearAfterTodayDate()}
+                  />
+                </div>
+                <div>
+                  <p className="label">New Due Date:</p>
+                  <input
+                    type="date"
+                    onChange={(e) => setEditSprintDueDate(e.target.value)}
+                    value={editSprintDueDate}
+                    min={getTodayDate()}
+                    max={getYearAfterTodayDate()}
+                  />
+                </div>
+              </div>
+              {Boolean(editSprintError) && <p style={{ color: 'crimson' }}>{editSprintError}</p>}
+              <button
+                style={{ width: '25%', margin: 'auto' }}
+                onClick={handleEditSprint}
+              >
+                Submit
+              </button>
+            </div>
+          }
           {/* create Sprint Popup */}
           {create_sprint_popup === "show" &&
             <div className="createPopup">

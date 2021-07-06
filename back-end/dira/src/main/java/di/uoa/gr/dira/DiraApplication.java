@@ -25,7 +25,6 @@ public class DiraApplication {
     }
 
     @Bean
-    @Profile(SpringProfiles.DEV)
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override

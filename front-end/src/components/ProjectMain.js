@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory } from 'react-router-dom';
 import edit_icon from "../Images/edit_icon.png"
 import x_icon from "../Images/x_icon.png"
@@ -54,11 +54,9 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
       "name": current_project.name,
       "visibility": current_project.visibility
     }).then(res => {
-      console.log(res);
       fetchAllProjects();
       hideEditProject();
     }).catch(err => {
-      console.log('error during update');
       setEditError('Couldn\'t update project');
       console.log(err);
     });
@@ -88,10 +86,8 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
 
   const fetchAllProjects = () => {
     userClientRef.current.get_user_projects(userInfo.id).then((res) => {
-      console.log(res);
       setProjects(res);
     }).catch((err) => {
-      console.log('error while fetching user projects');
       console.log(err);
     });
   }
@@ -103,7 +99,6 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
     projectClientRef.current.get_all_projects().then((res) => {
       setPublicProjects(res.filter(proj => proj.visibility === 'PUBLIC' && !Boolean(projects.find(p => p.id === proj.id))));
     }).catch((err) => {
-      console.log('error while fetching all projects');
       console.log(err);
     });
   }
@@ -114,10 +109,11 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
   useEffect(footerHandle, [footerHandle]);
   useEffect(footerStylesHandle, [footerStylesHandle]);
 
+
   return (
     <div className="projectmain">
 
-      <div className="leftPanel" style={{ width: "60%", margin: "0.5%" }}>
+      <div className="leftPanel">
         {/* projectButtons */}
         <div className="projectButtons">
           <button onClick={() => { history.push("/create_project") }}> + New Project</button>
@@ -243,7 +239,6 @@ const ProjectMain = ({ userInfo, userClientRef, userPlan, doLogout, footerHandle
           }
         </div>
       </div>
-
     </div>
   );
 }

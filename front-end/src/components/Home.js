@@ -1,65 +1,103 @@
 import logo from "../Images/dira_icon.png"
+import mainScreen from "../Images/main_screen.png"
+import backlogScreen from "../Images/backlog_screen.png"
+import reportsScreen from "../Images/reports_screen.png"
+
 import { useHistory } from "react-router-dom";
-import { useEffect } from 'react';
+import Footer from "./Footer";
 import { useState } from "react";
 
 
-function Home({ footerHandle }) {
+function Home() {
   const history = useHistory();
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
 
   const handleStartForFreeButtonClick = (e) => {
     e.preventDefault();
-    if (email) {
+    setEmailError('');
+    if (email && (!email.includes('@') || email.indexOf('@') === 0 || email.indexOf('@') === (email.length - 1))) {
+      setEmailError('Invalid email format');
+    }
+    else if (email) {
       history.push(`/register/${email}`);
     }
     else {
       history.push(`/register`);
     }
   }
-  useEffect(footerHandle, [footerHandle]);
 
   return (
     <div className="home">
       <div className="home_grad1">
         <img src={logo} alt="dira logo" id="dira logo" />
 
-        <form onSubmit={handleStartForFreeButtonClick}>
-          <input
-            type="email"
-            placeholder="Email Adress"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-          />
-          <button>Start for free</button>
+        <form
+          onSubmit={handleStartForFreeButtonClick}
+          style={{ display: "flex", flexDirection: 'column' }}
+          noValidate
+        >
+          {
+            Boolean(emailError) &&
+            <p style={{ color: 'crimson', textAlign: 'center' }}>{emailError}</p>
+          }
+          <div
+            style={{ display: 'flex', alignItems: 'center' }}
+          >
+            <input
+              type="email"
+              placeholder="Email Adress"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+            />
+            <button>Start for free</button>
+          </div>
         </form>
-        <br /><br /><br />
+        <br /><br />
+      </div>
+      <br />
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <div className="leftContent">
+          <img className="homeScreenshot" src={mainScreen} alt="mainScreen" id="mainScreen" />
+        </div>
+        <div className="rightContent">
+          <span className="description">Track Everything</span>
+        </div>
       </div>
 
-      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+      <br /><br /><br />
+
+      <div style={{ display: "flex", alignItems: "center", backgroundColor: "rgb(15, 98, 192)", padding: "40px 0px 40px 0px", borderRadius: "25px" }}>
+        <div className="leftContent">
+          <span className="description" style={{ color: "white" }}>Break Down your Work</span>
+        </div>
+        <div className="rightContent">
+          <img className="homeScreenshot" src={backlogScreen} alt="backlogScreen" id="backlogScreen" />
+        </div>
+      </div>
 
       <div className="home_grad2">
+        <br /><br /><br />
 
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div className="leftContent">
+            <img className="homeScreenshot" src={reportsScreen} alt="reportsScreen" id="reportsScreen" />
+          </div>
+          <div className="rightContent">
+            <span className="description">Analyze and Improve</span>
+          </div>
+        </div>
 
-        <div style={{ textAlign: "center" }}>
+
+        <div style={{ textAlign: "center", marginTop: "100px" }}>
           <button onClick={handleStartForFreeButtonClick}>Start for free</button>
         </div>
         <br /><br /><br /><br /><br /><br />
 
       </div>
+      <Footer position={'fixed'} />
     </div>
   );
 }
 
 export default Home;
-
-// const Home = () => {
-//   return (
-//     <div>
-//       Home page
-//     </div>
-//   );
-// }
-
-// export default Home;

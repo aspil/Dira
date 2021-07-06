@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
@@ -111,8 +112,7 @@ public class SprintService extends BaseService<SprintModel, Sprint, Long, Sprint
         }
 
         mapper.map(sprintModel, sprint);
-        sprint = repository.save(sprint);
-        return mapper.map(sprint, SprintModel.class);
+        return mapper.map(repository.save(sprint), SprintModel.class);
     }
 
     public void deleteSprintWithProjectId(Long projectId, Long customerId, Long sprintId) {

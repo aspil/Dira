@@ -11,8 +11,6 @@ const Register = ({ userClientRef, navHandle }) => {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const history = useHistory();
-  const [error, setError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
   const [errMessage, setErrMessage] = useState('');
 
   useEffect(navHandle, [navHandle]);
@@ -20,14 +18,26 @@ const Register = ({ userClientRef, navHandle }) => {
   const onSubmit = (e) => {
     e.preventDefault()
 
-    if (password !== confirmPassword) {
-      setError(false);
-      setPasswordError(true);
-      setErrMessage("Passwords don't match.");
+    if (!(
+      email &&
+      username &&
+      name &&
+      surname &&
+      password &&
+      confirmPassword
+    )) {
+      setErrMessage('Please fill in all fields')
       return;
     }
-    setError(false);
-    setPasswordError(false);
+    else if (email && (!email.includes('@') || email.indexOf('@') === 0 || email.indexOf('@') === (email.length - 1))) {
+      setErrMessage('Invalid email format');
+      return
+    }
+    else if (password !== confirmPassword) {
+      setErrMessage('Passwords don\'t match');
+      return;
+    }
+    setErrMessage('');
 
     userClientRef.current.register_user({
       "username": username,
@@ -37,20 +47,14 @@ const Register = ({ userClientRef, navHandle }) => {
       "password": password,
       "subscriptionPlan": "STANDARD"
     }).then(res => {
-      console.log(res);
       history.push('/');
     }).catch((err) => {
       console.log(err);
-      if (err === undefined) {
-        return;
-      }
-      if (err.errors) {
-        setPasswordError(true);
-        setErrMessage(err.errors[0].defaultMessage);
-      }
-      else {
-        setError(true);
+      try {
         setErrMessage(err.error.message);
+      }
+      catch {
+        setErrMessage('Couldn\'t perform registration');
       }
     });
   }
@@ -64,8 +68,21 @@ const Register = ({ userClientRef, navHandle }) => {
         <img src={logo} alt="dira logo" id="dira logo" onClick={redirectToMain} />
         <div className="login_grad" style={{ textAlign: "center" }}>
           <h1 style={{ fontWeight: "normal", margin: "15px" }}>Register</h1>
-          <form onSubmit={onSubmit}>
-            {error && <p style={{ "color": "red" }}>{errMessage}</p>}
+          <form onSubmit={onSubmit} noValidate>
+            {
+              Boolean(errMessage)
+              &&
+              <ul>
+                {
+                  errMessage.split('|').map((message, index) => <li
+                    key={index}
+                    style={{ "color": "crimson" }}
+                  >
+                    {message}
+                  </li>)
+                }
+              </ul>
+            }
             <div style={{ textAlign: "left" }}>
               <p className="inputHead">Email Adress:</p>
               <input
@@ -97,7 +114,6 @@ const Register = ({ userClientRef, navHandle }) => {
                 </div>
               </div>
 
-              {passwordError && <p style={{ "color": "red" }}>{errMessage}</p>}
               <p className="inputHead">Password:</p>
               <input
                 type="password" placeholder="Password" required

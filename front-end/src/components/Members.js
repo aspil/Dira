@@ -4,7 +4,7 @@ import x_icon from "../Images/x_icon.png"
 import { useParams } from 'react-router';
 import edit_icon from "../Images/edit_icon.png"
 
-const Members = ({ footerHandle, projectClientRef, userId }) => {
+const Members = ({ footerHandle, projectClientRef, userId, fetchMembers }) => {
   const [add_members_popup, handleMembersPopup] = useState("hide");
   const [members, setMembers] = useState([]);
   const [memberPermissions, setMemberPermissions] = useState([]);
@@ -48,19 +48,9 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
 
   const { projectId } = useParams();
 
-  const fetchMembers = () => {
-    if (!projectClientRef.current.headers.Authorization) {
-      return;
-    }
-
-    projectClientRef.current.get_all_users_in_project_by_id(projectId).then((res) => {
-      console.log('project members', res);
-      setMembers(res.users);
-    }).catch((err) => {
-      console.log(err);
-    });
-  }
-  useEffect(fetchMembers, [projectClientRef, projectId, projectClientRef.current.headers.Authorization]);
+  useEffect(() => fetchMembers(projectId, setMembers),
+    [projectClientRef, projectId, projectClientRef.current.headers.Authorization, fetchMembers]
+  );
 
   useEffect(() => {
     if (!projectClientRef.current.headers.Authorization) {
@@ -80,7 +70,6 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
     }
 
     projectClientRef.current.get_project_permissions_for_all_users(projectId).then(res => {
-      console.log('member permissions ', res);
       setMemberPermissions(res.map(permission => {
         const toSave = {
           memberId: permission.customerId,
@@ -99,9 +88,8 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
     setDeleteMemberError('');
 
     projectClientRef.current.delete_user_from_project_with_id(projectId, current_member.id).then((res) => {
-      console.log(res);
       fetchMemberPermissions();
-      fetchMembers();
+      fetchMembers(projectId, setMembers);
       hideEditMember();
     }).catch((err) => {
       console.log(err);
@@ -123,7 +111,7 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
 
     projectClientRef.current.add_user_to_project_with_email(projectId, newMember).then(() => {
       fetchMemberPermissions();
-      fetchMembers();
+      fetchMembers(projectId, setMembers);
       hideAddMember();
     }).catch((err) => {
       console.log(err);
@@ -142,7 +130,6 @@ const Members = ({ footerHandle, projectClientRef, userId }) => {
       permissions: newPermissions
     })
       .then((res) => {
-        console.log('updated member permissions ', res);
         fetchMemberPermissions();
         hideEditMember();
       })
