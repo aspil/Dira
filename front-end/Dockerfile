@@ -1,10 +1,14 @@
-FROM node as react-build
-RUN mkdir /app
-WORKDIR /app
-COPY . /app
-RUN yarn
-RUN yarn build
+from node
 
-FROM nginx:alpine
-COPY --from=react-build /app/build /usr/share/nginx/html
-EXPOSE 80
+# Prepare app directory
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app/
+
+# Install dependencies
+COPY package.json /usr/src/app/
+RUN npm install --silent
+
+ADD . /usr/src/app/
+
+EXPOSE 3000
+CMD [ "npm", "start" ]
