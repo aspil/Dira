@@ -73,7 +73,14 @@ const Register = ({ userClientRef, navHandle }) => {
               Boolean(errMessage)
               &&
               <ul>
-                {errMessage.split('|').map(message => <li style={{ "color": "crimson" }}>{message}</li>)}
+                {
+                  errMessage.split('|').map((message, index) => <li
+                    key={index}
+                    style={{ "color": "crimson" }}
+                  >
+                    {message}
+                  </li>)
+                }
               </ul>
             }
             <div style={{ textAlign: "left" }}>

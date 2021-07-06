@@ -9,7 +9,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "chart.js": "^3.4.1",
-    "dira-clients": "^1.1.28",
+    "dira-clients": "^1.1.29",
     "react": "^17.0.2",
     "react-calendar": "^3.4.0",
     "react-chartjs-2": "^3.0.3",

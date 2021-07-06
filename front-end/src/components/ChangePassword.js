@@ -81,7 +81,14 @@ const ChangePassword = ({ userClientRef, navHandle, username, doLogout }) => {
                 error
                 &&
                 <ul>
-                  {errMessage.split('|').map(message => <li style={{ "color": "crimson" }}>{message}</li>)}
+                  {
+                    errMessage.split('|').map((message, index) => <li
+                      key={index}
+                      style={{ "color": "crimson" }}
+                    >
+                      {message}
+                    </li>)
+                  }
                 </ul>
               }
               <p><button type="submit">Update Password</button></p>
