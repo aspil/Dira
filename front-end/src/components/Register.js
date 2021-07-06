@@ -18,7 +18,22 @@ const Register = ({ userClientRef, navHandle }) => {
   const onSubmit = (e) => {
     e.preventDefault()
 
-    if (password !== confirmPassword) {
+    if (!(
+      email &&
+      username &&
+      name &&
+      surname &&
+      password &&
+      confirmPassword
+    )) {
+      setErrMessage('Please fill in all fields')
+      return;
+    }
+    else if (email && (!email.includes('@') || email.indexOf('@') === 0 || email.indexOf('@') === (email.length - 1))) {
+      setErrMessage('Invalid email format');
+      return
+    }
+    else if (password !== confirmPassword) {
       setErrMessage('Passwords don\'t match');
       return;
     }
@@ -53,7 +68,7 @@ const Register = ({ userClientRef, navHandle }) => {
         <img src={logo} alt="dira logo" id="dira logo" onClick={redirectToMain} />
         <div className="login_grad" style={{ textAlign: "center" }}>
           <h1 style={{ fontWeight: "normal", margin: "15px" }}>Register</h1>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={onSubmit} noValidate>
             {
               Boolean(errMessage)
               &&

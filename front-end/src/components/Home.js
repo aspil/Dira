@@ -11,10 +11,15 @@ import { useState } from "react";
 function Home() {
   const history = useHistory();
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
 
   const handleStartForFreeButtonClick = (e) => {
     e.preventDefault();
-    if (email) {
+    setEmailError('');
+    if (email && (!email.includes('@') || email.indexOf('@') === 0 || email.indexOf('@') === (email.length - 1))) {
+      setEmailError('Invalid email format');
+    }
+    else if (email) {
       history.push(`/register/${email}`);
     }
     else {
@@ -27,19 +32,31 @@ function Home() {
       <div className="home_grad1">
         <img src={logo} alt="dira logo" id="dira logo" />
 
-        <form onSubmit={handleStartForFreeButtonClick} style={{display:"flex", alignItems:"center"}}>
-          <input
-            type="email"
-            placeholder="Email Adress"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-          />
-          <button>Start for free</button>
+        <form
+          onSubmit={handleStartForFreeButtonClick}
+          style={{ display: "flex", flexDirection: 'column' }}
+          noValidate
+        >
+          {
+            Boolean(emailError) &&
+            <p style={{ color: 'crimson', textAlign: 'center' }}>{emailError}</p>
+          }
+          <div
+            style={{ display: 'flex', alignItems: 'center' }}
+          >
+            <input
+              type="email"
+              placeholder="Email Adress"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+            />
+            <button>Start for free</button>
+          </div>
         </form>
         <br /><br />
       </div>
       <br />
-      <div style={{display:"flex",alignItems:"center"}}>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <div className="leftContent">
           <img className="homeScreenshot" src={mainScreen} alt="mainScreen" id="mainScreen" />
         </div>
@@ -50,35 +67,35 @@ function Home() {
 
       <br /><br /><br />
 
-      <div style={{display:"flex",alignItems:"center",backgroundColor:"rgb(15, 98, 192)", padding:"40px 0px 40px 0px",borderRadius:"25px"}}>
+      <div style={{ display: "flex", alignItems: "center", backgroundColor: "rgb(15, 98, 192)", padding: "40px 0px 40px 0px", borderRadius: "25px" }}>
         <div className="leftContent">
-          <span className="description" style={{color:"white"}}>Break Down your Work</span>
+          <span className="description" style={{ color: "white" }}>Break Down your Work</span>
         </div>
         <div className="rightContent">
-          <img className="homeScreenshot" src={backlogScreen} alt="backlogScreen" id="backlogScreen"/>
+          <img className="homeScreenshot" src={backlogScreen} alt="backlogScreen" id="backlogScreen" />
         </div>
       </div>
 
       <div className="home_grad2">
-      <br /><br /><br />
+        <br /><br /><br />
 
-      <div style={{display:"flex",alignItems:"center"}}>
-        <div className="leftContent">
-          <img className="homeScreenshot" src={reportsScreen} alt="reportsScreen" id="reportsScreen" />
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div className="leftContent">
+            <img className="homeScreenshot" src={reportsScreen} alt="reportsScreen" id="reportsScreen" />
+          </div>
+          <div className="rightContent">
+            <span className="description">Analyze and Improve</span>
+          </div>
         </div>
-        <div className="rightContent">
-          <span className="description">Analyze and Improve</span>
-        </div>
-      </div>
-      
 
-        <div style={{ textAlign: "center" ,marginTop:"100px"}}>
+
+        <div style={{ textAlign: "center", marginTop: "100px" }}>
           <button onClick={handleStartForFreeButtonClick}>Start for free</button>
         </div>
         <br /><br /><br /><br /><br /><br />
 
       </div>
-      <Footer position={'fixed'}/>
+      <Footer position={'fixed'} />
     </div>
   );
 }
